@@ -96,35 +96,37 @@ public class ConvexeHullImageMaker
 			ImagePlus ip = imagePlusBlack.duplicate();
 			double[][] image = giveTable(imagePlusBinary, width, height, k);
 
+			/**
+			ShortProcessor testas = new ShortProcessor(image.length, image[0].length);
+			for(int i = 0; i < image.length; ++i ) {
+				for (int j = 0; j < image[i].length; ++j) {
+					testas.setf(i, j, (int)image[i][j]);
 
+				}
+			}
+
+
+			ImagePlus testis = new ImagePlus();
+			//testas.setf((int)_p0._i,(int)_p0._j,13);
+			IJ.log(" eu la dans le testas" +_p0._i );
+			testis.setProcessor(testas);
+
+			testis.setTitle(" ConvexHullSegmentation"+_axesName + " et le K "+k);
+			testis.show();
+			*/
 			if (_listLabel.size()==1)
 			{
 				ArrayList<VoxelRecord> lVoxelBoundary = detectVoxelBoudary(image,_listLabel.get(0),k);
 
-				ShortProcessor testas = new ShortProcessor(image.length, image[0].length);
-                for(int i = 0; i < image.length; ++i ) {
-                    for (int j = 0; j < image[i].length; ++j) {
-                        testas.setf(i, j, (int)image[i][j]);
-
-                    }
-                }
 
 
                 //ImagePlus testis = new ImagePlus();
-               // testas.setf((int)_p0._i,(int)_p0._j,13);
+                //testas.setf((int)_p0._i,(int)_p0._j,13);
                 //IJ.log(" eu la dans le testas" +_p0._i );
                 //testis.setProcessor(testas);
 
                 //testis.setTitle(" ConvexHullSegmentation"+_axesName + " et le K "+k);
                 //testis.show();
-
-                ImagePlus testis = new ImagePlus();
-               // testas.setf((int)_p0._i,(int)_p0._j,13);
-                IJ.log(" eu la dans le testas" +_p0._i );
-                testis.setProcessor(testas);
-
-                testis.setTitle(" ConvexHullSegmentation"+_axesName + " et le K "+k);
-                testis.show();
 
 
 
@@ -142,10 +144,8 @@ public class ConvexeHullImageMaker
 
 
                // if (!(_axesName =="yz" && k==30))
-               //     testis.close();
+               // testis.close();
 
-                if (!(_axesName =="yz" && k==30))
-                    testis.close();
 
 			}
 			else if(_listLabel.size()>1)

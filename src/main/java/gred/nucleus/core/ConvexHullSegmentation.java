@@ -45,7 +45,7 @@ public class ConvexHullSegmentation
 
 		//imagePlusXY.show();
 
-		imagePlusXY.show();
+		//imagePlusXY.show();
 
 	   	nuc.setAxes("xz");
 	   	ImagePlus imagePlusXZ = nuc.giftWrapping(imagePlusInput);
@@ -54,7 +54,7 @@ public class ConvexHullSegmentation
 
         //imagePlusXZ.show();
 
-        imagePlusXZ.show();
+        //imagePlusXZ.show();
 
 		ImagePlus imagePlusYZ = nuc.giftWrapping(imagePlusInput);
 		

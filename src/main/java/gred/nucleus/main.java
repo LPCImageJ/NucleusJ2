@@ -16,7 +16,8 @@ public class main {
     public static void main(String[] args){
         FileList fileList = new FileList ();
         ArrayList<String> File;
-        File[] tFileRawImage = fileList.run("/media/tridubos/DATA1/MANIP_MANU_KAKU/Trier/RawDataBadSegmentation/c1_cot4-1_28.tif");
+        //OLD PATH /media/tridubos/DATA1/MANIP_MANU_KAKU/Trier/RawDataBadSegmentation/
+        File[] tFileRawImage = fileList.run("/home/tridubos/Bureau/ImageTEST/MANIP_KAKU/");
         for( int i = 0; i < tFileRawImage.length; ++i){
            IJ.log(""+tFileRawImage[i]);
             ConvexHullPlugin_ test = new ConvexHullPlugin_();
@@ -30,12 +31,12 @@ public class main {
         //String burp ="/home/tridubos/Bureau/ImageTEST/test_bille/c1_cot7-1_10.tif";
         String burp2 ="/home/tridubos/Bureau/ImageTEST/test_nucleol_bof/c1_cot1-2_09.tif";
         //String burp ="/home/tridubos/Bureau/ImageTEST/20180906_billes4/Exp-03.czi-C2.tif";
-        ConvexHullPlugin_ test = new ConvexHullPlugin_();
+       // ConvexHullPlugin_ test = new ConvexHullPlugin_();
        // ((ConvexHullPlugin_) test).run(args[0]);
 
         // test.run(burp);
 
-         test.run(burp);
+         //test.run(burp);
 
 
     }
