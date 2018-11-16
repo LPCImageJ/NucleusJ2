@@ -339,15 +339,12 @@ public class NucleusSegmentationDialog  extends JFrame
 	public double getMinVolume(){ return Double.parseDouble(_jTextFieldMin.getText()); }
 	public double getMaxVolume(){ return Double.parseDouble(_jTextFieldMax.getText()); }
 	public boolean isStart() {	return _start; }
-<<<<<<< HEAD
+
 	public void action(){
 		StartListener startListener = new StartListener(this);
 		_jButtonStart.addActionListener(startListener);
 	}
-=======
-	
-	
->>>>>>> a5bf335e2efa27e6f744f38d23733a34679dac83
+
 	/********************************************************************************************************************************************
 	 * 	Classes listener to interact with the several element of the window
 	 */

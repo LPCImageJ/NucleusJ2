@@ -6,11 +6,8 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="NucleusJ_-1.0.9-SNAPSHOT" />
+        <module name="NucleusJ_giftwrapping" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="NucleusJ_-1.0.9-SNAPSHOT" target="1.5" />
-    </bytecodeTargetLevel>
   </component>
 </project>

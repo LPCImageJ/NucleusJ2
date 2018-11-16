@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="NucleusJ_:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/NucleusJ__jar</output-path>
+    <root id="archive" name="NucleusJ_.jar" />
+  </artifact>
+</component>

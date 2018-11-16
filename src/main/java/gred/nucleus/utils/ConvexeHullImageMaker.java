@@ -108,7 +108,7 @@ public class ConvexeHullImageMaker
 
                     }
                 }
-<<<<<<< HEAD
+
 
                 //ImagePlus testis = new ImagePlus();
                // testas.setf((int)_p0._i,(int)_p0._j,13);
@@ -117,7 +117,7 @@ public class ConvexeHullImageMaker
 
                 //testis.setTitle(" ConvexHullSegmentation"+_axesName + " et le K "+k);
                 //testis.show();
-=======
+
                 ImagePlus testis = new ImagePlus();
                // testas.setf((int)_p0._i,(int)_p0._j,13);
                 IJ.log(" eu la dans le testas" +_p0._i );
@@ -125,7 +125,7 @@ public class ConvexeHullImageMaker
 
                 testis.setTitle(" ConvexHullSegmentation"+_axesName + " et le K "+k);
                 testis.show();
->>>>>>> a5bf335e2efa27e6f744f38d23733a34679dac83
+
 
 
 				for ( VoxelRecord t : lVoxelBoundary){
@@ -140,13 +140,13 @@ public class ConvexeHullImageMaker
 				else
 					ip = imagePlusBlack.duplicate() ;
 
-<<<<<<< HEAD
+
                // if (!(_axesName =="yz" && k==30))
                //     testis.close();
-=======
+
                 if (!(_axesName =="yz" && k==30))
                     testis.close();
->>>>>>> a5bf335e2efa27e6f744f38d23733a34679dac83
+
 			}
 			else if(_listLabel.size()>1)
 			{
