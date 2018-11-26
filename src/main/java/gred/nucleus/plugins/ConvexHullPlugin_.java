@@ -64,7 +64,7 @@ public class ConvexHullPlugin_  implements PlugIn {
 			imagePlusSegmented = nucleusSegmentation.applySegmentation(imagePlusSegmented);
 			imagePlusSegmented.setTitle("Seg");
 			imagePlusSegmented.show();
-            saveFile(imagePlusSegmented,"/home/tridubos/Bureau/IMAGES/out_test/burp.tiff");
+            saveFile(imagePlusSegmented,"/home/tridubos/Bureau/ImageTEST/Maquage_menbrane/test/"+imagePlusSegmented.getTitle());
 
             ConvexHullSegmentation nuc = new ConvexHullSegmentation();
 			ImagePlus plopi = nuc.run(imagePlusSegmented);
@@ -105,11 +105,12 @@ public class ConvexHullPlugin_  implements PlugIn {
 		nucleusSegmentation.setVolumeRange(volumeMin, volumeMax);
 		imagePlusSegmented = nucleusSegmentation.applySegmentation(imagePlusSegmented);
 		imagePlusSegmented.setTitle(_imagePlusInput.getTitle()+"_seg1");
-		saveFile(imagePlusSegmented,"/home/tridubos/Bureau/ImageTEST/MANIP_KAKU/NEW_SEGMENTATION/OTSU_modif/");
+		//saveFile(imagePlusSegmented,"/home/tridubos/Bureau/ImageTEST/MANIP_KAKU/NEW_SEGMENTATION/OTSU_modif/");
 		ConvexHullSegmentation nuc = new ConvexHullSegmentation();
 		ImagePlus plopi = nuc.run(imagePlusSegmented);
 		plopi.setTitle(_imagePlusInput.getTitle()+"_seg2");
-		saveFile(plopi,"/home/tridubos/Bureau/ImageTEST/MANIP_KAKU/NEW_SEGMENTATION/GIFT/");
+		saveFile(plopi,"/home/tridubos/Bureau/ImageTEST/MANIP_KAKU/TEST_IMAGE_PB_GIFT/THRESOLD_TEST/");
+				//"/home/tridubos/Bureau/ImageTEST/MANIP_KAKU/NEW_SEGMENTATION/GIFT/");
 		NucleusAnalysis nucleusAnalysis = new NucleusAnalysis();
 		nucleusAnalysis.nucleusParameter3D(_imagePlusInput, plopi);
 		nucleusAnalysis.nucleusParameter3D(_imagePlusInput, imagePlusSegmented);

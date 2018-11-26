@@ -119,8 +119,8 @@ public class ConvexeHullDetection
 					if(_axesName == "xy")	distance = Math.sqrt(vectorCourant._i*xcal*vectorCourant._i*xcal+vectorCourant._j*ycal*vectorCourant._j*ycal);
 					else if (_axesName == "xz")	distance = Math.sqrt(vectorCourant._i*xcal*vectorCourant._i*xcal+vectorCourant._k*zcal*vectorCourant._k*zcal);
 					else if (_axesName == "yz")	distance = Math.sqrt(vectorCourant._k*zcal*vectorCourant._k*zcal+vectorCourant._j*ycal*vectorCourant._j*ycal);
-                    IJ.log("distance " +distance+ " "+vectorCourant._i + " "+vectorCourant._k );
-                    IJ.log("distance " + distance +"<="+ distanceThreshold);
+                  //  IJ.log("distance " +distance+ " "+vectorCourant._i + " "+vectorCourant._k );
+                  //  IJ.log("distance " + distance +"<="+ distanceThreshold);
                     if (distance <= distanceThreshold ) {
                         double angle = computeAngle(vectorTest, vectorCourant, calibration);
 						double anglePlusPiSurDeux = angle - _pi / 2;
@@ -278,7 +278,7 @@ public class ConvexeHullDetection
 		//IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" largeur la distance  " +distance+ "\n  nbPixelWidth "+nbPixelWidth+ "\n nbPixelHeight "+nbPixelHeight+ "\n x "+x+ " y "+y+ " " + calibration.pixelDepth+ " "+calibration.pixelHeight);
 		//double angleMax = 0;
 		//if(nbPixelWidth>0 && nbPixelHeight>0 ) {
-        IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" "+nbPixelWidth + " "+nbPixelHeight+" " +x + " " + y);
+      //  IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" "+nbPixelWidth + " "+nbPixelHeight+" " +x + " " + y);
 			ArrayList<VoxelRecord> listeBoundaryVoxel = getListOfInterestVoxel(image, nbPixelWidth, nbPixelHeight, x, y);
 
 
@@ -318,10 +318,12 @@ public class ConvexeHullDetection
 		if (maxHeight >= image[0].length) maxHeight = image[0].length-1;
 		double[][] i_c = new double[nbPixelWidth*2][nbPixelHeight*2];
 
+		/*
         IJ.log(" i "+ i_InterestVoxel + " j "+j_InterestVoxel+"\n");
 		IJ.log("Image 1 "+image.length + " x "+image[0].length+"\n");
         IJ.log("minWidth "+minWidth + " maxWidth "+maxWidth+"\n");
         IJ.log("minHeight "+minHeight + " maxHeight "+maxHeight+"\n");
+        */
 		//IJ.log("HA "   +minWidth+" max "+maxWidth+" i_InterestVoxel "+i_InterestVoxel+" "+maxHeight+" ers "+i_c.length + " nbPixelWidth "+nbPixelWidth +" nbPixelHeight " +nbPixelHeight);
 		int k=0;
 		for (i_InterestVoxel = minWidth;i_InterestVoxel <maxWidth;++i_InterestVoxel)

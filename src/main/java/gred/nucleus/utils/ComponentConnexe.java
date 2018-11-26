@@ -32,12 +32,12 @@ public class ComponentConnexe
 
 					voxelRecord.setLocation(i, j, 0);
 					breadthFirstSearch(labelIni,voxelRecord,currentLabel);
-					IJ.log("current label ajouté "+currentLabel+ " i " + i+ " j" +j );
+				//	IJ.log("current label ajouté "+currentLabel+ " i " + i+ " j" +j );
 					_listLabel.add((double)currentLabel);
 
 					currentLabel++;	
 				}
-		IJ.log(" "+getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" "+_image.length+ " "+_image[0].length);
+		//IJ.log(" "+getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" "+_image.length+ " "+_image[0].length);
 		}
 
 	/**

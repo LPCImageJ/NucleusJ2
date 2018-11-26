@@ -6,7 +6,7 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.measure.Calibration;
-
+import ij.io.FileSaver;
 import ij.process.ShortProcessor;
 import ij.process.ImageProcessor;
 
@@ -15,6 +15,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -61,7 +62,7 @@ public class ConvexeHullImageMaker
 		/**
 		 * Calcul du rayon : PQ 1/2 du rayon
 		 */
-		double equivalentSphericalRadius = (mesure3d.equivalentSphericalRadius(imagePlusBinary));
+		double equivalentSphericalRadius = (mesure3d.equivalentSphericalRadius(imagePlusBinary)/2);
         VoxelRecord  tVoxelRecord = mesure3d.computeBarycenter3D(false,imagePlusBinary,255.0);
 		ImagePlus imagePlusCorrected = new ImagePlus();
 		int indice = 0;
@@ -92,7 +93,7 @@ public class ConvexeHullImageMaker
 		//parcours des differents stack en fontion des axes choisis
 		for (int k = 0; k < indice; ++k )
 		{
-			IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() + " ICI LE K "+  k );
+			//IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() + " ICI LE K "+  k );
 			ImagePlus ip = imagePlusBlack.duplicate();
 			double[][] image = giveTable(imagePlusBinary, width, height, k);
 
@@ -114,6 +115,9 @@ public class ConvexeHullImageMaker
 			testis.setTitle(" ConvexHullSegmentation"+_axesName + " et le K "+k);
 			testis.show();
 			*/
+			if (_axesName =="xy" && k==8 ) {
+				IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() + " "+_listLabel.size());
+			}
 			if (_listLabel.size()==1)
 			{
 				ArrayList<VoxelRecord> lVoxelBoundary = detectVoxelBoudary(image,_listLabel.get(0),k);
@@ -136,11 +140,27 @@ public class ConvexeHullImageMaker
 				}
 				if (lVoxelBoundary.size() > 5) {
 				//	IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() + " "+image+" Voxel boundary taille " +lVoxelBoundary.size()+" " +width+" " +height+" " +equivalentSphericalRadius+  " \n ListLAB "+_listLabel.get(0) +" \n ListLAB "+_listLabel.size());
-                    IJ.log("tVoxelRecord i "+tVoxelRecord._i+ "\nj "+tVoxelRecord._j+ "\n j "+tVoxelRecord._k+ "\n");
+                  //  IJ.log("tVoxelRecord i "+tVoxelRecord._i+ "\nj "+tVoxelRecord._j+ "\n j "+tVoxelRecord._k+ "\n");
                     ip = imageMaker(image, lVoxelBoundary, width, height, equivalentSphericalRadius);
+					if (_axesName =="xy" && k==9) {
+						ip.setTitle("hum2");
+						ip.show();
+						FileSaver fileSaver = new FileSaver(ip);
+						fileSaver.saveAsTiffStack("/home/tridubos/Bureau/aaaaaaaaaaaa.tiff");
+					}
+
+
 				}
-				else
-					ip = imagePlusBlack.duplicate() ;
+				else {
+					ip = imagePlusBlack.duplicate();
+					if (_axesName =="xy" && k==9) {
+						ip.setTitle("hum2");
+						ip.show();
+						FileSaver fileSaver = new FileSaver(ip);
+						fileSaver.saveAsTiffStack("/home/tridubos/Bureau/aaaaaaaaaaaa.tiff");
+					}
+				}
+
 
 
                // if (!(_axesName =="yz" && k==30))
@@ -160,19 +180,22 @@ public class ConvexeHullImageMaker
 						for (int l = 0; l < width; ++l)
 							for (int m = 0; m < height; ++m)
 								if (imageTempStack.getVoxel(l, m, 0)> 0)
-									imageStackIp.setVoxel(l, m, 0,255);							
+									imageStackIp.setVoxel(l, m, 0,255);
+
+
 						}
 					}
 				}
 			else{
 				ip = imagePlusBlack.duplicate();
+
 			}
 
 
 
             imageStackOutput.addSlice(ip.getProcessor());
 
-			IJ.log(" "+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() + " NEW K  \n\n\n");
+			//IJ.log(" "+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() + " NEW K  \n\n\n");
 
 		}
 		imagePlusCorrected.setStack(imageStackOutput);
@@ -199,8 +222,8 @@ public class ConvexeHullImageMaker
 			  if (image[i][j] == label)
 				  if ( image[i-1][j] == 0 || image[i+1][j] == 0|| image[i][j-1] == 0|| image[i][j+1]== 0) {
 
-				      if(i==51)
-				          IJ.log("ET LA PAS D'EXEPTION : I" +i+ "  J "+j +"\n");
+				      //if(i==51)
+				         // IJ.log("ET LA PAS D'EXEPTION : I" +i+ "  J "+j +"\n");
 
 					  VoxelRecord voxelTest = new VoxelRecord();
 					  if (_axesName == "xy") voxelTest.setLocation(i, j, indice);
@@ -227,7 +250,7 @@ public class ConvexeHullImageMaker
 
 						  if (j == _p0._k) {
 								  if (i > _p0._i) {
-									  IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" " + i + "  " + j);
+									//  IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" " + i + "  " + j);
 									  _p0.setLocation(i, indice, j);
 								  }
 							  }
@@ -260,7 +283,7 @@ public class ConvexeHullImageMaker
 
 
 				  }
-		IJ.log("voxeldepart : "+_p0._i+" "+_p0._j+" "+_p0._k);
+		//IJ.log("voxeldepart : "+_p0._i+" "+_p0._j+" "+_p0._k);
 		return lVoxelBoundary;
 	}
 	/**
@@ -276,7 +299,7 @@ public class ConvexeHullImageMaker
 		ArrayList<VoxelRecord> convexHull = new ArrayList<VoxelRecord> ();
 
 		convexHull.add(_p0);
-		IJ.log(" BUUUUUUUUUUUUUURP "+_p0._k+ " "+_p0._j );
+		//IJ.log(" BUUUUUUUUUUUUUURP "+_p0._k+ " "+_p0._j );
 		VoxelRecord vectorTest = new VoxelRecord();
 		if(_axesName == "xy" || _axesName == "xz")	
 			vectorTest.setLocation (-10, 0, 0);
@@ -347,6 +370,7 @@ public class ConvexeHullImageMaker
 		g2d.setColor(Color.WHITE);
 		g2d.dispose();
 		ip.setImage(bufferedImage);
+
 		return ip;
 	
 	}
@@ -375,7 +399,7 @@ public class ConvexeHullImageMaker
 				else
 					image[i][j] = imageStackInput.getVoxel(indice,i,j);
 			}
-		IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" hummmm "+ image.length+ " "+image[0].length+ " "+width+" "+ height);
+		//IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" hummmm "+ image.length+ " "+image[0].length+ " "+width+" "+ height);
 		ComponentConnexe componentConnexe = new ComponentConnexe();
 		componentConnexe.setImageTable(image);
 		_listLabel = componentConnexe.getListLabel(255);

@@ -43,7 +43,7 @@ public class ConvexHullSegmentation
 	   	IJ.log(imagePlusInput.getTitle()+" xz ");
 		imagePlusXY.setTitle("XY ConvexHullSegmentation");
 
-		//imagePlusXY.show();
+		imagePlusXY.show();
 
 		//imagePlusXY.show();
 
@@ -52,7 +52,7 @@ public class ConvexHullSegmentation
 	   	IJ.log(imagePlusInput.getTitle()+" yz ");
 	   	nuc.setAxes("yz");
 
-        //imagePlusXZ.show();
+        imagePlusXZ.show();
 
         //imagePlusXZ.show();
 
