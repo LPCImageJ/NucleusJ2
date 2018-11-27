@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  * Runnable class to the segmentation of the nucleus
  * 
- * @author Poulet Axel
+ * @author Dubos Tristan and Poulet Axel
  *
  */
 public class RunnableImageSegmentation extends Thread implements Runnable
@@ -61,17 +61,8 @@ public class RunnableImageSegmentation extends Thread implements Runnable
 			NucleusAnalysis nucleusAnalysis = new NucleusAnalysis();
 			if(_doAnalysis)
 			{
-				try
-				{
-					if(_isanalysis2D3D)
-					{
-						nucleusAnalysis.nucleusParameter3D(_workDirectory+File.separator+"3DNucleiParameters.tab",_imagePlusInput,impagePlusSegmented);
-						nucleusAnalysis.nucleusParameter2D(_workDirectory+File.separator+"2DNucleiParameters.tab",impagePlusSegmented);
-					}
-					else if(_isanalysis3D)
-						nucleusAnalysis.nucleusParameter3D(_workDirectory+File.separator+"3DNucleiParameters.tab",_imagePlusInput,impagePlusSegmented);
-					else
-						nucleusAnalysis.nucleusParameter2D(_workDirectory+File.separator+"2DNucleiParameters.tab",impagePlusSegmented);
+				try {
+					nucleusAnalysis.nucleusParameter3D(_workDirectory+File.separator+"3DNucleiParameters.tab",_imagePlusInput,impagePlusSegmented);
 				}
 				catch (IOException e) {	e.printStackTrace();	}
 			}

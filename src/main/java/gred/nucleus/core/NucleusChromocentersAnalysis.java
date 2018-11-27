@@ -13,12 +13,16 @@ import ij.measure.Calibration;
  * Several method to realise and create the outfile for the nuclear Analysis
  * this class contains the chromocenter parameters
  * 
- * @author Poulet Axel
+ * @author Dubos Tristan and Poulet Axel
  *
  */
-public class NucleusChromocentersAnalysis
-{
-	public NucleusChromocentersAnalysis ()  { }
+public class NucleusChromocentersAnalysis{
+	/**
+	 *
+	 */
+	public NucleusChromocentersAnalysis(){
+
+	}
 
 	   /**
 	    * Analysis for one nucleus, the results are stock on the IJ log windows
@@ -28,8 +32,7 @@ public class NucleusChromocentersAnalysis
 	    * @param imagePlusSegmented
 	    * @param imagePlusChromocenter
 	    */
-	public void computeParameters (String rhfChoice, ImagePlus imagePlusInput, ImagePlus imagePlusSegmented, ImagePlus imagePlusChromocenter)
-	{
+	public void computeParameters (String rhfChoice, ImagePlus imagePlusInput, ImagePlus imagePlusSegmented, ImagePlus imagePlusChromocenter) {
 		IJ.log("3D PARAMETERS ");
 		Histogram histogram = new Histogram ();
 		histogram.run(imagePlusChromocenter);
@@ -44,28 +47,21 @@ public class NucleusChromocentersAnalysis
 				+measure3D.computeFlatnessAndElongation(imagePlusSegmented,255)[0]+" "
 	    		+measure3D.computeFlatnessAndElongation(imagePlusSegmented,255)[1]+" "
 				+measure3D.computeSphericity(volume,surfaceArea);
-		if (rhfChoice.equals("Volume and intensity"))
-		{	
+		if (rhfChoice.equals("Volume and intensity")){
 			IJ.log("ImageTitle Volume ESR SurfaceArea Flatness Elongation Sphericity IntensityRHF VolumeRHF NbCc VCcMean VCcTotal DistanceBorderToBorderMean DistanceBarycenterToBorderMean VoxelVolume");
 			text += " "+measure3D.computeIntensityRHF(imagePlusInput,imagePlusSegmented,imagePlusChromocenter)+" "
 					+measure3D.computeVolumeRHF(imagePlusSegmented, imagePlusChromocenter)+" ";
-	
-		
 		}
-		else if (rhfChoice.equals("Volume"))
-		{
+		else if (rhfChoice.equals("Volume")) {
 			IJ.log("ImageTitle Volume ESR SurfaceArea Flatness Elongation Sphericity VolumeRHF NbCc VCcMean VCcTotal DistanceBorderToBorderMean DistanceBarycenterToBorderMean VoxelVolume");
 			text += " "+measure3D.computeVolumeRHF(imagePlusSegmented, imagePlusChromocenter)+" ";
-				
 		}
-		else  
-		{
+		else {
 			IJ.log("ImageTitle Volume ESR SurfaceArea Flatness Elongation Sphericity IntensityRHF NbCc VCcMean VCcTotal DistanceBorderToBorderMean DistanceBarycenterToBorderMean VoxelVolume");
 			text += " "+measure3D.computeIntensityRHF(imagePlusInput,imagePlusSegmented, imagePlusChromocenter)+" ";
 		}
 		
-		if (histogram.getNbLabels() > 0)
-		{
+		if (histogram.getNbLabels() > 0) {
 			double [] tVolumesObjects =  measure3D.computeVolumeofAllObjects(imagePlusChromocenter);
 			RadialDistance radialDistance = new RadialDistance();
 			double [] tBorderToBorderDistance = radialDistance.computeBorderToBorderDistances(imagePlusSegmented,imagePlusChromocenter);
@@ -95,15 +91,13 @@ public class NucleusChromocentersAnalysis
 	 * @param imagePlusChromocenter
 	 * @throws IOException
 	 */
-	public void computeParameters (String pathResultsFile ,String rhfChoice,ImagePlus imagePlusInput, ImagePlus imagePlusSegmented, ImagePlus imagePlusChromocenter) throws IOException
-	{
+	public void computeParameters (String pathResultsFile ,String rhfChoice,
+								   ImagePlus imagePlusInput, ImagePlus imagePlusSegmented, ImagePlus imagePlusChromocenter) throws IOException {
 		Histogram histogram = new Histogram ();
 		histogram.run(imagePlusChromocenter);
 		Calibration calibration = imagePlusInput.getCalibration();
 		double voxelVolume = calibration.pixelDepth*calibration.pixelHeight*calibration.pixelWidth;
 		Measure3D measure3D = new Measure3D();
-		Measure2D measure2D = new Measure2D();
-		measure2D.run(imagePlusSegmented);
 		double volume = measure3D.computeVolumeObject(imagePlusSegmented,255);
 		double surfaceArea = measure3D.computeSurfaceObject(imagePlusSegmented,255);
 		File fileResults = new File(pathResultsFile);
@@ -115,11 +109,11 @@ public class NucleusChromocentersAnalysis
 		if (exist == false)
 		{
 			if (rhfChoice.equals("Volume and intensity"))
-				text = "ImageTitle\tVolume\tESR\tSurfaceArea\tFlatness\tElongation\tSphericity\tIntensityRHF\tVolumeRHF\tNbCc\tVCcMean\tVCcTotal\tDistanceBorderToBorderMean\tDistanceBarycenterToBorderMean\tAspectRatio\tCircularity\tVoxelVolume\n";
+				text = "ImageTitle\tVolume\tESR\tSurfaceArea\tFlatness\tElongation\tSphericity\tIntensityRHF\tVolumeRHF\tNbCc\tVCcMean\tVCcTotal\tDistanceBorderToBorderMean\tDistanceBarycenterToBorderMean\tVoxelVolume\n";
 			else if (rhfChoice.equals("Volume"))
-				text = "ImageTitle\tVolume\tESR\tSurfaceArea\tFlatness\tElongation\tSphericity\tVolumeRHF\tNbCc\tVCcMean\tVCcTotal\tDistanceBorderToBorderMean\tDistanceBarycenterToBorderMean\tAspectRatio\tCircularity\tVoxelVolume\n";
+				text = "ImageTitle\tVolume\tESR\tSurfaceArea\tFlatness\tElongation\tSphericity\tVolumeRHF\tNbCc\tVCcMean\tVCcTotal\tDistanceBorderToBorderMean\tDistanceBarycenterToBorderMean\tVoxelVolume\n";
 			else
-				text = "ImageTitle\tVolume\tESR\tSurfaceArea\tFlatness\tElongation\tSphericity\tIntensityRHF\tNbCc\tVCcMean\tVCcTotal\tDistanceBorderToBorderMean\tDistanceBarycenterToBorderMean\tAspectRatio\tCircularity\tVoxelVolume\n";	
+				text = "ImageTitle\tVolume\tESR\tSurfaceArea\tFlatness\tElongation\tSphericity\tIntensityRHF\tNbCc\tVCcMean\tVCcTotal\tDistanceBorderToBorderMean\tDistanceBarycenterToBorderMean\tVoxelVolume\n";
 		} 
 		text += imagePlusSegmented.getTitle()+"\t"
 			 +volume+"\t"
@@ -154,9 +148,7 @@ public class NucleusChromocentersAnalysis
 		else	text += "0\t0\t0\tNaN\tNaN\t";
 		
 		
-		text += measure2D.getAspectRatio()+"\t"
-			 +measure2D.getCirculairty()+"\t"
-			 +voxelVolume+"\n";
+		text += voxelVolume+"\n";
 		
 		bufferedWriterOutput.write(text);
 		bufferedWriterOutput.flush();
