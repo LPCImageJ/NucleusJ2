@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 /**
  * Running gift wrapping for each axis combined
- * @author Dubos Tristan and Poulet Axel
+ * @author Tristan Dubos and Axel Poulet
  *
  */
 public class ConvexeHullImageMaker{
@@ -89,7 +89,6 @@ public class ConvexeHullImageMaker{
 			//IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() + " ICI LE K "+  k );
 			ImagePlus ip = imagePlusBlack.duplicate();
 			double[][] image = giveTable(imagePlusBinary, width, height, k);
-
 			/*
 			ShortProcessor testas = new ShortProcessor(image.length, image[0].length);
 			for(int i = 0; i < image.length; ++i ) {
@@ -98,13 +97,10 @@ public class ConvexeHullImageMaker{
 
 				}
 			}
-
-
 			ImagePlus testis = new ImagePlus();
 			//testas.setf((int)_p0._i,(int)_p0._j,13);
 			IJ.log(" eu la dans le testas" +_p0._i );
 			testis.setProcessor(testas);
-
 			testis.setTitle(" ConvexHullSegmentation"+_axesName + " et le K "+k);
 			testis.show();
 			*/

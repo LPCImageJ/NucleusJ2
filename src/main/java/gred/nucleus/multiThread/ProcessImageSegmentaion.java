@@ -11,11 +11,10 @@ import java.util.ArrayList;
 /**
  * multi thread class for the nucleus segmentation
  * 
- * @author Poulet Axel
+ * @author Tristan Dubos and Axel Poulet
  *
  */
-public class ProcessImageSegmentaion
-{
+public class ProcessImageSegmentaion {
 	static int _nbLance = 0;
 	static boolean _continuer;
 	static int _indiceImage = 0;

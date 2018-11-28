@@ -8,11 +8,10 @@ import ij.plugin.*;
 /**
  *  Method to segment the nucleus on one image
  *  
- * @author Poulet Axel
+ * @author Tristan Dubos and  Axel Poulet
  *
  */
-public class NucleusSegmentationPlugin_ implements PlugIn
-{
+public class NucleusSegmentationPlugin_ implements PlugIn {
 	/** image to process*/
 	ImagePlus _imagePlusInput;
 	
@@ -21,29 +20,24 @@ public class NucleusSegmentationPlugin_ implements PlugIn
 	 * 
 	 * @param arg 
 	 */
-	public void run(String arg)
-	{
+	public void run(String arg) {
 		_imagePlusInput = WindowManager.getCurrentImage();
-	    if (null == _imagePlusInput)
-	    {
+	    if (null == _imagePlusInput) {
 	       IJ.noImage();
 	       return;
 	    }
-	    else if (_imagePlusInput.getStackSize() == 1 || (_imagePlusInput.getType() != ImagePlus.GRAY8 && _imagePlusInput.getType() != ImagePlus.GRAY16))
-		{
+	    else if (_imagePlusInput.getStackSize() == 1 || (_imagePlusInput.getType() != ImagePlus.GRAY8 && _imagePlusInput.getType() != ImagePlus.GRAY16)) {
 	    	IJ.error("image format", "No images in gray scale 8bits or 16 bits in 3D");
 	        return;
 	    }
 	    if (IJ.versionLessThan("1.32c"))
 	    	return;
 	    NucleusSegmentationDialog nucleusSegmentationDialog = new NucleusSegmentationDialog(_imagePlusInput.getCalibration());
-	    while( nucleusSegmentationDialog.isShowing())
-		{
+	    while( nucleusSegmentationDialog.isShowing()) {
 			try {Thread.sleep(1);}
 			catch (InterruptedException e) {e.printStackTrace();}
 	    }	
-		if (nucleusSegmentationDialog.isStart())
-		{
+		if (nucleusSegmentationDialog.isStart()) {
 			double xCalibration = nucleusSegmentationDialog.getXCalibration();
 			double yCalibration = nucleusSegmentationDialog.getYCalibration();
 			double zCalibration = nucleusSegmentationDialog.getZCalibration();
@@ -61,16 +55,14 @@ public class NucleusSegmentationPlugin_ implements PlugIn
 			nucleusSegmentation.setVolumeRange(volumeMin, volumeMax);
 			imagePlusSegmented = nucleusSegmentation.applySegmentation(imagePlusSegmented);
 			if(nucleusSegmentation.getBestThreshold()==0)
-				IJ.showMessageWithCancel
-				(
+				IJ.showMessageWithCancel(
 					"Segmentation error",
 					"No object is detected between "
 					+nucleusSegmentationDialog.getMinVolume()
 					+"and"+nucleusSegmentationDialog.getMaxVolume()
 					+" "+unit
 				);
-			else
-			{
+			else {
 				imagePlusSegmented.setTitle("Segmented"+_imagePlusInput.getTitle());
 				imagePlusSegmented.show();
 				NucleusAnalysis nucleusAnalysis = new NucleusAnalysis();

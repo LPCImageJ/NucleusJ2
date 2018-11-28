@@ -10,15 +10,16 @@ import ij.plugin.PlugIn;
 /**
  *  Method to segment and analyse the nucleus on one image
  *  
- * @author Dubos Tristan and Poulet Axel
+ * @author Tristan Dubos and Axel Poulet
  *
  */
 public class NucleusSegmentationAndAnalysisPlugin_ implements PlugIn{
 	 /** image to process*/
 	ImagePlus _imagePlusInput;
-	
+
 	/**
-	 * 
+	 *
+	 * @param arg
 	 */
 	public void run(String arg) {
 		_imagePlusInput = WindowManager.getCurrentImage();

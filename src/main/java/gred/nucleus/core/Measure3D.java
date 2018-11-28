@@ -15,7 +15,7 @@ import Jama.Matrix;
  * Class NucleusMeasure : allow the compute of severals 3Dparameters (shape, lenght) in
  * binary object
  * 
- * @author Dubos Tristan and Poulet Axel
+ * @author Tristan Dubos and Axel Poulet
  */
 
 

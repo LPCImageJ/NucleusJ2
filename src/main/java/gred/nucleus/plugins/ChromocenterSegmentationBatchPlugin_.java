@@ -13,45 +13,37 @@ import java.util.ArrayList;
 /**
  * Method to detect the chromocenters on batch
  * 
- * @author Poulet Axel
+ * @author Tristan Dubos and Axel Poulet
  *
  */
-public class ChromocenterSegmentationBatchPlugin_ implements PlugIn
-{
-
+public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
 	/**
 	 *  
 	 * 
 	 */
-	public void run(String arg)
-	{
+	public void run(String arg) {
 		ChromocenterSegmentationPipelineBatchDialog _chromocenterSegmentationPipelineBatchDialog = new ChromocenterSegmentationPipelineBatchDialog();
-		while( _chromocenterSegmentationPipelineBatchDialog.isShowing())
-		{
+		while( _chromocenterSegmentationPipelineBatchDialog.isShowing()) {
 			try {Thread.sleep(1);}
 			catch (InterruptedException e) {e.printStackTrace();}
 		}	
-		if (_chromocenterSegmentationPipelineBatchDialog.isStart())
-		{
+		if (_chromocenterSegmentationPipelineBatchDialog.isStart()) {
 			FileList fileList = new FileList ();
 			File[] tFileRawData =fileList.run(_chromocenterSegmentationPipelineBatchDialog.getRawDataDirectory());
 			if (fileList.isDirectoryOrFileExist(".+RawDataNucleus.+",tFileRawData) &&
-				fileList.isDirectoryOrFileExist(".+SegmentedDataNucleus.+",tFileRawData))
-			{
+				fileList.isDirectoryOrFileExist(".+SegmentedDataNucleus.+",tFileRawData)) {
 				double xCalibration =_chromocenterSegmentationPipelineBatchDialog.getXCalibration();
 				double yCalibration = _chromocenterSegmentationPipelineBatchDialog.getYCalibration();
 				double zCalibration = _chromocenterSegmentationPipelineBatchDialog.getZCalibration();
 				String unit = _chromocenterSegmentationPipelineBatchDialog.getUnit();
 				ArrayList<String> arrayListImageSegmenetedDataNucleus = fileList.fileSearchList(".+SegmentedDataNucleus.+",tFileRawData);
 				String workDirectory = _chromocenterSegmentationPipelineBatchDialog.getWorkDirectory();
-				for (int i = 0; i < arrayListImageSegmenetedDataNucleus.size(); ++i)
-				{
+				for (int i = 0; i < arrayListImageSegmenetedDataNucleus.size(); ++i) {
 					IJ.log("image"+(i+1)+" / "+arrayListImageSegmenetedDataNucleus.size());
 					String pathImageSegmentedNucleus = arrayListImageSegmenetedDataNucleus.get(i);
 					String pathNucleusRaw = pathImageSegmentedNucleus.replaceAll("SegmentedDataNucleus", "RawDataNucleus");
 					IJ.log(pathNucleusRaw);
-					if (fileList.isDirectoryOrFileExist(pathNucleusRaw,tFileRawData))
-					{
+					if (fileList.isDirectoryOrFileExist(pathNucleusRaw,tFileRawData)) {
 						ImagePlus imagePlusSegmented = IJ.openImage(pathImageSegmentedNucleus);
 						ImagePlus imagePlusInput = IJ.openImage(pathNucleusRaw);
 						Calibration calibration = new Calibration();
@@ -69,8 +61,8 @@ public class ChromocenterSegmentationBatchPlugin_ implements PlugIn
 				}
 				IJ.log("End of the chromocenter segmentation , the results are in "+_chromocenterSegmentationPipelineBatchDialog.getWorkDirectory());
 			}
-			else	{	IJ.showMessage("There are no the two subdirectories (See the directory name) or subDirectories are empty"); }		
-			
+			else
+			    IJ.showMessage("There are no the two subdirectories (See the directory name) or subDirectories are empty");
 		}
 	}
 	
@@ -80,14 +72,12 @@ public class ChromocenterSegmentationBatchPlugin_ implements PlugIn
 	 * @param imagePlus imagePus to save 
 	 * @param pathFile the path where save the image
 	 */
-	public void saveFile ( ImagePlus imagePlus, String pathFile)
-	{
+	public void saveFile ( ImagePlus imagePlus, String pathFile) {
 		FileSaver fileSaver = new FileSaver(imagePlus);
 	    File file = new File(pathFile);
 	    if (file.exists())
 	    	fileSaver.saveAsTiffStack( pathFile+File.separator+imagePlus.getTitle());
-	    else
-	    {
+	    else {
 	    	file.mkdir();
 	    	fileSaver.saveAsTiffStack( pathFile+File.separator+imagePlus.getTitle());
 	    }
