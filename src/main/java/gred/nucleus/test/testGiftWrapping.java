@@ -1,4 +1,4 @@
-package gred.nucleus;
+package gred.nucleus.test;
 
 import gred.nucleus.utils.FileList;
 
@@ -12,7 +12,7 @@ import gred.nucleus.plugins.ConvexHullPlugin_;
 import java.io.File;
 import java.util.ArrayList;
 
-public class main {
+public class testGiftWrapping {
     public static void main(String[] args){
         FileList fileList = new FileList ();
         ArrayList<String> File;
@@ -30,9 +30,9 @@ public class main {
 
         // Bille qui marche pas /home/tridubos/Bureau/ImageTEST/test_bille/20180919_psf_63x_b_z 0_2-04.tif
        //  String burp ="/home/tridubos/Bureau/ImageTEST/test_bille/20180919_psf_63x_b_z 0_2-04.tif";
-        String burp ="/home/tridubos/Bureau/ImageTEST/Maquage_menbrane/hum/test_1.tif";
+        String burp ="/home/plop/Bureau/Col_Cot24-3_005.tif";
         //String burp ="/home/tridubos/Bureau/ImageTEST/test_bille/c1_cot7-1_10.tif";
-        String burp2 ="/home/tridubos/Bureau/ImageTEST/test_nucleol_bof/c1_cot1-2_09.tif";
+        //String burp2 ="/home/tridubos/Bureau/ImageTEST/test_nucleol_bof/c1_cot1-2_09.tif";
         //String burp ="/home/tridubos/Bureau/ImageTEST/20180906_billes4/Exp-03.czi-C2.tif";
         ConvexHullPlugin_ test = new ConvexHullPlugin_();
        // ((ConvexHullPlugin_) test).run(args[0]);

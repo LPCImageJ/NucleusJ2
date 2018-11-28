@@ -68,7 +68,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>gred.nucleus.main</mainClass>
+							<mainClass>gred.nucleus.test.testGiftWrapping</mainClass>
 						</manifest>
 					</archive>
 				</configuration>

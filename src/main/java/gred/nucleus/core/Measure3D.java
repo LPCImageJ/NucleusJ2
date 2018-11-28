@@ -15,13 +15,12 @@ import Jama.Matrix;
  * Class NucleusMeasure : allow the compute of severals 3Dparameters (shape, lenght) in
  * binary object
  * 
- * @author Poulet Axel
+ * @author Dubos Tristan and Poulet Axel
  */
 
 
-public class Measure3D
-{
-	public Measure3D () { }
+public class Measure3D {
+	public Measure3D (){ }
 
 	/**
 	 * Scan of image and if the voxel belong to theobject of interest, looking,
@@ -33,48 +32,43 @@ public class Measure3D
 	 * @param label label of the interest object
 	 * @return the surface
 	 */
-
-	public double computeSurfaceObject (ImagePlus imagePlusInput, double label)
-	{
+	public double computeSurfaceObject (ImagePlus imagePlusInput, double label){
 		Calibration calibration= imagePlusInput.getCalibration();
 		ImageStack imageStackInput = imagePlusInput.getStack();
 		double xCalibration = calibration.pixelWidth;
 		double yCalibration = calibration.pixelHeight;
 		double zCalibration = calibration.pixelDepth;
 		double surfaceArea = 0,voxelValue, neighborVoxelValue;
-		for (int k = 0; k < imagePlusInput.getStackSize(); ++k)
-			for (int i = 0; i < imagePlusInput.getWidth(); ++i)
-				for (int j = 0; j < imagePlusInput.getHeight(); ++j)
-				{
+		for (int k = 1; k < imagePlusInput.getStackSize(); ++k) {
+			for (int i = 1; i < imagePlusInput.getWidth(); ++i) {
+				for (int j = 1; j < imagePlusInput.getHeight(); ++j) {
 					voxelValue = imageStackInput.getVoxel(i, j, k);
-					if (voxelValue == label)
-					{
-						for (int kk = k-1; kk <= k+1; kk+=2)
-						{
+					if (voxelValue == label) {
+						for (int kk = k - 1; kk <= k + 1; kk += 2) {
 							neighborVoxelValue = imageStackInput.getVoxel(i, j, kk);
 							if (voxelValue != neighborVoxelValue)
 								surfaceArea = surfaceArea + xCalibration * yCalibration;
-								//surfaceArea = surfaceArea + (((Math.sqrt((zCalibration*zCalibration) *(xCalibration*xCalibration))* yCalibration))/2);
+							//surfaceArea = surfaceArea + (((Math.sqrt((zCalibration*zCalibration) *(xCalibration*xCalibration))* yCalibration))/2);
 							//surfaceArea = surfaceArea + ((4*Math.PI * ((xCalibration/2)*(xCalibration/2)))/2) ;
 						}
-						for (int ii=i-1; ii<=i+1; ii+=2)
-						{
-							neighborVoxelValue =  imageStackInput.getVoxel(ii, j, k);
+						for (int ii = i - 1; ii <= i + 1; ii += 2) {
+							neighborVoxelValue = imageStackInput.getVoxel(ii, j, k);
 							if (voxelValue != neighborVoxelValue)
 								surfaceArea = surfaceArea + yCalibration * zCalibration;
 							//surfaceArea = surfaceArea + (((Math.sqrt((zCalibration*zCalibration) *(xCalibration*xCalibration))* yCalibration))/2);
 							//surfaceArea = surfaceArea + ((4*Math.PI * ((xCalibration/2)*(xCalibration/2)))/2) ;
 						}
-						for (int jj = j-1; jj <= j+1; jj+=2)
-						{
+						for (int jj = j - 1; jj <= j + 1; jj += 2) {
 							neighborVoxelValue = imageStackInput.getVoxel(i, jj, k);
 							if (voxelValue != neighborVoxelValue)
 								surfaceArea = surfaceArea + xCalibration * zCalibration;
-								//surfaceArea = surfaceArea + (((Math.sqrt((zCalibration*zCalibration) *(xCalibration*xCalibration))* yCalibration))/2);
+							//surfaceArea = surfaceArea + (((Math.sqrt((zCalibration*zCalibration) *(xCalibration*xCalibration))* yCalibration))/2);
 							//surfaceArea = surfaceArea + ((4*Math.PI * ((xCalibration/2)*(xCalibration/2)))/2) ;
 						}
 					}
 				}
+			}
+		}
 		return surfaceArea;
 	}
 
@@ -86,8 +80,7 @@ public class Measure3D
 	 * @param imagePlusInput segmented image
 	 * @return double table which contain the volume of each image object
 	 */
-	public double[] computeVolumeofAllObjects (ImagePlus imagePlusInput)
-	{
+	public double[] computeVolumeofAllObjects (ImagePlus imagePlusInput){
 		Calibration calibration= imagePlusInput.getCalibration();
 		double xCalibration = calibration.pixelWidth;
 		double yCalibration = calibration.pixelHeight;
@@ -97,8 +90,7 @@ public class Measure3D
 		double []tlabel = histogram.getLabels();
 		double [] tObjectVolume = new double[tlabel.length];
 		HashMap<Double , Integer> hashHisto = histogram.getHistogram();
-		for(int i=0; i < tlabel.length; ++i)
-	    {
+		for(int i=0; i < tlabel.length; ++i){
 	        int nbVoxel = hashHisto.get(tlabel[i]); 
 			tObjectVolume[i] = nbVoxel*xCalibration*yCalibration*zCalibration;
 	    }
@@ -111,8 +103,7 @@ public class Measure3D
 	 * @param label 
 	 * @return the volume
 	 */
-	public double computeVolumeObject (ImagePlus imagePlusInput, double label)
-	{
+	public double computeVolumeObject (ImagePlus imagePlusInput, double label){
 		Calibration calibration= imagePlusInput.getCalibration();
 		double xCalibration = calibration.pixelWidth;
 		double yCalibration = calibration.pixelHeight;
@@ -120,29 +111,21 @@ public class Measure3D
 		double volume = 0;
 		Histogram histogram = new Histogram ();
 		histogram.run(imagePlusInput);
-
 		HashMap<Double , Integer> hashMapHisto = histogram.getHistogram();
-
-
 		for (Double name: hashMapHisto.keySet()){
-
 			String key =name.toString();
 			String value = hashMapHisto.get(name).toString();
 			//IJ.log( "L130   "+key + " " + value);
-
-
 		}
 		volume =  hashMapHisto.get(label) *xCalibration*yCalibration*zCalibration;
 		return volume;
 	}
-    
-	/**
-	 * 
-	 * @param imagePlusInput
-	 * @param label
-	 * @return
-	 */
 
+    /**
+     *
+     * @param volume
+     * @return
+     */
 	public double equivalentSphericalRadius (double volume)
 	{
 		double radius =  (3 * volume) / (4 * Math.PI);
@@ -151,15 +134,11 @@ public class Measure3D
 	}
 	
 	/**  Cacul du rayon de l'objet à partir du volume de l'objet r=((V/pi)*(3/4))^1/3
-	 * 
-	 * @param imagePlusInput
-	 * @param label
-	 * @return radius
 	 *
-	 */
-
-	public double equivalentSphericalRadius (ImagePlus imagePlusBinaire)
-	{
+     * @param imagePlusBinaire
+     * @return
+     */
+	public double equivalentSphericalRadius (ImagePlus imagePlusBinaire){
 		double radius =  (3 * computeVolumeObject(imagePlusBinaire,255)) / (4 * Math.PI);
 		radius = Math.pow(radius, 1.0/3.0);
 		return radius;
@@ -174,8 +153,7 @@ public class Measure3D
 	 * @param surface
 	 * @return
 	 */
-	public double computeSphericity(double volume, double surface)
-	{
+	public double computeSphericity(double volume, double surface){
 		return ((36 * Math.PI * (volume*volume)) / (surface*surface*surface));
 	}
   
@@ -193,8 +171,7 @@ public class Measure3D
 	 * @return
 	 */
 
-	public double [] computeEigenValue3D (ImagePlus imagePlusInput, double label)
-	{
+	public double [] computeEigenValue3D (ImagePlus imagePlusInput, double label){
 		ImageStack imageStackInput = imagePlusInput.getImageStack();
 		VoxelRecord barycenter = computeBarycenter3D (true,imagePlusInput,label);
 		Calibration calibration= imagePlusInput.getCalibration();
@@ -209,17 +186,13 @@ public class Measure3D
 		double zz = 0;
 		int compteur = 0;
 		double voxelValue;
-		for (int k = 0; k < imagePlusInput.getStackSize(); ++k)
-		{
+		for (int k = 0; k < imagePlusInput.getStackSize(); ++k){
 			double dz = ((zCalibration * (double) k)-barycenter.getK());
-			for (int i = 0; i < imagePlusInput.getWidth(); ++i)
-			{
+			for (int i = 0; i < imagePlusInput.getWidth(); ++i){
 				double dx = ((xCalibration * (double) i)-barycenter.getI());
-				for (int j = 0; j < imagePlusInput.getHeight(); ++j)
-				{
+				for (int j = 0; j < imagePlusInput.getHeight(); ++j){
 					voxelValue = imageStackInput.getVoxel(i,j,k);
-					if (voxelValue == label)
-					{ 
+					if (voxelValue == label){
 						double dy = ((yCalibration * (double) j)-barycenter.getJ());
 						xx+= dx * dx;
 						yy+= dy * dy;
@@ -246,8 +219,7 @@ public class Measure3D
 	 * @param label
 	 * @return
 	 */
-	public double [] computeFlatnessAndElongation (ImagePlus imagePlusInput, double label)
-	{
+	public double [] computeFlatnessAndElongation (ImagePlus imagePlusInput, double label){
 		double [] shapeParameters = new double[2];
 		double [] tEigenValues = computeEigenValue3D (imagePlusInput,label);
 		shapeParameters [0] = Math.sqrt(tEigenValues[1] / tEigenValues[0]);
@@ -263,8 +235,7 @@ public class Measure3D
 	 * @param label
 	 * @return
 	 */
-	public VoxelRecord computeBarycenter3D (boolean unit,ImagePlus imagePlusInput, double label)
-  	{
+	public VoxelRecord computeBarycenter3D (boolean unit,ImagePlus imagePlusInput, double label){
 		ImageStack imageStackInput = imagePlusInput.getImageStack();
 		Calibration calibration= imagePlusInput.getCalibration();
 		double xCalibration = calibration.pixelWidth;
@@ -276,24 +247,25 @@ public class Measure3D
 		int sy = 0;
 		int sz =0;
 		double voxelValue;
-		for (int k = 0; k < imagePlusInput.getStackSize(); ++k)
-			for (int i = 0; i < imagePlusInput.getWidth(); ++i)
-				for (int j = 0; j < imagePlusInput.getHeight(); ++j)
-				{
-					voxelValue = imageStackInput.getVoxel(i,j,k);
-					if (voxelValue == label )
-					{
-						sx +=i;
-						sy +=j;
-						sz +=k;
-						++count;
-					}
-				}
+		for (int k = 0; k < imagePlusInput.getStackSize(); ++k) {
+            for (int i = 0; i < imagePlusInput.getWidth(); ++i) {
+                for (int j = 0; j < imagePlusInput.getHeight(); ++j) {
+                    voxelValue = imageStackInput.getVoxel(i, j, k);
+                    if (voxelValue == label) {
+                        sx += i;
+                        sy += j;
+                        sz += k;
+                        ++count;
+                    }
+                }
+            }
+        }
 		sx /= count;
 		sy /= count;
 		sz /= count;
 		voxelRecordBarycenter.setLocation(sx, sy, sz);
-		if (unit) voxelRecordBarycenter.Multiplie(xCalibration, yCalibration,zCalibration);
+		if (unit)
+		    voxelRecordBarycenter.Multiplie(xCalibration, yCalibration,zCalibration);
 		return voxelRecordBarycenter;
   	}
 	
@@ -305,14 +277,12 @@ public class Measure3D
 	 * @param unit
 	 * @return
 	 */
-	public VoxelRecord[] computeObjectBarycenter (ImagePlus imagePlusInput, boolean unit)
-	{
+	public VoxelRecord[] computeObjectBarycenter (ImagePlus imagePlusInput, boolean unit) {
 		Histogram histogram = new Histogram();
 		histogram.run(imagePlusInput);
 		double []tlabel = histogram.getLabels();
 		VoxelRecord [] tVoxelRecord = new VoxelRecord [ tlabel.length];
-		for(int i = 0; i < tlabel.length; ++i)
-	    {
+		for(int i = 0; i < tlabel.length; ++i) {
 			tVoxelRecord[i] = computeBarycenter3D(unit, imagePlusInput,tlabel[i] );
 		}
 		return tVoxelRecord;
@@ -326,8 +296,7 @@ public class Measure3D
 	 * @param imagePlusChromocenter
 	 * @return
 	 */
-	public double computeIntensityRHF (ImagePlus imagePlusInput, ImagePlus imagePlusSegmented, ImagePlus imagePlusChromocenter )
-	  {
+	public double computeIntensityRHF (ImagePlus imagePlusInput, ImagePlus imagePlusSegmented, ImagePlus imagePlusChromocenter ) {
 	    double chromocenterIntensity = 0;
 	    double nucleusIntensity = 0;
 	    double voxelValueChromocenter;
@@ -336,22 +305,23 @@ public class Measure3D
 	    ImageStack imageStackChromocenter =  imagePlusChromocenter.getStack();
 	    ImageStack imageStackSegmented = imagePlusSegmented.getStack();
 	    ImageStack imageStackInput = imagePlusInput.getStack();
-	    for (int k = 0; k < imagePlusInput.getNSlices(); ++k)
-	      for (int i = 0; i < imagePlusInput.getWidth(); ++i )
-	        for (int j = 0; j < imagePlusInput.getHeight(); ++j )
-	        {
-	          voxelValueSegmented = imageStackSegmented.getVoxel(i, j, k);
-	          voxelValueInput = imageStackInput.getVoxel(i, j, k);
-	          voxelValueChromocenter = imageStackChromocenter.getVoxel(i,j,k);
-	     
-	          if (voxelValueSegmented > 0)
-	          {
-	            if (voxelValueChromocenter > 0){ chromocenterIntensity+=voxelValueInput;}
-	            nucleusIntensity += voxelValueInput;
-	          }
-	        }
+	    for (int k = 0; k < imagePlusInput.getNSlices(); ++k) {
+            for (int i = 0; i < imagePlusInput.getWidth(); ++i) {
+                for (int j = 0; j < imagePlusInput.getHeight(); ++j) {
+                    voxelValueSegmented = imageStackSegmented.getVoxel(i, j, k);
+                    voxelValueInput = imageStackInput.getVoxel(i, j, k);
+                    voxelValueChromocenter = imageStackChromocenter.getVoxel(i, j, k);
+
+                    if (voxelValueSegmented > 0) {
+                        if (voxelValueChromocenter > 0)
+                            chromocenterIntensity += voxelValueInput;
+                        nucleusIntensity += voxelValueInput;
+                    }
+                }
+            }
+        }
 	    return chromocenterIntensity / nucleusIntensity;
-	  }
+	}
 
 	  /**
 	   * Method which compute the RHF (total chromocenters volume / nucleus volume)
@@ -361,169 +331,157 @@ public class Measure3D
 	   * @param imagePlusChomocenters
 	   * @return
 	   */
-	  public double computeVolumeRHF (ImagePlus imagePlusSegmented, ImagePlus imagePlusChomocenters)
-	  {
+
+	public double computeVolumeRHF (ImagePlus imagePlusSegmented, ImagePlus imagePlusChomocenters) {
 	    double volumeCc = 0;
 	    double [] tVolumeChromocenter = computeVolumeofAllObjects(imagePlusChomocenters);
 	    for (int i = 0; i < tVolumeChromocenter.length; ++i) 
 	    	volumeCc += tVolumeChromocenter[i];
 	    double []tVolumeSegmented = computeVolumeofAllObjects(imagePlusSegmented);
 	    return volumeCc / tVolumeSegmented[0];
-	  } 
+	}
 	  
-	  /**
-	   * Detect the number of object on segmented imaeg  plop
-	   * @param imagePlusInput
-	   * @return
-	   */
-	  public int getNumberOfObject (ImagePlus imagePlusInput)
-	  {
+	/**
+	 * Detect the number of object on segmented imaeg  plop
+	 * @param imagePlusInput
+	 * @return
+	 */
+	public int getNumberOfObject (ImagePlus imagePlusInput) {
 	    Histogram histogram = new Histogram ();
 		histogram.run(imagePlusInput);
 		return histogram.getNbLabels();
-	  } 
+	}
 	 
 
-	  /**
-	   * 
-	   * @param imagePlusInput
-	   * @param imagePlusSegmented
-	   * @return
-	   */
-	  public double computeComplexSurface(ImagePlus imagePlusInput, ImagePlus imagePlusSegmented)
-	  {
-			Gradient gradient = new Gradient(imagePlusInput);
-			ArrayList <Double> tableUnitaire [][][] = gradient.getUnitaire();
-			ImageStack imageStackSegmented = imagePlusSegmented.getStack();
-			double surfaceArea = 0,voxelValue, neighborVoxelValue;
-			VoxelRecord voxelRecordIn = new VoxelRecord();
-			VoxelRecord voxelRecordOut= new VoxelRecord();
-			Calibration calibration= imagePlusInput.getCalibration();
-			double xCalibration = calibration.pixelWidth;
-			double yCalibration = calibration.pixelHeight;
-			double zCalibration = calibration.pixelDepth;
-			for (int k = 2; k < imagePlusSegmented.getNSlices()-2; ++k)
-			      for (int i = 2; i < imagePlusSegmented.getWidth()-2; ++i )
-			        for (int j = 2; j < imagePlusSegmented.getHeight()-2; ++j )
-			        {
-			        	voxelValue = imageStackSegmented.getVoxel(i, j, k);
-						if (voxelValue > 0)
-						{
-							for (int kk = k-1; kk <= k+1; kk+=2)
-							{
-								neighborVoxelValue = imageStackSegmented.getVoxel(i, j, kk);
-								if (voxelValue != neighborVoxelValue)
-								{
-									voxelRecordIn.setLocation((double) i, (double) j, (double) k);
-									voxelRecordOut.setLocation((double) i, (double) j, (double) kk);
-									surfaceArea = surfaceArea+computeSurfelContribution(tableUnitaire[i][j][k],tableUnitaire[i][j][kk],
-											voxelRecordIn,voxelRecordOut,((xCalibration)*(yCalibration)));
-								}
-							}
-							for (int ii=i-1; ii<=i+1; ii+=2)
-							{
-								neighborVoxelValue =  imageStackSegmented.getVoxel(ii, j, k);
-								if (voxelValue != neighborVoxelValue)
-								{
-									voxelRecordIn.setLocation((double) i, (double) j, (double) k);
-									voxelRecordOut.setLocation((double) ii, (double) j, (double) k);
-									surfaceArea = surfaceArea+computeSurfelContribution(tableUnitaire[i][j][k],tableUnitaire[ii][j][k],
-											voxelRecordIn,voxelRecordOut,((yCalibration)*(zCalibration)));
-								}
-							}
-							for (int jj = j-1; jj <= j+1; jj+=2)
-							{
-								neighborVoxelValue = imageStackSegmented.getVoxel(i, jj, k);
-								if (voxelValue != neighborVoxelValue)
-								{
-									voxelRecordIn.setLocation((double) i, (double) j, (double) k);
-									voxelRecordOut.setLocation((double) i, (double) jj, (double) k);
-									surfaceArea = surfaceArea+computeSurfelContribution(tableUnitaire[i][j][k],tableUnitaire[i][jj][k],
-											voxelRecordIn,voxelRecordOut,((xCalibration)*(zCalibration)));;
-								}
-									
-							}
-						}
-			        }
-			return surfaceArea;
-	  }
-	  
-	  
-	  public double computeComplexSurface(ImagePlus imagePlusSegmented, Gradient gradient )
-	  {
-			ArrayList <Double> tableUnitaire [][][] = gradient.getUnitaire();
-			ImageStack imageStackSegmented = imagePlusSegmented.getStack();
-			double surfaceArea = 0,voxelValue, neighborVoxelValue;
-			VoxelRecord voxelRecordIn = new VoxelRecord();
-			VoxelRecord voxelRecordOut= new VoxelRecord();
-			Calibration calibration= imagePlusSegmented.getCalibration();
-			double xCalibration = calibration.pixelWidth;
-			double yCalibration = calibration.pixelHeight;
-			double zCalibration = calibration.pixelDepth;
-			for (int k = 2; k < imagePlusSegmented.getNSlices()-2; ++k)
-			      for (int i = 2; i < imagePlusSegmented.getWidth()-2; ++i )
-			        for (int j = 2; j < imagePlusSegmented.getHeight()-2; ++j )
-			        {
-			        	voxelValue = imageStackSegmented.getVoxel(i, j, k);
-						if (voxelValue > 0)
-						{
-							for (int kk = k-1; kk <= k+1; kk+=2)
-							{
-								neighborVoxelValue = imageStackSegmented.getVoxel(i, j, kk);
-								if (voxelValue != neighborVoxelValue)
-								{
-									voxelRecordIn.setLocation((double) i, (double) j, (double) k);
-									voxelRecordOut.setLocation((double) i, (double) j, (double) kk);
-									surfaceArea = surfaceArea+computeSurfelContribution(tableUnitaire[i][j][k],tableUnitaire[i][j][kk],
-											voxelRecordIn,voxelRecordOut,((xCalibration)*(yCalibration)));
-								}
-							}
-							for (int ii=i-1; ii<=i+1; ii+=2)
-							{
-								neighborVoxelValue =  imageStackSegmented.getVoxel(ii, j, k);
-								if (voxelValue != neighborVoxelValue)
-								{
-									voxelRecordIn.setLocation((double) i, (double) j, (double) k);
-									voxelRecordOut.setLocation((double) ii, (double) j, (double) k);
-									surfaceArea = surfaceArea+computeSurfelContribution(tableUnitaire[i][j][k],tableUnitaire[ii][j][k],
-											voxelRecordIn,voxelRecordOut,((yCalibration)*(zCalibration)));
-								}
-							}
-							for (int jj = j-1; jj <= j+1; jj+=2)
-							{
-								neighborVoxelValue = imageStackSegmented.getVoxel(i, jj, k);
-								if (voxelValue != neighborVoxelValue)
-								{
-									voxelRecordIn.setLocation((double) i, (double) j, (double) k);
-									voxelRecordOut.setLocation((double) i, (double) jj, (double) k);
-									surfaceArea = surfaceArea+computeSurfelContribution(tableUnitaire[i][j][k],tableUnitaire[i][jj][k],
-											voxelRecordIn,voxelRecordOut,((xCalibration)*(zCalibration)));
-								}
-									
-							}
-						}
-			        }
-			return surfaceArea;
-	  }
-	  /**
-	   * 
-	   * @param listUnitaireIn
-	   * @param listUnitaireOut
-	   * @param voxelRecordIn
-	   * @param voxelRecordOut
-	   * @param as
-	   * @return
-	   */
-	  private double computeSurfelContribution (ArrayList <Double> listUnitaireIn, ArrayList <Double> listUnitaireOut,
-			  VoxelRecord voxelRecordIn, VoxelRecord voxelRecordOut, double as )
-	  {
-		  double dx = voxelRecordIn._i - voxelRecordOut._i;
-		  double dy = voxelRecordIn._j - voxelRecordOut._j;
-		  double dz = voxelRecordIn._k - voxelRecordOut._k;
-		  double nx = (listUnitaireIn.get(0)+listUnitaireOut.get(0))/2;
-		  double ny = (listUnitaireIn.get(1)+listUnitaireOut.get(1))/2;
-		  double nz = (listUnitaireIn.get(2)+listUnitaireOut.get(2))/2;
-		  return Math.abs((dx*nx+dy*ny+dz*nz)*as);
-	  }
-	  
+	/**
+	 *
+	 * @param imagePlusInput
+	 * @param imagePlusSegmented
+	 * @return
+	 */
+	public double computeComplexSurface(ImagePlus imagePlusInput, ImagePlus imagePlusSegmented) {
+	    Gradient gradient = new Gradient(imagePlusInput);
+		ArrayList <Double> tableUnitaire [][][] = gradient.getUnitaire();
+		ImageStack imageStackSegmented = imagePlusSegmented.getStack();
+		double surfaceArea = 0,voxelValue, neighborVoxelValue;
+		VoxelRecord voxelRecordIn = new VoxelRecord();
+		VoxelRecord voxelRecordOut= new VoxelRecord();
+		Calibration calibration= imagePlusInput.getCalibration();
+		double xCalibration = calibration.pixelWidth;
+		double yCalibration = calibration.pixelHeight;
+		double zCalibration = calibration.pixelDepth;
+		for (int k = 2; k < imagePlusSegmented.getNSlices()-2; ++k) {
+            for (int i = 2; i < imagePlusSegmented.getWidth() - 2; ++i) {
+                for (int j = 2; j < imagePlusSegmented.getHeight() - 2; ++j) {
+                    voxelValue = imageStackSegmented.getVoxel(i, j, k);
+                    if (voxelValue > 0) {
+                        for (int kk = k - 1; kk <= k + 1; kk += 2) {
+                            neighborVoxelValue = imageStackSegmented.getVoxel(i, j, kk);
+                            if (voxelValue != neighborVoxelValue) {
+                                voxelRecordIn.setLocation((double) i, (double) j, (double) k);
+                                voxelRecordOut.setLocation((double) i, (double) j, (double) kk);
+                                surfaceArea = surfaceArea + computeSurfelContribution(tableUnitaire[i][j][k], tableUnitaire[i][j][kk],
+                                        voxelRecordIn, voxelRecordOut, ((xCalibration) * (yCalibration)));
+                            }
+                        }
+                        for (int ii = i - 1; ii <= i + 1; ii += 2) {
+                            neighborVoxelValue = imageStackSegmented.getVoxel(ii, j, k);
+                            if (voxelValue != neighborVoxelValue) {
+                                voxelRecordIn.setLocation((double) i, (double) j, (double) k);
+                                voxelRecordOut.setLocation((double) ii, (double) j, (double) k);
+                                surfaceArea = surfaceArea + computeSurfelContribution(tableUnitaire[i][j][k], tableUnitaire[ii][j][k],
+                                        voxelRecordIn, voxelRecordOut, ((yCalibration) * (zCalibration)));
+                            }
+                        }
+                        for (int jj = j - 1; jj <= j + 1; jj += 2) {
+                            neighborVoxelValue = imageStackSegmented.getVoxel(i, jj, k);
+                            if (voxelValue != neighborVoxelValue) {
+                                voxelRecordIn.setLocation((double) i, (double) j, (double) k);
+                                voxelRecordOut.setLocation((double) i, (double) jj, (double) k);
+                                surfaceArea = surfaceArea + computeSurfelContribution(tableUnitaire[i][j][k], tableUnitaire[i][jj][k],
+                                        voxelRecordIn, voxelRecordOut, ((xCalibration) * (zCalibration)));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+		return surfaceArea;
+	}
+
+
+    /**
+     *
+     * @param imagePlusSegmented
+     * @param gradient
+     * @return
+     */
+	public double computeComplexSurface(ImagePlus imagePlusSegmented, Gradient gradient ) {
+	    ArrayList <Double> tableUnitaire [][][] = gradient.getUnitaire();
+		ImageStack imageStackSegmented = imagePlusSegmented.getStack();
+		double surfaceArea = 0,voxelValue, neighborVoxelValue;
+		VoxelRecord voxelRecordIn = new VoxelRecord();
+		VoxelRecord voxelRecordOut= new VoxelRecord();
+		Calibration calibration= imagePlusSegmented.getCalibration();
+		double xCalibration = calibration.pixelWidth;
+		double yCalibration = calibration.pixelHeight;
+		double zCalibration = calibration.pixelDepth;
+		for (int k = 2; k < imagePlusSegmented.getNSlices()-2; ++k) {
+            for (int i = 2; i < imagePlusSegmented.getWidth() - 2; ++i) {
+                for (int j = 2; j < imagePlusSegmented.getHeight() - 2; ++j) {
+                    voxelValue = imageStackSegmented.getVoxel(i, j, k);
+                    if (voxelValue > 0) {
+                        for (int kk = k - 1; kk <= k + 1; kk += 2) {
+                            neighborVoxelValue = imageStackSegmented.getVoxel(i, j, kk);
+                            if (voxelValue != neighborVoxelValue) {
+                                voxelRecordIn.setLocation((double) i, (double) j, (double) k);
+                                voxelRecordOut.setLocation((double) i, (double) j, (double) kk);
+                                surfaceArea = surfaceArea + computeSurfelContribution(tableUnitaire[i][j][k], tableUnitaire[i][j][kk],
+                                        voxelRecordIn, voxelRecordOut, ((xCalibration) * (yCalibration)));
+                            }
+                        }
+                        for (int ii = i - 1; ii <= i + 1; ii += 2) {
+                            neighborVoxelValue = imageStackSegmented.getVoxel(ii, j, k);
+                            if (voxelValue != neighborVoxelValue) {
+                                voxelRecordIn.setLocation((double) i, (double) j, (double) k);
+                                voxelRecordOut.setLocation((double) ii, (double) j, (double) k);
+                                surfaceArea = surfaceArea + computeSurfelContribution(tableUnitaire[i][j][k], tableUnitaire[ii][j][k],
+                                        voxelRecordIn, voxelRecordOut, ((yCalibration) * (zCalibration)));
+                            }
+                        }
+                        for (int jj = j - 1; jj <= j + 1; jj += 2) {
+                            neighborVoxelValue = imageStackSegmented.getVoxel(i, jj, k);
+                            if (voxelValue != neighborVoxelValue) {
+                                voxelRecordIn.setLocation((double) i, (double) j, (double) k);
+                                voxelRecordOut.setLocation((double) i, (double) jj, (double) k);
+                                surfaceArea = surfaceArea + computeSurfelContribution(tableUnitaire[i][j][k], tableUnitaire[i][jj][k],
+                                        voxelRecordIn, voxelRecordOut, ((xCalibration) * (zCalibration)));
+                            }
+                        }
+                    }
+                }
+            }
+        }
+		return surfaceArea;
+	}
+
+	/**
+	 *
+	 * @param listUnitaireIn
+	 * @param listUnitaireOut
+	 * @param voxelRecordIn
+	 * @param voxelRecordOut
+	 * @param as
+	 * @return
+	 */
+	private double computeSurfelContribution (ArrayList <Double> listUnitaireIn, ArrayList <Double> listUnitaireOut,
+			  VoxelRecord voxelRecordIn, VoxelRecord voxelRecordOut, double as ) {
+	    double dx = voxelRecordIn._i - voxelRecordOut._i;
+		double dy = voxelRecordIn._j - voxelRecordOut._j;
+		double dz = voxelRecordIn._k - voxelRecordOut._k;
+		double nx = (listUnitaireIn.get(0)+listUnitaireOut.get(0))/2;
+		double ny = (listUnitaireIn.get(1)+listUnitaireOut.get(1))/2;
+		double nz = (listUnitaireIn.get(2)+listUnitaireOut.get(2))/2;
+		return Math.abs((dx*nx+dy*ny+dz*nz)*as);
+	}
 }
