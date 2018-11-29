@@ -17,8 +17,8 @@ public class testGiftWrapping {
         FileList fileList = new FileList ();
         ArrayList<String> File;
         //OLD PATH /media/tridubos/DATA1/MANIP_MANU_KAKU/Trier/RawDataBadSegmentation/
-      /**
-        File[] tFileRawImage = fileList.run("/home/tridubos/Bureau/ImageTEST/MANIP_KAKU/TEST_IMAGE_PB_GIFT/RAW_FILTERED_STILL_WITH_PB");
+
+        File[] tFileRawImage = fileList.run("/home/tridubos/Bureau/ImageTEST/MANIP_KAKU/Manip_KAKU_COL-0/RawDataNucleus/");
                 //"/home/tridubos/Bureau/ImageTEST/MANIP_KAKU/");
         for( int i = 0; i < tFileRawImage.length; ++i){
            IJ.log(""+tFileRawImage[i]);
@@ -26,7 +26,7 @@ public class testGiftWrapping {
             String burp= tFileRawImage[i].toString();
             test.runCommand(burp);
         }
-        */
+
 
         // Bille qui marche pas /home/tridubos/Bureau/ImageTEST/test_bille/20180919_psf_63x_b_z 0_2-04.tif
        //  String burp ="/home/tridubos/Bureau/ImageTEST/test_bille/20180919_psf_63x_b_z 0_2-04.tif";
@@ -37,7 +37,7 @@ public class testGiftWrapping {
         ConvexHullPlugin_ test = new ConvexHullPlugin_();
        // ((ConvexHullPlugin_) test).run(args[0]);
 
-         test.run(burp);
+         //test.run(burp);
 
          //test.run(burp);
 
