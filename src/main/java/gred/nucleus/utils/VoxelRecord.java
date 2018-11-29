@@ -5,7 +5,7 @@ package gred.nucleus.utils;
  * @author Philippe Andrey, Tristan and Axel Poulet
  */
 @SuppressWarnings("rawtypes")
-public class VoxelRecord implements Comparable {
+public class VoxelRecord {
   /** Coordinates voxel*/
   public double _i, _j, _k;
   /** Voxel value*/
@@ -76,7 +76,7 @@ public class VoxelRecord implements Comparable {
    * @return results of comparaison
    */
 
-  public int compareTo(Object object) {
+  /*public int compareTo(Object object) {
     VoxelRecord voxelRecord = (VoxelRecord)object;
 
     if ( _value == voxelRecord._value )
@@ -85,7 +85,7 @@ public class VoxelRecord implements Comparable {
     	return -1;
     else
     	return 1;
-  }
+  }*/
 
   /**
    * Compare the values of two voxel
