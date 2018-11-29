@@ -69,7 +69,7 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame
 	 * 
 	 * @param args
 	 */
-	public static void main(String[] args)  
+	public static void main(String[] args)
     {
 		ChromocentersAnalysisPipelineBatchDialog chromocentersAnalysisPipelineBatchDialog = new ChromocentersAnalysisPipelineBatchDialog();
     	chromocentersAnalysisPipelineBatchDialog.setLocationRelativeTo(null);
@@ -506,15 +506,13 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame
 		 * 
 		 * @param chromocentersAnalysisPipelineBatchDialog
 		 */
-		public  StartListener (ChromocentersAnalysisPipelineBatchDialog chromocentersAnalysisPipelineBatchDialog)
-		{
+		public  StartListener (ChromocentersAnalysisPipelineBatchDialog chromocentersAnalysisPipelineBatchDialog) {
 			_chromocentersAnalysisPipelineBatchDialog = chromocentersAnalysisPipelineBatchDialog;
 		}
 		/**
 		 * 
 		 */
-		public void actionPerformed(ActionEvent actionEvent)
-		{
+		public void actionPerformed(ActionEvent actionEvent) {
 			if (_jTextFieldWorkDirectory.getText().isEmpty() || _jTextFieldRawData.getText().isEmpty())
 				JOptionPane.showMessageDialog
 				(

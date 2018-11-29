@@ -10,12 +10,11 @@ import ij.ImagePlus;
 /**
  * Several method to realise and create the outfile for the nuclear Analysis
  * 
- * @author Dubos Tristan and Poulet Axel
+ * @author Tristan Dubos and Axel Poulet
  *
  */
 
-public class NucleusAnalysis
-{
+public class NucleusAnalysis {
 	 @SuppressWarnings("unused")
 	 private static class IOEception {  public IOEception() { } }
 
@@ -37,12 +36,10 @@ public class NucleusAnalysis
 		  BufferedWriter bufferedWriterOutput;
 		  double volume = measure3D.computeVolumeObject(imagePlusSegmented,255);
 		  double surfaceArea = measure3D.computeSurfaceObject(imagePlusSegmented,255);
-
 		  if (exist){
 			  FileWriter fileWriter = new FileWriter(fileResults, true);
 		      bufferedWriterOutput = new BufferedWriter(fileWriter);
-		      bufferedWriterOutput.write
-		      (
+		      bufferedWriterOutput.write (
 		    		  imagePlusSegmented.getTitle()+"\t"
 		    		  +measure3D.computeVolumeObject(imagePlusSegmented,255)+"\t"
 		    		  +measure3D.computeFlatnessAndElongation(imagePlusSegmented,255)[0]+"\t"
@@ -55,8 +52,7 @@ public class NucleusAnalysis
 		  else{
 			  FileWriter fileWriter = new FileWriter(fileResults, true);
 		      bufferedWriterOutput = new BufferedWriter(fileWriter);
-		      bufferedWriterOutput.write
-		      (
+		      bufferedWriterOutput.write(
 		    		  "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\t\n"+
 		    		  imagePlusSegmented.getTitle()+"\t"
 		    		  +measure3D.computeVolumeObject(imagePlusSegmented,255)+"\t"

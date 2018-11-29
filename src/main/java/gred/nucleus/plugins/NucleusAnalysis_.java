@@ -8,36 +8,32 @@ import ij.gui.GenericDialog;
 import ij.measure.Calibration;
 import ij.plugin.PlugIn;
 
-public class NucleusAnalysis_
-implements PlugIn
-{
-	 /** image to process*/
+/**
+ * @author Tristan Dubos and Axel Poulet
+ */
+public class NucleusAnalysis_ implements PlugIn  {
+	/** image to process*/
 	ImagePlus _imagePlusInput;
-	
-	/**
-	 * 
-	 */
-	public void run(String arg)
-	{
+
+    /**
+     *
+     * @param arg
+     */
+	public void run(String arg) {
 		int indiceRawImage = 0;
 		int indiceSementedImage = 0;
 		double xCalibration = 1,yCalibration = 1,zCalibration = 1;
 		String unit = "pixel";
 		int[] wList = WindowManager.getIDList();
-		if (wList == null)
-		{
+		if (wList == null) {
 			IJ.noImage();
 			return;
 		}
 		String[] titles = new String[wList.length];
-		for (int i = 0; i < wList.length; i++)
-		{
+		for (int i = 0; i < wList.length; i++) {
 			ImagePlus imagePlus = WindowManager.getImage(wList[i]);
-			
-			if (imagePlus != null)
-			{	
-				if (i == 0)
-				{
+			if (imagePlus != null) {
+				if (i == 0) {
 					Calibration cal = imagePlus.getCalibration();
 					xCalibration = cal.pixelWidth;
 					yCalibration= cal.pixelHeight;
@@ -75,5 +71,4 @@ implements PlugIn
 		NucleusAnalysis nucleusAnalysis = new NucleusAnalysis();
 			nucleusAnalysis.nucleusParameter3D(imagePlusInput, imagePlusSegmented);
 	}
-
 }

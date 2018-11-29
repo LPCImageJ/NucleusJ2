@@ -79,11 +79,9 @@ public class ConvexHullPlugin_  implements PlugIn {
 
 
 	public void runCommand(String arg) {
-		if(arg != null){
+		if(arg != null)
 			_imagePlusInput= new ImagePlus(arg);
-
-		}
-		if (null == _imagePlusInput) {
+		else{
 			IJ.noImage();
 			return;
 		}
@@ -117,15 +115,17 @@ public class ConvexHullPlugin_  implements PlugIn {
 	}
 
 
-
-    public void saveFile ( ImagePlus imagePlus, String pathFile)
-    {
+    /**
+     *
+     * @param imagePlus
+     * @param pathFile
+     */
+    public void saveFile ( ImagePlus imagePlus, String pathFile) {
         FileSaver fileSaver = new FileSaver(imagePlus);
         File file = new File(pathFile);
         if (file.exists())
             fileSaver.saveAsTiffStack( pathFile+File.separator+imagePlus.getTitle());
-        else
-        {
+        else {
             file.mkdir();
             fileSaver.saveAsTiffStack( pathFile+File.separator+imagePlus.getTitle());
         }

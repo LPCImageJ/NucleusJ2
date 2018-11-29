@@ -12,7 +12,15 @@ import gred.nucleus.plugins.ConvexHullPlugin_;
 import java.io.File;
 import java.util.ArrayList;
 
+/**
+ *
+ * @author Tristan Dubos and Axel Poulet
+ */
 public class testGiftWrapping {
+    /**
+     *
+     * @param args
+     */
     public static void main(String[] args){
         FileList fileList = new FileList ();
         ArrayList<String> File;

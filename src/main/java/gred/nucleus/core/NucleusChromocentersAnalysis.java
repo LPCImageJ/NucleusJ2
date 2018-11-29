@@ -13,7 +13,7 @@ import ij.measure.Calibration;
  * Several method to realise and create the outfile for the nuclear Analysis
  * this class contains the chromocenter parameters
  * 
- * @author Dubos Tristan and Poulet Axel
+ * @author Tristan Dubos and Axel Poulet
  *
  */
 public class NucleusChromocentersAnalysis{
@@ -21,17 +21,16 @@ public class NucleusChromocentersAnalysis{
 	 *
 	 */
 	public NucleusChromocentersAnalysis(){
-
 	}
 
-	   /**
-	    * Analysis for one nucleus, the results are stock on the IJ log windows
-	    * 
-	    * @param rhfChoice 
-	    * @param imagePlusInput
-	    * @param imagePlusSegmented
-	    * @param imagePlusChromocenter
-	    */
+	/**
+	 * Analysis for one nucleus, the results are stock on the IJ log windows
+	 *
+	 * @param rhfChoice
+	 * @param imagePlusInput
+	 * @param imagePlusSegmented
+	 * @param imagePlusChromocenter
+	 */
 	public void computeParameters (String rhfChoice, ImagePlus imagePlusInput, ImagePlus imagePlusSegmented, ImagePlus imagePlusChromocenter) {
 		IJ.log("3D PARAMETERS ");
 		Histogram histogram = new Histogram ();
@@ -75,7 +74,8 @@ public class NucleusChromocentersAnalysis{
 				+computeMeanOfTable(tBarycenterToBorderDistance)+" "+voxelVolume;
 		}
 		
-		else	text += "0 0 0 NaN NaN "+voxelVolume;
+		else
+			text += "0 0 0 NaN NaN "+voxelVolume;
 		IJ.log(text);
 	}
 	   
@@ -122,8 +122,7 @@ public class NucleusChromocentersAnalysis{
 			 +measure3D.computeFlatnessAndElongation(imagePlusSegmented,255)[0]+"\t"
 			 +measure3D.computeFlatnessAndElongation(imagePlusSegmented,255)[1]+"\t"
 			 +measure3D.computeSphericity(volume,surfaceArea)+"\t";	
-		if (rhfChoice.equals("Volume and intensity"))
-		{
+		if (rhfChoice.equals("Volume and intensity")) {
 			text +=  measure3D.computeIntensityRHF(imagePlusInput,imagePlusSegmented, imagePlusChromocenter)+"\t";
 			text += measure3D.computeVolumeRHF(imagePlusSegmented, imagePlusChromocenter)+"\t";
 		}
@@ -131,8 +130,7 @@ public class NucleusChromocentersAnalysis{
 			text +=  measure3D.computeIntensityRHF(imagePlusInput,imagePlusSegmented, imagePlusChromocenter)+"\t";
 		else
 			text += measure3D.computeVolumeRHF(imagePlusSegmented, imagePlusChromocenter)+"\t";
-		if (histogram.getNbLabels() > 0)
-		{
+		if (histogram.getNbLabels() > 0) {
 			double [] tVolumesObjects =  measure3D.computeVolumeofAllObjects(imagePlusChromocenter);
 			double volumeCcMean = computeMeanOfTable(tVolumesObjects);
 			int nbCc = measure3D.getNumberOfObject(imagePlusChromocenter);
@@ -145,11 +143,10 @@ public class NucleusChromocentersAnalysis{
 					 +computeMeanOfTable(tBorderToBorderDistance)+"\t"
 					 +computeMeanOfTable(tBarycenterToBorderDistance)+"\t";
 		}
-		else	text += "0\t0\t0\tNaN\tNaN\t";
-		
-		
+		else
+		    text += "0\t0\t0\tNaN\tNaN\t";
+
 		text += voxelVolume+"\n";
-		
 		bufferedWriterOutput.write(text);
 		bufferedWriterOutput.flush();
 		bufferedWriterOutput.close();   
@@ -161,10 +158,7 @@ public class NucleusChromocentersAnalysis{
 	 * @param tInput Table of value
 	 * @return Mean of the table
 	 */
-
-	  
-	public double computeMeanOfTable (double [] tInput)
-	{
+	public double computeMeanOfTable (double [] tInput) {
 		double mean = 0;
 		for (int i = 0; i < tInput.length; ++i)
 			mean += tInput[i];
