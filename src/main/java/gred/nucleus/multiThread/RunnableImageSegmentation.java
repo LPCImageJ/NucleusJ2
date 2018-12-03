@@ -1,5 +1,5 @@
 package gred.nucleus.multiThread;
-import gred.nucleus.core.NucleusAnalysis;
+import gred.nucleus.mainsNucelusJ.NucleusAnalysis;
 import gred.nucleus.core.NucleusSegmentation;
 import ij.ImagePlus;
 import ij.io.FileSaver;

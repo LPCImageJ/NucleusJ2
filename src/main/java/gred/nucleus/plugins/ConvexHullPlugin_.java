@@ -1,7 +1,7 @@
 package gred.nucleus.plugins;
 import gred.nucleus.core.*;
 import gred.nucleus.dialogs.NucleusSegmentationDialog;
-import gred.nucleus.utils.ConvexeHullDetection;
+import gred.nucleus.mainsNucelusJ.NucleusAnalysis;
 import ij.*;
 import ij.io.FileSaver;
 import ij.measure.Calibration;
