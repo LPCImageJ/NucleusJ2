@@ -19,6 +19,7 @@ public class SegmentationMethods {
     private short _vMax = 0;
     private String _output = "";
     private String _inputDir = "";
+    private Calibration _cal;
 
 
     /**
@@ -41,12 +42,14 @@ public class SegmentationMethods {
      * @param outputDir
      * @param vMin
      * @param vMax
+     * @param cal
      */
-    public SegmentationMethods(String inputDir, String outputDir, short vMin, short vMax) {
+    public SegmentationMethods(String inputDir, String outputDir, short vMin, short vMax, Calibration cal) {
         this._vMin = vMin;
         this._vMax = vMax;
         this._inputDir = inputDir;
         this._output = outputDir;
+        this._cal = cal;
         File file = new File(this._output);
         if (file.exists()==false){file.mkdir();}
     }
@@ -91,7 +94,7 @@ public class SegmentationMethods {
             String fileImg = fileList[i].toString();
             if (fileImg.contains(".tif")) {
                 ImagePlus img  = IJ.openImage(fileImg);
-                //img.setCalibration(this._cal);
+                img.setCalibration(this._cal);
                 ImagePlus imgSeg = img;
                 NucleusSegmentation nucleusSegmentation = new NucleusSegmentation();
                 nucleusSegmentation.setVolumeRange(this._vMin, this._vMax);
