@@ -29,9 +29,9 @@ public class TestOtsuModifie {
         OtsuModifSeg otsuModif = new OtsuModifSeg(input, output, vMin, vMax, cal);
         try {
             String log = otsuModif.runSeveralImages();
-            System.out.println("Nuclei which didn't pass the segmentation\n"+log);
+            if(!(log.equals("")))
+                System.out.println("Nuclei which didn't pass the segmentation\n"+log);
         }catch (IOException e) { e.printStackTrace();}
-
     }
 
     /**
@@ -57,7 +57,7 @@ public class TestOtsuModifie {
         cal.pixelDepth = 0.2;
         cal.pixelHeight = 0.103;
         cal.pixelWidth = 0.103;
-        testStupidSeveralImages(inputAxel, outputAxel, (short)6.0, (short)40.0,cal);
+        testStupidSeveralImages(inputAxel, outputAxel, (short)6.0, (short)300.0,cal);
 
         System.err.println("The program ended normally.");
     }
