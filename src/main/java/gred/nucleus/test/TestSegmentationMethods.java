@@ -32,7 +32,7 @@ public class TestSegmentationMethods {
      * @param cal
      */
     public static void testStupidSeveralImages(String input, String output, short vMin, short vMax, Calibration cal, boolean gift ) {
-        SegmentationMethods otsuModif = new SegmentationMethods(input, output, vMin, vMax, cal);
+        SegmentationMethods otsuModif = new SegmentationMethods(input, output, vMin, vMax);
         try {
             String log = otsuModif.runSeveralImages(gift);
             if(!(log.equals("")))
@@ -54,8 +54,8 @@ public class TestSegmentationMethods {
 
         String imgPathTristan = "";
         String imgSegPathTristan = "";
-        String inputTristan = "/home/plop/Bureau/image/";
-        String outputTristan = "/home/plop/Bureau/image/";
+        String inputTristan = "/home/tridubos/Bureau/180516_FIXE_Col_J13_H258/COL0_BAD_SEG/TEST";
+        String outputTristan = "/home/tridubos/Bureau/180516_FIXE_Col_J13_H258/COL0_BAD_SEG/GIFT";
         ImagePlus img  = IJ.openImage(imgPathAxel);
 
         //testStupid(img,(short)6.0, (short)40.0,imgSegPathAxel,true);
@@ -64,7 +64,7 @@ public class TestSegmentationMethods {
         cal.pixelDepth = 0.2;
         cal.pixelHeight = 0.103;
         cal.pixelWidth = 0.103;
-        testStupidSeveralImages(inputAxel, outputAxel, (short)6.0, (short)300.0,cal,true);
+        testStupidSeveralImages(inputTristan, outputTristan, (short)6.0, (short)300.0,cal,true);
 
         System.err.println("The program ended normally.");
     }
