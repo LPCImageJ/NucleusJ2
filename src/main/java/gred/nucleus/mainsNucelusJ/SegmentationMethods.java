@@ -59,17 +59,19 @@ public class SegmentationMethods {
         NucleusSegmentation nucleusSegmentation = new NucleusSegmentation();
         nucleusSegmentation.setVolumeRange(this._vMin, this._vMax);
         imgSeg = nucleusSegmentation.applySegmentation(imgSeg);
-        if (giftWrapping){
-            ConvexHullSegmentation nuc = new ConvexHullSegmentation();
-            ImagePlus imgGift = nuc.run(imgSeg);
-            imgSeg = imgGift;
-            //imgGift.setTitle("test ConvexHullPlugin_");
-            //imgGift.show();
-        }
 
-        if(nucleusSegmentation.getBestThreshold() == 0)
+
+        if(nucleusSegmentation.getBestThreshold() == -1)
             System.out.println("Segmentation error: \nNo object is detected between "+this._vMin + "and"+this._vMax);
         else{
+            System.out.println("otsu modif threshold: "+nucleusSegmentation.getBestThreshold()+"\n");
+            if (giftWrapping){
+                ConvexHullSegmentation nuc = new ConvexHullSegmentation();
+                ImagePlus imgGift = nuc.run(imgSeg);
+                imgSeg = imgGift;
+                //imgGift.setTitle("test ConvexHullPlugin_");
+                //imgGift.show();
+            }
             imgSeg.setTitle(this._output);
             saveFile(imgSeg, this._output);
             NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(this._imgInput,imgSeg);
@@ -96,19 +98,15 @@ public class SegmentationMethods {
                 NucleusSegmentation nucleusSegmentation = new NucleusSegmentation();
                 nucleusSegmentation.setVolumeRange(this._vMin, this._vMax);
                 imgSeg  = nucleusSegmentation.applySegmentation(imgSeg);
-                if (giftWrapping){
-                    ConvexHullSegmentation nuc = new ConvexHullSegmentation();
-                    ImagePlus imgGift = nuc.run(imgSeg);
-                    imgSeg = imgGift;
-                    String pathSeg = this._output + File.separator+ img.getTitle();
-                    imgSeg.setTitle(this._output);
-                    saveFile(imgSeg, pathSeg);
-                    //imgGift.setTitle("test ConvexHullPlugin_");
-                    //imgGift.show();
-                }
-                if(nucleusSegmentation.getBestThreshold() == 0)
+                if(nucleusSegmentation.getBestThreshold() == -1)
                     log = log+fileImg+"\n";
                 else{
+                    System.out.println(fileImg+"\totsu modif threshold "+nucleusSegmentation.getBestThreshold()+"\n");
+                    if (giftWrapping){
+                        ConvexHullSegmentation nuc = new ConvexHullSegmentation();
+                        ImagePlus imgGift = nuc.run(imgSeg);
+                        imgSeg = imgGift;
+                    }
                     String pathSeg = this._output + File.separator+ img.getTitle();
                     imgSeg.setTitle(this._output);
                     saveFile(imgSeg, pathSeg);

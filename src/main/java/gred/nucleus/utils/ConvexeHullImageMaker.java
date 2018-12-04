@@ -104,8 +104,8 @@ public class ConvexeHullImageMaker{
 			testis.setTitle(" ConvexHullSegmentation"+_axesName + " et le K "+k);
 			testis.show();
 			*/
-			if (_axesName =="xy" && k==8 )
-				IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() + " "+_listLabel.size());
+			//if (_axesName =="xy" && k==8 )
+			//	IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() + " "+_listLabel.size());
 
 			if (_listLabel.size()==1){
 				ArrayList<VoxelRecord> lVoxelBoundary = detectVoxelBoudary(image,_listLabel.get(0),k);

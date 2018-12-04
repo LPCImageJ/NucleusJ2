@@ -36,17 +36,17 @@ public class ConvexHullSegmentation {
 	 * @return segmented image
 	 */
 	public ImagePlus run(ImagePlus imagePlusInput){
-		IJ.log(imagePlusInput.getTitle()+" xy ");
+		//IJ.log(imagePlusInput.getTitle()+" xy ");
 		ConvexeHullImageMaker nuc = new ConvexeHullImageMaker();
 		nuc.setAxes("xy");
 	   	ImagePlus imagePlusXY = nuc.giftWrapping(imagePlusInput);
-	   	IJ.log(imagePlusInput.getTitle()+" xz ");
+	   	//IJ.log(imagePlusInput.getTitle()+" xz ");
 		imagePlusXY.setTitle("XY ConvexHullSegmentation");
 		//imagePlusXY.show();
 		//imagePlusXY.show();
 	   	nuc.setAxes("xz");
 	   	ImagePlus imagePlusXZ = nuc.giftWrapping(imagePlusInput);
-	   	IJ.log(imagePlusInput.getTitle()+" yz ");
+	   	//IJ.log(imagePlusInput.getTitle()+" yz ");
 	   	nuc.setAxes("yz");
         //imagePlusXZ.show();
         //imagePlusXZ.show();
