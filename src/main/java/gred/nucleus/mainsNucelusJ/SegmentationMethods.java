@@ -1,5 +1,6 @@
 package gred.nucleus.mainsNucelusJ;
 
+import gred.nucleus.core.ConvexHullSegmentation;
 import gred.nucleus.core.NucleusSegmentation;
 import ij.IJ;
 import ij.ImagePlus;
@@ -11,7 +12,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class OtsuModifSeg {
+public class SegmentationMethods {
 
     private ImagePlus _imgInput = new ImagePlus();
     private short _vMin = 0;
@@ -28,7 +29,7 @@ public class OtsuModifSeg {
      * @param vMax
      * @param outputImg
      */
-    public OtsuModifSeg(ImagePlus img, short vMin, short vMax, String outputImg) {
+    public SegmentationMethods(ImagePlus img, short vMin, short vMax, String outputImg) {
         this._vMin = vMin;
         this._vMax = vMax;
         this._imgInput = img;
@@ -43,7 +44,7 @@ public class OtsuModifSeg {
      * @param vMax
      * @param cal
      */
-    public OtsuModifSeg(String inputDir, String outputDir, short vMin, short vMax, Calibration cal) {
+    public SegmentationMethods(String inputDir, String outputDir, short vMin, short vMax, Calibration cal) {
         this._vMin = vMin;
         this._vMax = vMax;
         this._inputDir = inputDir;
@@ -56,17 +57,25 @@ public class OtsuModifSeg {
     /**
      *
      */
-    public void runOneImage() {
-        ImagePlus imagePlusSegmented= this._imgInput;
+    public void runOneImage(boolean giftWrapping) {
+        ImagePlus imgSeg= this._imgInput;
         NucleusSegmentation nucleusSegmentation = new NucleusSegmentation();
         nucleusSegmentation.setVolumeRange(this._vMin, this._vMax);
-        imagePlusSegmented = nucleusSegmentation.applySegmentation(imagePlusSegmented);
+        imgSeg = nucleusSegmentation.applySegmentation(imgSeg);
+        if (giftWrapping){
+            ConvexHullSegmentation nuc = new ConvexHullSegmentation();
+            ImagePlus imgGift = nuc.run(imgSeg);
+            imgSeg = imgGift;
+            //imgGift.setTitle("test ConvexHullPlugin_");
+            //imgGift.show();
+        }
+
         if(nucleusSegmentation.getBestThreshold() == 0)
             System.out.println("Segmentation error: \nNo object is detected between "+this._vMin + "and"+this._vMax);
         else{
-            imagePlusSegmented.setTitle(this._output);
-            saveFile(imagePlusSegmented, this._output);
-            NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(this._imgInput,imagePlusSegmented);
+            imgSeg.setTitle(this._output);
+            saveFile(imgSeg, this._output);
+            NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(this._imgInput,imgSeg);
             System.out.println(nucleusAnalysis.nucleusParameter3D());
         }
     }
@@ -77,7 +86,7 @@ public class OtsuModifSeg {
      * @return
      * @throws IOException
      */
-    public String runSeveralImages() throws IOException {
+    public String runSeveralImages(boolean giftWrapping) throws IOException {
         String log = "";
         String resu = "";
         File [] fileList = fillList(this._inputDir);
@@ -90,6 +99,13 @@ public class OtsuModifSeg {
                 NucleusSegmentation nucleusSegmentation = new NucleusSegmentation();
                 nucleusSegmentation.setVolumeRange(this._vMin, this._vMax);
                 imgSeg  = nucleusSegmentation.applySegmentation(imgSeg);
+                if (giftWrapping){
+                    ConvexHullSegmentation nuc = new ConvexHullSegmentation();
+                    ImagePlus imgGift = nuc.run(imgSeg);
+                    imgSeg = imgGift;
+                    //imgGift.setTitle("test ConvexHullPlugin_");
+                    //imgGift.show();
+                }
                 if(nucleusSegmentation.getBestThreshold() == 0)
                     log = log+fileImg+"\n";
                 else{
