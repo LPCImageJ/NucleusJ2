@@ -49,7 +49,8 @@ public class TestSegmentationMethods {
         String imgPathAxel = "/home/plop/Bureau/image/Col_Cot24-3_005.tif";
         String imgSegPathAxel = "/home/plop/Bureau/image/";
         String inputAxel = "/home/plop/Bureau/image/test/";
-        String outputAxel = "/home/plop/Bureau/image/test_res/";
+        String outputAxel = "/home/plop/Bureau/image/test_resOtsu/";
+        String outputAxelGift = "/home/plop/Bureau/image/test_resGift/";
 
         String imgPathTristan = "";
         String imgSegPathTristan = "";
@@ -63,6 +64,7 @@ public class TestSegmentationMethods {
         //cal.pixelDepth = 0.2;
         //cal.pixelHeight = 0.103;
         //cal.pixelWidth = 0.103;
+        testStupidSeveralImages(inputAxel, outputAxelGift, (short)6.0, (short)300.0,true);
         testStupidSeveralImages(inputAxel, outputAxel, (short)6.0, (short)300.0,true);
 
         System.err.println("The program ended normally.");
