@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>sc.fiji</groupId>
 		<artifactId>pom-fiji</artifactId>
-		<version>17.0.0</version>
+		<version>2.0.0-beta-0</version>
 		<relativePath />
 	</parent>
 
@@ -41,22 +41,6 @@
 			<groupId>net.imagej</groupId>
 			<artifactId>ij</artifactId>
 			<version>1.51g</version>
-		</dependency>
-		<dependency>
-			<groupId>ome</groupId>
-			<artifactId>bio-formats_plugins</artifactId>
-			<version>5.4.0</version>
-			<exclusions>
-				<!-- NB: Guava requires Java 7+, so we exclude it here. -->
-				<exclusion>
-					<groupId>com.google.guava</groupId>
-					<artifactId>guava</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>ome</groupId>
-			<artifactId>formats-api</artifactId>
 		</dependency>
 	</dependencies>
 
