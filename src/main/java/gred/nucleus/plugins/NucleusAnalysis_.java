@@ -1,6 +1,6 @@
 package gred.nucleus.plugins;
 
-import gred.nucleus.core.NucleusAnalysis;
+import gred.nucleus.mainsNucelusJ.NucleusAnalysis;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.WindowManager;

@@ -1,7 +1,7 @@
 package gred.nucleus.utils;
 
 import ij.IJ;
-
+import gred.nucleus.utils.VoxelRecord;
 import java.util.ArrayList;
 
 public class ComponentConnexe {
@@ -16,25 +16,19 @@ public class ComponentConnexe {
 	 */
 	void computeLabel(double labelIni) {
 		int currentLabel=2;
-
 		// Parcour des différents Pixels de l'images
 		for(int i = 0; i < _image.length; ++i) {
             for (int j = 0; j < _image[i].length; ++j) {
                 if (_image[i][j] == labelIni) {
-                    //IJ.log(""+getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() + " hum" +_image[i][j]);
-                    //IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() + " i "+i + " j "+j + " "+ currentLabel);
                     _image[i][j] = currentLabel;
                     VoxelRecord voxelRecord = new VoxelRecord();
-
                     voxelRecord.setLocation(i, j, 0);
                     breadthFirstSearch(labelIni, voxelRecord, currentLabel);
-                    //	IJ.log("current label ajouté "+currentLabel+ " i " + i+ " j" +j );
                     _listLabel.add((double) currentLabel);
                     currentLabel++;
                 }
             }
         }
-		//IJ.log(" "+getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" "+_image.length+ " "+_image[0].length);
 	}
 
 	/**
@@ -46,10 +40,7 @@ public class ComponentConnexe {
 	private void breadthFirstSearch( double labelIni,VoxelRecord voxelRecord, int currentLabel) {
 		ArrayList<VoxelRecord> voxelBoundary = detectVoxelBoudary(labelIni);
 		voxelBoundary.add(0, voxelRecord);
-	//	IJ.log(" "+getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" "+_image.length+ " "+_image[0].length);
-	//	IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" image taille "+_image+"\n voxI "+(int)voxelRecord._i +"\n voxJ "+ (int)voxelRecord._j+ "\n current label "+currentLabel+ " \n et ca :");
-	//	IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" hummmm "+ _image.length+ " "+_image[0].length+ " \n GA " +" ");
-		_image[(int)voxelRecord._i][(int)voxelRecord._j]=currentLabel;
+	    _image[(int)voxelRecord._i][(int)voxelRecord._j]=currentLabel;
 		while (! voxelBoundary.isEmpty()) {
 			VoxelRecord voxelRemove= voxelBoundary.remove(0);
 			for (int ii = (int)voxelRemove._i-1;ii <= (int)voxelRemove._i+1; ii++) {
@@ -136,7 +127,6 @@ public class ComponentConnexe {
 	 */
 	private ArrayList<VoxelRecord> detectVoxelBoudary (double label) {
         ArrayList<VoxelRecord> lVoxelBoundary = new ArrayList<VoxelRecord>();
-        //	IJ.log(" "+getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" "+_image.length+ " "+_image[0].length);
         for (int i = 0; i < _image.length; ++i) {
             for (int j = 0; j < _image[i].length; ++j) {
                 if (_image[i][j] == label) {

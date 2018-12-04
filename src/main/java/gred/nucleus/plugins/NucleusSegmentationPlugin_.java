@@ -1,6 +1,7 @@
 package gred.nucleus.plugins;
 import gred.nucleus.core.*;
 import gred.nucleus.dialogs.NucleusSegmentationDialog;
+import gred.nucleus.mainsNucelusJ.NucleusAnalysis;
 import ij.*;
 import ij.measure.Calibration;
 import ij.plugin.*;
