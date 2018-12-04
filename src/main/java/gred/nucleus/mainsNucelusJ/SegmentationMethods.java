@@ -100,6 +100,9 @@ public class SegmentationMethods {
                     ConvexHullSegmentation nuc = new ConvexHullSegmentation();
                     ImagePlus imgGift = nuc.run(imgSeg);
                     imgSeg = imgGift;
+                    String pathSeg = this._output + File.separator+ img.getTitle();
+                    imgSeg.setTitle(this._output);
+                    saveFile(imgSeg, pathSeg);
                     //imgGift.setTitle("test ConvexHullPlugin_");
                     //imgGift.show();
                 }
