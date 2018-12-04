@@ -123,21 +123,11 @@ public class ConvexeHullImageMaker{
 				//	IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() + " "+image+" Voxel boundary taille " +lVoxelBoundary.size()+" " +width+" " +height+" " +equivalentSphericalRadius+  " \n ListLAB "+_listLabel.get(0) +" \n ListLAB "+_listLabel.size());
                   //  IJ.log("tVoxelRecord i "+tVoxelRecord._i+ "\nj "+tVoxelRecord._j+ "\n j "+tVoxelRecord._k+ "\n");
                     ip = imageMaker(image, lVoxelBoundary, width, height, equivalentSphericalRadius);
-					if (_axesName =="xy" && k==9){
-						ip.setTitle("hum2");
-						ip.show();
-						FileSaver fileSaver = new FileSaver(ip);
-						fileSaver.saveAsTiffStack("/home/tridubos/Bureau/aaaaaaaaaaaa.tiff");
-					}
+
 				}
 				else{
 					ip = imagePlusBlack.duplicate();
-					if (_axesName =="xy" && k==9){
-						ip.setTitle("hum2");
-						ip.show();
-						FileSaver fileSaver = new FileSaver(ip);
-						fileSaver.saveAsTiffStack("/home/tridubos/Bureau/aaaaaaaaaaaa.tiff");
-					}
+
 				}
     			// if (!(_axesName =="yz" && k==30))
                 // testis.close();

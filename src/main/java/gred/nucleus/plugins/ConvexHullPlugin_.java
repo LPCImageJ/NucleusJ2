@@ -102,8 +102,8 @@ public class ConvexHullPlugin_  implements PlugIn {
 		NucleusSegmentation nucleusSegmentation = new NucleusSegmentation();
 		nucleusSegmentation.setVolumeRange(volumeMin, volumeMax);
 		imagePlusSegmented = nucleusSegmentation.applySegmentation(imagePlusSegmented);
-		imagePlusSegmented.setTitle(_imagePlusInput.getTitle()+"_seg1");
-		//saveFile(imagePlusSegmented,"/home/tridubos/Bureau/ImageTEST/MANIP_KAKU/NEW_SEGMENTATION/OTSU_modif/");
+		imagePlusSegmented.setTitle(_imagePlusInput.getTitle());
+		saveFile(imagePlusSegmented,"/home/tridubos/Bureau/ImageTEST/MANIP_KAKU/NEW_SEGMENTATION/OTSU_modif/");
 		ConvexHullSegmentation nuc = new ConvexHullSegmentation();
 		ImagePlus plopi = nuc.run(imagePlusSegmented);
 		plopi.setTitle(_imagePlusInput.getTitle()+"_seg2");

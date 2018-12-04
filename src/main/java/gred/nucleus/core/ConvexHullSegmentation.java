@@ -42,13 +42,13 @@ public class ConvexHullSegmentation {
 	   	ImagePlus imagePlusXY = nuc.giftWrapping(imagePlusInput);
 	   	IJ.log(imagePlusInput.getTitle()+" xz ");
 		imagePlusXY.setTitle("XY ConvexHullSegmentation");
-		imagePlusXY.show();
+		//imagePlusXY.show();
 		//imagePlusXY.show();
 	   	nuc.setAxes("xz");
 	   	ImagePlus imagePlusXZ = nuc.giftWrapping(imagePlusInput);
 	   	IJ.log(imagePlusInput.getTitle()+" yz ");
 	   	nuc.setAxes("yz");
-        imagePlusXZ.show();
+        //imagePlusXZ.show();
         //imagePlusXZ.show();
 		ImagePlus imagePlusYZ = nuc.giftWrapping(imagePlusInput);
 		return imageMakingUnion(imagePlusInput, imagePlusXY, imagePlusXZ, imagePlusYZ);
