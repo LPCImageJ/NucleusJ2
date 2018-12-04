@@ -45,7 +45,7 @@ public class NucleusAnalysis {
                 +measure3D.equivalentSphericalRadius(volume)+"\t"
                 +surfaceArea+"\t"
                 +bis+"\t"
-                +measure3D.computeSphericity(volume, bis)+"\n";
+                +measure3D.computeSphericity(volume, bis);
         return this._resu;
     }
 
@@ -53,7 +53,7 @@ public class NucleusAnalysis {
      *
      * @param resu
      */
-    public void nsetResu(String resu){
+    public void setResu(String resu){
 	    this._resu = resu;
     }
 	 /**
