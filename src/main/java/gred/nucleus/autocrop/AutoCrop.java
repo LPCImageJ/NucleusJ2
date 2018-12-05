@@ -46,7 +46,9 @@ public class AutoCrop {
 	private ArrayList <String> m_outputFile =  new ArrayList <String>();
 	/** List of boxes coordinates */
 	private ArrayList <String> m_boxCoordinates = new ArrayList<String>();	
-	
+	/** */
+	private int _nbOfNuc = 0;
+
 	/**
 	 * Initialises the attributes of this instance and attempts loading the input image
 	 * 
@@ -85,12 +87,9 @@ public class AutoCrop {
 		enh.setNormalize(true);
 		enh.setUseStackHistogram(true);
 		enh.setProcessStack(true);
-		enh.stretchHistogram(m_imageSeg.getProcessor(), 0,m_imageSeg.getStatistics());
-		m_imageSeg.show();
-		saveFile(m_imageSeg,"/home/plop/Bureau/plopiEnh.tif");
+		enh.stretchHistogram(m_imageSeg.getProcessor(), 0.05);
 		StackConverter stackConverter = new StackConverter( m_imageSeg );
 		stackConverter.convertToGray8();
-		saveFile(m_imageSeg,"/home/plop/Bureau/plopi.tif");
 		m_outputFilesPrefix = outputFilesPrefix;
 	}
 
@@ -103,7 +102,7 @@ public class AutoCrop {
 		GaussianBlur3D.blur(m_imageSeg, 0.5,0.5,1);
 		int thresh = computeOtsuThreshold(m_imageSeg);
 		m_imageSeg = this.generateSegmentedImage(m_imageSeg, thresh);
-		saveFile(m_imageSeg,"/home/plop/Bureau/prout.tif");
+		//saveFile(m_imageSeg,"/home/plop/Bureau/prout.tif");
 	}
 	
 	/**
@@ -124,7 +123,7 @@ public class AutoCrop {
 			connectedComponent = ConnectedComponent.getLabelledConnectedComponent(m_imageSeg, 255, true, thresholdVolumeVoxel, true);
 			Box box = null;
 			//ArrayList initialisation
-			System.out.println(connectedComponent.getNumberOfComponents());
+            this._nbOfNuc = connectedComponent.getNumberOfComponents();
 			for(short i = 0; i< connectedComponent.getNumberOfComponents();++i)
 				boxes.add(new Box(Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE));
 
@@ -286,5 +285,13 @@ public class AutoCrop {
     	ImagePlus imp = new ImagePlus();
     	imp.setStack(iStack.crop(xmin, ymin, zmin, width, height, depth));
     	return imp;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int getNbOfNuc(){
+        return this._nbOfNuc;
     }
 }
