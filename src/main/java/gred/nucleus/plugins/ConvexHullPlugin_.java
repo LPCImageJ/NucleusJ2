@@ -70,9 +70,9 @@ public class ConvexHullPlugin_  implements PlugIn {
 			ImagePlus plopi = nuc.run(imagePlusSegmented);
 			plopi.setTitle("test ConvexHullPlugin_");
 			plopi.show();
-			NucleusAnalysis nucleusAnalysis = new NucleusAnalysis();
-			nucleusAnalysis.nucleusParameter3D(_imagePlusInput, plopi);
-			nucleusAnalysis.nucleusParameter3D(_imagePlusInput, imagePlusSegmented);
+			NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(_imagePlusInput, plopi);
+			nucleusAnalysis.nucleusParameter3D();
+
 
 		}
 	}
@@ -109,9 +109,8 @@ public class ConvexHullPlugin_  implements PlugIn {
 		plopi.setTitle(_imagePlusInput.getTitle()+"_seg2");
 		saveFile(plopi,"/home/tridubos/Bureau/ImageTEST/MANIP_KAKU/TEST_IMAGE_PB_GIFT/THRESOLD_TEST/");
 				//"/home/tridubos/Bureau/ImageTEST/MANIP_KAKU/NEW_SEGMENTATION/GIFT/");
-		NucleusAnalysis nucleusAnalysis = new NucleusAnalysis();
-		nucleusAnalysis.nucleusParameter3D(_imagePlusInput, plopi);
-		nucleusAnalysis.nucleusParameter3D(_imagePlusInput, imagePlusSegmented);
+		NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(_imagePlusInput, plopi);
+		nucleusAnalysis.nucleusParameter3D();
 	}
 
 

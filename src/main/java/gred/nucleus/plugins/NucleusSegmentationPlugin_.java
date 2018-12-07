@@ -66,8 +66,8 @@ public class NucleusSegmentationPlugin_ implements PlugIn {
 			else {
 				imagePlusSegmented.setTitle("Segmented"+_imagePlusInput.getTitle());
 				imagePlusSegmented.show();
-				NucleusAnalysis nucleusAnalysis = new NucleusAnalysis();
-				nucleusAnalysis.nucleusParameter3D(_imagePlusInput, imagePlusSegmented);
+				NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(_imagePlusInput, imagePlusSegmented);
+				nucleusAnalysis.nucleusParameter3D();
 			}
 		}
 	}

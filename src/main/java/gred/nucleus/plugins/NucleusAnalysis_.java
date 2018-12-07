@@ -68,7 +68,7 @@ public class NucleusAnalysis_ implements PlugIn  {
 		calibration.pixelHeight = yCalibration;
 		calibration.setUnit(unit);
 		imagePlusInput.setCalibration(calibration);
-		NucleusAnalysis nucleusAnalysis = new NucleusAnalysis();
-			nucleusAnalysis.nucleusParameter3D(imagePlusInput, imagePlusSegmented);
+		NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(imagePlusInput, imagePlusSegmented);
+		nucleusAnalysis.nucleusParameter3D();
 	}
 }

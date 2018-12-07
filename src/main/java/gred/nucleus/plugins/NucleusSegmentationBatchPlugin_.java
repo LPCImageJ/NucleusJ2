@@ -1,7 +1,7 @@
 package gred.nucleus.plugins;
 import java.io.File;
 import gred.nucleus.dialogs.NucleusSegmentationBatchDialog;
-import gred.nucleus.multiThread.*;
+import gred.nucleus.mainsNucelusJ.SegmentationMethods;
 import gred.nucleus.utils.FileList;
 import ij.IJ;
 import ij.ImagePlus;
@@ -35,12 +35,9 @@ public class NucleusSegmentationBatchPlugin_ implements PlugIn {
 			    	IJ.error("image format", "No images in gray scale 8bits or 16 bits in 3D");
 			        return;
 			    }
-				ProcessImageSegmentaion processImageSegmentation = new ProcessImageSegmentaion();
-				try {
-					processImageSegmentation.go(this, tRawImageFile,false);
-					IJ.log("End of the nucleus segmentation , the results are in "+getWorkDirectory());
-				} 
-				catch (InterruptedException e) { e.printStackTrace(); }
+				SegmentationMethods otsuModif = new SegmentationMethods(_nucleusSegmentationBatchDialog.getRawDataDirectory(), _nucleusSegmentationBatchDialog.getWorkDirectory(),
+						(short)_nucleusSegmentationBatchDialog.getMinVolume(), (short)_nucleusSegmentationBatchDialog.getMaxVolume());
+                otsuModif.runOneImage(true);
 			}
 		}
 	}

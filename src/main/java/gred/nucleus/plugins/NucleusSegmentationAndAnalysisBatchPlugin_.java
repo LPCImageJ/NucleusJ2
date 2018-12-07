@@ -1,12 +1,12 @@
 package gred.nucleus.plugins;
 import java.io.File;
+import java.io.IOException;
 
 import gred.nucleus.dialogs.NucleusSegmentationAndAnalysisBatchDialog;
-import gred.nucleus.multiThread.*;
-import gred.nucleus.utils.FileList;
+import gred.nucleus.mainsNucelusJ.SegmentationMethods;
 import ij.IJ;
-import ij.ImagePlus;
 import ij.plugin.PlugIn;
+import loci.formats.FormatException;
 
 /**
  *  Method to segment and analyse the nucleus on batch
@@ -28,19 +28,14 @@ public class NucleusSegmentationAndAnalysisBatchPlugin_ implements PlugIn {
 	    }	
 		if (_nucleusPipelineBatchDialog.isStart()) {
 			IJ.log("Begining of the segmentation of nuclei, the data are in "+_nucleusPipelineBatchDialog.getRawDataDirectory());
-			FileList fileList = new FileList ();
-			File[] tFileRawImage = fileList.run(_nucleusPipelineBatchDialog.getRawDataDirectory());
-			if(IJ.openImage(tFileRawImage[0].toString()).getType() == ImagePlus.GRAY32 ) {
-		    	IJ.error("image format", "No images in gray scale 8bits or 16 bits in 3D");
-		        return;
-		    }
-			
-			ProcessImageSegmentaion processImageSegmentation = new ProcessImageSegmentaion();
-			try {
-				processImageSegmentation.go(this, tFileRawImage,true);
-			} 
-			catch (InterruptedException e) { e.printStackTrace(); }
-			IJ.log("End of the segmentation the nuclei, the results are in "+_nucleusPipelineBatchDialog.getWorkDirectory());
+            SegmentationMethods otsuModif = new SegmentationMethods(_nucleusPipelineBatchDialog.getRawDataDirectory(), _nucleusPipelineBatchDialog.getWorkDirectory(),
+                    (short)_nucleusPipelineBatchDialog.getMinVolume(), (short)_nucleusPipelineBatchDialog.getMaxVolume());
+            try {
+                String log = otsuModif.runSeveralImages(true);
+            } catch (IOException e) {     e.printStackTrace();
+            } catch (FormatException e) { e.printStackTrace(); }
+
+            IJ.log("End of the segmentation the nuclei, the results are in "+_nucleusPipelineBatchDialog.getWorkDirectory());
 		}
 	}
 
