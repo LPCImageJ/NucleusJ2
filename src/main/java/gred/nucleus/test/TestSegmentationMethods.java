@@ -4,6 +4,7 @@ import gred.nucleus.mainsNucelusJ.SegmentationMethods;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.measure.Calibration;
+import loci.formats.FormatException;
 
 import java.io.IOException;
 
@@ -31,7 +32,7 @@ public class TestSegmentationMethods {
      * @param vMax
 
      */
-    public static void testStupidSeveralImages(String input, String output, short vMin, short vMax, boolean gift ) {
+    public static void testStupidSeveralImages(String input, String output, short vMin, short vMax, boolean gift ) throws FormatException {
         SegmentationMethods otsuModif = new SegmentationMethods(input, output, vMin, vMax);
         try {
             String log = otsuModif.runSeveralImages(gift);
@@ -45,22 +46,23 @@ public class TestSegmentationMethods {
      * Main function of the package's tests.
      * @param args
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FormatException {
         //testComponentsLabeling(wrapImaJ.test.TestCoreMethods.testImages_8bits[1]);
-        String imgPathAxel = "/home/plop/Bureau/image/Col_Cot24-3_005.tif";
+        String imgPathAxel = "/home/plop/Bureau/image/wideField/test/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s4_46_1655_34_8.tif";
         String imgSegPathAxel = "/home/plop/Bureau/image/";
-        String inputAxel = "/home/plop/Bureau/image/test/";
-        String outputAxel = "/home/plop/Bureau/image/test_res/";
-        String outputAxelGift = "/home/plop/Bureau/image/test_res/";
+        String inputAxel = "/home/plop/Bureau/image/wideField/test/";
+        String outputAxel = "/home/plop/Bureau/image/wideField/testSeg/";
+        String outputAxelGift = "/home/plop/Bureau/image/wideField/testSegGift/";
 
         String imgPathTristan = "";
         String imgSegPathTristan = "";
         String inputTristan = "/home/tridubos/Bureau/180516_FIXE_Col_J13_H258/COL0_BAD_SEG/TEST";
         String outputTristanGift = "/home/tridubos/Bureau/180516_FIXE_Col_J13_H258/COL0_BAD_SEG/GIFT";
         String outputTristanOtsu = "/home/tridubos/Bureau/180516_FIXE_Col_J13_H258/COL0_BAD_SEG/OTSU";
-        ImagePlus img  = IJ.openImage(imgPathAxel);
+        //ImagePlus img  = IJ.openImage(imgPathAxel);
+        //System.out.println(img.getTitle()+" Start test");
 
-        //testStupid(img,(short)6.0, (short)40.0,imgSegPathAxel,true);
+        //testStupid(img,(short)6.0, (short)400.0,imgSegPathAxel,false);
         /*
         Calibration cal = new Calibration();
         cal.pixelDepth = 0.2;

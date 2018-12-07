@@ -1,11 +1,13 @@
 package gred.nucleus.test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import gred.nucleus.autocrop.AutoCrop;
 import gred.nucleus.mainsNucelusJ.AutoCropCalling;
 import ij.IJ;
 import ij.ImagePlus;
+import loci.formats.FormatException;
 
 
 /**
@@ -30,7 +32,7 @@ public class TestAutoCrop {
 	
 	static ArrayList <String> m_test;
 	
-	public static void testStupid(String imageSourceFile, String output) {
+	public static void testStupid(String imageSourceFile, String output) throws IOException, FormatException {
         AutoCropCalling autoCrop = new AutoCropCalling(imageSourceFile,output);
         autoCrop.run();
 	}
@@ -40,10 +42,10 @@ public class TestAutoCrop {
 	 * Main function of the package's tests.
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException, FormatException {
 
 	    System.err.println("start prog");
-		String inputOneImageAxel = "/home/plop/Bureau/image/wideField/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s4.tif";
+		String inputOneImageAxel = "/home/plop/Bureau/image/wideField/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s4.TIF";
         String inputDirAxel = "/home/plop/Bureau/image/wideField/";
         String outputAxel = "/home/plop/Bureau/image/wideField/test";
 
@@ -51,7 +53,7 @@ public class TestAutoCrop {
         String inputDirTristan = "";
         String outputTristan = "";
 
-        testStupid(inputDirAxel, outputAxel);
+        testStupid(inputOneImageAxel, outputAxel);
 
 		
 		System.err.println("The program ended normally.");

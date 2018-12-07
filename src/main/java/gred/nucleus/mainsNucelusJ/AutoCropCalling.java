@@ -3,8 +3,12 @@ package gred.nucleus.mainsNucelusJ;
 import gred.nucleus.autocrop.AutoCrop;
 import ij.IJ;
 import ij.ImagePlus;
+import ij.measure.Calibration;
+import loci.formats.FormatException;
+import loci.plugins.BF;
 
 import java.io.File;
+import java.io.IOException;
 
 /**
  *
@@ -31,14 +35,16 @@ public class AutoCropCalling {
     /**
      *
      */
-    public void run(){
+    public void run() throws IOException, FormatException {
         File inputFile = new File(_input);
         if(inputFile.isFile()){
-           String[] tNameFile =  this._input.split(File.separator);
-           this._prefix = tNameFile[tNameFile.length-1].replaceAll(".tif","");
+            String[] tNameFile =  this._input.split(File.separator);
+            this._prefix = tNameFile[tNameFile.length-1].replaceAll(".tif","");
             this._prefix = tNameFile[tNameFile.length-1].replaceAll(".TIF","");
-           ImagePlus img = IJ.openImage(this._input);
-           autocropMethod(img);
+            ImagePlus[] img = BF.openImagePlus(_input);
+            Calibration cal = img[0].getCalibration();
+            System.out.println(img[0].getTitle()+"\t"+cal.pixelWidth+"\t"+cal.pixelHeight+"\t"+cal.pixelDepth);
+            autocropMethod(img[0]);
         }
         else{
             File folder = new File(_input);
@@ -49,8 +55,10 @@ public class AutoCropCalling {
                     String[] tNameFile =  fileImg.split(File.separator);
                     this._prefix = tNameFile[tNameFile.length-1].replaceAll(".tif","");
                     this._prefix = tNameFile[tNameFile.length-1].replaceAll(".TIF","");
-                    ImagePlus img = IJ.openImage(fileImg);
-                    autocropMethod(img);
+                    ImagePlus[] img = BF.openImagePlus(fileImg);
+                    Calibration cal = img[0].getCalibration();
+                    System.out.println(img[0].getTitle()+"\t"+cal.pixelWidth+"\t"+cal.pixelHeight+"\t"+cal.pixelDepth);
+                    autocropMethod(img[0]);
                 }
             }
         }
