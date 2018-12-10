@@ -42,7 +42,15 @@
 			<artifactId>ij</artifactId>
 			<version>1.51g</version>
 		</dependency>
-	</dependencies>
+        <!-- https://mvnrepository.com/artifact/loci/loci_plugins -->
+        <dependency>
+            <groupId>loci</groupId>
+            <artifactId>loci_plugins</artifactId>
+            <version>5.0.0-beta1</version>
+        </dependency>
+
+
+    </dependencies>
 
 	<build>
 		<resources>
