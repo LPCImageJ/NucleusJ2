@@ -2,7 +2,6 @@ package gred.nucleus.mainsNucelusJ;
 
 import gred.nucleus.core.ConvexHullSegmentation;
 import gred.nucleus.core.NucleusSegmentation;
-import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
 import ij.measure.Calibration;
@@ -11,27 +10,47 @@ import ij.plugin.GaussianBlur3D;
 import ij.process.StackConverter;
 import loci.formats.FormatException;
 import loci.plugins.BF;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * This class call the different segmentation methods available to detect the nucleus.
+ * The Ostu method modified and the gift wrapping 3D. Methods can be call for analysis of several images or only one.
+ * The gift wrapping is initialized by teh Otsu method modified, then the gift wrapping algorithm process the result
+ * obtain with the first method.
+ * If the first method doesn't detect a nucleus, a message is print on the console.
+ *
+ * if the nucleus input image is 16bit, a preprocess is done to convert it in 8bit, and also increase the contrast
+ * and decrease the noise, then the 8bits image is used for the nuclear segmentation.
+ *
+ * @author Tristan Dubos and Axel Poulet
+ *
+ */
 public class SegmentationMethods {
-
+    /** ImagePlus raw image*/
     private ImagePlus _imgInput = new ImagePlus();
-    private short _vMin = 0;
-    private short _vMax = 0;
-    private String _output = "";
+    /** ImagePlus segmented image*/
+    private ImagePlus _imgSeg = new ImagePlus();
+    /** volume min of the detected object*/
+    private short _vMin;
+    /** volume max of the detected object*/
+    private short _vMax;
+    /** String of of the path for the output files*/
+    private String _output;
+    /** String of the input dir for several nuclei analysis*/
     private String _inputDir = "";
 
 
     /**
+     *  Constructor for ImagePlus input
      *
-     * @param img
-     * @param vMin
-     * @param vMax
-     * @param outputImg
+     * @param img ImagePlus raw image
+     * @param vMin volume min of the detected object
+     * @param vMax volume max of the detected object
+     * @param outputImg String of of the path to save the img of the segmented nucleus.
+     *
      */
     public SegmentationMethods(ImagePlus img, short vMin, short vMax, String outputImg) {
         this._vMin = vMin;
@@ -41,11 +60,26 @@ public class SegmentationMethods {
     }
 
     /**
+     *  Constructor for ImagePlus input
      *
-     * @param inputDir
-     * @param outputDir
-     * @param vMin
-     * @param vMax
+     * @param img ImagePlus raw image
+     * @param vMin volume min of the detected object
+     * @param vMax volume max of the detected object
+     *
+     */
+    public SegmentationMethods(ImagePlus img, short vMin, short vMax) {
+        this._vMin = vMin;
+        this._vMax = vMax;
+        this._imgInput = img;
+    }
+
+    /**
+     * Constructor for directory input
+     *
+     * @param inputDir String path of the input containing the tif/TIF file
+     * @param outputDir String of of the path to save results img of the segmented nucleus.
+     * @param vMin volume min of the detected object
+     * @param vMax volume max of the detected object
      */
     public SegmentationMethods(String inputDir, String outputDir, short vMin, short vMax) {
         this._vMin = vMin;
@@ -53,13 +87,22 @@ public class SegmentationMethods {
         this._inputDir = inputDir;
         this._output = outputDir;
         File file = new File(this._output);
-        if (file.exists()==false){file.mkdir();}
+        if (!file.exists()){
+            file.mkdir();
+        }
     }
 
     /**
+     * Method to run an ImagePlus input
+     * the method will call method in NucleusSegmentation and ConvexHullSegmentation to segment the input nucleus.
+     * if the input boolean is true the gift wrapping will be use, if false the Otsu modified method will be used.
+     * If a segmentation results is find the method will then computed the different parameters with the NucleusAnalysis
+     * class, results will be print in the console. If no nucleus is detected a log message is print in teh console
      *
+     * @param giftWrapping boolean if true used GiftWrapping, else Otsu Modified
+     * @return ImagePlus the segmented nucleus
      */
-    public void runOneImage(boolean giftWrapping) {
+    public int runOneImage(boolean giftWrapping) {
         ImagePlus imgSeg= this._imgInput;
         NucleusSegmentation nucleusSegmentation = new NucleusSegmentation();
         nucleusSegmentation.setVolumeRange(this._vMin, this._vMax);
@@ -69,7 +112,6 @@ public class SegmentationMethods {
         if(imgSeg.getType() == ImagePlus.GRAY16)
             this.preProcessImage(imgSeg);
 
-
         imgSeg = nucleusSegmentation.applySegmentation(imgSeg);
         if(nucleusSegmentation.getBestThreshold() == -1)
             System.out.println("Segmentation error: \nNo object is detected between "+this._vMin + "and"+this._vMax);
@@ -77,28 +119,50 @@ public class SegmentationMethods {
             System.out.println("otsu modif threshold: "+nucleusSegmentation.getBestThreshold()+"\n");
             if (giftWrapping){
                 ConvexHullSegmentation nuc = new ConvexHullSegmentation();
-                ImagePlus imgGift = nuc.run(imgSeg);
-                imgSeg = imgGift;
-                //imgGift.setTitle("test ConvexHullPlugin_");
-                //imgGift.show();
+                imgSeg = nuc.run(imgSeg);
             }
             imgSeg.setTitle(this._output);
-            saveFile(imgSeg, this._output);
+            if(!this._output.equals(""))
+                saveFile(imgSeg, this._output);
             NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(this._imgInput,imgSeg);
             System.out.println(nucleusAnalysis.nucleusParameter3D());
         }
+        this._imgSeg = imgSeg;
+        return nucleusSegmentation.getBestThreshold() ;
+    }
+
+    /**
+     * getter of the image segmented
+     * @return
+     */
+    public ImagePlus getImageSegmented(){
+        return this._imgSeg;
     }
 
 
     /**
      *
-     * @return
-     * @throws IOException
+     * Method to run the nuclear segmentation of images stocked in input dir.
+     * First listing of the tif files contained in input dir.
+     * then for each images:
+     * the method will call method in NucleusSegmentation and ConvexHullSegmentation to segment the input nucleus.
+     * if the input boolean is true the gift wrapping will be use, if false the Otsu modified method will be used.
+     * If a segmentation results is find the method will then computed the different parameters with the NucleusAnalysis
+     *  class, and save in file in the outputDir. If no nucleus is detected a log message is print in the console
+     *
+     * Open the image with bioformat plugin to obtain the metadata:
+     *          ImagePlus[] imgTab = BF.openImagePlus(fileImg);
+     *
+     * @param giftWrapping boolean if true used GiftWrapping, else Otsu Modified
+     * @return String with the name files which failed in the segmentation step
+     * @throws IOException if file doesn't existed
+     * @throws FormatException Bioformat exception
      */
+
     public String runSeveralImages(boolean giftWrapping) throws IOException, FormatException {
         String log = "";
         String resu = "";
-        File [] fileList = fillList(this._inputDir);
+        File [] fileList = new File(this._inputDir).listFiles();
         for(int i = 0; i < fileList.length; ++i) {
             String fileImg = fileList[i].toString();
             if (fileImg.contains(".tif")) {
@@ -112,13 +176,12 @@ public class SegmentationMethods {
                 nucleusSegmentation.setVolumeRange(this._vMin, this._vMax);
                 imgSeg  = nucleusSegmentation.applySegmentation(imgSeg);
                 if(nucleusSegmentation.getBestThreshold() == -1)
-                    log = log+fileImg+"\n";
+                    log = log + fileImg+"\n";
                 else{
                     System.out.println(fileImg+"\totsu modif threshold "+nucleusSegmentation.getBestThreshold()+"\n");
                     if (giftWrapping){
                         ConvexHullSegmentation nuc = new ConvexHullSegmentation();
-                        ImagePlus imgGift = nuc.run(imgSeg);
-                        imgSeg = imgGift;
+                        imgSeg =  nuc.run(imgSeg);
                     }
                     String pathSeg = this._output + File.separator+ img.getTitle();
                     imgSeg.setTitle(this._output);
@@ -135,35 +198,24 @@ public class SegmentationMethods {
         writer.close();
         return log;
     }
+
     /**
-     *
      * Method which save the image in the directory.
      *
      * @param imagePlusInput Image to be save
      * @param pathFile path of directory
      */
-    public void saveFile ( ImagePlus imagePlusInput, String pathFile) {
+    private void saveFile ( ImagePlus imagePlusInput, String pathFile) {
         FileSaver fileSaver = new FileSaver(imagePlusInput);
-        File file = new File(pathFile);
-        fileSaver.saveAsTiffStack( pathFile);
-
+        fileSaver.saveAsTiffStack(pathFile);
     }
 
     /**
-     *
-     * @param dir
-     * @return
-     * @throws IOException
-     */
-    private File[] fillList(String dir) throws IOException {
-        File folder = new File(dir);
-        File[] listOfFiles = folder.listFiles();
-        return listOfFiles;
-    }
-
-    /**
-     *
-     * @param img
+     * 16bits image preprocessing
+     * normalised the histohram distribution
+     * apply a gaussian filter to smooth the signal
+     * convert the image in 8bits
+     * @param img 16bits ImagePlus
      */
     private void preProcessImage(ImagePlus img){
         ContrastEnhancer enh = new ContrastEnhancer();
@@ -175,5 +227,4 @@ public class SegmentationMethods {
         StackConverter stackConverter = new StackConverter( img );
         stackConverter.convertToGray8();
     }
-
 }

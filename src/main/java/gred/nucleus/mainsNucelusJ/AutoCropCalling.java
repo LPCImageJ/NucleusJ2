@@ -1,27 +1,36 @@
 package gred.nucleus.mainsNucelusJ;
 
 import gred.nucleus.autocrop.AutoCrop;
-import ij.IJ;
 import ij.ImagePlus;
 import ij.measure.Calibration;
 import loci.formats.FormatException;
 import loci.plugins.BF;
-
 import java.io.File;
 import java.io.IOException;
 
-/**
- *
- */
-public class AutoCropCalling {
 
-    private String _input = "";
-    private String _output = "";
+/**
+ *  Core method calling the autocrop method. this method can be run on only one file
+ *  or on directory containing multiple tuple file.
+ *  This class will call AutoCrop class to detect the mutipe nuclei in the image.
+ * @author Tristan Dubos and Axel Poulet
+ */
+
+public class AutoCropCalling {
+    /** path of the input file*/
+    private String _input;
+    /** output to save the images cropped*/
+    private String _output;
+    /** prefix for the name of the image*/
     private String _prefix = "";
+
+
+
     /**
-     *
-     * @param imageSourceFile
-     * @param output
+     * Constructor
+     * Create the output directory if he isn't existed.
+     * @param imageSourceFile  String path of input file(s)
+     * @param output String to save the results image
      */
     public AutoCropCalling(String imageSourceFile, String output) {
         this._input = imageSourceFile;
@@ -33,7 +42,12 @@ public class AutoCropCalling {
 
 
     /**
+     * Run auto crop on the input,
+     * If input is a file: open the image with bioformat plugin to obtain the metadata then run the auto crop.
+     * If input is directory, listed the file, foreach tif file loaded file with bioformat, run the auto crop.
      *
+     * @throws IOException if file problem
+     * @throws FormatException Bioformat exception
      */
     public void run() throws IOException, FormatException {
         File inputFile = new File(_input);
@@ -47,8 +61,7 @@ public class AutoCropCalling {
             autocropMethod(img[0]);
         }
         else{
-            File folder = new File(_input);
-            File[] listOfFiles = folder.listFiles();
+            File[] listOfFiles = new File(_input).listFiles();
             for(int i = 0; i < listOfFiles.length; ++i) {
                 String fileImg = listOfFiles[i].toString();
                 if (fileImg.contains(".tif") || fileImg.contains(".TIF")) {
@@ -66,8 +79,8 @@ public class AutoCropCalling {
 
 
     /**
-     *
-     * @param img
+     * private method calling the autoCrop Class,
+     * @param img ImagePlus input to crop
      */
     private void autocropMethod(ImagePlus img){
         AutoCrop autoCrop = new AutoCrop (img,this._prefix,this._output);

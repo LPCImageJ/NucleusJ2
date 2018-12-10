@@ -17,21 +17,21 @@ import ij.process.AutoThresholder.Method;
 import inra.ijpb.binary.ConnectedComponents;
 
 /**
- * this class allows the realization of segmention method in the image in input. This segmentation
- * is based on the method of Otsu, and we add the maximization of the sphericity (shape parameter)
- * of detected object .
+ * Object segmentation method for 3D images. This segmentation used as initial threshold
+ * the method of Otsu, and then maximize he sphericity of the object detected .
  *
  * @author Tristan Dubos and Axel Poulet
  *
  */
 public class NucleusSegmentation {
 
+    /** Threshold detected by the Otsu modified method*/
 	private int _bestThreshold = -1;
-	/** Segmentation parameters*/
-	private double _volumeMin;
-	/** */
+    /** volume min of the detected object*/
+	private double _vMin;
+    /** volume max of the detected object*/
 	private double _volumeMax;
-	/** */
+	/** String stocking the file name if any nucleus is detected*/
 	private String _logErrorSeg = "";
 
 	/**
@@ -46,31 +46,7 @@ public class NucleusSegmentation {
 	 * @param imagePlusInput
 	 * @return
 	 */
-	public ImagePlus run (ImagePlus imagePlusInput) {
-		IJ.log("Begin segmentation "+imagePlusInput.getTitle());
-		ImagePlus imagePlusSegmented = applySegmentation (imagePlusInput);
-		IJ.log("End segmentation "+imagePlusInput.getTitle()+" "+_bestThreshold);
-		if (_bestThreshold == -1) {
-			if (_logErrorSeg.length() == 0) {
-				IJ.showMessage("Error Segmentation", "Bad parameter for the segmentation, any object is detected between "
-						+_volumeMin+" and "+ _volumeMax+" "+ imagePlusInput.getCalibration().getUnit()+"^3");
-			}
-			else {
-				File fileLogError = new File (_logErrorSeg);
-				BufferedWriter bufferedWriterLogError;
-				FileWriter fileWriterLogError;
-				try {
-					fileWriterLogError = new FileWriter(fileLogError, true);
-					bufferedWriterLogError = new BufferedWriter(fileWriterLogError);
-					bufferedWriterLogError.write(imagePlusInput.getTitle()+"\n");
-					bufferedWriterLogError.flush();
-					bufferedWriterLogError.close();
-				}
-				catch (IOException e) { e.printStackTrace(); }
-			}
-		}
-		return imagePlusSegmented;
-	}
+
 
 	/**
 	 * Compute of the first threshold of input image with the method of Otsu
@@ -107,11 +83,11 @@ public class NucleusSegmentation {
 			imagePlusSegmentedTemp.setCalibration(calibration);
 			volume = measure3D.computeVolumeObject(imagePlusSegmentedTemp,255);
 			imagePlusSegmentedTemp.setCalibration(calibration);
-			//IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" "+" Volume : "+ volume+ "   "+imageVolume +" Valmin "+_volumeMin+" Valmax "+_volumeMax+"\n les stack"+imagePlusSegmented.getImageStack());
+			//IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" "+" Volume : "+ volume+ "   "+imageVolume +" Valmin "+_vMin+" Valmax "+_volumeMax+"\n les stack"+imagePlusSegmented.getImageStack());
 			boolean first = isVoxelThresholded(imagePlusSegmentedTemp,255, 0);
 			boolean last = isVoxelThresholded(imagePlusSegmentedTemp,255, imagePlusInput.getStackSize()-1);
 			if (testRelativeObjectVolume(volume,imageVolume) &&
-					volume >= _volumeMin &&
+					volume >= _vMin &&
 					volume <= _volumeMax && first == false && last == false) {
 				sphericity = measure3D.computeSphericity(volume,measure3D.computeComplexSurface(imagePlusSegmentedTemp,gradient));
 				//IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+"les stack"+imagePlusSegmentedTemp.getImageStack());
@@ -124,7 +100,7 @@ public class NucleusSegmentation {
 				}
 			}
 			//else
-			//	IJ.log("Volume de l'objet segmenté : "+ volume + " seuil entre "+ _volumeMin +" et "+  _volumeMax);
+			//	IJ.log("Volume de l'objet segmenté : "+ volume + " seuil entre "+ _vMin +" et "+  _volumeMax);
 		}
 		ImageStack imageStackInput = imagePlusSegmented.getImageStack();
 		//IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" "+imageStackInput);
@@ -288,7 +264,7 @@ public class NucleusSegmentation {
 	 * @param volumeMax
 	 */
 	public void setVolumeRange(double volumeMin, double volumeMax) {
-		_volumeMin = volumeMin;
+		_vMin = volumeMin;
 		_volumeMax = volumeMax;
 	}
 

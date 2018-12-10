@@ -148,9 +148,6 @@ public class AutoCrop {
 							    box.setZMin(k);
 							else if (k > box.getZMax())
 							    box.setZMax(k);
-							
-							// replace the box with the new coordinates 
-							//boxes.set(connectedComponent.getLabel(i, j, k)-1, box);
 						}
 					}
 				}
@@ -168,9 +165,6 @@ public class AutoCrop {
 	 * @param boxes: containing object boxes.
      */
 	public void cropKernels(ArrayList <Box> boxes) {
-		//for each box the method created image is called and create the image with the good coordinates
-		//On all the coordinates to have all the intensity of the object we do minus 10 and plus 15 voxel on the coordinates of 
-		//the bounding box detected
 		for(short i = 0; i < boxes.size(); ++i) {
 			Box box = boxes.get(i);
 			int xmin = box.getXMin()-20;
@@ -223,7 +217,7 @@ public class AutoCrop {
 	}
 	
 	/**
-	 * Compute the beginig threshold value
+	 * Compute the initial threshold value
 	 * 
 	 * @param imagePlusInput raw image
 	 * @return
@@ -236,9 +230,9 @@ public class AutoCrop {
 	}
 	
 	/**
-	 * 
-	 * @param imagePlusInput
-	 * @param threshold
+	 * Create binary image with the threshold value gave in input
+	 * @param imagePlusInput ImagePlus raw image to binarize
+	 * @param threshold integer threshold value
 	 * @return
 	 */
 	private ImagePlus generateSegmentedImage (ImagePlus imagePlusInput, int threshold) {
@@ -272,7 +266,8 @@ public class AutoCrop {
     /**
      *
      * Crop of the bounding box on the image. The coordinates are inputs of this methods  
-     * @param xmin: coordinate x min of the crop
+     *
+	 * @param xmin: coordinate x min of the crop
      * @param ymin: coordinate y min of the crop
      * @param zmin: coordinate z min of the crop
      * @param width: coordinate x max of the crop
@@ -288,8 +283,9 @@ public class AutoCrop {
     }
 
     /**
-     *
-     * @return
+     *Getter of the number of nuclei contained in the input image
+	 *
+     * @return int the nb of nuclei
      */
     public int getNbOfNuc(){
         return this._nbOfNuc;

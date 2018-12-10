@@ -1,11 +1,10 @@
 package gred.nucleus.plugins;
-import gred.nucleus.core.*;
 import gred.nucleus.dialogs.NucleusSegmentationAndAnalysisDialog;
 import gred.nucleus.mainsNucelusJ.NucleusAnalysis;
+import gred.nucleus.mainsNucelusJ.SegmentationMethods;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.WindowManager;
-import ij.measure.Calibration;
 import ij.plugin.PlugIn;
 
 /**
@@ -15,50 +14,41 @@ import ij.plugin.PlugIn;
  *
  */
 public class NucleusSegmentationAndAnalysisPlugin_ implements PlugIn{
-	 /** image to process*/
-	ImagePlus _imagePlusInput;
+
 
 	/**
-	 *
-	 * @param arg
+	 *Run method for imageJ plugin for the nuclear segmentation
+	 * @param arg use by imageJ
 	 */
 	public void run(String arg) {
-		_imagePlusInput = WindowManager.getCurrentImage();
-		if (null == _imagePlusInput) {
+        ImagePlus img = WindowManager.getCurrentImage();
+        if (null == img) {
 			IJ.noImage();
 			return;
 		}
-		else if (_imagePlusInput.getStackSize() == 1 || (_imagePlusInput.getType() != ImagePlus.GRAY8 && _imagePlusInput.getType() != ImagePlus.GRAY16)) {
+		else if (img.getStackSize() == 1 || (img.getType() != ImagePlus.GRAY8 && img.getType() != ImagePlus.GRAY16)) {
 			IJ.error("image format", "No images in 8 or 16 bits gray scale  in 3D");
 			return;
 		}
 		if (IJ.versionLessThan("1.32c"))
 			return;
-		NucleusSegmentationAndAnalysisDialog nucleusSegmentationAndAnalysisDialog = new NucleusSegmentationAndAnalysisDialog(_imagePlusInput.getCalibration());
+		NucleusSegmentationAndAnalysisDialog nucleusSegmentationAndAnalysisDialog = new NucleusSegmentationAndAnalysisDialog(img.getCalibration());
 		while( nucleusSegmentationAndAnalysisDialog.isShowing()){
 	    	 try {Thread.sleep(1);}
 	    	 catch (InterruptedException e) {e.printStackTrace();}
 	    }
 		if (nucleusSegmentationAndAnalysisDialog.isStart()) {
-			double xCalibration =nucleusSegmentationAndAnalysisDialog.getXCalibration();
-			double yCalibration = nucleusSegmentationAndAnalysisDialog.getYCalibration();
-			double zCalibration = nucleusSegmentationAndAnalysisDialog.getZCalibration();
-			String unit = nucleusSegmentationAndAnalysisDialog.getUnit();
-			double volumeMin = nucleusSegmentationAndAnalysisDialog.getMinVolume();
-			double volumeMax = nucleusSegmentationAndAnalysisDialog.getMaxVolume();
-			Calibration calibration = new Calibration();
-			calibration.pixelDepth = zCalibration;
-			calibration.pixelWidth = xCalibration;
-			calibration.pixelHeight = yCalibration;
-			calibration.setUnit(unit);
-			_imagePlusInput.setCalibration(calibration);
-			IJ.log("Begin image processing "+_imagePlusInput.getTitle());
-			NucleusSegmentation nucleusSegmentation = new NucleusSegmentation();
-			nucleusSegmentation.setVolumeRange(volumeMin, volumeMax);
-			ImagePlus imagePlusSegmented = nucleusSegmentation.run(_imagePlusInput);
-			if (nucleusSegmentation.getBestThreshold() > 0) {
-				imagePlusSegmented.show();
-				NucleusAnalysis nucleusAnalysis = new NucleusAnalysis();
+			short volumeMin = (short)nucleusSegmentationAndAnalysisDialog.getMinVolume();
+			short volumeMax = (short)nucleusSegmentationAndAnalysisDialog.getMaxVolume();
+
+			IJ.log("Begin image processing "+img.getTitle());
+            SegmentationMethods segMethod = new SegmentationMethods(img,volumeMin,volumeMax);
+
+			int thresh = segMethod.runOneImage(false);
+			if (thresh  != -1){
+				NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(img,segMethod.getImageSegmented());
+				IJ.log(nucleusAnalysis.nucleusParameter3D());
+                segMethod.getImageSegmented().show();
 			}
 		}
 	}

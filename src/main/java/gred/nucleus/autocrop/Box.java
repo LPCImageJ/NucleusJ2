@@ -1,9 +1,10 @@
 package gred.nucleus.autocrop;
 
 /**
-*  Represents the informations relative to a Box in the image space (e.g. a bounding box for an object in an image).
+*  Represents the information relative to a Box in the image space (e.g. a bounding box for an object in an image).
 *  A box is represented by the minimal values (xmin, ymin, zmin) and the maximal values (xmax, ymax, zmax) for each coordinate.
-* @author Tristan Dubos and Axel Poulet
+*
+ * @author Tristan Dubos and Axel Poulet
 *
 */
 public class Box {

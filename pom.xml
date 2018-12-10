@@ -48,8 +48,6 @@
             <artifactId>loci_plugins</artifactId>
             <version>5.0.0-beta1</version>
         </dependency>
-
-
     </dependencies>
 
 	<build>

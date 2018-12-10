@@ -1,35 +1,45 @@
 package gred.nucleus.mainsNucelusJ;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 import gred.nucleus.core.Measure3D;
-import ij.IJ;
 import ij.ImagePlus;
 
 
 /**
- * Several method to realise and create the outfile for the nuclear Analysis
- * 
+ * Analysis of nuclear segmented image, method call Measure3D class, to copute the 3D parameters of interest
  * @author Tristan Dubos and Axel Poulet
  *
  */
-
 public class NucleusAnalysis {
-	@SuppressWarnings("unused")
-	private static class IOEception {  public IOEception() { } }
+    /**ImagePlus raw image*/
     private ImagePlus _imgRaw = new ImagePlus();
+    /**ImagePlus segmented image*/
     private ImagePlus _imgSeg = new ImagePlus();
+    /** String stocking the the parameters 3D results*/
     private String _resu = "";
 
-	public NucleusAnalysis (ImagePlus raw, ImagePlus seg){
-	    this._imgRaw =  raw;
-	    this._imgSeg = seg;
+    /**
+     * Constructor
+     * @param raw ImagePlus raw
+     * @param seg ImagePlus segmented
+     */
+	public NucleusAnalysis (ImagePlus raw, ImagePlus seg) {
+        this._imgRaw = raw;
+        this._imgSeg = seg;
     }
 
-	public NucleusAnalysis (){}
-
+    /**
+     * Compute the different 3D parameter and stock them in a String
+     * NucleusFileName
+     * Volume
+     * Flatness
+     * Elongation
+     * Sphericity => //TODO can be removed after test if the correction is OK
+     * Esr
+     * SurfaceArea => //TODO can be removed after test if the correction is OK
+     * SurfaceAreaCorrected => with surfel method
+     * SphericityCorrected => compute sphericty with SurfaceAreaCorrected
+     * @return String results of the 3D parameter
+     */
 	public String nucleusParameter3D (){
         Measure3D measure3D = new Measure3D();
         double volume = measure3D.computeVolumeObject(this._imgSeg,255);
@@ -50,8 +60,8 @@ public class NucleusAnalysis {
     }
 
     /**
-     *
-     * @param resu
+     * Setter of _resu.
+     * @param resu String
      */
     public void setResu(String resu){
 	    this._resu = resu;
