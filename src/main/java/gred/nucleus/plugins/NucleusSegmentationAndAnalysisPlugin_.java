@@ -9,7 +9,7 @@ import ij.plugin.PlugIn;
 
 /**
  *  Method to segment and analyse the nucleus on one image
- *  
+ *  //TODO add a paramter in GUI to chose true or false for the giftWrapping 3D
  * @author Tristan Dubos and Axel Poulet
  *
  */

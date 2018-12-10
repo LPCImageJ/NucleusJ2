@@ -1,11 +1,7 @@
 package gred.nucleus.core;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.Map.Entry;
-
 import gred.nucleus.utils.FillingHoles;
 import gred.nucleus.utils.Gradient;
 import gred.nucleus.utils.Histogram;
@@ -33,35 +29,31 @@ public class NucleusSegmentation {
 	private double _volumeMax;
 	/** String stocking the file name if any nucleus is detected*/
 	private String _logErrorSeg = "";
+    /** ImagePlus input to process*/
+    private ImagePlus _imgRaw;
 
 	/**
 	 *
 	 */
 	public NucleusSegmentation (){	}
 
-	/**
-	 * Method which run the process in input image. This image will be segmented, and
-	 * the binary image will be saved in a directory.
-	 *
-	 * @param imagePlusInput
-	 * @return
-	 */
 
 
 	/**
-	 * Compute of the first threshold of input image with the method of Otsu
-	 * From this initial value we will seek the better segmentaion possible:
+	 * Compute of the first threshold of input image with the method of Otsu.
+	 * From this initial value we will seek the better segmentation possible:
 	 * for this we will take the voxels value superior at the threshold value of method of Otsu :
 	 * Then we compute the standard deviation of this values voxel > threshold value
 	 * determines which allows range of value we will search the better threshodl value :
-	 *   thresholdOtsu-ecartType et thresholdOtsu+ecartType.
-	 * For each threshold test; we realize a opening and a closing, then we use
-	 * the holesFilling. To finish we compute the sphericity.
+	 *   thresholdOtsu - ecartType et thresholdOtsu + ecartType.
+	 * For each threshold test; we do an opening and a closing, then run the holesFilling methods.
+     * To finish we compute the sphericity.
+     *
 	 * The aim of this method is to maximize the sphericity to obtain the segmented object
 	 * nearest of the biological object.
 	 *
-	 * @param imagePlusInput
-	 * @return
+	 * @param imagePlusInput ImagePlus raw image
+	 * @return ImagePlus Segmented image
 	 */
 	public ImagePlus applySegmentation (ImagePlus imagePlusInput) {
 		double sphericityMax = -1.0;
@@ -83,14 +75,12 @@ public class NucleusSegmentation {
 			imagePlusSegmentedTemp.setCalibration(calibration);
 			volume = measure3D.computeVolumeObject(imagePlusSegmentedTemp,255);
 			imagePlusSegmentedTemp.setCalibration(calibration);
-			//IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" "+" Volume : "+ volume+ "   "+imageVolume +" Valmin "+_vMin+" Valmax "+_volumeMax+"\n les stack"+imagePlusSegmented.getImageStack());
 			boolean first = isVoxelThresholded(imagePlusSegmentedTemp,255, 0);
 			boolean last = isVoxelThresholded(imagePlusSegmentedTemp,255, imagePlusInput.getStackSize()-1);
 			if (testRelativeObjectVolume(volume,imageVolume) &&
 					volume >= _vMin &&
 					volume <= _volumeMax && first == false && last == false) {
 				sphericity = measure3D.computeSphericity(volume,measure3D.computeComplexSurface(imagePlusSegmentedTemp,gradient));
-				//IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+"les stack"+imagePlusSegmentedTemp.getImageStack());
 				if (sphericity > sphericityMax ) {
 					_bestThreshold = t;
 					sphericityMax = sphericity;
@@ -99,11 +89,9 @@ public class NucleusSegmentation {
 					imagePlusSegmented= imagePlusSegmentedTemp.duplicate();
 				}
 			}
-			//else
-			//	IJ.log("Volume de l'objet segmenté : "+ volume + " seuil entre "+ _vMin +" et "+  _volumeMax);
+
 		}
 		ImageStack imageStackInput = imagePlusSegmented.getImageStack();
-		//IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" "+imageStackInput);
 		if(_bestThreshold != -1 )
 			morphologicalCorrection(imagePlusSegmented);
 		return imagePlusSegmented;
@@ -171,7 +159,7 @@ public class NucleusSegmentation {
 	}
 
 	/**
-	 * Determines there
+	 * Determines the number of pixel on the stack index in input return true if the number of pixel>=10
 	 *
 	 * @param imagePlusSegmented
 	 * @param threshold
