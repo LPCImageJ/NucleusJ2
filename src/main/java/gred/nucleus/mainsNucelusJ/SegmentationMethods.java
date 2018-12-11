@@ -104,8 +104,8 @@ public class SegmentationMethods {
      */
     public int runOneImage(boolean giftWrapping) {
         ImagePlus imgSeg= this._imgInput;
-        NucleusSegmentation nucleusSegmentation = new NucleusSegmentation();
-        nucleusSegmentation.setVolumeRange(this._vMin, this._vMax);
+        NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(this._vMin, this._vMax);
+
 
         Calibration cal = imgSeg.getCalibration();
         System.out.println(imgSeg.getTitle()+"\t"+cal.pixelWidth+"\t"+cal.pixelHeight+"\t"+cal.pixelDepth);
@@ -172,8 +172,7 @@ public class SegmentationMethods {
                 ImagePlus imgSeg = img;
                 if(imgSeg.getType() == ImagePlus.GRAY16)
                     this.preProcessImage(imgSeg);
-                NucleusSegmentation nucleusSegmentation = new NucleusSegmentation();
-                nucleusSegmentation.setVolumeRange(this._vMin, this._vMax);
+                NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(this._vMin, this._vMax);
                 imgSeg  = nucleusSegmentation.applySegmentation(imgSeg);
                 if(nucleusSegmentation.getBestThreshold() == -1)
                     log = log + fileImg+"\n";
