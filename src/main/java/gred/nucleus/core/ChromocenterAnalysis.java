@@ -58,7 +58,7 @@ public class ChromocenterAnalysis
 	 * @param pathResultsFile path for the output file
 	 * @param imagePlusSegmented image of the segmented nucleus
 	 * @param imagePlusChromocenter image of the chromocenter segmented
-	 * @throws IOException 
+	 * @throws IOException if file doesn't exist catch the exception
 	 */
 	   
 	public void computeParametersChromocenter (String pathResultsFile,ImagePlus imagePlusSegmented, ImagePlus imagePlusChromocenter) throws IOException {
@@ -76,7 +76,7 @@ public class ChromocenterAnalysis
 			double [] tBorderToBorderDistanceTable = radialDistance.computeBorderToBorderDistances(imagePlusSegmented,imagePlusChromocenter);
 			double [] tBarycenterToBorderDistanceTableCc = radialDistance.computeBarycenterToBorderDistances (imagePlusSegmented,imagePlusChromocenter);
 			double [] tBarycenterToBorderDistanceTableNucleus = radialDistance.computeBarycenterToBorderDistances (imagePlusSegmented,imagePlusSegmented);
-			if (exist == false)
+			if (!exist)
 				bufferedWriterOutput.write("Titre\tVolume\tBorderToBorderDistance\tBarycenterToBorderDistance\tBarycenterToBorderDistanceNucleus\n");
 			for (int i = 0; i < tBorderToBorderDistanceTable.length;++i ) {
 				bufferedWriterOutput.write(

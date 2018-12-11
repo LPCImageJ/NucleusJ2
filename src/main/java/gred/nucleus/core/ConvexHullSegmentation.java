@@ -1,16 +1,9 @@
 package gred.nucleus.core;
 
 import gred.nucleus.utils.ConvexeHullImageMaker;
-import gred.nucleus.utils.VoxelRecord;
-import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Polygon;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 
 
 /**
@@ -64,10 +57,10 @@ public class ConvexHullSegmentation {
 	 * @param imagePlusYZ
 	 * Segmented image in YZ dimension
 	 *
-	 * @return
+	 * @return ImagePlus image results of the gift wrapping
 	 */
 	
-	public ImagePlus imageMakingUnion (ImagePlus imagePlusInput,ImagePlus  imagePlusXY,ImagePlus imagePlusXZ,ImagePlus imagePlusYZ) {
+	private ImagePlus imageMakingUnion (ImagePlus imagePlusInput,ImagePlus  imagePlusXY,ImagePlus imagePlusXZ,ImagePlus imagePlusYZ) {
 		ImagePlus imagePlusOutput = imagePlusInput.duplicate();
 		ImageStack imageStackXY= imagePlusXY.getStack();
 		ImageStack imageStackXZ= imagePlusXZ.getStack();

@@ -39,8 +39,7 @@ public class ChromocentersEnhancement {
 	    ImagePlus imagePlusLabels = ConnectedComponents.computeLabels(imagePlusExtrema, 26, 32);
 	    ImagePlus imagePlusWatershed = Watershed.computeWatershed(imagePlusGradient,imagePlusLabels,imagePlusSegmented, 26,true,false);
 		double [] contrast = computeContrast (imagePlusRaw,imagePlusWatershed);
-		ImagePlus imagePlusContrast = computeImage (imagePlusWatershed, contrast);
-		return imagePlusContrast;
+		return computeImage (imagePlusWatershed, contrast);
 	}
 
 
@@ -50,7 +49,7 @@ public class ChromocentersEnhancement {
 	 * @param imagePlusWatershed image results of the watershed
 	 * @return a float table which contain the value of the contrast between each region
 	 */
-	public double [][] getRegionAdjacencyGraph (ImagePlus imagePlusWatershed) {
+	private double [][] getRegionAdjacencyGraph (ImagePlus imagePlusWatershed) {
 		int voxelValue;
 		int neighborVoxelValue;
 		ImageStatistics imageStatistics = new StackStatistics(imagePlusWatershed);
@@ -88,10 +87,10 @@ public class ChromocentersEnhancement {
 	 * 
 	 * @param imagePlusRaw raw image
 	 * @param imagePlusRegions imag of the contrasted regions
-	 * @return table of constrast
+	 * @return table of contrast
 	 */
 	
-	public double [] computeContrast (ImagePlus imagePlusRaw,ImagePlus imagePlusRegions) {
+	private double [] computeContrast (ImagePlus imagePlusRaw,ImagePlus imagePlusRegions) {
 		double [][] tRegionAdjacencyGraph = getRegionAdjacencyGraph(imagePlusRegions);
 		double [] tMean = computeMeanIntensity (imagePlusRaw,imagePlusRegions);
 		double [] tContrast= new double [tRegionAdjacencyGraph.length+1];
@@ -112,58 +111,16 @@ public class ChromocentersEnhancement {
 		return tContrast;
     }
 
-	/**
-	 * Filter max on the RAG
-	 * 
-	 * @param tMeanIntensity 
-	 * @param tRegionAdjacencyGraph
-	 * @return
-	 */
-
-	public double [] filterMaxRegionAdjacencyGraph (double []tMeanIntensity, double [][] tRegionAdjacencyGraph ) {
-		double [] tOutput = new double [tRegionAdjacencyGraph.length];
-		double max;
-		for(int i = 1; i < tRegionAdjacencyGraph.length; ++i) {
-			max = tMeanIntensity[i];
-			for(int j = 1; j < tRegionAdjacencyGraph.length; ++j) {
-                if (tMeanIntensity[j] > max && tRegionAdjacencyGraph[i][j] > 0)
-                    max = tMeanIntensity[j];
-            }
-			tOutput[i] = max;
-		}
-		return tOutput;
-	}
-  
-	/**
-	 * Filter min on the RAG
-	 * 
-	 * @param tMeanIntensity
-	 * @param tRegionAdjacencyGraph
-	 * @return
-	 */
-	public double [] filterMinRegionAdjacencyGraph (double [] tMeanIntensity, double [][] tRegionAdjacencyGraph) {
-		double tOutput[] = new double [tRegionAdjacencyGraph.length];
-		double min;
-		for(int i = 1; i < tRegionAdjacencyGraph.length; ++i) {
-			min = tMeanIntensity[i];
-			for(int j = 1; j < tRegionAdjacencyGraph.length; ++j) {
-                if (tMeanIntensity[j] > 0 && tMeanIntensity[j] < min && tRegionAdjacencyGraph[i][j] > 0)
-                    min = tMeanIntensity[j];
-            }
-			tOutput[i] =  min;
-		}
-		return tOutput;
-	}
 
 	/**
 	 * Compute the mean of value voxel for each region
 	 * 
-	 * @param imagePlusInput
-	 * @param imagePlusWatershed
-	 * @return
+	 * @param imagePlusInput ImagePlus raw image
+	 * @param imagePlusWatershed ImagePlus of the results of the watershed
+	 * @return table of double of average intensity for each watershed label
 	 */
 	
-	public double [] computeMeanIntensity (ImagePlus imagePlusInput,ImagePlus imagePlusWatershed) {
+	private double [] computeMeanIntensity (ImagePlus imagePlusInput,ImagePlus imagePlusWatershed) {
 		ImageStatistics imageStatistics = new StackStatistics(imagePlusWatershed);
 		ImageStack imageStackWatershed = imagePlusWatershed.getStack();
 		ImageStack imageStackInput = imagePlusInput.getStack();
@@ -190,11 +147,11 @@ public class ChromocentersEnhancement {
 	/**
 	 * Creation of the image of contrasted regions
 	 * 
-	 * @param imagePlusInput 
-	 * @param tVoxelValue
-	 * @return
+	 * @param imagePlusInput ImagePlus raw image
+	 * @param tVoxelValue table of double of the mean region value
+	 * @return ImagePlus image contrast
 	 */
-	public ImagePlus computeImage (ImagePlus imagePlusInput, double [] tVoxelValue) {
+	private ImagePlus computeImage (ImagePlus imagePlusInput, double [] tVoxelValue) {
 		double voxelValue;
 		ImagePlus imagePlusContrast = imagePlusInput.duplicate();
 		ImageStack imageStackConstrast = imagePlusContrast.getStack();

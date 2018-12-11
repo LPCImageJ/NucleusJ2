@@ -1,23 +1,23 @@
 package gred.nucleus.core;
+
 import gred.nucleus.utils.Gradient;
 import gred.nucleus.utils.Histogram;
 import gred.nucleus.utils.VoxelRecord;
 import ij.*;
 import ij.measure.*;
-
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import Jama.EigenvalueDecomposition;
 import Jama.Matrix;
 
 /**
  * Class NucleusMeasure : allow the compute of severals 3Dparameters (shape, lenght) in
  * binary object
- * 
+ *
+ * //TODO reercrire cette classe ya des choses que je fais 5 fois c'est inutil
+ *
  * @author Tristan Dubos and Axel Poulet
  */
-
 
 public class Measure3D {
 	public Measure3D (){ }
@@ -32,6 +32,7 @@ public class Measure3D {
 	 * @param label label of the interest object
 	 * @return the surface
 	 */
+
 	public double computeSurfaceObject (ImagePlus imagePlusInput, double label){
 		Calibration calibration= imagePlusInput.getCalibration();
 		ImageStack imageStackInput = imagePlusInput.getStack();
@@ -48,22 +49,16 @@ public class Measure3D {
 							neighborVoxelValue = imageStackInput.getVoxel(i, j, kk);
 							if (voxelValue != neighborVoxelValue)
 								surfaceArea = surfaceArea + xCalibration * yCalibration;
-							//surfaceArea = surfaceArea + (((Math.sqrt((zCalibration*zCalibration) *(xCalibration*xCalibration))* yCalibration))/2);
-							//surfaceArea = surfaceArea + ((4*Math.PI * ((xCalibration/2)*(xCalibration/2)))/2) ;
 						}
 						for (int ii = i - 1; ii <= i + 1; ii += 2) {
 							neighborVoxelValue = imageStackInput.getVoxel(ii, j, k);
 							if (voxelValue != neighborVoxelValue)
 								surfaceArea = surfaceArea + yCalibration * zCalibration;
-							//surfaceArea = surfaceArea + (((Math.sqrt((zCalibration*zCalibration) *(xCalibration*xCalibration))* yCalibration))/2);
-							//surfaceArea = surfaceArea + ((4*Math.PI * ((xCalibration/2)*(xCalibration/2)))/2) ;
 						}
 						for (int jj = j - 1; jj <= j + 1; jj += 2) {
 							neighborVoxelValue = imageStackInput.getVoxel(i, jj, k);
 							if (voxelValue != neighborVoxelValue)
 								surfaceArea = surfaceArea + xCalibration * zCalibration;
-							//surfaceArea = surfaceArea + (((Math.sqrt((zCalibration*zCalibration) *(xCalibration*xCalibration))* yCalibration))/2);
-							//surfaceArea = surfaceArea + ((4*Math.PI * ((xCalibration/2)*(xCalibration/2)))/2) ;
 						}
 					}
 				}
@@ -77,7 +72,7 @@ public class Measure3D {
 	 * This Method compute the volume of each segmented objects
 	 * in imagePlus
 	 * 
-	 * @param imagePlusInput segmented image
+	 * @param imagePlusInput ImagePlus segmented image
 	 * @return double table which contain the volume of each image object
 	 */
 	public double[] computeVolumeofAllObjects (ImagePlus imagePlusInput){
@@ -97,49 +92,44 @@ public class Measure3D {
 		return tObjectVolume;
 	} 
 
+
 	/**
 	 * Compute the volume of one object with this label
-	 * @param imagePlusInput
-	 * @param label 
-	 * @return the volume
+	 * @param imagePlusInput ImagePLus of the segmented image
+	 * @param label double label of the object of interest
+	 * @return double: the volume of the label of interest
 	 */
 	public double computeVolumeObject (ImagePlus imagePlusInput, double label){
 		Calibration calibration= imagePlusInput.getCalibration();
 		double xCalibration = calibration.pixelWidth;
 		double yCalibration = calibration.pixelHeight;
 		double zCalibration = calibration.pixelDepth;
-		double volume = 0;
 		Histogram histogram = new Histogram ();
 		histogram.run(imagePlusInput);
 		HashMap<Double , Integer> hashMapHisto = histogram.getHistogram();
-		for (Double name: hashMapHisto.keySet()){
-			String key =name.toString();
-			String value = hashMapHisto.get(name).toString();
-			//IJ.log( "L130   "+key + " " + value);
-		}
-		volume =  hashMapHisto.get(label) *xCalibration*yCalibration*zCalibration;
-		return volume;
+		return  hashMapHisto.get(label) *xCalibration*yCalibration*zCalibration;
+
 	}
 
     /**
-     *
-     * @param volume
-     * @return
+     * compute the equivalent spherical radius
+     * @param volume double of the volume of the object of interesr
+     * @return double the equivalent spherical radius
      */
-	public double equivalentSphericalRadius (double volume)
-	{
+	public double equivalentSphericalRadius (double volume) {
 		double radius =  (3 * volume) / (4 * Math.PI);
 		radius = Math.pow(radius, 1.0/3.0);
 		return radius;
 	}
 	
-	/**  Cacul du rayon de l'objet à partir du volume de l'objet r=((V/pi)*(3/4))^1/3
-	 *
-     * @param imagePlusBinaire
-     * @return
+	/**
+	 * compute the equivalent spherical radius with ImagePlus in input
+     *
+     * @param imagePlusBinary ImagePlus of the segmented image
+     * @return  double the equivalent spherical radius
      */
-	public double equivalentSphericalRadius (ImagePlus imagePlusBinaire){
-		double radius =  (3 * computeVolumeObject(imagePlusBinaire,255)) / (4 * Math.PI);
+	public double equivalentSphericalRadius (ImagePlus imagePlusBinary){
+		double radius =  (3 * computeVolumeObject(imagePlusBinary,255)) / (4 * Math.PI);
 		radius = Math.pow(radius, 1.0/3.0);
 		return radius;
 	}
@@ -149,9 +139,9 @@ public class Measure3D {
 	 * Method which compute the sphericity :
 	 * 36Pi*Volume^2/Surface^3 = 1 if perfect sphere
 	 * 
-	 * @param volume
-	 * @param surface
-	 * @return
+	 * @param volume double volume of the object
+	 * @param surface double surface of the object
+	 * @return double sphercity
 	 */
 	public double computeSphericity(double volume, double surface){
 		return ((36 * Math.PI * (volume*volume)) / (surface*surface*surface));
@@ -166,9 +156,9 @@ public class Measure3D {
 	 * xz yz zz
 	 * Compute the eigen value with the pakage JAMA
 	 * 
-	 * @param imagePlusInput
-	 * @param label
-	 * @return
+	 * @param imagePlusInput  ImagePlus labelled
+	 * @param label double label of interest
+	 * @return double table containing the 3 eigen values
 	 */
 
 	public double [] computeEigenValue3D (ImagePlus imagePlusInput, double label){
@@ -215,9 +205,10 @@ public class Measure3D {
 
   
 	/**
-	 * @param imagePlusInput
-	 * @param label
-	 * @return
+     * Compute the flatness and the elongation of the object of interest
+	 * @param imagePlusInput ImagePlus of labelled image
+	 * @param label double label of interest
+	 * @return double table containing in [0] flatness and in [1] elongation
 	 */
 	public double [] computeFlatnessAndElongation (ImagePlus imagePlusInput, double label){
 		double [] shapeParameters = new double[2];
@@ -231,9 +222,9 @@ public class Measure3D {
 	 * Method which determines object barycenter
 	 * 
 	 * @param unit if true the coordinates of barycenter are in µm.
-	 * @param imagePlusInput
-	 * @param label
-	 * @return
+	 * @param imagePlusInput ImagePlus of labelled image
+	 * @param label double label of interest
+	 * @return VoxelRecord the barycenter of the object of interest
 	 */
 	public VoxelRecord computeBarycenter3D (boolean unit,ImagePlus imagePlusInput, double label){
 		ImageStack imageStackInput = imagePlusInput.getImageStack();
@@ -272,10 +263,10 @@ public class Measure3D {
 	/**
 	 * Method which compute the barycenter of each objects and return the result
 	 * in a table of VoxelRecord
-	 * 
-	 * @param imagePlusInput
-	 * @param unit
-	 * @return
+	 *
+	 * @param imagePlusInput ImagePlus of labelled image
+	 * @param unit  if true the coordinates of barycenter are in µm.
+	 * @return table of VoxelRecord for each object of the input image
 	 */
 	public VoxelRecord[] computeObjectBarycenter (ImagePlus imagePlusInput, boolean unit) {
 		Histogram histogram = new Histogram();
@@ -291,10 +282,10 @@ public class Measure3D {
 	/**
 	 * Intensity of chromocenters/ intensity of the nucleus
 	 * 
-	 * @param imagePlusInput
-	 * @param imagePlusSegmented
-	 * @param imagePlusChromocenter
-	 * @return
+	 * @param imagePlusInput ImagePlus raw image
+	 * @param imagePlusSegmented binary ImagePlus
+	 * @param imagePlusChromocenter ImagePlus of the chromocemters
+	 * @return double Relative Heterochromatin Fraction compute on the Intensity ratio
 	 */
 	public double computeIntensityRHF (ImagePlus imagePlusInput, ImagePlus imagePlusSegmented, ImagePlus imagePlusChromocenter ) {
 	    double chromocenterIntensity = 0;
@@ -327,9 +318,9 @@ public class Measure3D {
 	   * Method which compute the RHF (total chromocenters volume / nucleus volume)
 	   * @return RHF
 	   *
-	   * @param imagePlusSegmented
-	   * @param imagePlusChomocenters
-	   * @return
+	   * @param imagePlusSegmented binary ImagePlus
+	   * @param imagePlusChomocenters ImagePLus of the chromocenters
+	   * @return double Relative Heterochromatin Fraction compute on the Volume ratio
 	   */
 
 	public double computeVolumeRHF (ImagePlus imagePlusSegmented, ImagePlus imagePlusChomocenters) {
@@ -343,8 +334,8 @@ public class Measure3D {
 	  
 	/**
 	 * Detect the number of object on segmented imaeg  plop
-	 * @param imagePlusInput
-	 * @return
+	 * @param imagePlusInput Segmented image
+	 * @return int nb of object in the image
 	 */
 	public int getNumberOfObject (ImagePlus imagePlusInput) {
 	    Histogram histogram = new Histogram ();
@@ -354,7 +345,8 @@ public class Measure3D {
 	 
 
 	/**
-	 *
+	 * //TODO garder qu'une seul methode poure calcuer la surface complexe
+     *
 	 * @param imagePlusInput
 	 * @param imagePlusSegmented
 	 * @return
