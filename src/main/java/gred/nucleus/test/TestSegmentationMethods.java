@@ -56,9 +56,19 @@ public class TestSegmentationMethods {
 
         String imgPathTristan = "";
         String imgSegPathTristan = "";
-        String inputTristan = "/home/tridubos/Bureau/180516_FIXE_Col_J13_H258/COL0_BAD_SEG/TEST";
-        String outputTristanGift = "/home/tridubos/Bureau/180516_FIXE_Col_J13_H258/COL0_BAD_SEG/GIFT";
-        String outputTristanOtsu = "/home/tridubos/Bureau/180516_FIXE_Col_J13_H258/COL0_BAD_SEG/OTSU";
+        String inputTristan = "/home/tridubos/Bureau/bille_AXEL/Raw";
+        String outputTristanGift = "/home/tridubos/Bureau/bille_AXEL/GIFT/";
+        String outputTristanOtsu = "/home/tridubos/Bureau/bille_AXEL/OTSU/";
+/*
+        String inputTristan = "/home/tridubos/Bureau/Noyaux_test_sphericité/Raw";
+        String outputTristanGift = "/home/tridubos/Bureau/Noyaux_test_sphericité/GIFT/";
+        String outputTristanOtsu = "/home/tridubos/Bureau/Noyaux_test_sphericité/OTSU/";
+                /home/tridubos/Bureau/bille_AXEL/Raw
+        String inputTristan = "/home/titus/Bureau/data/Noyaux/Raw";
+        String outputTristanGift = "/home/titus/Bureau/data/Noyaux/GIFT/";
+        String outputTristanOtsu = "/home/titus/Bureau/data/Noyaux/OTSU/";
+        */
+
         //ImagePlus img  = IJ.openImage(imgPathAxel);
         //System.out.println(img.getTitle()+" Start test");
 
@@ -69,8 +79,8 @@ public class TestSegmentationMethods {
         cal.pixelHeight = 0.103;
         cal.pixelWidth = 0.103;
         */
-        testStupidSeveralImages(inputAxel, outputAxelGift, (short)6.0, (short)400.0,true);
-        testStupidSeveralImages(inputAxel, outputAxel, (short)6.0, (short)400.0,false);
+        testStupidSeveralImages(inputTristan, outputTristanGift, (short)6.0, (short)400.0,true);
+        testStupidSeveralImages(inputTristan, outputTristanOtsu, (short)6.0, (short)400.0,false);
 
 
         System.err.println("The program ended normally.");

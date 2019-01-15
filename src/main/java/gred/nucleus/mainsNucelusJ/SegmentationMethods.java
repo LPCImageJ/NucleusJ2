@@ -182,8 +182,8 @@ public class SegmentationMethods {
                         ConvexHullSegmentation nuc = new ConvexHullSegmentation();
                         imgSeg =  nuc.run(imgSeg);
                     }
-                    String pathSeg = this._output + File.separator+ img.getTitle();
-                    imgSeg.setTitle(this._output);
+                    String pathSeg = this._output + img.getTitle();
+                    imgSeg.setTitle(pathSeg);
                     saveFile(imgSeg, pathSeg);
                     NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(img,imgSeg);
                     nucleusAnalysis.setResu(resu);
