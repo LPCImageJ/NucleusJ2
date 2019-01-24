@@ -2,6 +2,7 @@ package gred.nucleus.mainsNucelusJ;
 
 import gred.nucleus.core.ConvexHullSegmentation;
 import gred.nucleus.core.NucleusSegmentation;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
 import ij.measure.Calibration;
@@ -36,7 +37,7 @@ public class SegmentationMethods {
     /** volume min of the detected object*/
     private short _vMin;
     /** volume max of the detected object*/
-    private short _vMax;
+    private int _vMax;
     /** String of of the path for the output files*/
     private String _output;
     /** String of the input dir for several nuclei analysis*/
@@ -52,7 +53,7 @@ public class SegmentationMethods {
      * @param outputImg String of of the path to save the img of the segmented nucleus.
      *
      */
-    public SegmentationMethods(ImagePlus img, short vMin, short vMax, String outputImg) {
+    public SegmentationMethods(ImagePlus img, short vMin, int vMax, String outputImg) {
         this._vMin = vMin;
         this._vMax = vMax;
         this._imgInput = img;
@@ -67,7 +68,7 @@ public class SegmentationMethods {
      * @param vMax volume max of the detected object
      *
      */
-    public SegmentationMethods(ImagePlus img, short vMin, short vMax) {
+    public SegmentationMethods(ImagePlus img, short vMin, int vMax) {
         this._vMin = vMin;
         this._vMax = vMax;
         this._imgInput = img;
@@ -81,7 +82,7 @@ public class SegmentationMethods {
      * @param vMin volume min of the detected object
      * @param vMax volume max of the detected object
      */
-    public SegmentationMethods(String inputDir, String outputDir, short vMin, short vMax) {
+    public SegmentationMethods(String inputDir, String outputDir, short vMin, int vMax) {
         this._vMin = vMin;
         this._vMax = vMax;
         this._inputDir = inputDir;
@@ -170,9 +171,11 @@ public class SegmentationMethods {
                 ImagePlus img  = imgTab[0];
                 //img.setCalibration(this._cal);
                 ImagePlus imgSeg = img;
+               // IJ.log(""+getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() +" image type " +imgSeg.getType()+"\n");
                 if(imgSeg.getType() == ImagePlus.GRAY16)
                     this.preProcessImage(imgSeg);
                 NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(this._vMin, this._vMax);
+
                 imgSeg  = nucleusSegmentation.applySegmentation(imgSeg);
                 if(nucleusSegmentation.getBestThreshold() == -1)
                     log = log + fileImg+"\n";

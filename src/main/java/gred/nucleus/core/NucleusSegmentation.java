@@ -26,7 +26,7 @@ public class NucleusSegmentation {
     /** volume min of the detected object*/
 	private short _vMin;
     /** volume max of the detected object*/
-    private  short _vMax;
+    private  int _vMax;
 	/** String stocking the file name if any nucleus is detected*/
 	private String _logErrorSeg = "";
     /** ImagePlus input to process*/
@@ -35,7 +35,7 @@ public class NucleusSegmentation {
 	/**
 	 *
 	 */
-	public NucleusSegmentation (short vMin, short vMax){
+	public NucleusSegmentation (short vMin, int vMax){
         this._vMin = vMin;
         this._vMax = vMax;
 	}
@@ -73,7 +73,9 @@ public class NucleusSegmentation {
 		final double imageVolume = xCalibration*imagePlusInput.getWidth()*yCalibration*imagePlusInput.getHeight()*zCalibration*imagePlusInput.getStackSize();
 		ImagePlus imagePlusSegmented = new ImagePlus();
 		ArrayList<Integer> arrayListThreshold = computeMinMaxThreshold(imagePlusInput);  // methode OTSU
+
 		for (int t = arrayListThreshold.get(0) ; t <= arrayListThreshold.get(1); ++t) {
+
 			ImagePlus imagePlusSegmentedTemp = generateSegmentedImage(imagePlusInput,t);
 			imagePlusSegmentedTemp = ConnectedComponents.computeLabels(imagePlusSegmentedTemp, 26, 32);
 			deleteArtefact(imagePlusSegmentedTemp);
@@ -95,7 +97,9 @@ public class NucleusSegmentation {
 				}
 			}
 
+
 		}
+		IJ.log(""+getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() + " "+_bestThreshold);
 		ImageStack imageStackInput = imagePlusSegmented.getImageStack();
 		if(_bestThreshold != -1 )
 			morphologicalCorrection(imagePlusSegmented);
@@ -155,6 +159,7 @@ public class NucleusSegmentation {
 		double stdDev =stackStatistics.stdDev ;
 		double min = threshold - stdDev*2;
 		double max = threshold + stdDev/2;
+		IJ.log(""+getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() +" min "+min + " max "+ max);
 		if ( min < 0)
 			arrayListMinMaxThreshold.add(6);
 		else

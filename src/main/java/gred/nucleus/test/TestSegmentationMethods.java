@@ -19,7 +19,7 @@ public class TestSegmentationMethods {
      * @param outputImgString
      */
 
-    public static void testStupid(ImagePlus img, short vMin, short vMax, String outputImgString, boolean gift ) {
+    public static void testStupid(ImagePlus img, short vMin, int vMax, String outputImgString, boolean gift ) {
         SegmentationMethods otsuModif = new SegmentationMethods(img, vMin, vMax, outputImgString);
         otsuModif.runOneImage(gift);
     }
@@ -32,7 +32,7 @@ public class TestSegmentationMethods {
      * @param vMax
 
      */
-    public static void testStupidSeveralImages(String input, String output, short vMin, short vMax, boolean gift ) throws FormatException {
+    public static void testStupidSeveralImages(String input, String output, short vMin, int vMax, boolean gift ) throws FormatException {
         SegmentationMethods otsuModif = new SegmentationMethods(input, output, vMin, vMax);
         try {
             String log = otsuModif.runSeveralImages(gift);
@@ -56,9 +56,9 @@ public class TestSegmentationMethods {
 
         String imgPathTristan = "";
         String imgSegPathTristan = "";
-        String inputTristan = "/home/tridubos/Bureau/bille_AXEL/Raw";
-        String outputTristanGift = "/home/tridubos/Bureau/bille_AXEL/GIFT/";
-        String outputTristanOtsu = "/home/tridubos/Bureau/bille_AXEL/OTSU/";
+        String inputTristan = "/home/tridubos/Bureau/Billes_Therorique/GAUSSIAN2/RAW";
+        String outputTristanGift = "/home/tridubos/Bureau/Billes_Therorique/GAUSSIAN2/GIFT/";
+        String outputTristanOtsu = "/home/tridubos/Bureau/Billes_Therorique/GAUSSIAN2/OTSU/";
 /*
         String inputTristan = "/home/tridubos/Bureau/Noyaux_test_sphericité/Raw";
         String outputTristanGift = "/home/tridubos/Bureau/Noyaux_test_sphericité/GIFT/";
@@ -79,8 +79,8 @@ public class TestSegmentationMethods {
         cal.pixelHeight = 0.103;
         cal.pixelWidth = 0.103;
         */
-        testStupidSeveralImages(inputTristan, outputTristanGift, (short)6.0, (short)400.0,true);
-        testStupidSeveralImages(inputTristan, outputTristanOtsu, (short)6.0, (short)400.0,false);
+        testStupidSeveralImages(inputTristan, outputTristanGift, (short)1.0, 300000,true);
+        testStupidSeveralImages(inputTristan, outputTristanOtsu, (short)6.0, 300000,false);
 
 
         System.err.println("The program ended normally.");
