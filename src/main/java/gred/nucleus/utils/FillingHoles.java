@@ -87,7 +87,7 @@ public class FillingHoles {
  
  
 	/**
-	 * Method in two dimensions which process ecah plan z independent,
+	 * Method in two dimensions which process each plan z independent,
 	 *
 	 */
 	public ImagePlus apply2D (ImagePlus imagePlusInput){
@@ -138,6 +138,8 @@ public class FillingHoles {
 			imageStackOutput.addSlice(imageProcessorLabellised);
 		}
 		imagePlusCorrected.setStack(imageStackOutput);
+        StackConverter stackConverter = new StackConverter( imagePlusCorrected );
+        stackConverter.convertToGray8();
 		return imagePlusCorrected;
 	}
 }

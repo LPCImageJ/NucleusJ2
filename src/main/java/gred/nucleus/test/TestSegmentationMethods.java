@@ -4,6 +4,7 @@ import gred.nucleus.mainsNucelusJ.SegmentationMethods;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.measure.Calibration;
+import ij.process.ImageProcessor;
 import loci.formats.FormatException;
 
 import java.io.IOException;
@@ -56,9 +57,13 @@ public class TestSegmentationMethods {
 
         String imgPathTristan = "";
         String imgSegPathTristan = "";
-        String inputTristan = "/home/tridubos/Bureau/Billes_Therorique/GAUSSIAN2/RAW";
-        String outputTristanGift = "/home/tridubos/Bureau/Billes_Therorique/GAUSSIAN2/GIFT/";
-        String outputTristanOtsu = "/home/tridubos/Bureau/Billes_Therorique/GAUSSIAN2/OTSU/";
+        String inputTristan = "/home/tridubos/Bureau/Billes_Therorique/GAUSSIAN_TEST/RAW";
+        String outputTristanGift = "/home/tridubos/Bureau/Billes_Therorique/GAUSSIAN_TEST/GIFT/";
+        String outputTristanOtsu = "/home/tridubos/Bureau/Billes_Therorique/GAUSSIAN_TEST/OTSU/";
+
+
+
+
 /*
         String inputTristan = "/home/tridubos/Bureau/Noyaux_test_sphericité/Raw";
         String outputTristanGift = "/home/tridubos/Bureau/Noyaux_test_sphericité/GIFT/";
@@ -67,6 +72,7 @@ public class TestSegmentationMethods {
         String inputTristan = "/home/titus/Bureau/data/Noyaux/Raw";
         String outputTristanGift = "/home/titus/Bureau/data/Noyaux/GIFT/";
         String outputTristanOtsu = "/home/titus/Bureau/data/Noyaux/OTSU/";
+
         */
 
         //ImagePlus img  = IJ.openImage(imgPathAxel);
@@ -78,8 +84,9 @@ public class TestSegmentationMethods {
         cal.pixelDepth = 0.2;
         cal.pixelHeight = 0.103;
         cal.pixelWidth = 0.103;
-        */
+
         testStupidSeveralImages(inputTristan, outputTristanGift, (short)1.0, 300000,true);
+*/
         testStupidSeveralImages(inputTristan, outputTristanOtsu, (short)6.0, 300000,false);
 
 

@@ -94,15 +94,20 @@ public class NucleusSegmentation {
 					StackConverter stackConverter = new StackConverter( imagePlusSegmentedTemp );
 					stackConverter.convertToGray8();
 					imagePlusSegmented= imagePlusSegmentedTemp.duplicate();
+
 				}
 			}
 
 
 		}
-		IJ.log(""+getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() + " "+_bestThreshold);
+
+
 		ImageStack imageStackInput = imagePlusSegmented.getImageStack();
-		if(_bestThreshold != -1 )
+		//IJ.log(""+getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() + " type image :"+imagePlusSegmented.getType());
+		if(_bestThreshold != -1 ) {
 			morphologicalCorrection(imagePlusSegmented);
+		}
+
 		return imagePlusSegmented;
 	}
 
@@ -159,7 +164,6 @@ public class NucleusSegmentation {
 		double stdDev =stackStatistics.stdDev ;
 		double min = threshold - stdDev*2;
 		double max = threshold + stdDev/2;
-		IJ.log(""+getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() +" min "+min + " max "+ max);
 		if ( min < 0)
 			arrayListMinMaxThreshold.add(6);
 		else
