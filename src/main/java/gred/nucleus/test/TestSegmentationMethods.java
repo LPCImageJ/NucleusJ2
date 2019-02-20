@@ -1,6 +1,7 @@
 package gred.nucleus.test;
 
 import gred.nucleus.mainsNucelusJ.SegmentationMethods;
+import gred.nucleus.utils.Histogram;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.measure.Calibration;
@@ -8,8 +9,11 @@ import ij.process.ImageProcessor;
 import loci.formats.FormatException;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 import static ij.IJ.open;
+
+import ij.plugin.filter.GaussianBlur;
 
 public class TestSegmentationMethods {
     /**
@@ -55,11 +59,11 @@ public class TestSegmentationMethods {
         String outputAxel = "/home/plop/Bureau/image/wideField/testSeg/";
         String outputAxelGift = "/home/plop/Bureau/image/wideField/testSegGift/";
 
-        String imgPathTristan = "";
+        String imgPathTristan = "/home/tridubos/Bureau/Billes_Therorique/r5_8b.tif";
         String imgSegPathTristan = "";
-        String inputTristan = "/home/tridubos/Bureau/Billes_Therorique/GAUSSIAN_TEST/RAW";
-        String outputTristanGift = "/home/tridubos/Bureau/Billes_Therorique/GAUSSIAN_TEST/GIFT/";
-        String outputTristanOtsu = "/home/tridubos/Bureau/Billes_Therorique/GAUSSIAN_TEST/OTSU/";
+        String inputTristan = "/home/tridubos/Bureau/Billes_Therorique/RAW_BILLE/GAUSSIAN-01/raw/";
+        String outputTristanGift = "/home/tridubos/Bureau/Billes_Therorique/RAW_BILLE/GAUSSIAN-01/GIFT/";
+        String outputTristanOtsu = "/home/tridubos/Bureau/Billes_Therorique/RAW_BILLE/GAUSSIAN-01/OTSU/";
 
 
 
@@ -84,12 +88,17 @@ public class TestSegmentationMethods {
         cal.pixelDepth = 0.2;
         cal.pixelHeight = 0.103;
         cal.pixelWidth = 0.103;
+ */
+        testStupidSeveralImages(inputTristan, outputTristanGift, (short)1.0, 300000000,true);
 
-        testStupidSeveralImages(inputTristan, outputTristanGift, (short)1.0, 300000,true);
-*/
-        testStupidSeveralImages(inputTristan, outputTristanOtsu, (short)6.0, 300000,false);
-
-
+        testStupidSeveralImages(inputTristan, outputTristanOtsu, (short)6.0, 300000000,false);
+        /*
+        ImagePlus img  = IJ.openImage(imgPathTristan);
+        Histogram histogram = new Histogram ();
+        histogram.run(img);
+        HashMap<Double , Integer> hashMapHisto = histogram.getHistogram();
+        IJ.log("nombre de pixel"+hashMapHisto.get(0));
+        */
         System.err.println("The program ended normally.");
     }
 }

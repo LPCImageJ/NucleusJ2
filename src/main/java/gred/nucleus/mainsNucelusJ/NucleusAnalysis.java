@@ -1,6 +1,7 @@
 package gred.nucleus.mainsNucelusJ;
 
 import gred.nucleus.core.Measure3D;
+import ij.IJ;
 import ij.ImagePlus;
 
 
@@ -45,6 +46,8 @@ public class NucleusAnalysis {
         double volume = measure3D.computeVolumeObject(this._imgSeg,255);
         double surfaceArea = measure3D.computeSurfaceObject(this._imgSeg,255);
         double bis = measure3D.computeComplexSurface(this._imgRaw, this._imgSeg);
+        double [] tEigenValues = measure3D.computeEigenValue3D (this._imgSeg,255);
+        IJ.log(" "+tEigenValues[0]            + " " +tEigenValues[1]  + " "              +tEigenValues[2]);
         if(this._resu.equals(""))
             this._resu = "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected";
         this._resu = this._resu+"\n"+this._imgSeg.getTitle()+"\t"
@@ -55,7 +58,8 @@ public class NucleusAnalysis {
                 +measure3D.equivalentSphericalRadius(volume)+"\t"
                 +surfaceArea+"\t"
                 +bis+"\t"
-                +measure3D.computeSphericity(volume, bis);
+                +measure3D.computeSphericity(volume, bis)
+                ;
         return this._resu;
     }
 
