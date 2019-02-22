@@ -2,11 +2,14 @@ package gred.nucleus.autocrop;
 
 import ij.IJ;
 import ij.ImagePlus;
+import ij.gui.Overlay;
+import ij.gui.TextRoi;
 import ij.io.FileSaver;
 import ij.plugin.ZProjector;
 import loci.formats.FormatException;
 import loci.plugins.BF;
 
+import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -47,6 +50,26 @@ public class annotAutoCrop {
             IJ.run("Line Width...", "line=4");
             IJ.run("Colors...", "foreground=black background=black selection=black");
             m_zProjection.setRoi(Integer.parseInt(currentBox[1])-20,Integer.parseInt(currentBox[3])-20,withBox+40,heigthBox+40);
+            IJ.run(m_zProjection, "Draw", "stack");
+            int xBorder=(Integer.parseInt(currentBox[1])-60);
+            int xBorderLeft =(Integer.parseInt(currentBox[1])-60);
+            int xBorderRigth =m_zProjection.getWidth()-(Integer.parseInt(currentBox[1])-60);
+            IJ.log("ca race "+m_zProjection.getWidth()+ " " +(Integer.parseInt(currentBox[1])));
+            if (xBorderLeft <= 50){
+                xBorder =withBox+60;
+                IJ.log("On est dedans LEFT");
+            }
+            if (xBorderRigth <= 50){
+                xBorder =xBorderRigth;
+                IJ.log("On est dedans RIGTH");
+            }
+
+            Font font = new Font("Arial", Font.PLAIN, 20);
+
+            TextRoi left = new TextRoi(xBorder,(Integer.parseInt(currentBox[3]))-heigthBox/2,Integer.toString(i) ,font);
+
+
+            m_zProjection.setRoi(left);
             IJ.run(m_zProjection, "Draw", "stack");
 
         }

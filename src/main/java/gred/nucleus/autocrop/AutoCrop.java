@@ -102,7 +102,6 @@ public class AutoCrop {
 		GaussianBlur3D.blur(m_imageSeg, 0.5,0.5,1);
 		int thresh = computeOtsuThreshold(m_imageSeg);
 		m_imageSeg = this.generateSegmentedImage(m_imageSeg, thresh);
-		m_imageSeg.show();
 		//saveFile(m_imageSeg,"/home/plop/Bureau/prout.tif");
 	}
 	

@@ -90,7 +90,7 @@ public class AutoCropCalling {
     private void autocropMethod(ImagePlus img)throws IOException, FormatException{
         AutoCrop autoCrop = new AutoCrop (img,this._prefix,this._output);
         autoCrop.thresholdKernels();
-        autoCrop.cropKernels(autoCrop.computeBoxes(1));
+        autoCrop.cropKernels(autoCrop.computeBoxes(2));
         //IJ.log("et la mamen"+autoCrop.getFileCoordinates()+"\nle prefix"+this._prefix);
         autoCrop.getOutputFileArrayList();
         annotAutoCrop test  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input);

@@ -50,7 +50,7 @@ public class TestAutoCrop {
         String inputDirTristan = "";
         String outputTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/test_crop/";
 
-        //testStupid(inputOneImageTristan, outputTristan);
+        testStupid(inputOneImageTristan, outputTristan);
 
 		System.err.println("The program ended normally.");
 	}
