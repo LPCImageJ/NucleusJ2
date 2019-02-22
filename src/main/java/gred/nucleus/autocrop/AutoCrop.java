@@ -102,6 +102,7 @@ public class AutoCrop {
 		GaussianBlur3D.blur(m_imageSeg, 0.5,0.5,1);
 		int thresh = computeOtsuThreshold(m_imageSeg);
 		m_imageSeg = this.generateSegmentedImage(m_imageSeg, thresh);
+		m_imageSeg.show();
 		//saveFile(m_imageSeg,"/home/plop/Bureau/prout.tif");
 	}
 	
@@ -171,7 +172,7 @@ public class AutoCrop {
 			int ymin =  box.getYMin()-20;
 			int zmin =  box.getZMin()-20;
 			String coord= box.getXMin()+"_"+box.getYMin()+"_"+box.getZMin();
-			m_boxCoordinates.add(m_outputDirPath+File.separator+m_outputFilesPrefix+"_"+coord+i+"\t"+box.getXMin()+"\t"+box.getXMax()+"\t"+box.getYMin()+"\t"+box.getYMax()+" \t"+box.getZMin()+"\t"+box.getZMax());
+			m_boxCoordinates.add(m_outputDirPath+File.separator+m_outputFilesPrefix+"_"+coord+i+"\t"+box.getXMin()+"\t"+box.getXMax()+"\t"+box.getYMin()+"\t"+box.getYMax()+"\t"+box.getZMin()+"\t"+box.getZMax());
 			if (xmin < 0)
 			    xmin = 1;
 			if (ymin < 0)
@@ -290,4 +291,6 @@ public class AutoCrop {
     public int getNbOfNuc(){
         return this._nbOfNuc;
     }
+
+
 }

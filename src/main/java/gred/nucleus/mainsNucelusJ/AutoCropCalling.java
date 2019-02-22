@@ -1,6 +1,8 @@
 package gred.nucleus.mainsNucelusJ;
 
 import gred.nucleus.autocrop.AutoCrop;
+import gred.nucleus.autocrop.annotAutoCrop;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.measure.Calibration;
 import loci.formats.FormatException;
@@ -54,7 +56,7 @@ public class AutoCropCalling {
         if(inputFile.isFile()){
             String[] tNameFile =  this._input.split(File.separator);
             this._prefix = tNameFile[tNameFile.length-1].replaceAll(".tif","");
-            this._prefix = tNameFile[tNameFile.length-1].replaceAll(".TIF","");
+            this._prefix = _prefix.replaceAll(".TIF","");
             ImagePlus[] img = BF.openImagePlus(_input);
             Calibration cal = img[0].getCalibration();
             System.out.println(img[0].getTitle()+"\t"+cal.pixelWidth+"\t"+cal.pixelHeight+"\t"+cal.pixelDepth);
@@ -67,7 +69,7 @@ public class AutoCropCalling {
                 if (fileImg.contains(".tif") || fileImg.contains(".TIF")) {
                     String[] tNameFile =  fileImg.split(File.separator);
                     this._prefix = tNameFile[tNameFile.length-1].replaceAll(".tif","");
-                    this._prefix = tNameFile[tNameFile.length-1].replaceAll(".TIF","");
+                    this._prefix = _prefix.replaceAll(".TIF","");
                     ImagePlus[] img = BF.openImagePlus(fileImg);
                     Calibration cal = img[0].getCalibration();
                     System.out.println(img[0].getTitle()+"\t"+cal.pixelWidth+"\t"+cal.pixelHeight+"\t"+cal.pixelDepth);
@@ -79,15 +81,21 @@ public class AutoCropCalling {
 
 
     /**
+     *  @throws IOException if file problem
+     *  @throws FormatException Bioformat exception
+     *
      * private method calling the autoCrop Class,
      * @param img ImagePlus input to crop
      */
-    private void autocropMethod(ImagePlus img){
+    private void autocropMethod(ImagePlus img)throws IOException, FormatException{
         AutoCrop autoCrop = new AutoCrop (img,this._prefix,this._output);
         autoCrop.thresholdKernels();
-        autoCrop.cropKernels(autoCrop.computeBoxes(8));
+        autoCrop.cropKernels(autoCrop.computeBoxes(1));
+        //IJ.log("et la mamen"+autoCrop.getFileCoordinates()+"\nle prefix"+this._prefix);
         autoCrop.getOutputFileArrayList();
+        annotAutoCrop test  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input);
         System.out.println(_prefix+"\t"+autoCrop.getNbOfNuc()+" nuclei detected");
-
     }
+
+
 }
