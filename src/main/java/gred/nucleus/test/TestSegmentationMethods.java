@@ -89,9 +89,9 @@ public class TestSegmentationMethods {
         cal.pixelHeight = 0.103;
         cal.pixelWidth = 0.103;
  */
-        testStupidSeveralImages(inputTristan, outputTristanGift, (short)1.0, 300000000,true);
+        testStupidSeveralImages(inputTristan, outputTristanOtsu , (short)1.0, 300000000,false);
 
-        testStupidSeveralImages(inputTristan, outputTristanOtsu, (short)6.0, 300000000,false);
+        testStupidSeveralImages(inputTristan, outputTristanGift, (short)6.0, 300000000,true);
         /*
         ImagePlus img  = IJ.openImage(imgPathTristan);
         Histogram histogram = new Histogram ();
