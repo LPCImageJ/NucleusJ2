@@ -167,9 +167,13 @@ public class AutoCrop {
 	public void cropKernels(ArrayList <Box> boxes) {
 		for(short i = 0; i < boxes.size(); ++i) {
 			Box box = boxes.get(i);
-			int xmin = box.getXMin()-20;
-			int ymin =  box.getYMin()-20;
+			int xmin = box.getXMin()-40;
+			int ymin =  box.getYMin()-40;
 			int zmin =  box.getZMin()-20;
+			if(i==13){
+
+				IJ.log(""+xmin +" "+ ymin + " "+ zmin);
+			}
 			String coord= box.getXMin()+"_"+box.getYMin()+"_"+box.getZMin();
 			m_boxCoordinates.add(m_outputDirPath+File.separator+m_outputFilesPrefix+"_"+coord+i+"\t"+box.getXMin()+"\t"+box.getXMax()+"\t"+box.getYMin()+"\t"+box.getYMax()+"\t"+box.getZMin()+"\t"+box.getZMax());
 			if (xmin < 0)
@@ -179,8 +183,8 @@ public class AutoCrop {
 			if (zmin < 0)
 			    zmin = 1;
 
-			int width = box.getXMax()+30 - box.getXMin();
-			int height = box.getYMax()+30 - box.getYMin();
+			int width = box.getXMax()+80 - box.getXMin();
+			int height = box.getYMax()+80 - box.getYMin();
 			int depth = box.getZMax()+30 - box.getZMin();
 			if (width+xmin >= m_imageSeg.getWidth())
 	         	width-=(width+xmin)-m_imageSeg.getWidth();
