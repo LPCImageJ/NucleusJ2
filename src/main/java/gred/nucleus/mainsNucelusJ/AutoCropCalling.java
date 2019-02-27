@@ -91,9 +91,8 @@ public class AutoCropCalling {
         AutoCrop autoCrop = new AutoCrop (img,this._prefix,this._output);
         autoCrop.thresholdKernels();
         autoCrop.cropKernels(autoCrop.computeBoxes(2));
-        //IJ.log("et la mamen"+autoCrop.getFileCoordinates()+"\nle prefix"+this._prefix);
         autoCrop.getOutputFileArrayList();
-        annotAutoCrop test  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input);
+        annotAutoCrop test  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input+img.getTitle());
         System.out.println(_prefix+"\t"+autoCrop.getNbOfNuc()+" nuclei detected");
     }
 

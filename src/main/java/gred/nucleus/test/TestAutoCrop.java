@@ -46,7 +46,7 @@ public class TestAutoCrop {
         String inputDirAxel = "/home/plop/Bureau/image/wideField/";
         String outputAxel = "/home/plop/Bureau/image/wideField/test";
 
-        String inputOneImageTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/raw/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s9_test.TIF";
+        String inputOneImageTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/raw/";
         //String inputOneImageTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/raw/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s9.TIF";
         String inputDirTristan = "";
         String outputTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/test_crop/";
