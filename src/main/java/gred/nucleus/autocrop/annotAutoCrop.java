@@ -87,30 +87,26 @@ public class annotAutoCrop {
 
     private void  addBoxCropToZProjection(String corrdinateList ,int boxNumber){
         String currentBox[] =corrdinateList.split("\t");
-        int withBox=Math.abs(Integer.parseInt(currentBox[1])-Integer.parseInt(currentBox[2]));
-        int heigthBox=Math.abs(Integer.parseInt(currentBox[3])-Integer.parseInt(currentBox[4]));
+        /** withBox calculation */
+        int withBox=Math.abs(Integer.parseInt(currentBox[1])-Integer.parseInt(currentBox[2]))+80;
+        /** heigthBox calculation */
+        int heigthBox=Math.abs(Integer.parseInt(currentBox[3])-Integer.parseInt(currentBox[4]))+80;
+        /** Line size parameter */
         IJ.run("Line Width...", "line=4");
-        this.m_zProjection.setRoi(Integer.parseInt(currentBox[1])-20,Integer.parseInt(currentBox[3])-20,withBox+40,heigthBox+40);
+        /** Set draw current box*/
+        this.m_zProjection.setRoi(Integer.parseInt(currentBox[1])-40,Integer.parseInt(currentBox[3])-40,withBox,heigthBox);
         IJ.run(this.m_zProjection, "Draw", "stack");
-        int xBorder=(Integer.parseInt(currentBox[1])-60);
-        int xBorderLeft =(Integer.parseInt(currentBox[1])-60);
-        int xBorderRigth =this.m_zProjection.getWidth()-(Integer.parseInt(currentBox[1])-60);
-        if (xBorderLeft <= 50){
-            xBorder =withBox+60;
-
+        /** Calculation of the coordinate to add nuclei Number */
+        int xBorder=Integer.parseInt(currentBox[1])-100;
+        int yBorder=Integer.parseInt(currentBox[3])+((Integer.parseInt(currentBox[4])-Integer.parseInt(currentBox[3]))/2)-20;
+        if (xBorder <= 40){  // When the box is in left border the number need to be write on the write
+           xBorder =Integer.parseInt(currentBox[2])+60;
         }
-        if (xBorderRigth <= 50){
-            xBorder =xBorderRigth;
-        }
-
         Font font = new Font("Arial", Font.PLAIN, 30);
-
-        TextRoi left = new TextRoi(xBorder,(Integer.parseInt(currentBox[3]))-heigthBox/2,Integer.toString(boxNumber) ,font);
-
-
+        TextRoi left = new TextRoi(xBorder,yBorder,Integer.toString(boxNumber) ,font);
         this.m_zProjection.setRoi(left);
+        /** Draw the nucleus number aside the box */
         IJ.run(this.m_zProjection, "Draw", "stack");
-        this.m_zProjection.show();
 
     }
 
@@ -123,7 +119,6 @@ public class annotAutoCrop {
     private void ajustContrast (double contrast){
         IJ.run(this.m_zProjection, "Enhance Contrast...", "saturated="+contrast);
         IJ.run(this.m_zProjection, "Invert LUT", "");
-        this.m_zProjection.show();
     }
 
 }
