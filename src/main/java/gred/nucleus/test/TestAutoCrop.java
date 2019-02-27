@@ -1,13 +1,10 @@
 package gred.nucleus.test;
 
+import gred.nucleus.mainsNucelusJ.AutoCropCalling;
+import loci.formats.FormatException;
+
 import java.io.IOException;
 import java.util.ArrayList;
-
-import gred.nucleus.autocrop.AutoCrop;
-import gred.nucleus.mainsNucelusJ.AutoCropCalling;
-import ij.IJ;
-import ij.ImagePlus;
-import loci.formats.FormatException;
 
 
 /**
@@ -49,13 +46,13 @@ public class TestAutoCrop {
         String inputDirAxel = "/home/plop/Bureau/image/wideField/";
         String outputAxel = "/home/plop/Bureau/image/wideField/test";
 
-        String inputOneImageTristan = "";
+        String inputOneImageTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/raw/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s9_test.TIF";
+        //String inputOneImageTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/raw/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s9.TIF";
         String inputDirTristan = "";
-        String outputTristan = "";
+        String outputTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/test_crop/";
 
-        testStupid(inputOneImageAxel, outputAxel);
+        testStupid(inputOneImageTristan, outputTristan);
 
-		
 		System.err.println("The program ended normally.");
 	}
 

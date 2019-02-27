@@ -61,9 +61,9 @@ public class TestSegmentationMethods {
 
         String imgPathTristan = "/home/tridubos/Bureau/Billes_Therorique/r5_8b.tif";
         String imgSegPathTristan = "";
-        String inputTristan = "/home/tridubos/Bureau/Billes_Therorique/RAW_BILLE/GAUSSIAN-01/raw/";
-        String outputTristanGift = "/home/tridubos/Bureau/Billes_Therorique/RAW_BILLE/GAUSSIAN-01/GIFT/";
-        String outputTristanOtsu = "/home/tridubos/Bureau/Billes_Therorique/RAW_BILLE/GAUSSIAN-01/OTSU/";
+        String inputTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/test_crop";
+        String outputTristanGift = "/home/tridubos/Bureau/AUTOCROP_TEST/test_crop/GIFT/";
+        String outputTristanOtsu = "/home/tridubos/Bureau/AUTOCROP_TEST/test_crop/OTSU/";
 
 
 
