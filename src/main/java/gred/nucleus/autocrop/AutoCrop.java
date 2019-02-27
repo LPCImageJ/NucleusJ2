@@ -138,7 +138,6 @@ public class AutoCrop {
 							    box.setXMin(i);
 							else if (i > box.getXMax())
 							    box.setXMax(i);
-					
 							if (j < box.getYMin())
 							    box.setYMin(j);
 							else if(j > box.getYMax())
@@ -170,10 +169,6 @@ public class AutoCrop {
 			int xmin = box.getXMin()-40;
 			int ymin =  box.getYMin()-40;
 			int zmin =  box.getZMin()-20;
-			if(i==13){
-
-				IJ.log(""+xmin +" "+ ymin + " "+ zmin);
-			}
 			String coord= box.getXMin()+"_"+box.getYMin()+"_"+box.getZMin();
 			m_boxCoordinates.add(m_outputDirPath+File.separator+m_outputFilesPrefix+"_"+coord+i+"\t"+box.getXMin()+"\t"+box.getXMax()+"\t"+box.getYMin()+"\t"+box.getYMax()+"\t"+box.getZMin()+"\t"+box.getZMax());
 			if (xmin < 0)
@@ -185,7 +180,7 @@ public class AutoCrop {
 
 			int width = box.getXMax()+80 - box.getXMin();
 			int height = box.getYMax()+80 - box.getYMin();
-			int depth = box.getZMax()+30 - box.getZMin();
+			int depth = box.getZMax()+40 - box.getZMin();
 			if (width+xmin >= m_imageSeg.getWidth())
 	         	width-=(width+xmin)-m_imageSeg.getWidth();
 
@@ -194,7 +189,8 @@ public class AutoCrop {
 
 			if (depth+zmin >= m_imageSeg.getNSlices())
 	         	depth-=(depth+zmin)-m_imageSeg.getNSlices();
-
+			//IJ.log(" "+i +" "+ xmin+" "+ ymin+" "+ zmin+" "+ width+" "+ height+" "+ depth+"\n");
+			//IJ.log(" "+width +" "+ box.getXMax()+" +80 " + box.getXMin()+"\n");
 			ImagePlus imgResu = cropImage(xmin, ymin, zmin, width, height, depth);
 			Calibration cal = m_rawImg.getCalibration();
 			imgResu.setCalibration(cal);
