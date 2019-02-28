@@ -168,29 +168,37 @@ public class SegmentationMethods {
             String fileImg = fileList[i].toString();
             if (fileImg.contains(".tif")) {
                 ImagePlus[] imgTab = BF.openImagePlus(fileImg);
-                ImagePlus img  = imgTab[0];
-                //img.setCalibration(this._cal);
+                ImagePlus img = imgTab[0];
                 ImagePlus imgSeg = img;
-               // IJ.log(""+getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() +" image type " +imgSeg.getType()+"\n");
-                if(imgSeg.getType() == ImagePlus.GRAY16)
+                // IJ.log(""+getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() +" image type " +imgSeg.getType()+"\n");
+                if (imgSeg.getType() == ImagePlus.GRAY16)
                     this.preProcessImage(imgSeg);
                 NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(this._vMin, this._vMax);
 
-                imgSeg  = nucleusSegmentation.applySegmentation(imgSeg);
-                if(nucleusSegmentation.getBestThreshold() == -1)
-                    log = log + fileImg+"\n";
-                else{
-                    System.out.println(fileImg+"\totsu modif threshold "+nucleusSegmentation.getBestThreshold()+"\n");
-                    if (giftWrapping){
-                        ConvexHullSegmentation nuc = new ConvexHullSegmentation();
-                        imgSeg =  nuc.run(imgSeg);
+                imgSeg = nucleusSegmentation.applySegmentation(imgSeg);
+
+
+                if (nucleusSegmentation.getBadCrop()==true) {
+                    IJ.log("Bad crop " +fileImg);
+
+                }
+                else {
+                    if (nucleusSegmentation.getBestThreshold() == -1) {
+                        log = log + fileImg + "\n";
+                        IJ.log("le log : " + log);
+                    } else {
+                        System.out.println(fileImg + "\totsu modif threshold " + nucleusSegmentation.getBestThreshold() + "\n");
+                        if (giftWrapping) {
+                            ConvexHullSegmentation nuc = new ConvexHullSegmentation();
+                            imgSeg = nuc.run(imgSeg);
+                        }
+                        String pathSeg = this._output + img.getTitle();
+                        imgSeg.setTitle(pathSeg);
+                        saveFile(imgSeg, pathSeg);
+                        NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(img, imgSeg);
+                        nucleusAnalysis.setResu(resu);
+                        resu = nucleusAnalysis.nucleusParameter3D();
                     }
-                    String pathSeg = this._output + img.getTitle();
-                    imgSeg.setTitle(pathSeg);
-                    saveFile(imgSeg, pathSeg);
-                    NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(img,imgSeg);
-                    nucleusAnalysis.setResu(resu);
-                    resu = nucleusAnalysis.nucleusParameter3D();
                 }
             }
         }

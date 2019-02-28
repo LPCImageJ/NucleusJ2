@@ -31,6 +31,8 @@ public class NucleusSegmentation {
 	private String _logErrorSeg = "";
     /** ImagePlus input to process*/
     private ImagePlus _imgRaw;
+	/** Check if the segmentation is not in border */
+    private boolean _badCrop =false;
 
 	/**
 	 *
@@ -82,11 +84,12 @@ public class NucleusSegmentation {
 			imagePlusSegmentedTemp.setCalibration(calibration);
 			volume = measure3D.computeVolumeObject(imagePlusSegmentedTemp,255);
 			imagePlusSegmentedTemp.setCalibration(calibration);
-			boolean first = isVoxelThresholded(imagePlusSegmentedTemp,255, 0);
-			boolean last = isVoxelThresholded(imagePlusSegmentedTemp,255, imagePlusInput.getStackSize()-1);
+			boolean firstStack = isVoxelThresholded(imagePlusSegmentedTemp,255, 0);
+			boolean lastStack = isVoxelThresholded(imagePlusSegmentedTemp,255, imagePlusInput.getStackSize()-1);
+			//boolean xyBorder;
 			if (testRelativeObjectVolume(volume,imageVolume) &&
 					volume >= _vMin &&
-					volume <= _vMax && first == false && last == false) {
+					volume <= _vMax && firstStack == false && lastStack == false) {
 				sphericity = measure3D.computeSphericity(volume,measure3D.computeComplexSurface(imagePlusSegmentedTemp,gradient));
 				if (sphericity > sphericityMax ) {
 					_bestThreshold = t;
@@ -101,12 +104,13 @@ public class NucleusSegmentation {
 
 		}
 
-
 		ImageStack imageStackInput = imagePlusSegmented.getImageStack();
-		//IJ.log(""+getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() + " type image :"+imagePlusSegmented.getType());
+
 		if(_bestThreshold != -1 ) {
 			morphologicalCorrection(imagePlusSegmented);
 		}
+
+		checkBorder(imagePlusSegmented);
 
 		return imagePlusSegmented;
 	}
@@ -149,6 +153,45 @@ public class NucleusSegmentation {
 		}
 		return imagePlusSegmented;
 	}
+
+	/**
+	 * Method to check if the final segmented image got pixel on border of the image
+	 * (filter of partial nucleus)
+	 *
+	 * @param imagePlusInput Segmented image with the OTSU modified threshold
+	 */
+
+	private void checkBorder (ImagePlus imagePlusInput) {
+		ImageStack imageStackInput = imagePlusInput.getStack();
+		for(int k = 0; k < imagePlusInput.getStackSize(); ++k) {
+			for (int i = 0; i < imagePlusInput.getWidth(); i+=(imagePlusInput.getWidth())-1) {
+				for (int j = 0; j < imagePlusInput.getHeight(); j++) {
+					if (imageStackInput.getVoxel(i, j, k) ==255.0){
+						this._badCrop=true;
+					}
+				}
+			}
+			for (int j = 0; j < imagePlusInput.getHeight(); j+=(imagePlusInput.getHeight()-1)) {
+
+				for (int i = 0; i < imagePlusInput.getWidth(); i++) {
+					if (imageStackInput.getVoxel(i, j, k) == 255.0) {
+						this._badCrop = true;
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 *
+	 * @return True if the nucleus is partial
+	 */
+
+	public boolean getBadCrop (){
+		return this._badCrop;
+	}
+
+
 
 	/**
 	 * Determine of the minimum and the maximum value o find the better threshold value
@@ -194,6 +237,7 @@ public class NucleusSegmentation {
 			voxelThresolded = true;
 		return voxelThresolded;
 	}
+
 
 
 	/**
