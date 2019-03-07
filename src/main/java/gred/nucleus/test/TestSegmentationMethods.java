@@ -15,6 +15,7 @@ import static ij.IJ.open;
 
 import ij.plugin.filter.GaussianBlur;
 
+
 public class TestSegmentationMethods {
     /**
      *
@@ -62,9 +63,9 @@ public class TestSegmentationMethods {
         String imgPathTristan = "/home/tridubos/Bureau/Billes_Therorique/r5_8b.tif";
         String imgSegPathTristan = "";
         //String inputTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/test_crop";
-        String inputTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/test_crop";
-        String outputTristanGift = "/home/tridubos/Bureau/AUTOCROP_TEST/test_crop/GIFT/";
-        String outputTristanOtsu = "/home/tridubos/Bureau/AUTOCROP_TEST/test_crop/OTSU/";
+        String inputTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/bille_test/out/";
+        String outputTristanGift = "/home/tridubos/Bureau/AUTOCROP_TEST/bille_test/out/GIFT/";
+        String outputTristanOtsu = "/home/tridubos/Bureau/AUTOCROP_TEST/bille_test/out/OTSU/";
 
 
 

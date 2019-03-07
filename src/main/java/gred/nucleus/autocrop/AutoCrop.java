@@ -15,7 +15,7 @@ import ij.process.ImageStatistics;
 import ij.process.StackConverter;
 import ij.process.StackStatistics;
 import ij.process.AutoThresholder.Method;
-
+import java.io.IOException;
 
 /**
  * Allows to compute bounding boxes, to automatically crop and to save. 
@@ -188,13 +188,15 @@ public class AutoCrop {
 
 			if (depth+zmin >= m_imageSeg.getNSlices())
 	         	depth-=(depth+zmin)-m_imageSeg.getNSlices();
-			//IJ.log(" "+i +" "+ xmin+" "+ ymin+" "+ zmin+" "+ width+" "+ height+" "+ depth+"\n");
-			//IJ.log(" "+width +" "+ box.getXMax()+" +80 " + box.getXMin()+"\n");
 			ImagePlus imgResu = cropImage(xmin, ymin, zmin, width, height, depth);
 			Calibration cal = m_rawImg.getCalibration();
 			imgResu.setCalibration(cal);
-	       	saveFile(imgResu,m_outputDirPath+File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
-			m_outputFile.add(m_outputDirPath+File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
+			File outputFile = new File(m_outputDirPath+File.separator+m_outputFilesPrefix);
+			if(!(outputFile .exists())) {
+				outputFile.mkdir();
+			}
+	       	saveFile(imgResu,m_outputDirPath+File.separator+m_outputFilesPrefix+File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
+			m_outputFile.add(m_outputDirPath+File.separator+m_outputFilesPrefix+File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
 	       	System.gc();
 		}	
 	}

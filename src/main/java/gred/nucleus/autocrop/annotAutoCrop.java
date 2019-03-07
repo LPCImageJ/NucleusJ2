@@ -37,7 +37,6 @@ public class annotAutoCrop {
     private String m_outputDirPath;
 
     public annotAutoCrop(ArrayList<String> ListBox, String m_imageFilePath) throws IOException, FormatException {
-
         ImagePlus[] imageInput = BF.openImagePlus(m_imageFilePath);
         ZProjector zProjectionTmp = new ZProjector(imageInput[0]);
         this.m_zProjection= projectionMax(zProjectionTmp);
@@ -47,7 +46,6 @@ public class annotAutoCrop {
             String fileImg = m_boxCoordinates.get(i).toString();
             addBoxCropToZProjection(m_boxCoordinates.get(i).toString(),i);
         }
-        //m_zProjection.show();
         String outFileZbox = m_imageFilePath.replaceAll(".tif","_Zprojection.tif");
         outFileZbox=outFileZbox.replaceAll(".TIF","_Zprojection.TIF");
         saveFile(m_zProjection,outFileZbox);
