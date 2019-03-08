@@ -15,7 +15,7 @@ import ij.process.ImageStatistics;
 import ij.process.StackConverter;
 import ij.process.StackStatistics;
 import ij.process.AutoThresholder.Method;
-import java.io.IOException;
+import ij.process.ImageConverter;
 
 /**
  * Allows to compute bounding boxes, to automatically crop and to save. 
@@ -79,7 +79,6 @@ public class AutoCrop {
 	 * @param outputDirPath: the path to saved the cropped images
 	 */
 	public AutoCrop(ImagePlus imageThresholding,String outputFilesPrefix, String outputDirPath) {
-		//m_imageFilePath = imageThresholding.;
 		m_outputDirPath = outputDirPath;
 		m_rawImg = imageThresholding.duplicate();
 		m_imageSeg= imageThresholding;
@@ -279,7 +278,10 @@ public class AutoCrop {
     public ImagePlus cropImage(int xmin, int ymin, int zmin, int width, int height, int depth) {
     	ImageStack iStack =  m_rawImg.getStack();
     	ImagePlus imp = new ImagePlus();
-    	imp.setStack(iStack.crop(xmin, ymin, zmin, width, height, depth));
+	   	imp.setStack(iStack.crop(xmin, ymin, zmin, width, height, depth));
+		ImageConverter ic = new ImageConverter(imp);
+		ic.convertToGray8();
+		imp.updateAndDraw();
     	return imp;
     }
 
