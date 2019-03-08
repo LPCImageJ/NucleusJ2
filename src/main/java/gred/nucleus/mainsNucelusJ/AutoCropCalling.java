@@ -88,7 +88,7 @@ public class AutoCropCalling {
      * @param img ImagePlus input to crop
      */
     private void autocropMethod(ImagePlus img)throws IOException, FormatException{
-        AutoCrop autoCrop = new AutoCrop (img,this._prefix,this._output);
+        AutoCrop autoCrop = new AutoCrop (img,this._prefix,this._output,this._input);
         autoCrop.thresholdKernels();
         autoCrop.cropKernels(autoCrop.computeBoxes(2));
         autoCrop.getOutputFileArrayList();

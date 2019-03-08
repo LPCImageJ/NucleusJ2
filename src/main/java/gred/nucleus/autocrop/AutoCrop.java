@@ -1,6 +1,7 @@
 package gred.nucleus.autocrop;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import gred.nucleus.connectedComponent.ConnectedComponent;
 import ij.IJ;
@@ -16,6 +17,8 @@ import ij.process.StackConverter;
 import ij.process.StackStatistics;
 import ij.process.AutoThresholder.Method;
 import ij.process.ImageConverter;
+import loci.formats.FormatException;
+
 
 /**
  * Allows to compute bounding boxes, to automatically crop and to save. 
@@ -78,7 +81,8 @@ public class AutoCrop {
 	 * @param outputFilesPrefix: prefix of the names of the output cropped images
 	 * @param outputDirPath: the path to saved the cropped images
 	 */
-	public AutoCrop(ImagePlus imageThresholding,String outputFilesPrefix, String outputDirPath) {
+	public AutoCrop(ImagePlus imageThresholding,String outputFilesPrefix, String outputDirPath,String imageFile) {
+		m_imageFilePath = imageFile;
 		m_outputDirPath = outputDirPath;
 		m_rawImg = imageThresholding.duplicate();
 		m_imageSeg= imageThresholding;
@@ -278,7 +282,9 @@ public class AutoCrop {
     public ImagePlus cropImage(int xmin, int ymin, int zmin, int width, int height, int depth) {
     	ImageStack iStack =  m_rawImg.getStack();
     	ImagePlus imp = new ImagePlus();
-	   	imp.setStack(iStack.crop(xmin, ymin, zmin, width, height, depth));
+		imp.setStack(iStack.crop(xmin, ymin, zmin, width, height, depth));
+		//ImagePlus[] imp = BF.openImagePlus(m_imageFilePath);
+		//imp[0].setRoi(xmin, ymin, zmin, width, height, depth);
 		ImageConverter ic = new ImageConverter(imp);
 		ic.convertToGray8();
 		imp.updateAndDraw();
