@@ -48,10 +48,10 @@ public class TestAutoCrop {
 
         String inputOneImageTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/test_outpout/Z_Col_cot15&19&23__w11_DAPI_SIM_s5.tif";
         //String inputOneImageTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/raw/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s9.TIF";
-        String inputDirTristan = "";
-        String outputTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/test_outpout/";
-
-        testStupid(inputOneImageTristan, outputTristan);
+        String inputDirTristan = "/home/tridubos/Bureau/Bille_4Micro_02-2019/AutocropDuSchnaps/";
+        String outputTristan = "/home/tridubos/Bureau/Bille_4Micro_02-2019/OutputDuSchnaps/";
+		System.out.println("la le Arg1 "+args[0]);
+        testStupid(args[0],args[1] );
 
 		System.err.println("The program ended normally.");
 	}

@@ -92,7 +92,7 @@ public class AutoCropCalling {
         autoCrop.thresholdKernels();
         autoCrop.cropKernels(autoCrop.computeBoxes(2));
         autoCrop.getOutputFileArrayList();
-        annotAutoCrop projectionWithBoxes  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input);
+        annotAutoCrop projectionWithBoxes  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input+img.getTitle());
         System.out.println(_prefix+"\t"+autoCrop.getNbOfNuc()+" nuclei detected");
     }
 
