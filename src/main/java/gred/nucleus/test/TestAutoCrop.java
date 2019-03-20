@@ -42,18 +42,25 @@ public class TestAutoCrop {
 	public static void main(String[] args) throws IOException, FormatException {
 
 	    System.err.println("start prog");
+		long maxMemory = Runtime.getRuntime().maxMemory();
+		/* Maximum amount of memory the JVM will attempt to use */
+		System.out.println("Maximum memory (bytes): " +
+				(maxMemory == Long.MAX_VALUE ? "no limit" : maxMemory*1e-9));
 		String inputOneImageAxel = "/home/plop/Bureau/image/wideField/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s4.TIF";
         String inputDirAxel = "/home/plop/Bureau/image/wideField/";
         String outputAxel = "/home/plop/Bureau/image/wideField/test";
 
-        String inputOneImageTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/test_outpout/Z_Col_cot15&19&23__w11_DAPI_SIM_s5.tif";
+        String inputOneImageTristan = "/home/tridubos/Bureau/TestJar_autocrop/raw/";
         //String inputOneImageTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/raw/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s9.TIF";
         String inputDirTristan = "/home/tridubos/Bureau/Bille_4Micro_02-2019/AutocropDuSchnaps/";
-        String outputTristan = "/home/tridubos/Bureau/Bille_4Micro_02-2019/OutputDuSchnaps/";
-		System.out.println("la le Arg1 "+args[0]);
-        testStupid(args[0],args[1] );
+        String outputTristan = "/home/tridubos/Bureau/TestJar_autocrop/out/";
+
+        //testStupid(inputOneImageTristan, outputTristan);
 
 		System.err.println("The program ended normally.");
+
+		System.out.println("Total memory (bytes): " +
+				Runtime.getRuntime().totalMemory()*1e-9);
 	}
 
 }

@@ -29,6 +29,7 @@ public class main {
 
 
     public static void main(String[] args) throws IOException, FormatException {
+
         if(args[0].equals("autocrop")) {
             System.out.println("start "+args[0]);
             String inputOneImageAxel = "/home/plop/Bureau/image/wideField/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s4.TIF";
@@ -62,6 +63,7 @@ public class main {
 
         }
         System.err.println("The program ended normally.");
+
 
     }
 }

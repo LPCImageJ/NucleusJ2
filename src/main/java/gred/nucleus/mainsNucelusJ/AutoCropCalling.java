@@ -89,8 +89,15 @@ public class AutoCropCalling {
      */
     private void autocropMethod(ImagePlus img)throws IOException, FormatException{
         AutoCrop autoCrop = new AutoCrop (img,this._prefix,this._output,this._input);
+        System.out.println(" STEP 1 Total memory (bytes): " +
+                Runtime.getRuntime().totalMemory()*1e-9);
         autoCrop.thresholdKernels();
+        long maxMemory = Runtime.getRuntime().maxMemory();
+        System.out.println("  STEP 2  Total memory (bytes): " +
+                Runtime.getRuntime().totalMemory()*1e-9);
         autoCrop.cropKernels(autoCrop.computeBoxes(2));
+        System.out.println("  STEP 3  Total memory (bytes): " +
+                Runtime.getRuntime().totalMemory()*1e-9);
         autoCrop.getOutputFileArrayList();
         annotAutoCrop projectionWithBoxes  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input+img.getTitle());
         System.out.println(_prefix+"\t"+autoCrop.getNbOfNuc()+" nuclei detected");
