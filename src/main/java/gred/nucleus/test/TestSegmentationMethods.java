@@ -60,12 +60,12 @@ public class TestSegmentationMethods {
         String outputAxel = "/home/plop/Bureau/image/wideField/testSeg/";
         String outputAxelGift = "/home/plop/Bureau/image/wideField/testSegGift/";
 
-        String imgPathTristan = "/home/tridubos/Bureau/Billes_Therorique/r5_8b.tif";
+        String imgPathTristan = "/home/titus/Bureau/AA_DEBUG/Raw/";
         String imgSegPathTristan = "";
         //String inputTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/test_crop";
-        String inputTristan = "/home/tridubos/Bureau/Bille_4Micro_02-2019/OutputDuSchnaps/Concat_FITC/Raw";
-        String outputTristanGift = "/home/tridubos/Bureau/Bille_4Micro_02-2019/OutputDuSchnaps/Concat_FITC/GIFT/";
-        String outputTristanOtsu = "/home/tridubos/Bureau/Bille_4Micro_02-2019/OutputDuSchnaps/Concat_FITC/OTSU/";
+        String inputTristan = "/home/titus/Bureau/AA_DEBUG/CROP_A_SEG/RawDataNucleus/";
+        String outputTristanGift = "/home/titus/Bureau/AA_DEBUG/Out/GIFT/";
+        String outputTristanOtsu = "/home/titus/Bureau/AA_DEBUG/Out/OTSU/";
 
 
 
