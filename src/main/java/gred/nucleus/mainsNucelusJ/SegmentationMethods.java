@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+
 /**
  * This class call the different segmentation methods available to detect the nucleus.
  * The Ostu method modified and the gift wrapping 3D. Methods can be call for analysis of several images or only one.
@@ -180,6 +181,15 @@ public class SegmentationMethods {
 
                 if (nucleusSegmentation.getBadCrop()==true) {
                     IJ.log("Bad crop " +fileImg);
+                    File file = new File(this._inputDir+"/BadCrop");
+                    if (!file.exists()){
+                        file.mkdir();
+                    }
+                    IJ.log("test "+this._inputDir+"/BadCrop/"+img.getTitle()+"\n");
+                    File fileToMove = new File(fileImg);
+                    fileToMove.renameTo(new File(this._inputDir+"BadCrop/"+img.getTitle()));
+                    //FileUtils.moveFileToDirectory(fileImg, this._inputDir+"/BadCrop"/, REPLACE_EXISTING);
+
 
                 }
                 else {
