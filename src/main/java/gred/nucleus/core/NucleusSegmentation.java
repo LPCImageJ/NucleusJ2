@@ -174,6 +174,16 @@ public class NucleusSegmentation {
 	private void checkBorder (ImagePlus imagePlusInput) {
 		ImageStack imageStackInput = imagePlusInput.getStack();
 		for(int k = 0; k < imagePlusInput.getStackSize(); ++k) {
+			if((k==0 ) || k == imagePlusInput.getStackSize()-1){ // Verification first and last slice
+				for (int i = 0; i < imagePlusInput.getWidth(); i++) {
+					for (int j = 0; j < imagePlusInput.getHeight(); j++) {
+						if (imageStackInput.getVoxel(i, j, k) ==255.0){
+							this._badCrop=true;
+						}
+					}
+				}
+			}
+
 			for (int i = 0; i < imagePlusInput.getWidth(); i+=(imagePlusInput.getWidth())-1) {
 				for (int j = 0; j < imagePlusInput.getHeight(); j++) {
 					if (imageStackInput.getVoxel(i, j, k) ==255.0){
