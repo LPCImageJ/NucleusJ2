@@ -86,7 +86,6 @@ public class AutoCrop {
 		m_outputDirPath = outputDirPath;
 		m_rawImg = imageThresholding.duplicate();
 		m_imageSeg= imageThresholding;
-		m_imageSeg.show();
 		ContrastEnhancer enh = new ContrastEnhancer();
 		enh.setNormalize(true);
 		enh.setUseStackHistogram(true);
