@@ -92,12 +92,11 @@ public class AutoCropCalling {
      */
     private void autocropMethod(ImagePlus img)throws IOException, FormatException{
         AutoCrop autoCrop = new AutoCrop (img,this._prefix,this._output,this._input);
+        autoCrop.thresholdKernels();
         autoCrop.cropKernels(autoCrop.computeBoxes(1));
         autoCrop.getOutputFileArrayList();
-        System.out.println("eu explique moi cette ");
-
         annotAutoCrop projectionWithBoxes  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input+img.getTitle());
-        System.out.println(_prefix+"\t"+autoCrop.getNbOfNuc()+" nuclei detected");
+        annotAutoCrop test  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input);
 
 
     }
