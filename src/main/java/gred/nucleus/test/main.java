@@ -3,7 +3,7 @@ import gred.nucleus.mainsNucelusJ.AutoCropCalling;
 import gred.nucleus.mainsNucelusJ.SegmentationMethods;
 
 import loci.formats.FormatException;
-import org.apache.commons.cli.Options;
+//import org.apache.commons.cli.Options;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class main {
     public static void main(String[] args) throws IOException, FormatException {
 
 
-        Options options = new Options();
+      //  Options options = new Options();
 
         if(args[0].equals("autocrop")) {
             System.out.println("start "+args[0]);

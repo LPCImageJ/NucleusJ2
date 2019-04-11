@@ -73,7 +73,10 @@ public class AutoCropCalling {
                     ImagePlus[] img = BF.openImagePlus(fileImg);
                     Calibration cal = img[0].getCalibration();
                     System.out.println(img[0].getTitle()+"\t"+cal.pixelWidth+"\t"+cal.pixelHeight+"\t"+cal.pixelDepth);
+                    System.out.println("on est dedans de la méthode ");
+
                     autocropMethod(img[0]);
+                    System.out.println("on sort de la méthode ");
                 }
             }
         }
@@ -89,9 +92,14 @@ public class AutoCropCalling {
      */
     private void autocropMethod(ImagePlus img)throws IOException, FormatException{
         AutoCrop autoCrop = new AutoCrop (img,this._prefix,this._output,this._input);
-        autoCrop.cropKernels(autoCrop.computeBoxes(2));
+        autoCrop.cropKernels(autoCrop.computeBoxes(1));
         autoCrop.getOutputFileArrayList();
+        System.out.println("eu explique moi cette ");
+
         annotAutoCrop projectionWithBoxes  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input+img.getTitle());
+        System.out.println(_prefix+"\t"+autoCrop.getNbOfNuc()+" nuclei detected");
+
+
     }
 
 

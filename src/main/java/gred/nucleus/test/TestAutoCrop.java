@@ -50,12 +50,12 @@ public class TestAutoCrop {
         String inputDirAxel = "/home/plop/Bureau/image/wideField/";
         String outputAxel = "/home/plop/Bureau/image/wideField/test";
 
-        String inputOneImageTristan = "/home/tridubos/Bureau/TestJar_autocrop/raw/";
+        String inputOneImageTristan = "/home/tridubos/Bureau/Demo_Autocrop/Raw/";
         //String inputOneImageTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/raw/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s9.TIF";
-        String inputDirTristan = "/home/tridubos/Bureau/Bille_4Micro_02-2019/AutocropDuSchnaps/";
+        String inputDirTristan = "/home/tridubos/Bureau/Demo_Autocrop/Out/";
         String outputTristan = "/home/tridubos/Bureau/TestJar_autocrop/out/";
 
-        //testStupid(inputOneImageTristan, outputTristan);
+        testStupid(inputOneImageTristan, outputTristan);
 
 		System.err.println("The program ended normally.");
 

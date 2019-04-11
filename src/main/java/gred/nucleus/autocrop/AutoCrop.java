@@ -86,6 +86,7 @@ public class AutoCrop {
 		m_outputDirPath = outputDirPath;
 		m_rawImg = imageThresholding.duplicate();
 		m_imageSeg= imageThresholding;
+		m_imageSeg.show();
 		ContrastEnhancer enh = new ContrastEnhancer();
 		enh.setNormalize(true);
 		enh.setUseStackHistogram(true);
@@ -128,7 +129,7 @@ public class AutoCrop {
             this._nbOfNuc = connectedComponent.getNumberOfComponents();
 			for(short i = 0; i< connectedComponent.getNumberOfComponents();++i)
 				boxes.add(new Box(Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE));
-
+                System.out.println();
 			// Check the predicate
 			for (short k = 0; k < this.m_imageSeg.getNSlices(); ++k) {
 				for (short i = 0; i < this.m_imageSeg.getWidth(); ++i) {
