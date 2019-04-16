@@ -372,8 +372,9 @@ public class Measure3D {
                             if (voxelValue != neighborVoxelValue) {
                                 voxelRecordIn.setLocation((double) i, (double) j, (double) k);
                                 voxelRecordOut.setLocation((double) i, (double) j, (double) kk);
-                                surfaceArea = surfaceArea + computeSurfelContribution(tableUnitaire[i][j][k], tableUnitaire[i][j][kk],
-                                        voxelRecordIn, voxelRecordOut, ((xCalibration) * (yCalibration)));
+                                surfaceArea = surfaceArea + computeSurfelContribution(tableUnitaire[i][j][k],
+										      tableUnitaire[i][j][kk], voxelRecordIn, voxelRecordOut,
+										      ((xCalibration) * (yCalibration)));
                             }
                         }
                         for (int ii = i - 1; ii <= i + 1; ii += 2) {

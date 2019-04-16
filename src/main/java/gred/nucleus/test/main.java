@@ -16,7 +16,7 @@ public class main {
     static ArrayList <String> m_test;
 
     public static void ruAutoCrop(String imageSourceFile, String output) throws IOException, FormatException {
-        AutoCropCalling autoCrop = new AutoCropCalling(imageSourceFile,output);
+        AutoCropCalling autoCrop = new AutoCropCalling(imageSourceFile,output,output+"zProjection");
         autoCrop.run();
     }
     public static void segmentation(String input, String output, short vMin, int vMax, boolean gift ) throws FormatException {
@@ -47,7 +47,6 @@ public class main {
             String outputTristan = "/home/tridubos/Bureau/Bille_4Micro_02-2019/OutputDuSchnaps/";
             ruAutoCrop(args[1], args[2]);
 
-            System.err.println("The program ended normally.");
         }
         else if(args[0].equals("segmentation")) {
             System.out.println("start "+args[0]);

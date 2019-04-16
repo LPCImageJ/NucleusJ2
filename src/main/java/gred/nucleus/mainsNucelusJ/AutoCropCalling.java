@@ -26,6 +26,7 @@ public class AutoCropCalling {
     /** prefix for the name of the image*/
     private String _prefix = "";
 
+    private String _outputZprojection ="";
 
 
     /**
@@ -34,12 +35,16 @@ public class AutoCropCalling {
      * @param imageSourceFile  String path of input file(s)
      * @param output String to save the results image
      */
-    public AutoCropCalling(String imageSourceFile, String output) {
+    public AutoCropCalling(String imageSourceFile, String output ,String outputZpojection) {
         this._input = imageSourceFile;
         this._output = output;
+        this._outputZprojection =outputZpojection;
         File outputFile = new File(this._output);
         if(!(outputFile .exists()))
             outputFile.mkdir();
+        File outputZprojection = new File(this._outputZprojection);
+        if(!(outputZprojection .exists()))
+            outputZprojection.mkdir();
     }
 
 
@@ -73,10 +78,7 @@ public class AutoCropCalling {
                     ImagePlus[] img = BF.openImagePlus(fileImg);
                     Calibration cal = img[0].getCalibration();
                     System.out.println(img[0].getTitle()+"\t"+cal.pixelWidth+"\t"+cal.pixelHeight+"\t"+cal.pixelDepth);
-                    System.out.println("on est dedans de la méthode ");
-
                     autocropMethod(img[0]);
-                    System.out.println("on sort de la méthode ");
                 }
             }
         }
@@ -91,14 +93,23 @@ public class AutoCropCalling {
      * @param img ImagePlus input to crop
      */
     private void autocropMethod(ImagePlus img)throws IOException, FormatException{
+
         AutoCrop autoCrop = new AutoCrop (img,this._prefix,this._output,this._input);
         autoCrop.thresholdKernels();
         autoCrop.cropKernels(autoCrop.computeBoxes(1));
         autoCrop.getOutputFileArrayList();
         annotAutoCrop projectionWithBoxes  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input+img.getTitle());
+        annotAutoCrop test  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input+img.getTitle());
 
-        annotAutoCrop test  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input+"/"+img.getTitle());
-        System.out.println(_prefix+"\t"+autoCrop.getNbOfNuc()+" nuclei detected");
+        AutoCrop autoCropZ = new AutoCrop (img,this._prefix,this._outputZprojection,this._input);
+        autoCropZ.thresholdKernelsZprojection();
+        autoCropZ.cropKernels(autoCropZ.computeBoxes(1));
+        autoCropZ.getOutputFileArrayList();
+        annotAutoCrop projectionWithBoxesZ  = new annotAutoCrop(autoCropZ.getFileCoordinates(),this._input+img.getTitle());
+
+        annotAutoCrop testZ  = new annotAutoCrop(autoCropZ.getFileCoordinates(),this._input+img.getTitle());
+
+        System.out.println(_prefix+"\t"+autoCropZ.getNbOfNuc()+" nuclei detected");
 
 
     }

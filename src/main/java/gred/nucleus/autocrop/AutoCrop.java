@@ -10,7 +10,9 @@ import ij.ImageStack;
 import ij.io.FileSaver;
 import ij.measure.Calibration;
 import ij.plugin.ContrastEnhancer;
+import ij.plugin.Duplicator;
 import ij.plugin.GaussianBlur3D;
+import ij.plugin.ZProjector;
 import ij.process.AutoThresholder;
 import ij.process.ImageStatistics;
 import ij.process.StackConverter;
@@ -103,10 +105,45 @@ public class AutoCrop {
 	 */
 	public void thresholdKernels() {
 		GaussianBlur3D.blur(m_imageSeg, 0.5,0.5,1);
-		int thresh = computeOtsuThreshold(m_imageSeg);
-		m_imageSeg = this.generateSegmentedImage(m_imageSeg, thresh);
-	}
-	
+       // m_imageSeg.getSlice()
+        int thresh = computeOtsuThreshold(m_imageSeg);
+        if(thresh <10) {
+            ImagePlus imp2 = new Duplicator().run(m_imageSeg, 40, m_imageSeg.getStackSize());
+            System.out.println("le threshold de ses mort " + thresh);
+            int thresh2 = computeOtsuThreshold(imp2);
+            if (thresh2<10)
+                thresh=15;
+            else
+                thresh=thresh2;
+            System.out.println("le threshold de schnaps " + thresh);
+        }
+
+        m_imageSeg = this.generateSegmentedImage(m_imageSeg, thresh);
+        saveFile(m_imageSeg,m_outputDirPath+File.separator+m_outputFilesPrefix+"ChampLargeSegmented.tif");
+
+    }
+
+    public void thresholdKernelsZprojection() {
+        ZProjector zProjectionTmp = new ZProjector(m_imageSeg);
+        ImagePlus testConvert= projectionMax(zProjectionTmp);
+
+        testConvert.show();
+        int thresh = computeOtsuThreshold(testConvert);
+        testConvert.close();
+        System.out.println("Gaussian sans Blur "+ thresh);
+        //GaussianBlur3D.blur(testConvert, 0.5,0.5,1);
+        //thresh = computeOtsuThreshold(testConvert);
+        System.out.println("Gaussian avec Blur "+ thresh);
+        m_imageSeg = this.generateSegmentedImage(m_imageSeg, thresh);
+        saveFile(m_imageSeg,m_outputDirPath+File.separator+m_outputFilesPrefix+"ChampLargeSegmented.tif");
+    }
+    private ImagePlus projectionMax(ZProjector project){
+        project.setMethod(1);
+        project.doProjection();
+        return project.getProjection();
+    }
+
+
 	/**
 	 * Detection of the of the bounding box for each object of the image.
 	 * A Connected component detection is do on the  m_imageThresholding and all the object on the border and inferior a at the threshold volume
@@ -198,7 +235,13 @@ public class AutoCrop {
 			if(!(outputFile .exists())) {
 				outputFile.mkdir();
 			}
-	       	saveFile(imgResu,m_outputDirPath+File.separator+m_outputFilesPrefix+File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
+			String out =m_outputDirPath+File.separator+m_outputFilesPrefix+File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+".tif";
+            File outputFile2 = new File(out);
+			if((outputFile2  .exists())){
+                out=out =m_outputDirPath+File.separator+m_outputFilesPrefix+File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+"_B.tif";
+            }
+            saveFile(imgResu,out);
+			//saveFile(imgResu,m_outputDirPath+File.separator+m_outputFilesPrefix+File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
 			m_outputFile.add(m_outputDirPath+File.separator+m_outputFilesPrefix+File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
 	       	System.gc();
 		}	
@@ -232,7 +275,9 @@ public class AutoCrop {
 		int [] tHisto = imageStatistics.histogram;
 		return autoThresholder.getThreshold(Method.Otsu,tHisto);
 	}
-	
+
+
+
 	/**
 	 * Create binary image with the threshold value gave in input
 	 * @param imagePlusInput ImagePlus raw image to binarize

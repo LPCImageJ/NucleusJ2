@@ -30,7 +30,7 @@ public class TestAutoCrop {
 	static ArrayList <String> m_test;
 	
 	public static void testStupid(String imageSourceFile, String output) throws IOException, FormatException {
-        AutoCropCalling autoCrop = new AutoCropCalling(imageSourceFile,output);
+        AutoCropCalling autoCrop = new AutoCropCalling(imageSourceFile,output,output+"zProjection");
         autoCrop.run();
 	}
 
