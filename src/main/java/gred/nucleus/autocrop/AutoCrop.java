@@ -107,35 +107,34 @@ public class AutoCrop {
 		GaussianBlur3D.blur(m_imageSeg, 0.5,0.5,1);
        // m_imageSeg.getSlice()
         int thresh = computeOtsuThreshold(m_imageSeg);
-        if(thresh <10) {
+        if(thresh <30) {
             ImagePlus imp2 = new Duplicator().run(m_imageSeg, 40, m_imageSeg.getStackSize());
-            System.out.println("le threshold de ses mort " + thresh);
             int thresh2 = computeOtsuThreshold(imp2);
-            if (thresh2<10)
-                thresh=15;
+            if (thresh2<30)
+                thresh=30;
             else
                 thresh=thresh2;
-            System.out.println("le threshold de schnaps " + thresh);
         }
-
+        System.out.println("le threshold de  " +m_imageSeg.getTitle()+" est de "+ thresh);
         m_imageSeg = this.generateSegmentedImage(m_imageSeg, thresh);
-        saveFile(m_imageSeg,m_outputDirPath+File.separator+m_outputFilesPrefix+"ChampLargeSegmented.tif");
 
     }
 
     public void thresholdKernelsZprojection() {
-        ZProjector zProjectionTmp = new ZProjector(m_imageSeg);
+
+        ImagePlus temmGaussian =this.m_imageSeg;
+	    GaussianBlur3D.blur(temmGaussian, 0.5,0.5,1);
+
+        ZProjector zProjectionTmp = new ZProjector(temmGaussian);
         ImagePlus testConvert= projectionMax(zProjectionTmp);
 
         testConvert.show();
         int thresh = computeOtsuThreshold(testConvert);
         testConvert.close();
         System.out.println("Gaussian sans Blur "+ thresh);
-        //GaussianBlur3D.blur(testConvert, 0.5,0.5,1);
         //thresh = computeOtsuThreshold(testConvert);
         System.out.println("Gaussian avec Blur "+ thresh);
         m_imageSeg = this.generateSegmentedImage(m_imageSeg, thresh);
-        saveFile(m_imageSeg,m_outputDirPath+File.separator+m_outputFilesPrefix+"ChampLargeSegmented.tif");
     }
     private ImagePlus projectionMax(ZProjector project){
         project.setMethod(1);
@@ -236,12 +235,13 @@ public class AutoCrop {
 				outputFile.mkdir();
 			}
 			String out =m_outputDirPath+File.separator+m_outputFilesPrefix+File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+".tif";
+           /*
             File outputFile2 = new File(out);
 			if((outputFile2  .exists())){
                 out=out =m_outputDirPath+File.separator+m_outputFilesPrefix+File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+"_B.tif";
             }
+            */
             saveFile(imgResu,out);
-			//saveFile(imgResu,m_outputDirPath+File.separator+m_outputFilesPrefix+File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
 			m_outputFile.add(m_outputDirPath+File.separator+m_outputFilesPrefix+File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
 	       	System.gc();
 		}	
@@ -331,7 +331,7 @@ public class AutoCrop {
 		//ImagePlus[] imp = BF.openImagePlus(m_imageFilePath);
 		//imp[0].setRoi(xmin, ymin, zmin, width, height, depth);
 		ImageConverter ic = new ImageConverter(imp);
-		ic.convertToGray8();
+		//ic.convertToGray8();
 		imp.updateAndDraw();
     	return imp;
     }

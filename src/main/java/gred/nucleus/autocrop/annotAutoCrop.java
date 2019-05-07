@@ -50,11 +50,6 @@ public class annotAutoCrop {
         String outFileZbox = m_imageFilePath.replaceAll(".tif","_Zprojection.tif");
         outFileZbox=outFileZbox.replaceAll(".TIF","_Zprojection.TIF");
         File outputFile = new File(outFileZbox);
-        if((outputFile .exists())) {
-            System.out.println("Dans l'annotation ");
-            outFileZbox = outFileZbox.replaceAll(".tif", "2.tif");
-            outFileZbox = outFileZbox.replaceAll(".TIF", "2.TIF");
-        }
         System.out.println("Et la la Z s appel "+outFileZbox);
         saveFile(m_zProjection,outFileZbox);
 

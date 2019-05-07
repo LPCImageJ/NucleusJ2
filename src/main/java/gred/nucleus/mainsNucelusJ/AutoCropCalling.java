@@ -26,7 +26,6 @@ public class AutoCropCalling {
     /** prefix for the name of the image*/
     private String _prefix = "";
 
-    private String _outputZprojection ="";
 
 
     /**
@@ -35,16 +34,12 @@ public class AutoCropCalling {
      * @param imageSourceFile  String path of input file(s)
      * @param output String to save the results image
      */
-    public AutoCropCalling(String imageSourceFile, String output ,String outputZpojection) {
+    public AutoCropCalling(String imageSourceFile, String output ) {
         this._input = imageSourceFile;
         this._output = output;
-        this._outputZprojection =outputZpojection;
         File outputFile = new File(this._output);
         if(!(outputFile .exists()))
             outputFile.mkdir();
-        File outputZprojection = new File(this._outputZprojection);
-        if(!(outputZprojection .exists()))
-            outputZprojection.mkdir();
     }
 
 
@@ -72,6 +67,10 @@ public class AutoCropCalling {
             for(int i = 0; i < listOfFiles.length; ++i) {
                 String fileImg = listOfFiles[i].toString();
                 if (fileImg.contains(".tif") || fileImg.contains(".TIF")) {
+                    long maxMemory = Runtime.getRuntime().freeMemory();
+                    /* Maximum amount of memory the JVM will attempt to use */
+                    System.out.println("Image suivante : "+listOfFiles[i].toString()+" la ram en est la : " +
+                            (maxMemory == Long.MAX_VALUE ? "no limit" : maxMemory*1e-9));
                     String[] tNameFile =  fileImg.split(File.separator);
                     this._prefix = tNameFile[tNameFile.length-1].replaceAll(".tif","");
                     this._prefix = _prefix.replaceAll(".TIF","");
@@ -99,7 +98,9 @@ public class AutoCropCalling {
         autoCrop.cropKernels(autoCrop.computeBoxes(1));
         autoCrop.getOutputFileArrayList();
         annotAutoCrop projectionWithBoxes  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input+img.getTitle());
-        annotAutoCrop test  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input+img.getTitle());
+        //annotAutoCrop test  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input+img.getTitle());
+        /*
+        ICI C ETAIT UN AUTOCROP SUR LA Z PROJECTION !!!!
 
         AutoCrop autoCropZ = new AutoCrop (img,this._prefix,this._outputZprojection,this._input);
         autoCropZ.thresholdKernelsZprojection();
@@ -108,8 +109,8 @@ public class AutoCropCalling {
         annotAutoCrop projectionWithBoxesZ  = new annotAutoCrop(autoCropZ.getFileCoordinates(),this._input+img.getTitle());
 
         annotAutoCrop testZ  = new annotAutoCrop(autoCropZ.getFileCoordinates(),this._input+img.getTitle());
-
-        System.out.println(_prefix+"\t"+autoCropZ.getNbOfNuc()+" nuclei detected");
+        */
+        System.out.println(_prefix+"\t"+autoCrop.getNbOfNuc()+" nuclei detected");
 
 
     }

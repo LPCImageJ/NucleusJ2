@@ -108,7 +108,6 @@ public class SegmentationMethods {
         ImagePlus imgSeg= this._imgInput;
         NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(this._vMin, this._vMax);
 
-
         Calibration cal = imgSeg.getCalibration();
         System.out.println(imgSeg.getTitle()+"\t"+cal.pixelWidth+"\t"+cal.pixelHeight+"\t"+cal.pixelDepth);
         if(imgSeg.getType() == ImagePlus.GRAY16)
@@ -177,10 +176,10 @@ public class SegmentationMethods {
                 NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(this._vMin, this._vMax);
 
                 imgSeg = nucleusSegmentation.applySegmentation(imgSeg);
+                // TODO A Nettoyer les else !!!
 
-
-                if (nucleusSegmentation.getBadCrop()==true) {
-                    IJ.log("Bad crop " +fileImg);
+                if (nucleusSegmentation.getBadCrop()==true || nucleusSegmentation.getBestThreshold() == -1) {
+                    IJ.log("Bad crop " +fileImg+ "  "+nucleusSegmentation.getBestThreshold());
                     File file = new File(this._inputDir+"/BadCrop");
                     if (!file.exists()){
                         file.mkdir();
@@ -195,7 +194,6 @@ public class SegmentationMethods {
                 else {
                     if (nucleusSegmentation.getBestThreshold() == -1) {
                         log = log + fileImg + "\n";
-                        IJ.log("le log : " + log);
                     } else {
                         System.out.println(fileImg + "\totsu modif threshold " + nucleusSegmentation.getBestThreshold() + "\n");
                         if (giftWrapping) {

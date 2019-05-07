@@ -30,7 +30,7 @@ public class TestAutoCrop {
 	static ArrayList <String> m_test;
 	
 	public static void testStupid(String imageSourceFile, String output) throws IOException, FormatException {
-        AutoCropCalling autoCrop = new AutoCropCalling(imageSourceFile,output,output+"zProjection");
+        AutoCropCalling autoCrop = new AutoCropCalling(imageSourceFile,output);
         autoCrop.run();
 	}
 
@@ -50,11 +50,15 @@ public class TestAutoCrop {
         String inputDirAxel = "/home/plop/Bureau/image/wideField/";
         String outputAxel = "/home/plop/Bureau/image/wideField/test";
 
-        String inputOneImageTristan = "/home/tridubos/Bureau/Demo_Autocrop/Raw/";
+		// TODO AJOUTER WARNING QUAND LE THRESHOLD EST TROP BAS (VERIFIER LES NOYAUX )
         //String inputOneImageTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/raw/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s9.TIF";
-        String inputDirTristan = "/home/tridubos/Bureau/Demo_Autocrop/Out/";
+        //String inputDirTristan = "/home/tridubos/Bureau/Demo_Autocrop/Out/";
 
-        String outputTristan = "/home/tridubos/Bureau/Demo_Autocrop/Out";
+        String inputOneImageTristan = "/media/tridubos/DATA1/Raw_KAKU_GIFT/Raw/";
+        String outputTristan = "/media/tridubos/DATA1/Raw_KAKU_GIFT/Aurocrop/";
+
+       // String inputOneImageTristan = "/media/tridubos/DATA1/Autocrop_Kaku_verif_bad_crop/";
+        //String outputTristan = "/media/tridubos/DATA1/Autocrop_Kaku_verif_bad_crop/OUTPUT/";
 
         testStupid(inputOneImageTristan, outputTristan);
 

@@ -80,17 +80,12 @@ public class NucleusSegmentation {
 
 			ImagePlus imagePlusSegmentedTemp = generateSegmentedImage(imagePlusInput,t);
 			ImagePlus tem =generateSegmentedImage(imagePlusInput,t);
-			if (t==209) {
-				tem.setTitle("test");
-				tem.show();
-			}
+
 			imagePlusSegmentedTemp = ConnectedComponents.computeLabels(imagePlusSegmentedTemp, 26, 32);
 
 
 			deleteArtefact(imagePlusSegmentedTemp);
-			if (t==209) {
-				//imagePlusSegmentedTemp.show();
-			}
+
 			imagePlusSegmentedTemp.setCalibration(calibration);
 			volume = measure3D.computeVolumeObject(imagePlusSegmentedTemp,255);
 			imagePlusSegmentedTemp.setCalibration(calibration);

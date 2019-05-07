@@ -63,14 +63,19 @@ public class TestSegmentationMethods {
         String imgPathTristan = "/home/titus/Bureau/AA_DEBUG/Raw/";
         String imgSegPathTristan = "";
         //String inputTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/test_crop";
-        String inputTristan = "/home/titus/Bureau/AA_DEBUG/CROP_A_SEG/RawDataNucleus/";
-        String outputTristanGift = "/home/titus/Bureau/AA_DEBUG/Out/GIFT/";
-        String outputTristanOtsu = "/home/titus/Bureau/AA_DEBUG/Out/OTSU/";
 
 
-
+        String inputTristan = "/home/tridubos/Bureau/VERIFICATION_SEGMENTATION_MANUEL_NUCLEOLE/Verification/raw/";
+        String outputTristanGift = "/home/tridubos/Bureau/VERIFICATION_SEGMENTATION_MANUEL_NUCLEOLE/Verification/out/GIFT/";
+        String outputTristanOtsu = "/home/tridubos/Bureau/VERIFICATION_SEGMENTATION_MANUEL_NUCLEOLE/Verification/out/OTSU/";
 
 /*
+
+        String inputTristan = "/home/tridubos/Bureau/VERIFICATION_SEGMENTATION_MANUEL_NUCLEOLE/RawDataNucleus/";
+        String outputTristanGift = "/home/tridubos/Bureau/VERIFICATION_SEGMENTATION_MANUEL_NUCLEOLE/Segmentation/GIFT/";
+        String outputTristanOtsu = "/home/tridubos/Bureau/VERIFICATION_SEGMENTATION_MANUEL_NUCLEOLE/Segmentation/OTSU/";
+
+
         String inputTristan = "/home/tridubos/Bureau/Noyaux_test_sphericité/Raw";
         String outputTristanGift = "/home/tridubos/Bureau/Noyaux_test_sphericité/GIFT/";
         String outputTristanOtsu = "/home/tridubos/Bureau/Noyaux_test_sphericité/OTSU/";

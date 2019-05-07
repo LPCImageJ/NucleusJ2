@@ -16,7 +16,7 @@ public class main {
     static ArrayList <String> m_test;
 
     public static void ruAutoCrop(String imageSourceFile, String output) throws IOException, FormatException {
-        AutoCropCalling autoCrop = new AutoCropCalling(imageSourceFile,output,output+"zProjection");
+        AutoCropCalling autoCrop = new AutoCropCalling(imageSourceFile,output);
         autoCrop.run();
     }
     public static void segmentation(String input, String output, short vMin, int vMax, boolean gift ) throws FormatException {
