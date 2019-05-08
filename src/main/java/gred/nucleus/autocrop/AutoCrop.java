@@ -20,6 +20,7 @@ import ij.process.StackStatistics;
 import ij.process.AutoThresholder.Method;
 import ij.process.ImageConverter;
 import loci.formats.FormatException;
+import loci.plugins.BF;
 
 
 /**
@@ -51,7 +52,7 @@ public class AutoCrop {
 	private ArrayList <String> m_outputFile =  new ArrayList <String>();
 	/** List of boxes coordinates */
 	private ArrayList <String> m_boxCoordinates = new ArrayList<String>();	
-	/** */
+	/** Number of nuclei cropped */
 	private int _nbOfNuc = 0;
 
 	/**
@@ -103,9 +104,8 @@ public class AutoCrop {
 	 * First step is the  binomial blur of the wrapImaJ package with 6 6 1 as parameters.
 	 * Then Otsu thresholding is applied. This method can be used if the input image is 8bit gray level image.
 	 */
-	public void thresholdKernels() {
+	public void thresholdKernels(){
 		GaussianBlur3D.blur(m_imageSeg, 0.5,0.5,1);
-       // m_imageSeg.getSlice()
         int thresh = computeOtsuThreshold(m_imageSeg);
         if(thresh <30) {
             ImagePlus imp2 = new Duplicator().run(m_imageSeg, 40, m_imageSeg.getStackSize());
@@ -117,7 +117,6 @@ public class AutoCrop {
         }
         System.out.println("le threshold de  " +m_imageSeg.getTitle()+" est de "+ thresh);
         m_imageSeg = this.generateSegmentedImage(m_imageSeg, thresh);
-
     }
 
     public void thresholdKernelsZprojection() {
@@ -146,7 +145,7 @@ public class AutoCrop {
 	/**
 	 * Detection of the of the bounding box for each object of the image.
 	 * A Connected component detection is do on the  m_imageThresholding and all the object on the border and inferior a at the threshold volume
-	 * are removed. The coordinates allow the implementation of the box objects which define the bounding box, and these objects are stocked in a 
+	 * are removed. The coordinates allow the implementation of the box objects which define the bounding box, and these objects are stocked in a
 	 * ArrayList.
 	 * @pre the input image must be a binary image with values 255 and 0 only.
 	 * In order to use with a grey-level image, use either @see # thresholdKernels() or 
@@ -325,7 +324,9 @@ public class AutoCrop {
      * @return : ImageCoreIJ of the cropped image.
      */
     public ImagePlus cropImage(int xmin, int ymin, int zmin, int width, int height, int depth) {
-    	ImageStack iStack =  m_rawImg.getStack();
+		//ImagePlus[] img = BF.openImagePlus(fileImg);
+		m_rawImg.duplicate();
+		ImageStack iStack =  m_rawImg.getStack();
     	ImagePlus imp = new ImagePlus();
 		imp.setStack(iStack.crop(xmin, ymin, zmin, width, height, depth));
 		//ImagePlus[] imp = BF.openImagePlus(m_imageFilePath);

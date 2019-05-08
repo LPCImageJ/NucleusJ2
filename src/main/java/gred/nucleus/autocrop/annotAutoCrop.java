@@ -5,6 +5,9 @@ import ij.ImagePlus;
 import ij.gui.TextRoi;
 import ij.io.FileSaver;
 import ij.plugin.ZProjector;
+import ij.process.AutoThresholder;
+import ij.process.ImageStatistics;
+import ij.process.StackStatistics;
 import loci.formats.FormatException;
 import loci.plugins.BF;
 
@@ -41,6 +44,11 @@ public class annotAutoCrop {
         ImagePlus[] imageInput = BF.openImagePlus(m_imageFilePath);
         ZProjector zProjectionTmp = new ZProjector(imageInput[0]);
         this.m_zProjection= projectionMax(zProjectionTmp);
+        AutoThresholder autoThresholder = new AutoThresholder();
+        ImageStatistics imageStatistics = new StackStatistics(m_zProjection);
+        int [] tHisto = imageStatistics.histogram;
+        int thresh= autoThresholder.getThreshold(AutoThresholder.Method.Otsu,tHisto);
+        System.out.println("le thresh sur le Z pour voir ?: "+thresh);
         ajustContrast(0.3);
         m_boxCoordinates= ListBox;
         for(int i = 0; i < m_boxCoordinates.size(); ++i) {

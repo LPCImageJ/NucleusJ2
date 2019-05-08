@@ -91,6 +91,7 @@ public class AutoCropCalling {
      * private method calling the autoCrop Class,
      * @param img ImagePlus input to crop
      */
+    // TODO Clean method
     private void autocropMethod(ImagePlus img)throws IOException, FormatException{
 
         AutoCrop autoCrop = new AutoCrop (img,this._prefix,this._output,this._input);

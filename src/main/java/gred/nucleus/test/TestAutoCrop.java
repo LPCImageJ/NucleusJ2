@@ -54,8 +54,8 @@ public class TestAutoCrop {
         //String inputOneImageTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/raw/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s9.TIF";
         //String inputDirTristan = "/home/tridubos/Bureau/Demo_Autocrop/Out/";
 
-        String inputOneImageTristan = "/media/tridubos/DATA1/Raw_KAKU_GIFT/Raw/";
-        String outputTristan = "/media/tridubos/DATA1/Raw_KAKU_GIFT/Aurocrop/";
+        String inputOneImageTristan = "/home/titus/Bureau/data/test_autocrop/";
+        String outputTristan = "/home/titus/Bureau/data/test_autocrop/";
 
        // String inputOneImageTristan = "/media/tridubos/DATA1/Autocrop_Kaku_verif_bad_crop/";
         //String outputTristan = "/media/tridubos/DATA1/Autocrop_Kaku_verif_bad_crop/OUTPUT/";
