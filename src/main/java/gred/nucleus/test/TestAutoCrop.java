@@ -1,10 +1,17 @@
 package gred.nucleus.test;
 
 import gred.nucleus.mainsNucelusJ.AutoCropCalling;
+import ij.ImagePlus;
+import ij.io.FileSaver;
+import ij.process.ImageConverter;
+import loci.common.Region;
 import loci.formats.FormatException;
+import loci.plugins.BF;
+import loci.plugins.in.ImporterOptions;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import ij.plugin.Duplicator;
 
 
 /**
@@ -54,18 +61,37 @@ public class TestAutoCrop {
         //String inputOneImageTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/raw/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s9.TIF";
         //String inputDirTristan = "/home/tridubos/Bureau/Demo_Autocrop/Out/";
 
-        String inputOneImageTristan = "/home/titus/Bureau/data/test_autocrop/";
-        String outputTristan = "/home/titus/Bureau/data/test_autocrop/";
+       // String outputTristan = "/home/titus/Bureau/data/test_autocrop/";
 
-       // String inputOneImageTristan = "/media/tridubos/DATA1/Autocrop_Kaku_verif_bad_crop/";
-        //String outputTristan = "/media/tridubos/DATA1/Autocrop_Kaku_verif_bad_crop/OUTPUT/";
+        String inputOneImageTristan = "/home/tridubos/Bureau/TEST_READING_METADATA/";
+        String outputTristan = "/home/tridubos/Bureau/TEST_READING_METADATA/";
 
-        testStupid(inputOneImageTristan, outputTristan);
 
+
+		/*
+		String inputOneImageTristan = "/home/tridubos/Bureau/TEST_READING_METADATA/";
+		ImporterOptions options = new ImporterOptions();
+		options.setId(inputOneImageTristan);
+		options.setAutoscale(true);
+		options.setCrop(true);
+		options.setCropRegion(0, new Region(150, 150 ,50, 50));
+		options.setColorMode(ImporterOptions.COLOR_MODE_COMPOSITE);
+		ImagePlus[] imps = BF.openImagePlus(options);
+		ImagePlus sort = new ImagePlus();
+		sort = new Duplicator().run(imps[0],1,10);
+
+		saveFile(sort, "/home/tridubos/Bureau/TEST_READING_METADATA/cetruc.tif");
+		*/
+		testStupid(inputOneImageTristan, outputTristan);
 		System.err.println("The program ended normally.");
 
 		System.out.println("Total memory (bytes): " +
 				Runtime.getRuntime().totalMemory()*1e-9);
+	}
+
+	public static void saveFile ( ImagePlus imagePlusInput, String pathFile) {
+		FileSaver fileSaver = new FileSaver(imagePlusInput);
+		fileSaver.saveAsTiff(pathFile);
 	}
 
 }

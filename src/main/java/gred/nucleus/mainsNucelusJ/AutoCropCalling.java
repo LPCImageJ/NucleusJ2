@@ -93,7 +93,7 @@ public class AutoCropCalling {
      */
     // TODO Clean method
     private void autocropMethod(ImagePlus img)throws IOException, FormatException{
-
+        System.out.println("Ici on a le truc"+ img.getTitle()+" "+this._prefix+" "+this._output+" "+this._input);
         AutoCrop autoCrop = new AutoCrop (img,this._prefix,this._output,this._input);
         autoCrop.thresholdKernels();
         autoCrop.cropKernels(autoCrop.computeBoxes(1));

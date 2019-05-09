@@ -8,6 +8,7 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.io.FileSaver;
+import ij.io.ImageReader;
 import ij.measure.Calibration;
 import ij.plugin.ContrastEnhancer;
 import ij.plugin.Duplicator;
@@ -19,8 +20,11 @@ import ij.process.StackConverter;
 import ij.process.StackStatistics;
 import ij.process.AutoThresholder.Method;
 import ij.process.ImageConverter;
+import loci.common.Region;
 import loci.formats.FormatException;
 import loci.plugins.BF;
+import loci.formats.IFormatReader;
+import loci.plugins.in.ImporterOptions;
 
 
 /**
@@ -61,6 +65,8 @@ public class AutoCrop {
 	 * @param imageFile: the path to the input 8bit gray level or binary image, to crop the sub objects.
 	 * @param outputFilesPrefix: prefix of the names of the output cropped images
 	 * @param outputDirPath: the path to saved the cropped images
+	 *
+	 *   TODO CLEAN METHODE : VERIFIER VARIABLE EN DOUBLE  
 	 */
 	
 	public AutoCrop(String imageFile,String outputFilesPrefix, String outputDirPath) {
@@ -83,11 +89,12 @@ public class AutoCrop {
 	 * @param imageThresholding: the input 8bit gray level or binary image, to crop the sub objects.
 	 * @param outputFilesPrefix: prefix of the names of the output cropped images
 	 * @param outputDirPath: the path to saved the cropped images
+	 *
 	 */
 	public AutoCrop(ImagePlus imageThresholding,String outputFilesPrefix, String outputDirPath,String imageFile) {
 		m_imageFilePath = imageFile;
 		m_outputDirPath = outputDirPath;
-		m_rawImg = imageThresholding.duplicate();
+		m_rawImg = imageThresholding;
 		m_imageSeg= imageThresholding;
 		ContrastEnhancer enh = new ContrastEnhancer();
 		enh.setNormalize(true);
@@ -107,17 +114,19 @@ public class AutoCrop {
 	public void thresholdKernels(){
 		GaussianBlur3D.blur(m_imageSeg, 0.5,0.5,1);
         int thresh = computeOtsuThreshold(m_imageSeg);
-        if(thresh <30) {
+        if(thresh <20) {
             ImagePlus imp2 = new Duplicator().run(m_imageSeg, 40, m_imageSeg.getStackSize());
             int thresh2 = computeOtsuThreshold(imp2);
-            if (thresh2<30)
-                thresh=30;
+            if (thresh2<20)
+                thresh=20;
             else
                 thresh=thresh2;
         }
         System.out.println("le threshold de  " +m_imageSeg.getTitle()+" est de "+ thresh);
         m_imageSeg = this.generateSegmentedImage(m_imageSeg, thresh);
-    }
+		System.out.println("le threshold de  " +m_imageSeg.getTitle()+" est de "+ thresh);
+
+	}
 
     public void thresholdKernelsZprojection() {
 
@@ -200,7 +209,7 @@ public class AutoCrop {
 	 * 
 	 * @param boxes: containing object boxes.
      */
-	public void cropKernels(ArrayList <Box> boxes) {
+	public void cropKernels(ArrayList <Box> boxes)throws IOException, FormatException {
 		for(short i = 0; i < boxes.size(); ++i) {
 			Box box = boxes.get(i);
 			int xmin = box.getXMin()-40;
@@ -226,7 +235,10 @@ public class AutoCrop {
 
 			if (depth+zmin >= m_imageSeg.getNSlices())
 	         	depth-=(depth+zmin)-m_imageSeg.getNSlices();
+
 			ImagePlus imgResu = cropImage(xmin, ymin, zmin, width, height, depth);
+
+
 			Calibration cal = m_rawImg.getCalibration();
 			imgResu.setCalibration(cal);
 			File outputFile = new File(m_outputDirPath+File.separator+m_outputFilesPrefix);
@@ -323,18 +335,25 @@ public class AutoCrop {
      * @param depth: coordinate z max of the crop
      * @return : ImageCoreIJ of the cropped image.
      */
-    public ImagePlus cropImage(int xmin, int ymin, int zmin, int width, int height, int depth) {
-		//ImagePlus[] img = BF.openImagePlus(fileImg);
+    public ImagePlus cropImage(int xmin, int ymin, int zmin, int width, int height, int depth)throws IOException, FormatException {
+		ImporterOptions options = new ImporterOptions();
+		options.setId(m_imageFilePath+File.separator+m_rawImg.getTitle());
+		options.setAutoscale(true);
+		options.setCrop(true);
+		options.setCropRegion(0, new Region(xmin, ymin ,width, height));
+		ImagePlus[] imps = BF.openImagePlus(options);
+		ImagePlus sort = new ImagePlus();
+		sort = new Duplicator().run(imps[0],zmin,zmin+depth);
+		return sort;
+
+		/*
 		m_rawImg.duplicate();
 		ImageStack iStack =  m_rawImg.getStack();
     	ImagePlus imp = new ImagePlus();
 		imp.setStack(iStack.crop(xmin, ymin, zmin, width, height, depth));
-		//ImagePlus[] imp = BF.openImagePlus(m_imageFilePath);
-		//imp[0].setRoi(xmin, ymin, zmin, width, height, depth);
 		ImageConverter ic = new ImageConverter(imp);
-		//ic.convertToGray8();
 		imp.updateAndDraw();
-    	return imp;
+		*/
     }
 
     /**
