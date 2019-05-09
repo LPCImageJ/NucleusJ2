@@ -66,7 +66,7 @@ public class AutoCrop {
 	 * @param outputFilesPrefix: prefix of the names of the output cropped images
 	 * @param outputDirPath: the path to saved the cropped images
 	 *
-	 *   TODO CLEAN METHODE : VERIFIER VARIABLE EN DOUBLE  
+	 *   TODO CLEAN METHODE : VERIFIER VARIABLE EN DOUBLE
 	 */
 	
 	public AutoCrop(String imageFile,String outputFilesPrefix, String outputDirPath) {
@@ -252,6 +252,7 @@ public class AutoCrop {
                 out=out =m_outputDirPath+File.separator+m_outputFilesPrefix+File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+"_B.tif";
             }
             */
+           //TODO FACTORISE SAVE FILE FONCTION IN NEW CLASS
             saveFile(imgResu,out);
 			m_outputFile.add(m_outputDirPath+File.separator+m_outputFilesPrefix+File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
 	       	System.gc();
@@ -279,6 +280,8 @@ public class AutoCrop {
 	 * 
 	 * @param imagePlusInput raw image
 	 * @return
+     *
+     * //TODO FACTORING THRESHOLD FONCTION
 	 */
 	private int computeOtsuThreshold (ImagePlus imagePlusInput) {
 		AutoThresholder autoThresholder = new AutoThresholder();
