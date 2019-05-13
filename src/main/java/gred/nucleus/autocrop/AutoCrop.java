@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import gred.nucleus.connectedComponent.ConnectedComponent;
+import gred.nucleus.imageProcess.Thresholding;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -113,10 +114,11 @@ public class AutoCrop {
 	 */
 	public void thresholdKernels(){
 		GaussianBlur3D.blur(m_imageSeg, 0.5,0.5,1);
-        int thresh = computeOtsuThreshold(m_imageSeg);
+		Thresholding thresholding = new Thresholding();
+		int thresh	=thresholding.computeOtsuThreshold(m_imageSeg);
         if(thresh <20) {
             ImagePlus imp2 = new Duplicator().run(m_imageSeg, 40, m_imageSeg.getStackSize());
-            int thresh2 = computeOtsuThreshold(imp2);
+            int thresh2 = thresholding.computeOtsuThreshold(imp2);
             if (thresh2<20)
                 thresh=20;
             else
@@ -127,8 +129,8 @@ public class AutoCrop {
 		System.out.println("le threshold de  " +m_imageSeg.getTitle()+" est de "+ thresh);
 
 	}
-
-    public void thresholdKernelsZprojection() {
+	//TODO A ENLEVER ?
+	public void thresholdKernelsZprojection() {
 
         ImagePlus temmGaussian =this.m_imageSeg;
 	    GaussianBlur3D.blur(temmGaussian, 0.5,0.5,1);
@@ -137,7 +139,8 @@ public class AutoCrop {
         ImagePlus testConvert= projectionMax(zProjectionTmp);
 
         testConvert.show();
-        int thresh = computeOtsuThreshold(testConvert);
+		Thresholding thresholding = new Thresholding();
+		int thresh	=thresholding.computeOtsuThreshold(testConvert);
         testConvert.close();
         System.out.println("Gaussian sans Blur "+ thresh);
         //thresh = computeOtsuThreshold(testConvert);
