@@ -9,7 +9,13 @@ public class Thresholding {
 
     public Thresholding() {}
 
-
+    /**
+     * Compute the initial threshold value from OTSU method
+     *
+     * @param imagePlusInput raw image
+     * @return OTSU threshold
+     *
+     */
     public int computeOtsuThreshold (ImagePlus imagePlusInput) {
         AutoThresholder autoThresholder = new AutoThresholder();
         ImageStatistics imageStatistics = new StackStatistics(imagePlusInput);

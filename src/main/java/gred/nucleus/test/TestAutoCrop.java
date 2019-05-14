@@ -1,17 +1,16 @@
 package gred.nucleus.test;
 
+import gred.nucleus.AnalyseTest.OuputFileVerification;
 import gred.nucleus.mainsNucelusJ.AutoCropCalling;
 import ij.ImagePlus;
 import ij.io.FileSaver;
-import ij.process.ImageConverter;
-import loci.common.Region;
+
 import loci.formats.FormatException;
-import loci.plugins.BF;
-import loci.plugins.in.ImporterOptions;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
-import ij.plugin.Duplicator;
+
 
 
 /**
@@ -63,11 +62,18 @@ public class TestAutoCrop {
 
        // String outputTristan = "/home/titus/Bureau/data/test_autocrop/";
 
-        String inputOneImageTristan = "/home/tridubos/Bureau/TEST_READING_METADATA/";
-        String outputTristan = "/home/tridubos/Bureau/TEST_READING_METADATA/";
+        String ExpectedResult = "/home/tridubos/Bureau/TEST_AUTOCROP/Results_checked";
+		String inputOneImageTristan = "/home/tridubos/Bureau/TEST_AUTOCROP/RAW_TEST";
 
+		String outputTristan = "/home/tridubos/Bureau/TEST_AUTOCROP/RAW_TEST";
 
+		OuputFileVerification fw = new OuputFileVerification();
+		fw.GetFileResultExpeted(ExpectedResult);
+		fw.GetFilesOutputFolder(outputTristan);
+		//testStupid(inputOneImageTristan, outputTristan);
 
+		fw.GetFilesResultingOfAnalysis(outputTristan);
+		fw.CompareAnalysisResult();
 		/*
 		String inputOneImageTristan = "/home/tridubos/Bureau/TEST_READING_METADATA/";
 		ImporterOptions options = new ImporterOptions();
@@ -82,16 +88,13 @@ public class TestAutoCrop {
 
 		saveFile(sort, "/home/tridubos/Bureau/TEST_READING_METADATA/cetruc.tif");
 		*/
-		testStupid(inputOneImageTristan, outputTristan);
+		//testStupid(inputOneImageTristan, outputTristan);
 		System.err.println("The program ended normally.");
 
 		System.out.println("Total memory (bytes): " +
 				Runtime.getRuntime().totalMemory()*1e-9);
 	}
 
-	public static void saveFile ( ImagePlus imagePlusInput, String pathFile) {
-		FileSaver fileSaver = new FileSaver(imagePlusInput);
-		fileSaver.saveAsTiff(pathFile);
-	}
+
 
 }

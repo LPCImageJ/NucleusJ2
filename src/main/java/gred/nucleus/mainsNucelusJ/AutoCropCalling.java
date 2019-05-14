@@ -98,18 +98,17 @@ public class AutoCropCalling {
         autoCrop.thresholdKernels();
         autoCrop.cropKernels(autoCrop.computeBoxes(1));
         autoCrop.getOutputFileArrayList();
-        annotAutoCrop projectionWithBoxes  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input+img.getTitle());
-        //annotAutoCrop test  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input+img.getTitle());
+        // annotAutoCrop projectionWithBoxes  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input+img.getTitle());
+        // annotAutoCrop test  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input+img.getTitle());
         /*
         ICI C ETAIT UN AUTOCROP SUR LA Z PROJECTION !!!!
-
         AutoCrop autoCropZ = new AutoCrop (img,this._prefix,this._outputZprojection,this._input);
         autoCropZ.thresholdKernelsZprojection();
         autoCropZ.cropKernels(autoCropZ.computeBoxes(1));
         autoCropZ.getOutputFileArrayList();
         annotAutoCrop projectionWithBoxesZ  = new annotAutoCrop(autoCropZ.getFileCoordinates(),this._input+img.getTitle());
-
         annotAutoCrop testZ  = new annotAutoCrop(autoCropZ.getFileCoordinates(),this._input+img.getTitle());
+
         */
         System.out.println(_prefix+"\t"+autoCrop.getNbOfNuc()+" nuclei detected");
 
