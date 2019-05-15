@@ -1,124 +1,140 @@
 package gred.nucleus.AnalyseTest;
 
 
+
+
 import java.io.File;
-import java.util.ArrayList;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import org.apache.commons.codec.digest.DigestUtils;
+
 
 public class OuputFileVerification {
-    /*
-    private ArrayList<File> _listInitialFilesInputFolder = new ArrayList<File>();
-    private ArrayList<File> _listInitialFileOutputFolder = new ArrayList<File>();
-    private ArrayList<File> _listFilesProduceByAnlaysis = new ArrayList<File>();
 
-    */
     /** Key of files expected in the result directory */
-    Map<String,Integer> _myMapInitialFilesInputFolder = new HashMap<String,Integer>();
+    Map<String,String> _myMapInitialFilesInputFolder = new HashMap<String,String>();
 
     /** Key of files produce by the analysis*/
-    Map<String,Integer> _myMapInitialFileOutputFolder = new HashMap<String,Integer>();
+    Map<String,String> _myMapInitialFileOutputFolder = new HashMap<String,String>();
 
     /** list of files produce by the analysis*/
-    Map<String,Integer> _myMapFilesProduceByAnlaysis = new HashMap<String,Integer>();
+    Map<String,String> _myMapFilesProduceByAnlaysis = new HashMap<String,String>();
 
 
-    public void OuputFileVerification() {
-        System.out.println("Init l object ");
+    public void OuputFileVerification() {}
 
-    }
+    /**
+    List files expected and compute md5sum stored in hashMap (read recursively folders)
+     @param path : path of folder which contains files expected
+
+     */
 
     public void GetFileResultExpeted( String path ) {
         File root = new File(path);
         File[] list = root.listFiles();
         for (File f : list) {
-            // System.out.println("list est de  " + list.length);
             if (f.isDirectory()) {
-               //return listFile;
                 GetFileResultExpeted(f.getAbsolutePath());
-                 // System.out.println("Dir:" + f.getAbsoluteFile() + " " + f.hashCode());
             }
             else {
-                _myMapInitialFilesInputFolder.put(f.getName(),f.hashCode());
-                System.out.println("On ajoute ca au hashmap"+f.getName()+" "+f.hashCode());
-               // _listInitialFilesInputFolder.add(f);
+                try {
+                    _myMapInitialFilesInputFolder.put(f.getName(), md5(f.getPath()));
+                    }
+                catch (IOException e){
+
+                }
             }
         }
 
     }
+    /**
+     List files already inside the output folder and compute md5sum stored in hashMap (read recursively folders)
+     @param path : path of folder which contains files expected
+
+     */
+
     public void GetFilesOutputFolder( String path ) {
         File root = new File(path);
         File[] list = root.listFiles();
         for (File f : list) {
-            // System.out.println("list est de  " + list.length);
             if (f.isDirectory()) {
-                //return listFile;
                 GetFilesOutputFolder(f.getAbsolutePath());
-                //   System.out.println("Dir:" + f.getAbsoluteFile() + " " + f.hashCode());
             }
             else {
-                //_listInitialFileOutputFolder.add(f);
-                _myMapInitialFileOutputFolder.put(f.getName(),f.hashCode());
+                try {
+                    _myMapInitialFileOutputFolder.put(f.getName(), md5(f.getPath()));
+                }
+                catch (IOException e){
+
+                }
             }
         }
 
     }
+    /**
+     List files output folder produce by the analyse and compute md5sum stored in hashMap (read recursively folders)
+     @param path : path of folder which contains files expected
+
+     */
     public void GetFilesResultingOfAnalysis( String path ) {
         File root = new File(path);
         File[] list = root.listFiles();
         for (File f : list) {
-            // System.out.println("list est de  " + list.length);
             if (f.isDirectory()) {
-                //return listFile;
                 GetFilesResultingOfAnalysis(f.getAbsolutePath());
-                //   System.out.println("Dir:" + f.getAbsoluteFile() + " " + f.hashCode());
             }
             else {
-                //_listFilesProduceByAnlaysis.add(f);
-                _myMapFilesProduceByAnlaysis.put(f.getName(),f.hashCode());
-                System.out.println("Le resu analyse: "+f.getName()+" "+f.hashCode());
+               try {
+                   _myMapFilesProduceByAnlaysis.put(f.getName(), md5(f.getPath()));
+               }
+               catch (IOException e){
 
+               }
             }
         }
 
     }
+    /**
+     *Method to compare md5sum of files from output analysis
+     * with expected results
+     *
+     */
     public void CompareAnalysisResult() {
-        System.out.println("Terrible du cul c est le Map qui merde "+_myMapInitialFilesInputFolder.size());
-
-
-        for(Map.Entry<String, Integer> entry : _myMapInitialFilesInputFolder.entrySet()) {
+        for(Map.Entry<String, String> entry : _myMapInitialFilesInputFolder.entrySet()) {
             String fileName = entry.getKey();
-            Integer hashCode = entry.getValue();
-            if ( hashCode == _myMapFilesProduceByAnlaysis.get(fileName)){
+            String hashCode = entry.getValue();
+            if ( hashCode.equals( _myMapFilesProduceByAnlaysis.get(fileName))){
                 System.out.println("Terrible du cul ");
             }
             else {
 
-                System.out.println("Le file : "+fileName+ "  -- Le hashcode : "+hashCode+"" +
-                        " le out "+_myMapFilesProduceByAnlaysis.get(fileName)+ " "              +
-                        _myMapFilesProduceByAnlaysis.size()                );
-
             }
 
         }
-        /*
-        Iterator<File> itr = _listFilesProduceByAnlaysis.iterator();
-
-        while (itr.hasNext()) {
-            if (_listInitialFilesInputFolder.contains(itr)) {
-                File element = itr.next();
-
-                System.out.println("Account found");
-
-            }
-            else{
-
-                System.out.println("Pas bien");
-
-            }
-
-        }
-        */
     }
+
+    /**
+     * Method to compute md5sum of files
+     * @param path path of file
+     * @return hash md5 of file
+     * @throws IOException
+     *  TODO ADD exception handeling
+     */
+
+    public String md5(String path) throws IOException  {
+        String checksumMD5="Na";
+        try {
+            checksumMD5 = DigestUtils.md5Hex(new FileInputStream(path));
+        }
+        catch (IOException e){
+
+        }
+        return checksumMD5;
+
+    }
+
+
+
 }
