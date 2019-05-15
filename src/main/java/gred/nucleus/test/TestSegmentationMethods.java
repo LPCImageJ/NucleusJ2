@@ -1,5 +1,6 @@
 package gred.nucleus.test;
 
+import gred.nucleus.AnalyseTest.OuputFileVerification;
 import gred.nucleus.mainsNucelusJ.SegmentationMethods;
 import gred.nucleus.utils.Histogram;
 import ij.IJ;
@@ -64,12 +65,12 @@ public class TestSegmentationMethods {
         String imgSegPathTristan = "";
         //String inputTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/test_crop";
 
-
+/*
         String inputTristan = "/home/tridubos/Bureau/VERIFICATION_SEGMENTATION_MANUEL_NUCLEOLE/Verification/raw/";
         String outputTristanGift = "/home/tridubos/Bureau/VERIFICATION_SEGMENTATION_MANUEL_NUCLEOLE/Verification/out/GIFT/";
         String outputTristanOtsu = "/home/tridubos/Bureau/VERIFICATION_SEGMENTATION_MANUEL_NUCLEOLE/Verification/out/OTSU/";
 
-/*
+
 
         String inputTristan = "/home/tridubos/Bureau/VERIFICATION_SEGMENTATION_MANUEL_NUCLEOLE/RawDataNucleus/";
         String outputTristanGift = "/home/tridubos/Bureau/VERIFICATION_SEGMENTATION_MANUEL_NUCLEOLE/Segmentation/GIFT/";
@@ -96,10 +97,38 @@ public class TestSegmentationMethods {
         cal.pixelHeight = 0.103;
         cal.pixelWidth = 0.103;
  */
+
+
+
+        String ExpectedResult = "/home/tridubos/Bureau/TEST_SEG/Results_checked/Z_Col_cot21&17&22__w11 DAPI SIM_s3/";
+        String ExpectedResultOutOTSU = "/home/tridubos/Bureau/TEST_SEG/Results_checked/Z_Col_cot21&17&22__w11 DAPI SIM_s3/OTSU/";
+
+        String inputTristan= "/home/tridubos/Bureau/TEST_SEG/Test_analysis/Z_Col_cot21&17&22__w11 DAPI SIM_s3/";
+        String outputTristanGift = "/home/tridubos/Bureau/TEST_SEG/Test_analysis/Z_Col_cot21&17&22__w11 DAPI SIM_s3/GIFT";
+        String outputTristanOtsu = "/home/tridubos/Bureau/TEST_SEG/Test_analysis/Z_Col_cot21&17&22__w11 DAPI SIM_s3/OTSU/";
+
+        OuputFileVerification fw = new OuputFileVerification(ExpectedResult,inputTristan);
+        fw.GetFileResultExpeted(ExpectedResult);
+        fw.GetFilesOutputFolder(inputTristan);
+
         testStupidSeveralImages(inputTristan, outputTristanOtsu , (short)1.0, 300000000,false);
 
-        testStupidSeveralImages(inputTristan, outputTristanGift, (short)6.0, 300000000,true);
+       // testStupidSeveralImages(ExpectedResult, ExpectedResult, (short)6.0, 300000000,true);
+
+        fw.GetFilesResultingOfAnalysis(inputTristan);
+        fw.CompareAnalysisResult();
+
         /*
+        OuputFileVerification fw = new OuputFileVerification();
+        fw.GetFileResultExpeted(ExpectedResult);
+        fw.GetFilesOutputFolder(outputTristan);
+        fw.GetFilesResultingOfAnalysis(outputTristan);
+        fw.CompareAnalysisResult();
+
+
+
+
+
         ImagePlus img  = IJ.openImage(imgPathTristan);
         Histogram histogram = new Histogram ();
         histogram.run(img);
