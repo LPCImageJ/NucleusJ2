@@ -1,5 +1,6 @@
 package gred.nucleus.mainsNucelusJ;
 
+import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.core.ConvexHullSegmentation;
 import gred.nucleus.core.NucleusSegmentation;
 import ij.IJ;
@@ -88,11 +89,14 @@ public class SegmentationMethods {
         this._vMax = vMax;
         this._inputDir = inputDir;
         this._output = outputDir;
-        File file = new File(this._output);
-        if (!file.exists()){
-            file.mkdir();
-        }
+
+        Directory dirOutput =new Directory(this._output );
+        dirOutput.CheckAndCreateDir();
+        this._output=dirOutput.get_dirPath();
+
+
     }
+
 
     /**
      * Method to run an ImagePlus input
@@ -170,7 +174,6 @@ public class SegmentationMethods {
                 ImagePlus[] imgTab = BF.openImagePlus(fileImg);
                 ImagePlus img = imgTab[0];
                 ImagePlus imgSeg = img;
-                // IJ.log(""+getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() +" image type " +imgSeg.getType()+"\n");
                 if (imgSeg.getType() == ImagePlus.GRAY16)
                     this.preProcessImage(imgSeg);
                 NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(this._vMin, this._vMax);
