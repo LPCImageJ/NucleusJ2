@@ -15,15 +15,24 @@ public class OuputFileVerification {
 
     /** Key of files expected in the result directory */
     Map<String,String> _myMapInitialFilesInputFolder = new HashMap<String,String>();
-
     /** Key of files produce by the analysis*/
     Map<String,String> _myMapInitialFileOutputFolder = new HashMap<String,String>();
-
     /** list of files produce by the analysis*/
     Map<String,String> _myMapFilesProduceByAnlaysis = new HashMap<String,String>();
 
 
-    public void OuputFileVerification() {}
+    /** Path output analysis files */
+    String _rawPathOutPut;
+    /** Raw path expected files */
+    String _rawPathExpectedResult;
+
+
+    //public void OuputFileVerification(){}
+
+    public OuputFileVerification(String PathExpectedResult,String PathOutPut) {
+        _rawPathExpectedResult=PathExpectedResult;
+        _rawPathOutPut=PathOutPut;
+    }
 
     /**
     List files expected and compute md5sum stored in hashMap (read recursively folders)
@@ -40,7 +49,8 @@ public class OuputFileVerification {
             }
             else {
                 try {
-                    _myMapInitialFilesInputFolder.put(f.getName(), md5(f.getPath()));
+                    String temps= f.getPath().replace(_rawPathExpectedResult,"");
+                    _myMapInitialFilesInputFolder.put(temps, md5(f.getPath()));
                     }
                 catch (IOException e){
 
@@ -64,7 +74,8 @@ public class OuputFileVerification {
             }
             else {
                 try {
-                    _myMapInitialFileOutputFolder.put(f.getName(), md5(f.getPath()));
+                    String temps= f.getPath().replace(_rawPathOutPut,"");
+                    _myMapInitialFileOutputFolder.put(temps, md5(f.getPath()));
                 }
                 catch (IOException e){
 
@@ -87,7 +98,9 @@ public class OuputFileVerification {
             }
             else {
                try {
-                   _myMapFilesProduceByAnlaysis.put(f.getName(), md5(f.getPath()));
+                   String temps= f.getPath().replace(_rawPathOutPut,"");
+                   System.out.println(temps);
+                   _myMapFilesProduceByAnlaysis.put(temps, md5(f.getPath()));
                }
                catch (IOException e){
 
@@ -106,10 +119,12 @@ public class OuputFileVerification {
             String fileName = entry.getKey();
             String hashCode = entry.getValue();
             if ( hashCode.equals( _myMapFilesProduceByAnlaysis.get(fileName))){
-                System.out.println("Terrible du cul ");
+                System.out.println("Terrible du cul "+fileName);
             }
             else {
-
+                System.out.println("le fichier n'existe pas ou diff hash "+fileName+"\n"
+                        +hashCode+"\n"
+                +_myMapFilesProduceByAnlaysis.get(fileName)+"\n");
             }
 
         }
