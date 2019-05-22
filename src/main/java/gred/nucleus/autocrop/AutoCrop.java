@@ -1,15 +1,13 @@
 package gred.nucleus.autocrop;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
+import gred.nucleus.FilesInputOutput.Directory;
+import gred.nucleus.FilesInputOutput.OutputTiff;
 import gred.nucleus.connectedComponent.ConnectedComponent;
+import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.imageProcess.Thresholding;
-import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.io.FileSaver;
-import ij.io.ImageReader;
 import ij.measure.Calibration;
 import ij.plugin.ContrastEnhancer;
 import ij.plugin.Duplicator;
@@ -19,33 +17,22 @@ import ij.process.AutoThresholder;
 import ij.process.ImageStatistics;
 import ij.process.StackConverter;
 import ij.process.StackStatistics;
-import ij.process.AutoThresholder.Method;
-import ij.process.ImageConverter;
 import loci.common.Region;
 import loci.formats.FormatException;
 import loci.plugins.BF;
-import loci.formats.IFormatReader;
 import loci.plugins.in.ImporterOptions;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
 
-/**
- * Allows to compute bounding boxes, to automatically crop and to save. 
- * Input image can be a binary Image or an 8 bit gray level image. If it is a gray level image, the method thresholdKernels allow the segmentation
- *  of the image.
- * The ConnectedComponent Class is used and permit thresholding of the objects volume to remove the smaller connected components
- * which can be artefact. 
- * 
- * @author Tristan Dubos and Axel Poulet
- *
- */
 public class AutoCrop {
-	/**
-	 * Input image, it is a binary Image. If it is not the case the method thresholdKernels
-	 * allow the segmentation of the image. The image is initialised in the constructor 
-	 * and this image is modified during the process.
-	 */
+
+	/** */
+	File m_currentFile;
+
 	private ImagePlus m_rawImg;
-	
+
 	private ImagePlus m_imageSeg;
 	/** The path of the image to be processed */
 	private String m_imageFilePath;
@@ -54,105 +41,40 @@ public class AutoCrop {
 	/** The prefix of the names of the output cropped images, which are automatically numbered.*/
 	private String m_outputFilesPrefix;
 	/** List of the path of the output files created by the cropKernels method*/
-	private ArrayList <String> m_outputFile =  new ArrayList <String>();
+	private ArrayList<String> m_outputFile =  new ArrayList <String>();
 	/** List of boxes coordinates */
-	private ArrayList <String> m_boxCoordinates = new ArrayList<String>();	
+	private ArrayList <String> m_boxCoordinates = new ArrayList<String>();
 	/** Number of nuclei cropped */
 	private int _nbOfNuc = 0;
 
-	/**
-	 * Initialises the attributes of this instance and attempts loading the input image
-	 * 
-	 * @param imageFile: the path to the input 8bit gray level or binary image, to crop the sub objects.
-	 * @param outputFilesPrefix: prefix of the names of the output cropped images
-	 * @param outputDirPath: the path to saved the cropped images
-	 *
-	 *   TODO CLEAN METHODE : VERIFIER VARIABLE EN DOUBLE
-	 */
-	
-	public AutoCrop(String imageFile,String outputFilesPrefix, String outputDirPath) {
-		m_imageFilePath = imageFile;
-		m_outputDirPath = outputDirPath;
-		this.m_rawImg = IJ.openImage(m_imageFilePath);
-		m_imageSeg= IJ.openImage(m_imageFilePath);
-		ContrastEnhancer enh = new ContrastEnhancer();
-		enh.setNormalize(true);
-		enh.setUseStackHistogram(true);
-		enh.stretchHistogram(m_imageSeg, 0.05);
-		StackConverter stackConverter = new StackConverter( m_imageSeg );
-		stackConverter.convertToGray8();
-		m_outputFilesPrefix = outputFilesPrefix;
-	}
+	public AutoCrop(File imageFile, String outputDirPath ,String outputFilesPrefix ) throws IOException, FormatException, fileInOut,Exception{
+		this.m_currentFile=imageFile;
+		this.m_imageFilePath = imageFile.getAbsolutePath();
+		this.m_outputDirPath = outputDirPath;
+		this.m_rawImg =  BF.openImagePlus(imageFile.getAbsolutePath())[0];
+		Thresholding thresholding = new Thresholding();
+		this.m_imageSeg= thresholding.contrastAnd8bits(BF.openImagePlus(imageFile.getAbsolutePath())[0]);
+		this.m_outputFilesPrefix = outputFilesPrefix;
 
-	/**
-	 * Initialises the attributes of this instance.
-	 * 
-	 * @param imageThresholding: the input 8bit gray level or binary image, to crop the sub objects.
-	 * @param outputFilesPrefix: prefix of the names of the output cropped images
-	 * @param outputDirPath: the path to saved the cropped images
-	 *
-	 */
-	public AutoCrop(ImagePlus imageThresholding,String outputFilesPrefix, String outputDirPath,String imageFile) {
-		m_imageFilePath = imageFile;
-		m_outputDirPath = outputDirPath;
-		m_rawImg = imageThresholding;
-		m_imageSeg= imageThresholding;
-		ContrastEnhancer enh = new ContrastEnhancer();
-		enh.setNormalize(true);
-		enh.setUseStackHistogram(true);
-		enh.setProcessStack(true);
-		enh.stretchHistogram(m_imageSeg.getProcessor(), 0.05);
-		StackConverter stackConverter = new StackConverter( m_imageSeg );
-		stackConverter.convertToGray8();
-		m_outputFilesPrefix = outputFilesPrefix;
-	}
 
-	/**
-	 * Threshold of the input using the Otsu method:
-	 * First step is the  binomial blur of the wrapImaJ package with 6 6 1 as parameters.
-	 * Then Otsu thresholding is applied. This method can be used if the input image is 8bit gray level image.
-	 */
+	}
 	public void thresholdKernels(){
-		GaussianBlur3D.blur(m_imageSeg, 0.5,0.5,1);
+		GaussianBlur3D.blur(this.m_imageSeg, 0.5,0.5,1);
 		Thresholding thresholding = new Thresholding();
-		int thresh	=thresholding.computeOtsuThreshold(m_imageSeg);
-        if(thresh <20) {
-            ImagePlus imp2 = new Duplicator().run(m_imageSeg, 40, m_imageSeg.getStackSize());
-            int thresh2 = thresholding.computeOtsuThreshold(imp2);
-            if (thresh2<20)
-                thresh=20;
-            else
-                thresh=thresh2;
-        }
-        System.out.println("le threshold de  " +m_imageSeg.getTitle()+" est de "+ thresh);
-        m_imageSeg = this.generateSegmentedImage(m_imageSeg, thresh);
-		System.out.println("le threshold de  " +m_imageSeg.getTitle()+" est de "+ thresh);
+		int thresh	=thresholding.computeOtsuThreshold(this.m_imageSeg);
+		if(thresh <20) {
+			ImagePlus imp2 = new Duplicator().run(this.m_imageSeg, 40, this.m_imageSeg.getStackSize());
+			int thresh2 = thresholding.computeOtsuThreshold(imp2);
+			if (thresh2<20)
+				thresh=20;
+			else
+				thresh=thresh2;
+		}
+		System.out.println("le threshold de  " +this.m_imageSeg.getTitle()+" est de "+ thresh);
+		this.m_imageSeg = this.generateSegmentedImage(this.m_imageSeg, thresh);
+		System.out.println("le threshold de  " +this.m_imageSeg.getTitle()+" est de "+ thresh);
 
 	}
-	//TODO A ENLEVER ?
-	public void thresholdKernelsZprojection() {
-
-        ImagePlus temmGaussian =this.m_imageSeg;
-	    GaussianBlur3D.blur(temmGaussian, 0.5,0.5,1);
-
-        ZProjector zProjectionTmp = new ZProjector(temmGaussian);
-        ImagePlus testConvert= projectionMax(zProjectionTmp);
-
-        testConvert.show();
-		Thresholding thresholding = new Thresholding();
-		int thresh	=thresholding.computeOtsuThreshold(testConvert);
-        testConvert.close();
-        System.out.println("Gaussian sans Blur "+ thresh);
-        //thresh = computeOtsuThreshold(testConvert);
-        System.out.println("Gaussian avec Blur "+ thresh);
-        m_imageSeg = this.generateSegmentedImage(m_imageSeg, thresh);
-    }
-    private ImagePlus projectionMax(ZProjector project){
-        project.setMethod(1);
-        project.doProjection();
-        return project.getProjection();
-    }
-
 
 	/**
 	 * Detection of the of the bounding box for each object of the image.
@@ -160,22 +82,22 @@ public class AutoCrop {
 	 * are removed. The coordinates allow the implementation of the box objects which define the bounding box, and these objects are stocked in a
 	 * ArrayList.
 	 * @pre the input image must be a binary image with values 255 and 0 only.
-	 * In order to use with a grey-level image, use either @see # thresholdKernels() or 
+	 * In order to use with a grey-level image, use either @see # thresholdKernels() or
 	 * your own binarisation method.
 	 * @param thresholdVolumeVoxel: threshold volume of the objects detected by the connected component
 	 * @return the ArrayList of the bounding boxes.
 	 */
 	public ArrayList <Box> computeBoxes(double thresholdVolumeVoxel) {
-		ConnectedComponent connectedComponent; 
+		ConnectedComponent connectedComponent;
 		ArrayList <Box> boxes =  new ArrayList <Box>();
 		try {
 			connectedComponent = ConnectedComponent.getLabelledConnectedComponent(m_imageSeg, 255, true, thresholdVolumeVoxel, true);
 			Box box = null;
 			//ArrayList initialisation
-            this._nbOfNuc = connectedComponent.getNumberOfComponents();
+			this._nbOfNuc = connectedComponent.getNumberOfComponents();
 			for(short i = 0; i< connectedComponent.getNumberOfComponents();++i)
 				boxes.add(new Box(Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE));
-                System.out.println();
+			System.out.println();
 			// Check the predicate
 			for (short k = 0; k < this.m_imageSeg.getNSlices(); ++k) {
 				for (short i = 0; i < this.m_imageSeg.getWidth(); ++i) {
@@ -184,18 +106,18 @@ public class AutoCrop {
 						if (connectedComponent.getLabel(i, j, k) > 0) {
 							box = boxes.get(connectedComponent.getLabel(i, j, k)-1);
 							if (i < box.getXMin())
-							    box.setXMin(i);
+								box.setXMin(i);
 							else if (i > box.getXMax())
-							    box.setXMax(i);
+								box.setXMax(i);
 							if (j < box.getYMin())
-							    box.setYMin(j);
+								box.setYMin(j);
 							else if(j > box.getYMax())
-							    box.setYMax(j);
-							
+								box.setYMax(j);
+
 							if (k < box.getZMin())
-							    box.setZMin(k);
+								box.setZMin(k);
 							else if (k > box.getZMax())
-							    box.setZMax(k);
+								box.setZMax(k);
 						}
 					}
 				}
@@ -204,15 +126,17 @@ public class AutoCrop {
 		catch (Exception e){ e.printStackTrace(); }
 		return boxes;
 	}
-	
+
 	/**
-	 * Method crops a box of interest, create and save a new small image. This process allow the crop of all the bounding box 
-	 * contained in the input ArrayList and the crop is did on the ImageCore put in input in this method (crop method available in the imagej wrapper). Then the image results 
-	 * obtained was used to create a new ImageCoreIJ, and the image is saved. 
-	 * 
+	 * Method crops a box of interest, create and save a new small image. This process allow the crop of all the bounding box
+	 * contained in the input ArrayList and the crop is did on the ImageCore put in input in this method (crop method available in the imagej wrapper). Then the image results
+	 * obtained was used to create a new ImageCoreIJ, and the image is saved.
+	 *
 	 * @param boxes: containing object boxes.
-     */
-	public void cropKernels(ArrayList <Box> boxes)throws IOException, FormatException {
+	 */
+	public void cropKernels(ArrayList <Box> boxes)throws IOException, FormatException, Exception {
+		Directory dirOutput= new Directory(m_outputDirPath+File.separator+m_outputFilesPrefix);
+		dirOutput.CheckAndCreateDir();
 		for(short i = 0; i < boxes.size(); ++i) {
 			Box box = boxes.get(i);
 			int xmin = box.getXMin()-40;
@@ -221,45 +145,45 @@ public class AutoCrop {
 			String coord= box.getXMin()+"_"+box.getYMin()+"_"+box.getZMin();
 			m_boxCoordinates.add(m_outputDirPath+File.separator+m_outputFilesPrefix+"_"+coord+i+"\t"+box.getXMin()+"\t"+box.getXMax()+"\t"+box.getYMin()+"\t"+box.getYMax()+"\t"+box.getZMin()+"\t"+box.getZMax());
 			if (xmin < 0)
-			    xmin = 1;
+				xmin = 1;
 			if (ymin < 0)
-			    ymin = 1;
+				ymin = 1;
 			if (zmin < 0)
-			    zmin = 1;
+				zmin = 1;
 
 			int width = box.getXMax()+80 - box.getXMin();
 			int height = box.getYMax()+80 - box.getYMin();
 			int depth = box.getZMax()+40 - box.getZMin();
 			if (width+xmin >= m_imageSeg.getWidth())
-	         	width-=(width+xmin)-m_imageSeg.getWidth();
+				width-=(width+xmin)-m_imageSeg.getWidth();
 
 			if (height+ymin >= m_imageSeg.getHeight())
-	        	height-=(height+ymin)-m_imageSeg.getHeight();
+				height-=(height+ymin)-m_imageSeg.getHeight();
 
 			if (depth+zmin >= m_imageSeg.getNSlices())
-	         	depth-=(depth+zmin)-m_imageSeg.getNSlices();
+				depth-=(depth+zmin)-m_imageSeg.getNSlices();
 
 			ImagePlus imgResu = cropImage(xmin, ymin, zmin, width, height, depth);
 
 
 			Calibration cal = m_rawImg.getCalibration();
 			imgResu.setCalibration(cal);
-			File outputFile = new File(m_outputDirPath+File.separator+m_outputFilesPrefix);
-			if(!(outputFile .exists())) {
-				outputFile.mkdir();
-			}
-			String out =m_outputDirPath+File.separator+m_outputFilesPrefix+File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+".tif";
-           /*
-            File outputFile2 = new File(out);
-			if((outputFile2  .exists())){
-                out=out =m_outputDirPath+File.separator+m_outputFilesPrefix+File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+"_B.tif";
-            }
-            */
-           //TODO FACTORISE SAVE FILE FONCTION IN NEW CLASS
-            saveFile(imgResu,out);
+			OutputTiff fileOutput = new OutputTiff(m_outputDirPath+File.separator+m_outputFilesPrefix+File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
+			fileOutput.SaveImage(imgResu);
+
+			{}
+			//TODO FACTORISE SAVE FILE FONCTION IN NEW CLASS
+
+			/*
+			System.out.println("Heu la on a le out file name : "+m_outputDirPath+"\n"+
+					File.separator+m_outputFilesPrefix+"\n"+
+					File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
+			System.out.println("Heu la on a le out file name : "+this.m_outputDirPath+"\n"+
+					File.separator+this.m_outputFilesPrefix+"\n"+
+					File.separator+this.m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
+			*/
 			m_outputFile.add(m_outputDirPath+File.separator+m_outputFilesPrefix+File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
-	       	System.gc();
-		}	
+		}
 	}
 
 	/**
@@ -267,30 +191,30 @@ public class AutoCrop {
 	 * @return m_outputFile: ArrayList of String for the path of the output files created.
 	 */
 	public ArrayList <String> getOutputFileArrayList(){
-	    return m_outputFile;
+		return m_outputFile;
 	}
-	
+
 	/**
 	 * Getter for the m_boxCoordinates
 	 * @return m_boxCoordinates: ArrayList of String which contain the coordinates of the boxes
 	 */
 	public ArrayList <String> getFileCoordinates(){
-	    return m_boxCoordinates;
+		return m_boxCoordinates;
 	}
-	
+
 	/**
 	 * Compute the initial threshold value
-	 * 
+	 *
 	 * @param imagePlusInput raw image
 	 * @return
-     *
-     * //TODO FACTORING THRESHOLD FONCTION
+	 *
+	 * //TODO FACTORING THRESHOLD FONCTION
 	 */
 	private int computeOtsuThreshold (ImagePlus imagePlusInput) {
 		AutoThresholder autoThresholder = new AutoThresholder();
 		ImageStatistics imageStatistics = new StackStatistics(imagePlusInput);
 		int [] tHisto = imageStatistics.histogram;
-		return autoThresholder.getThreshold(Method.Otsu,tHisto);
+		return autoThresholder.getThreshold(AutoThresholder.Method.Otsu,tHisto);
 	}
 
 
@@ -306,44 +230,44 @@ public class AutoCrop {
 		ImagePlus imagePlusSegmented = imagePlusInput.duplicate();
 		ImageStack imageStackSegmented = imagePlusSegmented.getStack();
 		for(int k = 0; k < imagePlusInput.getStackSize(); ++k) {
-            for (int i = 0; i < imagePlusInput.getWidth(); ++i) {
-                for (int j = 0; j < imagePlusInput.getHeight(); ++j) {
-                    double voxelValue = imageStackInput.getVoxel(i, j, k);
-                    if (voxelValue >= threshold) imageStackSegmented.setVoxel(i, j, k, 255);
-                    else imageStackSegmented.setVoxel(i, j, k, 0);
-                }
-            }
-        }
+			for (int i = 0; i < imagePlusInput.getWidth(); ++i) {
+				for (int j = 0; j < imagePlusInput.getHeight(); ++j) {
+					double voxelValue = imageStackInput.getVoxel(i, j, k);
+					if (voxelValue >= threshold) imageStackSegmented.setVoxel(i, j, k, 255);
+					else imageStackSegmented.setVoxel(i, j, k, 0);
+				}
+			}
+		}
 		return imagePlusSegmented;
 	}
-	
+
 	/**
 	 * Save the image file
-	 * 
+	 *
 	 * @param imagePlusInput image to save
 	 * @param pathFile path to save the image
-	 */	
+	 */
 	public void saveFile ( ImagePlus imagePlusInput, String pathFile) {
 		FileSaver fileSaver = new FileSaver(imagePlusInput);
-	    fileSaver.saveAsTiff(pathFile);
+		fileSaver.saveAsTiff(pathFile);
 	}
-	
-    
-    /**
-     *
-     * Crop of the bounding box on the image. The coordinates are inputs of this methods  
-     *
+
+
+	/**
+	 *
+	 * Crop of the bounding box on the image. The coordinates are inputs of this methods
+	 *
 	 * @param xmin: coordinate x min of the crop
-     * @param ymin: coordinate y min of the crop
-     * @param zmin: coordinate z min of the crop
-     * @param width: coordinate x max of the crop
-     * @param height: coordinate y max of the crop
-     * @param depth: coordinate z max of the crop
-     * @return : ImageCoreIJ of the cropped image.
-     */
-    public ImagePlus cropImage(int xmin, int ymin, int zmin, int width, int height, int depth)throws IOException, FormatException {
+	 * @param ymin: coordinate y min of the crop
+	 * @param zmin: coordinate z min of the crop
+	 * @param width: coordinate x max of the crop
+	 * @param height: coordinate y max of the crop
+	 * @param depth: coordinate z max of the crop
+	 * @return : ImageCoreIJ of the cropped image.
+	 */
+	public ImagePlus cropImage(int xmin, int ymin, int zmin, int width, int height, int depth)throws IOException, FormatException {
 		ImporterOptions options = new ImporterOptions();
-		options.setId(m_imageFilePath+File.separator+m_rawImg.getTitle());
+		options.setId(this.m_imageFilePath);
 		options.setAutoscale(true);
 		options.setCrop(true);
 		options.setCropRegion(0, new Region(xmin, ymin ,width, height));
@@ -360,16 +284,16 @@ public class AutoCrop {
 		ImageConverter ic = new ImageConverter(imp);
 		imp.updateAndDraw();
 		*/
-    }
+	}
 
-    /**
-     *Getter of the number of nuclei contained in the input image
+	/**
+	 *Getter of the number of nuclei contained in the input image
 	 *
-     * @return int the nb of nuclei
-     */
-    public int getNbOfNuc(){
-        return this._nbOfNuc;
-    }
+	 * @return int the nb of nuclei
+	 */
+	public int getNbOfNuc(){
+		return this._nbOfNuc;
+	}
 
 
 }
