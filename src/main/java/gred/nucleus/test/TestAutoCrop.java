@@ -1,12 +1,8 @@
 package gred.nucleus.test;
 
-import gred.nucleus.AnalyseTest.OuputFileVerification;
+import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.mainsNucelusJ.AutoCropCalling;
-import ij.ImagePlus;
-import ij.io.FileSaver;
-
 import loci.formats.FormatException;
-
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -35,7 +31,7 @@ public class TestAutoCrop {
 	
 	static ArrayList <String> m_test;
 	
-	public static void testStupid(String imageSourceFile, String output) throws IOException, FormatException {
+	public static void testStupid(String imageSourceFile, String output) throws IOException, FormatException , fileInOut,Exception {
         AutoCropCalling autoCrop = new AutoCropCalling(imageSourceFile,output);
         autoCrop.run();
 	}
@@ -45,7 +41,7 @@ public class TestAutoCrop {
 	 * Main function of the package's tests.
 	 * @param args
 	 */
-	public static void main(String[] args) throws IOException, FormatException {
+	public static void main(String[] args) throws IOException, FormatException, fileInOut,Exception{
 
 	    System.err.println("start prog");
 		long maxMemory = Runtime.getRuntime().maxMemory();
@@ -62,16 +58,20 @@ public class TestAutoCrop {
 
        // String outputTristan = "/home/titus/Bureau/data/test_autocrop/";
 
+
+
+
         String ExpectedResult = "/home/tridubos/Bureau/TEST_AUTOCROP/Results_checked";
-		String inputOneImageTristan = "/home/tridubos/Bureau/TEST_AUTOCROP/RAW_TEST";
+		String inputOneImageTristan = "/home/tridubos/Bureau/TEST_AUTOCROP/RAW_TEST/raw";
 
-		String outputTristan = "/home/tridubos/Bureau/TEST_AUTOCROP/RAW_TEST";
-
-		OuputFileVerification fw = new OuputFileVerification();
+		String outputTristan = "/home/tridubos/Bureau/TEST_AUTOCROP/RAW_TEST/output";
+		/*
+		OuputFileVerification fw = new OuputFileVerification(ExpectedResult,outputTristan);
 		fw.GetFileResultExpeted(ExpectedResult);
 		fw.GetFilesOutputFolder(outputTristan);
-		//testStupid(inputOneImageTristan, outputTristan);
-
+		*/
+		testStupid(inputOneImageTristan, outputTristan);
+		/*
 		fw.GetFilesResultingOfAnalysis(outputTristan);
 		fw.CompareAnalysisResult();
 		/*

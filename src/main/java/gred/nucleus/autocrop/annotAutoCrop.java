@@ -1,5 +1,6 @@
 package gred.nucleus.autocrop;
 
+import gred.nucleus.FilesInputOutput.FilesNames;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.TextRoi;
@@ -31,6 +32,11 @@ public class annotAutoCrop {
      * @throws IOException if file problem
      * @throws FormatException Bioformat exception
      */
+    /** File to process (Image input) */
+    File m_currentFile;
+
+
+
     /** ImagePlus of the Z projection */
     private ImagePlus m_zProjection ;
     /** List of the coordinate boxes of croped nucleus */
@@ -40,26 +46,30 @@ public class annotAutoCrop {
     /** the path of the directory where image with boxes is saved  */
     private String m_outputDirPath;
 
-    public annotAutoCrop(ArrayList<String> ListBox, String m_imageFilePath) throws IOException, FormatException {
-        ImagePlus[] imageInput = BF.openImagePlus(m_imageFilePath);
-        ZProjector zProjectionTmp = new ZProjector(imageInput[0]);
+    public annotAutoCrop(ArrayList<String> ListBox, File imageFile) throws IOException, FormatException {
+        this.m_currentFile=imageFile;
+        this.m_zProjection = BF.openImagePlus(imageFile.getAbsolutePath())[0];
+        this.m_boxCoordinates = ListBox;
+
+
+    }
+
+    public void run(){
+        ZProjector zProjectionTmp = new ZProjector(this.m_zProjection);
         this.m_zProjection= projectionMax(zProjectionTmp);
-        AutoThresholder autoThresholder = new AutoThresholder();
-        ImageStatistics imageStatistics = new StackStatistics(m_zProjection);
-        int [] tHisto = imageStatistics.histogram;
-        int thresh= autoThresholder.getThreshold(AutoThresholder.Method.Otsu,tHisto);
-        System.out.println("le thresh sur le Z pour voir ?: "+thresh);
+
+
         ajustContrast(0.3);
-        m_boxCoordinates= ListBox;
-        for(int i = 0; i < m_boxCoordinates.size(); ++i) {
-            String fileImg = m_boxCoordinates.get(i).toString();
-            addBoxCropToZProjection(m_boxCoordinates.get(i).toString(),i);
+        for(int i = 0; i < this.m_boxCoordinates.size(); ++i) {
+            String fileImg = this.m_boxCoordinates.get(i).toString();
+            addBoxCropToZProjection(this.m_boxCoordinates.get(i).toString(),i);
         }
-        String outFileZbox = m_imageFilePath.replaceAll(".tif","_Zprojection.tif");
-        outFileZbox=outFileZbox.replaceAll(".TIF","_Zprojection.TIF");
+
+        FilesNames outPutFilesNames=new FilesNames(this.m_currentFile.getAbsolutePath());
+        String outFileZbox = outPutFilesNames.get_pathFile()+outPutFilesNames.PrefixeNameFile()+"_Zprojection.tif";
         File outputFile = new File(outFileZbox);
         System.out.println("Et la la Z s appel "+outFileZbox);
-        saveFile(m_zProjection,outFileZbox);
+        saveFile(this.m_zProjection,outFileZbox);
 
 
     }

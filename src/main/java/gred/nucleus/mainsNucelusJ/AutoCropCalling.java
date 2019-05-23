@@ -63,33 +63,14 @@ public class AutoCropCalling {
             String fileImg = currentFile.toString();
             FilesNames outPutFilesNames=new FilesNames(fileImg);
             this._prefix=outPutFilesNames.PrefixeNameFile();
-            ImagePlus[] img = BF.openImagePlus(fileImg);
-           // autocropMethod(img[0]);
 
             AutoCrop autoCrop = new AutoCrop(currentFile,this._output,this._prefix);
             autoCrop.thresholdKernels();
             autoCrop.cropKernels(autoCrop.computeBoxes(1));
+            annotAutoCrop test  = new annotAutoCrop(autoCrop.getFileCoordinates(),currentFile);
+            test.run();
         }
-        /**  OLD
-        File inputFile = new File(this._input);
 
-        if(inputFile.isFile()){
-            FilesNames outPutFilesNames=new FilesNames(this._input);
-            this._prefix=outPutFilesNames.PrefixeNameFile();
-            ImagePlus[] img = BF.openImagePlus(_input);
-            autocropMethod(img[0]);
-        }
-        else{
-            File[] listOfFiles = new File(_input).listFiles();
-            for(int i = 0; i < listOfFiles.length; ++i) {
-                String fileImg = listOfFiles[i].toString();
-                FilesNames outPutFilesNames=new FilesNames(fileImg);
-                this._prefix=outPutFilesNames.PrefixeNameFile();
-                ImagePlus[] img = BF.openImagePlus(fileImg);
-                autocropMethod(img[0]);
-            }
-        }
-         */
     }
 
 

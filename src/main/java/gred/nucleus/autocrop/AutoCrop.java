@@ -28,11 +28,11 @@ import java.util.ArrayList;
 
 public class AutoCrop {
 
-	/** */
+	/** File to process (Image input) */
 	File m_currentFile;
-
+    /** Raw Image */
 	private ImagePlus m_rawImg;
-
+    /** Image segmented  */
 	private ImagePlus m_imageSeg;
 	/** The path of the image to be processed */
 	private String m_imageFilePath;
@@ -135,7 +135,7 @@ public class AutoCrop {
 	 * @param boxes: containing object boxes.
 	 */
 	public void cropKernels(ArrayList <Box> boxes)throws IOException, FormatException, Exception {
-		Directory dirOutput= new Directory(m_outputDirPath+File.separator+m_outputFilesPrefix);
+		Directory dirOutput= new Directory(this.m_outputDirPath+File.separator+this.m_outputFilesPrefix);
 		dirOutput.CheckAndCreateDir();
 		for(short i = 0; i < boxes.size(); ++i) {
 			Box box = boxes.get(i);
@@ -143,46 +143,37 @@ public class AutoCrop {
 			int ymin =  box.getYMin()-40;
 			int zmin =  box.getZMin()-20;
 			String coord= box.getXMin()+"_"+box.getYMin()+"_"+box.getZMin();
-			m_boxCoordinates.add(m_outputDirPath+File.separator+m_outputFilesPrefix+"_"+coord+i+"\t"+box.getXMin()+"\t"+box.getXMax()+"\t"+box.getYMin()+"\t"+box.getYMax()+"\t"+box.getZMin()+"\t"+box.getZMax());
-			if (xmin < 0)
+			this.m_boxCoordinates.add(this.m_outputDirPath+File.separator+this.m_outputFilesPrefix+"_"+coord+i+"\t"+box.getXMin()+"\t"+box.getXMax()+"\t"+box.getYMin()+"\t"+box.getYMax()+"\t"+box.getZMin()+"\t"+box.getZMax());
+			if (xmin <= 0)
 				xmin = 1;
-			if (ymin < 0)
+			if (ymin <= 0)
 				ymin = 1;
-			if (zmin < 0)
+			if (zmin <= 0)
 				zmin = 1;
 
 			int width = box.getXMax()+80 - box.getXMin();
 			int height = box.getYMax()+80 - box.getYMin();
 			int depth = box.getZMax()+40 - box.getZMin();
-			if (width+xmin >= m_imageSeg.getWidth())
-				width-=(width+xmin)-m_imageSeg.getWidth();
+			if (width+xmin >= this.m_imageSeg.getWidth())
+				width-=(width+xmin)-this.m_imageSeg.getWidth();
 
-			if (height+ymin >= m_imageSeg.getHeight())
-				height-=(height+ymin)-m_imageSeg.getHeight();
+			if (height+ymin >= this.m_imageSeg.getHeight())
+				height-=(height+ymin)-this.m_imageSeg.getHeight();
 
-			if (depth+zmin >= m_imageSeg.getNSlices())
-				depth-=(depth+zmin)-m_imageSeg.getNSlices();
+			if (depth+zmin >= this.m_imageSeg.getNSlices())
+				depth-=(depth+zmin)-this.m_imageSeg.getNSlices();
 
 			ImagePlus imgResu = cropImage(xmin, ymin, zmin, width, height, depth);
 
 
-			Calibration cal = m_rawImg.getCalibration();
+			Calibration cal = this.m_rawImg.getCalibration();
 			imgResu.setCalibration(cal);
-			OutputTiff fileOutput = new OutputTiff(m_outputDirPath+File.separator+m_outputFilesPrefix+File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
+			OutputTiff fileOutput = new OutputTiff(this.m_outputDirPath+this.m_outputFilesPrefix+File.separator+this.m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
 			fileOutput.SaveImage(imgResu);
 
-			{}
 			//TODO FACTORISE SAVE FILE FONCTION IN NEW CLASS
-
-			/*
-			System.out.println("Heu la on a le out file name : "+m_outputDirPath+"\n"+
-					File.separator+m_outputFilesPrefix+"\n"+
-					File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
-			System.out.println("Heu la on a le out file name : "+this.m_outputDirPath+"\n"+
-					File.separator+this.m_outputFilesPrefix+"\n"+
-					File.separator+this.m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
-			*/
-			m_outputFile.add(m_outputDirPath+File.separator+m_outputFilesPrefix+File.separator+m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
+			System.out.println(this.m_outputDirPath+File.separator+this.m_outputFilesPrefix+File.separator+this.m_outputFilesPrefix+"_"+coord+"_"+i+".tif");;
+			this.m_outputFile.add(this.m_outputDirPath+File.separator+this.m_outputFilesPrefix+File.separator+this.m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
 		}
 	}
 
@@ -267,6 +258,8 @@ public class AutoCrop {
 	 */
 	public ImagePlus cropImage(int xmin, int ymin, int zmin, int width, int height, int depth)throws IOException, FormatException {
 		ImporterOptions options = new ImporterOptions();
+
+		System.out.println("comprend rien la "+this.m_imageFilePath+"\n x"+xmin+"y" +ymin+"y" +width+"y" +height+"   "+ zmin+depth+"\nnslice"+this.m_imageSeg.getNSlices());
 		options.setId(this.m_imageFilePath);
 		options.setAutoscale(true);
 		options.setCrop(true);
@@ -276,14 +269,6 @@ public class AutoCrop {
 		sort = new Duplicator().run(imps[0],zmin,zmin+depth);
 		return sort;
 
-		/*
-		m_rawImg.duplicate();
-		ImageStack iStack =  m_rawImg.getStack();
-    	ImagePlus imp = new ImagePlus();
-		imp.setStack(iStack.crop(xmin, ymin, zmin, width, height, depth));
-		ImageConverter ic = new ImageConverter(imp);
-		imp.updateAndDraw();
-		*/
 	}
 
 	/**

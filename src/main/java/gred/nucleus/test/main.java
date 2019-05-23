@@ -1,4 +1,5 @@
 package gred.nucleus.test;
+import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.mainsNucelusJ.AutoCropCalling;
 import gred.nucleus.mainsNucelusJ.SegmentationMethods;
 
@@ -15,7 +16,7 @@ public class main {
 
     static ArrayList <String> m_test;
 
-    public static void ruAutoCrop(String imageSourceFile, String output) throws IOException, FormatException {
+    public static void ruAutoCrop(String imageSourceFile, String output) throws IOException, FormatException ,fileInOut,Exception{
         AutoCropCalling autoCrop = new AutoCropCalling(imageSourceFile,output);
         autoCrop.run();
     }
@@ -30,7 +31,7 @@ public class main {
 
 
 
-    public static void main(String[] args) throws IOException, FormatException {
+    public static void main(String[] args) throws IOException, FormatException, fileInOut,Exception {
 
 
       //  Options options = new Options();
@@ -71,3 +72,6 @@ public class main {
 
     }
 }
+
+
+// IJ.log(""+getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() +" image type " +imgSeg.getType()+"\n");

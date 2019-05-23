@@ -104,14 +104,14 @@ public class TestSegmentationMethods {
         String ExpectedResultOutOTSU = "/home/tridubos/Bureau/TEST_SEG/Results_checked/Z_Col_cot21&17&22__w11 DAPI SIM_s3/OTSU/";
 
         String inputTristan= "/home/tridubos/Bureau/TEST_SEG/Test_analysis/Z_Col_cot21&17&22__w11 DAPI SIM_s3/";
-        String outputTristanGift = "/home/tridubos/Bureau/TEST_SEG/Test_analysis/Z_Col_cot21&17&22__w11 DAPI SIM_s3/GIFT";
-        String outputTristanOtsu = "/home/tridubos/Bureau/TEST_SEG/Test_analysis/Z_Col_cot21&17&22__w11 DAPI SIM_s3/OTSU/";
+        String outputTristanGift = "/home/tridubos/Bureau/TEST_SEG/Test_analysis/Z_Col_cot21&17&22__w11 DAPI SIM_s3/GIFT/";
+        String outputTristanOtsu = "/home/tridubos/Bureau/TEST_SEG/Test_analysis/Z_Col_cot21&17&22__w11 DAPI SIM_s3/OTSU";
 
         OuputFileVerification fw = new OuputFileVerification(ExpectedResult,inputTristan);
         fw.GetFileResultExpeted(ExpectedResult);
         fw.GetFilesOutputFolder(inputTristan);
 
-        testStupidSeveralImages(inputTristan, outputTristanOtsu , (short)1.0, 300000000,false);
+        testStupidSeveralImages(inputTristan, outputTristanOtsu , (short)1.0, 300000000,true);
 
        // testStupidSeveralImages(ExpectedResult, ExpectedResult, (short)6.0, 300000000,true);
 
