@@ -12,18 +12,19 @@ public class OutputTiff extends FilesNames {
         super(filePath);
     }
     /** Method to save file
-     * with verification if file already exists */
+     * with verification if file already exists
+     * TODO ADD ERROR IN LOG FILE*/
     public void SaveImage(ImagePlus imageToSave)throws Exception {
         try {
             if (!is_fileExist()) {
                 FileSaver fileSaver = new FileSaver(imageToSave);
                 fileSaver.saveAsTiffStack(this._fullPathFile);
             }
+            else{
+                throw new fileInOut(imageToSave.getTitle());
+            }
         }
-        catch (Exception e){
-            System.err.println("Oops, something went wrong for ID "+imageToSave+"! Here's the stack trace:");
-
-            e.printStackTrace();
+        catch (fileInOut e){
         }
     }
 }

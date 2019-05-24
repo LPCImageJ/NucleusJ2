@@ -68,7 +68,6 @@ public class annotAutoCrop {
         FilesNames outPutFilesNames=new FilesNames(this.m_currentFile.getAbsolutePath());
         String outFileZbox = outPutFilesNames.get_pathFile()+outPutFilesNames.PrefixeNameFile()+"_Zprojection.tif";
         File outputFile = new File(outFileZbox);
-        System.out.println("Et la la Z s appel "+outFileZbox);
         saveFile(this.m_zProjection,outFileZbox);
 
 

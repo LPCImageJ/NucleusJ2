@@ -7,15 +7,11 @@ import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.imageProcess.Thresholding;
 import ij.ImagePlus;
 import ij.ImageStack;
-import ij.io.FileSaver;
 import ij.measure.Calibration;
-import ij.plugin.ContrastEnhancer;
 import ij.plugin.Duplicator;
 import ij.plugin.GaussianBlur3D;
-import ij.plugin.ZProjector;
 import ij.process.AutoThresholder;
 import ij.process.ImageStatistics;
-import ij.process.StackConverter;
 import ij.process.StackStatistics;
 import loci.common.Region;
 import loci.formats.FormatException;
@@ -25,6 +21,7 @@ import loci.plugins.in.ImporterOptions;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
 
 public class AutoCrop {
 
@@ -47,10 +44,12 @@ public class AutoCrop {
 	/** Number of nuclei cropped */
 	private int _nbOfNuc = 0;
 
+
 	public AutoCrop(File imageFile, String outputDirPath ,String outputFilesPrefix ) throws IOException, FormatException, fileInOut,Exception{
 		this.m_currentFile=imageFile;
 		this.m_imageFilePath = imageFile.getAbsolutePath();
 		this.m_outputDirPath = outputDirPath;
+		/** TODO GESTION OF log4J WARN !!!!! */
 		this.m_rawImg =  BF.openImagePlus(imageFile.getAbsolutePath())[0];
 		Thresholding thresholding = new Thresholding();
 		this.m_imageSeg= thresholding.contrastAnd8bits(BF.openImagePlus(imageFile.getAbsolutePath())[0]);
@@ -58,6 +57,8 @@ public class AutoCrop {
 
 
 	}
+
+
 	public void thresholdKernels(){
 		GaussianBlur3D.blur(this.m_imageSeg, 0.5,0.5,1);
 		Thresholding thresholding = new Thresholding();
@@ -70,9 +71,7 @@ public class AutoCrop {
 			else
 				thresh=thresh2;
 		}
-		System.out.println("le threshold de  " +this.m_imageSeg.getTitle()+" est de "+ thresh);
 		this.m_imageSeg = this.generateSegmentedImage(this.m_imageSeg, thresh);
-		System.out.println("le threshold de  " +this.m_imageSeg.getTitle()+" est de "+ thresh);
 
 	}
 
@@ -171,8 +170,7 @@ public class AutoCrop {
 			OutputTiff fileOutput = new OutputTiff(this.m_outputDirPath+this.m_outputFilesPrefix+File.separator+this.m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
 			fileOutput.SaveImage(imgResu);
 
-			//TODO FACTORISE SAVE FILE FONCTION IN NEW CLASS
-			System.out.println(this.m_outputDirPath+File.separator+this.m_outputFilesPrefix+File.separator+this.m_outputFilesPrefix+"_"+coord+"_"+i+".tif");;
+
 			this.m_outputFile.add(this.m_outputDirPath+File.separator+this.m_outputFilesPrefix+File.separator+this.m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
 		}
 	}
@@ -232,16 +230,7 @@ public class AutoCrop {
 		return imagePlusSegmented;
 	}
 
-	/**
-	 * Save the image file
-	 *
-	 * @param imagePlusInput image to save
-	 * @param pathFile path to save the image
-	 */
-	public void saveFile ( ImagePlus imagePlusInput, String pathFile) {
-		FileSaver fileSaver = new FileSaver(imagePlusInput);
-		fileSaver.saveAsTiff(pathFile);
-	}
+
 
 
 	/**
@@ -259,7 +248,6 @@ public class AutoCrop {
 	public ImagePlus cropImage(int xmin, int ymin, int zmin, int width, int height, int depth)throws IOException, FormatException {
 		ImporterOptions options = new ImporterOptions();
 
-		System.out.println("comprend rien la "+this.m_imageFilePath+"\n x"+xmin+"y" +ymin+"y" +width+"y" +height+"   "+ zmin+depth+"\nnslice"+this.m_imageSeg.getNSlices());
 		options.setId(this.m_imageFilePath);
 		options.setAutoscale(true);
 		options.setCrop(true);

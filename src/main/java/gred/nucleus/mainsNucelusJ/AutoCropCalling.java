@@ -65,7 +65,9 @@ public class AutoCropCalling {
             this._prefix=outPutFilesNames.PrefixeNameFile();
 
             AutoCrop autoCrop = new AutoCrop(currentFile,this._output,this._prefix);
+
             autoCrop.thresholdKernels();
+
             autoCrop.cropKernels(autoCrop.computeBoxes(1));
             annotAutoCrop test  = new annotAutoCrop(autoCrop.getFileCoordinates(),currentFile);
             test.run();

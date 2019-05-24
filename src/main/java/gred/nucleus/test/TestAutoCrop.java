@@ -33,7 +33,9 @@ public class TestAutoCrop {
 	
 	public static void testStupid(String imageSourceFile, String output) throws IOException, FormatException , fileInOut,Exception {
         AutoCropCalling autoCrop = new AutoCropCalling(imageSourceFile,output);
-        autoCrop.run();
+
+		autoCrop.run();
+
 	}
 
 
@@ -44,10 +46,7 @@ public class TestAutoCrop {
 	public static void main(String[] args) throws IOException, FormatException, fileInOut,Exception{
 
 	    System.err.println("start prog");
-		long maxMemory = Runtime.getRuntime().maxMemory();
-		/* Maximum amount of memory the JVM will attempt to use */
-		System.out.println("Maximum memory (bytes): " +
-				(maxMemory == Long.MAX_VALUE ? "no limit" : maxMemory*1e-9));
+
 		String inputOneImageAxel = "/home/plop/Bureau/image/wideField/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s4.TIF";
         String inputDirAxel = "/home/plop/Bureau/image/wideField/";
         String outputAxel = "/home/plop/Bureau/image/wideField/test";
@@ -70,7 +69,9 @@ public class TestAutoCrop {
 		fw.GetFileResultExpeted(ExpectedResult);
 		fw.GetFilesOutputFolder(outputTristan);
 		*/
+
 		testStupid(inputOneImageTristan, outputTristan);
+
 		/*
 		fw.GetFilesResultingOfAnalysis(outputTristan);
 		fw.CompareAnalysisResult();
