@@ -17,7 +17,7 @@ public class Thresholding {
      *
      * @param imagePlusInput raw image
      * @return OTSU threshold
-     * TODO STRUCTUREs PROBABLY NEEDED
+     * TODO STRUCTURES PROBABLY NEEDED
      */
     public int computeOtsuThreshold (ImagePlus imagePlusInput) {
         AutoThresholder autoThresholder = new AutoThresholder();

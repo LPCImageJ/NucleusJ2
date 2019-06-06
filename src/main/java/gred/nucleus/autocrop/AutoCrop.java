@@ -8,6 +8,7 @@ import gred.nucleus.imageProcess.Thresholding;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.measure.Calibration;
+import ij.plugin.ChannelSplitter;
 import ij.plugin.Duplicator;
 import ij.plugin.GaussianBlur3D;
 import ij.process.AutoThresholder;
@@ -29,36 +30,85 @@ public class AutoCrop {
 	File m_currentFile;
     /** Raw Image */
 	private ImagePlus m_rawImg;
-    /** Image segmented  */
+    /** Image segmented */
 	private ImagePlus m_imageSeg;
 	/** The path of the image to be processed */
 	private String m_imageFilePath;
 	/** the path of the directory where are saved the crop of the object */
 	private String m_outputDirPath;
-	/** The prefix of the names of the output cropped images, which are automatically numbered.*/
+	/** The prefix of the names of the output cropped images, which are automatically numbered */
 	private String m_outputFilesPrefix;
-	/** List of the path of the output files created by the cropKernels method*/
+	/** List of the path of the output files created by the cropKernels method */
 	private ArrayList<String> m_outputFile =  new ArrayList <String>();
 	/** List of boxes coordinates */
 	private ArrayList <String> m_boxCoordinates = new ArrayList<String>();
 	/** Number of nuclei cropped */
-	private int _nbOfNuc = 0;
+	private int m_nbOfNuc = 0;
+	/** Number of channels in current image */
+	private int m_channelNumbers=0;
+	/** Channel considered to compute OTSU threshold */
+	private int m_channelToComputeThreshold=0;
 
+	/** TODO GESTION OF log4J WARN !!!!! (BF.openImagePlus) */
 
 	public AutoCrop(File imageFile, String outputDirPath ,String outputFilesPrefix ) throws IOException, FormatException, fileInOut,Exception{
 		this.m_currentFile=imageFile;
 		this.m_imageFilePath = imageFile.getAbsolutePath();
 		this.m_outputDirPath = outputDirPath;
-		/** TODO GESTION OF log4J WARN !!!!! */
-		this.m_rawImg =  BF.openImagePlus(imageFile.getAbsolutePath())[0];
 		Thresholding thresholding = new Thresholding();
-		this.m_imageSeg= thresholding.contrastAnd8bits(BF.openImagePlus(imageFile.getAbsolutePath())[0]);
 		this.m_outputFilesPrefix = outputFilesPrefix;
+		setChannelNumbers();
 
+		this.m_imageSeg= thresholding.contrastAnd8bits(getImageChannel(m_channelToComputeThreshold));
+	}
+	/** TODO GESTION OF log4J WARN !!!!! (BF.openImagePlus) */
 
+	public AutoCrop(File imageFile, String outputDirPath ,String outputFilesPrefix,int channelToComputeThreshold ) throws IOException, FormatException, fileInOut,Exception{
+		this.m_currentFile=imageFile;
+		this.m_imageFilePath = imageFile.getAbsolutePath();
+		this.m_outputDirPath = outputDirPath;
+		Thresholding thresholding = new Thresholding();
+		this.m_outputFilesPrefix = outputFilesPrefix;
+		setChannelNumbers();
+		m_channelToComputeThreshold=channelToComputeThreshold;
+		this.m_imageSeg= thresholding.contrastAnd8bits(getImageChannel(m_channelToComputeThreshold));
 	}
 
 
+
+	/**
+	 * Method to get specific channel
+	 *
+	 * @return image of specific channel
+	 */
+
+	public ImagePlus getImageChannel(int channelNumber)throws Exception{
+		ImagePlus[] currentImage = BF.openImagePlus(this.m_imageFilePath);
+		ChannelSplitter splitter = new ChannelSplitter();
+		currentImage = splitter.split(currentImage[0]);
+		return currentImage[channelNumber];
+	}
+
+
+
+	/**
+	 * Method to check multichannel
+	 * @throws Exception
+	 */
+
+	public void setChannelNumbers() throws Exception{
+		ImagePlus[] currentImage = BF.openImagePlus(this.m_imageFilePath);
+		ChannelSplitter channelSplitter = new ChannelSplitter();
+		currentImage = channelSplitter.split(currentImage[0]);
+		this.m_rawImg=currentImage[0];
+
+		if(currentImage.length>1){
+			this.m_channelNumbers=currentImage.length;
+
+		}
+	}
+	//TODO AJOUTER MESSAGE POUR UTILISATEUR SI THRESHOLD INFERIEUR A 20
+	//TODO AJOUTER INFO DU THRESHLOD DANS LE OUTPUT VOIR PCA
 	public void thresholdKernels(){
 		GaussianBlur3D.blur(this.m_imageSeg, 0.5,0.5,1);
 		Thresholding thresholding = new Thresholding();
@@ -71,6 +121,7 @@ public class AutoCrop {
 			else
 				thresh=thresh2;
 		}
+		System.out.println("le theshold "+ thresh);
 		this.m_imageSeg = this.generateSegmentedImage(this.m_imageSeg, thresh);
 
 	}
@@ -93,10 +144,12 @@ public class AutoCrop {
 			connectedComponent = ConnectedComponent.getLabelledConnectedComponent(m_imageSeg, 255, true, thresholdVolumeVoxel, true);
 			Box box = null;
 			//ArrayList initialisation
-			this._nbOfNuc = connectedComponent.getNumberOfComponents();
+			this.m_nbOfNuc = connectedComponent.getNumberOfComponents();
+			System.out.println("la taille des boxes " +boxes.size());
+
 			for(short i = 0; i< connectedComponent.getNumberOfComponents();++i)
 				boxes.add(new Box(Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE));
-			System.out.println();
+
 			// Check the predicate
 			for (short k = 0; k < this.m_imageSeg.getNSlices(); ++k) {
 				for (short i = 0; i < this.m_imageSeg.getWidth(); ++i) {
@@ -123,6 +176,7 @@ public class AutoCrop {
 			}
 		}
 		catch (Exception e){ e.printStackTrace(); }
+
 		return boxes;
 	}
 
@@ -136,42 +190,44 @@ public class AutoCrop {
 	public void cropKernels(ArrayList <Box> boxes)throws IOException, FormatException, Exception {
 		Directory dirOutput= new Directory(this.m_outputDirPath+File.separator+this.m_outputFilesPrefix);
 		dirOutput.CheckAndCreateDir();
-		for(short i = 0; i < boxes.size(); ++i) {
-			Box box = boxes.get(i);
-			int xmin = box.getXMin()-40;
-			int ymin =  box.getYMin()-40;
-			int zmin =  box.getZMin()-20;
-			String coord= box.getXMin()+"_"+box.getYMin()+"_"+box.getZMin();
-			this.m_boxCoordinates.add(this.m_outputDirPath+File.separator+this.m_outputFilesPrefix+"_"+coord+i+"\t"+box.getXMin()+"\t"+box.getXMax()+"\t"+box.getYMin()+"\t"+box.getYMax()+"\t"+box.getZMin()+"\t"+box.getZMax());
-			if (xmin <= 0)
-				xmin = 1;
-			if (ymin <= 0)
-				ymin = 1;
-			if (zmin <= 0)
-				zmin = 1;
+		for (int y =0 ;y<this.m_channelNumbers;y++) {
 
-			int width = box.getXMax()+80 - box.getXMin();
-			int height = box.getYMax()+80 - box.getYMin();
-			int depth = box.getZMax()+40 - box.getZMin();
-			if (width+xmin >= this.m_imageSeg.getWidth())
-				width-=(width+xmin)-this.m_imageSeg.getWidth();
+			for (short i = 0; i < boxes.size(); ++i) {
+				Box box = boxes.get(i);
+				int xmin = box.getXMin() - 40;
+				int ymin = box.getYMin() - 40;
+				int zmin = box.getZMin() - 20;
+				String coord = box.getXMin() + "_" + box.getYMin() + "_" + box.getZMin();
+				this.m_boxCoordinates.add(this.m_outputDirPath + File.separator + this.m_outputFilesPrefix + "_" + coord + i + "\t" + box.getXMin() + "\t" + box.getXMax() + "\t" + box.getYMin() + "\t" + box.getYMax() + "\t" + box.getZMin() + "\t" + box.getZMax());
+				if (xmin <= 0)
+					xmin = 1;
+				if (ymin <= 0)
+					ymin = 1;
+				if (zmin <= 0)
+					zmin = 1;
 
-			if (height+ymin >= this.m_imageSeg.getHeight())
-				height-=(height+ymin)-this.m_imageSeg.getHeight();
+				int width = box.getXMax() + 80 - box.getXMin();
+				int height = box.getYMax() + 80 - box.getYMin();
+				int depth = box.getZMax() + 40 - box.getZMin();
+				if (width + xmin >= this.m_imageSeg.getWidth())
+					width -= (width + xmin) - this.m_imageSeg.getWidth();
 
-			if (depth+zmin >= this.m_imageSeg.getNSlices())
-				depth-=(depth+zmin)-this.m_imageSeg.getNSlices();
+				if (height + ymin >= this.m_imageSeg.getHeight())
+					height -= (height + ymin) - this.m_imageSeg.getHeight();
 
-			ImagePlus imgResu = cropImage(xmin, ymin, zmin, width, height, depth);
+				if (depth + zmin >= this.m_imageSeg.getNSlices())
+					depth -= (depth + zmin) - this.m_imageSeg.getNSlices();
+
+				ImagePlus imgResu = cropImage(xmin, ymin, zmin, width, height, depth,y);
+
+				Calibration cal = this.m_rawImg.getCalibration();
+				imgResu.setCalibration(cal);
+				OutputTiff fileOutput = new OutputTiff(this.m_outputDirPath + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i +"_C"+y+".tif");
+				fileOutput.SaveImage(imgResu);
 
 
-			Calibration cal = this.m_rawImg.getCalibration();
-			imgResu.setCalibration(cal);
-			OutputTiff fileOutput = new OutputTiff(this.m_outputDirPath+this.m_outputFilesPrefix+File.separator+this.m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
-			fileOutput.SaveImage(imgResu);
-
-
-			this.m_outputFile.add(this.m_outputDirPath+File.separator+this.m_outputFilesPrefix+File.separator+this.m_outputFilesPrefix+"_"+coord+"_"+i+".tif");
+				this.m_outputFile.add(this.m_outputDirPath + File.separator + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i + ".tif");
+			}
 		}
 	}
 
@@ -243,18 +299,18 @@ public class AutoCrop {
 	 * @param width: coordinate x max of the crop
 	 * @param height: coordinate y max of the crop
 	 * @param depth: coordinate z max of the crop
+	 * @param channelNumber: channel to crop
 	 * @return : ImageCoreIJ of the cropped image.
 	 */
-	public ImagePlus cropImage(int xmin, int ymin, int zmin, int width, int height, int depth)throws IOException, FormatException {
+	public ImagePlus cropImage(int xmin, int ymin, int zmin, int width, int height, int depth,int channelNumber)throws IOException, FormatException,Exception {
 		ImporterOptions options = new ImporterOptions();
-
 		options.setId(this.m_imageFilePath);
 		options.setAutoscale(true);
 		options.setCrop(true);
 		options.setCropRegion(0, new Region(xmin, ymin ,width, height));
 		ImagePlus[] imps = BF.openImagePlus(options);
 		ImagePlus sort = new ImagePlus();
-		sort = new Duplicator().run(imps[0],zmin,zmin+depth);
+		sort = new Duplicator().run(getImageChannel(channelNumber),zmin,zmin+depth);
 		return sort;
 
 	}
@@ -265,8 +321,9 @@ public class AutoCrop {
 	 * @return int the nb of nuclei
 	 */
 	public int getNbOfNuc(){
-		return this._nbOfNuc;
+		return this.m_nbOfNuc;
 	}
+
 
 
 }

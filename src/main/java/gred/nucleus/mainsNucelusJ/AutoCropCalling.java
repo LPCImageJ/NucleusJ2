@@ -5,11 +5,8 @@ import gred.nucleus.FilesInputOutput.FilesNames;
 import gred.nucleus.autocrop.AutoCrop;
 import gred.nucleus.autocrop.annotAutoCrop;
 import gred.nucleus.exceptions.fileInOut;
-import ij.IJ;
 import ij.ImagePlus;
-import ij.measure.Calibration;
 import loci.formats.FormatException;
-import loci.plugins.BF;
 import java.io.File;
 import java.io.IOException;
 
@@ -64,51 +61,15 @@ public class AutoCropCalling {
             FilesNames outPutFilesNames=new FilesNames(fileImg);
             this._prefix=outPutFilesNames.PrefixeNameFile();
 
-            AutoCrop autoCrop = new AutoCrop(currentFile,this._output,this._prefix);
-
+            AutoCrop autoCrop = new AutoCrop(currentFile,this._output,this._prefix,1);
             autoCrop.thresholdKernels();
-
             autoCrop.cropKernels(autoCrop.computeBoxes(1));
+
             annotAutoCrop test  = new annotAutoCrop(autoCrop.getFileCoordinates(),currentFile);
             test.run();
         }
 
     }
 
-
-    /**
-     *  @throws IOException if file problem
-     *  @throws FormatException Bioformat exception
-     *
-     * private method calling the autoCrop Class,
-     * @param img ImagePlus input to crop
-     */
-    // TODO Clean method
-    private void autocropMethod(ImagePlus img)throws IOException, FormatException, fileInOut ,Exception{
-        System.out.println("Ici on a le truc"+ img.getTitle()+" "+this._prefix+" "+this._output+" "+this._input);
-
-      /*
-        AutoCrop autoCrop = new AutoCrop (img,this._prefix,this._output,this._input);
-        autoCrop.thresholdKernels();
-        autoCrop.cropKernels(autoCrop.computeBoxes(1));
-        //autoCrop.getOutputFileArrayList();
-        //annotAutoCrop projectionWithBoxes  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input+img.getTitle());
-        //annotAutoCrop test  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input+img.getTitle());
-        /*
-        ICI C ETAIT UN AUTOCROP SUR LA Z PROJECTION !!!!
-        AutoCrop autoCropZ = new AutoCrop (img,this._prefix,this._outputZprojection,this._input);
-        autoCropZ.thresholdKernelsZprojection();
-        autoCropZ.cropKernels(autoCropZ.computeBoxes(1));
-        autoCropZ.getOutputFileArrayList();
-        annotAutoCrop projectionWithBoxesZ  = new annotAutoCrop(autoCropZ.getFileCoordinates(),this._input+img.getTitle());
-        annotAutoCrop testZ  = new annotAutoCrop(autoCropZ.getFileCoordinates(),this._input+img.getTitle());
-
-
-        System.out.println(_prefix+"\t"+autoCrop.getNbOfNuc()+" nuclei detected");
-         */
-
-
-    }
-
-
 }
+

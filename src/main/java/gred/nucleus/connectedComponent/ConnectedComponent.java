@@ -121,7 +121,6 @@ public abstract class ConnectedComponent {
 			cc = new ConnectedComponent2D(inputImage, foregroundColor);
 		else
 			cc = new ConnectedComponent3D(inputImage, foregroundColor);
-
 		cc.doLabelConnectedComponent();
 		cc.filterComponents(removeBorderComponent, thresholdVoxelVolume, setRandomColors);
 		return cc;
@@ -256,8 +255,9 @@ public abstract class ConnectedComponent {
 	 */
 	protected void filterComponents( boolean removeBorderComponent, double thresholdComponentVolume,
 			ComponentRemovalPredicate removalPredicate, boolean keepPredicate, boolean setRandomColors) {
+		System.out.println("La on des compO : "+this.m_voxelVolume );
 
-	    ArrayList<Boolean> existsVoxelSatisfyingPredicate = new ArrayList<Boolean>();
+		ArrayList<Boolean> existsVoxelSatisfyingPredicate = new ArrayList<Boolean>();
 		for (int i = 0 ; i < this.m_compInfo.size() ; ++i)
 			existsVoxelSatisfyingPredicate.add(Boolean.valueOf(false));
 
