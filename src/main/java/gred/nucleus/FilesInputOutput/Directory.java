@@ -1,14 +1,25 @@
 package gred.nucleus.FilesInputOutput;
+import org.apache.commons.io.FilenameUtils;
+
 import java.io.File;
 import java.lang.*;
 import java.util.ArrayList;
+
+/**
+ * Class get to get Directory information.
+ *
+ *
+ */
+
 
 public class Directory {
     /**
      * Directory path
      */
     public String _dirPath = "";
-    public ArrayList<File> m_boxCoordinates = new ArrayList<File>();
+    public ArrayList<File> m_listeOfFiles = new ArrayList<File>();
+    public Boolean m_containNdFile=false;
+    public ArrayList<File> m_listeOfFilesND = new ArrayList<File>();
 
 
     public Directory(String Path) {
@@ -50,20 +61,41 @@ public class Directory {
             if (f.isDirectory()) {
                 GetListFiles(f.getAbsolutePath());
             } else {
-                this.m_boxCoordinates.add(f);
+                this.m_listeOfFiles.add(f);
+                if(FilenameUtils.getExtension(f.getName()).equals("nd")) {
+                    this.m_containNdFile=true;
+                    this.m_listeOfFilesND.add(f);
+
+                }
             }
         }
     }
 
     public ArrayList<File> ListFiles() {
-        return this.m_boxCoordinates;
+        return this.m_listeOfFiles;
     }
+
 
     public File getFile(int indice) {
-        return this.m_boxCoordinates.get(indice);
+        return this.m_listeOfFiles.get(indice);
+    }
+    public int getNumberFiles(){
+        return this.m_listeOfFiles.size();
     }
 
-    public int getNumberFiles(){
-        return this.m_boxCoordinates.size();
+
+
+    public boolean getContainNdFile(){
+        return this.m_containNdFile;
     }
+    public int getNumberNDFiles(){
+        return this.m_listeOfFilesND.size();
+    }
+    public ArrayList<File> ListFilesND() {
+        return this.m_listeOfFilesND;
+    }
+    public File getNDFile(int indice) {
+        return this.m_listeOfFilesND.get(indice);
+    }
+
 }

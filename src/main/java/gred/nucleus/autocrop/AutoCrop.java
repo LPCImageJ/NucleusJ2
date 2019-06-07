@@ -102,7 +102,8 @@ public class AutoCrop {
 		currentImage = channelSplitter.split(currentImage[0]);
 		this.m_rawImg=currentImage[0];
 
-		if(currentImage.length>1){
+
+        if(currentImage.length>1){
 			this.m_channelNumbers=currentImage.length;
 
 		}

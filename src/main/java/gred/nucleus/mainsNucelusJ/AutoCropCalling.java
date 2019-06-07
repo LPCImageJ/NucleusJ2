@@ -54,19 +54,35 @@ public class AutoCropCalling {
     public void run() throws IOException, FormatException,fileInOut,Exception {
         Directory directoryInput=new Directory(this._input);
         directoryInput.GetListFiles(this._input);
+        if(directoryInput.getContainNdFile()){
+            for (short i = 0; i < directoryInput.getNumberNDFiles(); ++i) {
+                File currentFile = directoryInput.getNDFile(i);
+                String fileImg = currentFile.toString();
+                FilesNames outPutFilesNames = new FilesNames(fileImg);
+                this._prefix = outPutFilesNames.PrefixeNameFile();
 
-        for(short i = 0; i < directoryInput.getNumberFiles(); ++i) {
-            File currentFile = directoryInput.getFile(i);
-            String fileImg = currentFile.toString();
-            FilesNames outPutFilesNames=new FilesNames(fileImg);
-            this._prefix=outPutFilesNames.PrefixeNameFile();
+                AutoCrop autoCrop = new AutoCrop(currentFile, this._output, this._prefix);
+                autoCrop.thresholdKernels();
+                autoCrop.cropKernels(autoCrop.computeBoxes(1));
 
-            AutoCrop autoCrop = new AutoCrop(currentFile,this._output,this._prefix,1);
-            autoCrop.thresholdKernels();
-            autoCrop.cropKernels(autoCrop.computeBoxes(1));
+                annotAutoCrop test = new annotAutoCrop(autoCrop.getFileCoordinates(), currentFile);
+                test.run();
+            }
+        }
+        else {
+            for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
+                File currentFile = directoryInput.getFile(i);
+                String fileImg = currentFile.toString();
+                FilesNames outPutFilesNames = new FilesNames(fileImg);
+                this._prefix = outPutFilesNames.PrefixeNameFile();
 
-            annotAutoCrop test  = new annotAutoCrop(autoCrop.getFileCoordinates(),currentFile);
-            test.run();
+                AutoCrop autoCrop = new AutoCrop(currentFile, this._output, this._prefix);
+                autoCrop.thresholdKernels();
+                autoCrop.cropKernels(autoCrop.computeBoxes(1));
+
+                annotAutoCrop test = new annotAutoCrop(autoCrop.getFileCoordinates(), currentFile);
+                test.run();
+            }
         }
 
     }
