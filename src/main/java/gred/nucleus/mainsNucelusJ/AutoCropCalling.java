@@ -53,7 +53,11 @@ public class AutoCropCalling {
      */
     public void run() throws IOException, FormatException,fileInOut,Exception {
         Directory directoryInput=new Directory(this._input);
-        directoryInput.GetListFiles(this._input);
+        directoryInput.listFiles(this._input);
+        directoryInput.checkAndActualiseNDFiles();
+
+       /*
+       TODO remove after control
         if(directoryInput.getContainNdFile()){
             for (short i = 0; i < directoryInput.getNumberNDFiles(); ++i) {
                 File currentFile = directoryInput.getNDFile(i);
@@ -70,6 +74,7 @@ public class AutoCropCalling {
             }
         }
         else {
+        */
             for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
                 File currentFile = directoryInput.getFile(i);
                 String fileImg = currentFile.toString();
@@ -83,7 +88,7 @@ public class AutoCropCalling {
                 annotAutoCrop test = new annotAutoCrop(autoCrop.getFileCoordinates(), currentFile);
                 test.run();
             }
-        }
+
 
     }
 
