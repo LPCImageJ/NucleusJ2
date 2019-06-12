@@ -58,8 +58,7 @@ public class AutoCrop {
 		Thresholding thresholding = new Thresholding();
 		this.m_outputFilesPrefix = outputFilesPrefix;
 		setChannelNumbers();
-
-		this.m_imageSeg= thresholding.contrastAnd8bits(getImageChannel(m_channelToComputeThreshold));
+		this.m_imageSeg= thresholding.contrastAnd8bits(getImageChannel(this.m_channelToComputeThreshold));
 	}
 	/** TODO GESTION OF log4J WARN !!!!! (BF.openImagePlus) */
 
@@ -101,8 +100,6 @@ public class AutoCrop {
 		ChannelSplitter channelSplitter = new ChannelSplitter();
 		currentImage = channelSplitter.split(currentImage[0]);
 		this.m_rawImg=currentImage[0];
-
-
         if(currentImage.length>1){
 			this.m_channelNumbers=currentImage.length;
 
@@ -191,7 +188,7 @@ public class AutoCrop {
 	public void cropKernels(ArrayList <Box> boxes)throws IOException, FormatException, Exception {
 		Directory dirOutput= new Directory(this.m_outputDirPath+File.separator+this.m_outputFilesPrefix);
 		dirOutput.CheckAndCreateDir();
-		for (int y =0 ;y<this.m_channelNumbers;y++) {
+		for (int y =0 ;y<=this.m_channelNumbers;y++) {
 
 			for (short i = 0; i < boxes.size(); ++i) {
 				Box box = boxes.get(i);

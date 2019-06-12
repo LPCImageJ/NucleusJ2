@@ -70,12 +70,14 @@ public class TestAutoCrop {
 		String ExpectedResult = "/home/tridubos/Bureau/TEST_AUTOCROP/Results_checked";
 		String inputOneImageTristan = "/home/tridubos/Bureau/TEST_AUTOCROP/RAW_TEST/raw";
 
-		String outputTristan = "/home/tridubos/Bureau/TEST_AUTOCROP/RAW_TEST/output";
+
 
 		//String imagetestmulti = "/home/tridubos/Bureau/TEST_AUTOCROP/RAW_TEST/Raw_Multi/Cot3bis2_TEST1.tif";
 		String imagetestmulti = "/home/tridubos/Bureau/TEST_AUTOCROP/RAW_TEST/Raw_Multi/Z_Col_cot15&19&23__w11 DAPI SIM_s5.TIF";
-		String imagetestmulti2 = "/home/tridubos/Bureau/TEST_AUTOCROP/RAW_TEST/Raw_Multi/";
 
+
+		String imagetestmulti2 = "/home/tridubos/Bureau/TEST_AUTOCROP/Test_Version";
+		String outputTristan = "/home/tridubos/Bureau/TEST_AUTOCROP/out_test_Version";
 		testStupid(imagetestmulti2, outputTristan);
 
 
