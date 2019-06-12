@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 
 
+
 /**
  *  Core method calling the autocrop method. this method can be run on only one file
  *  or on directory containing multiple tuple file.
