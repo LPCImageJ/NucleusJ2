@@ -312,6 +312,11 @@ public class AutoCrop {
 		ImagePlus[] imps = BF.openImagePlus(options);
 		ImagePlus sort = new ImagePlus();
 		sort = new Duplicator().run(getImageChannel(channelNumber),zmin,zmin+depth);
+
+
+		//imps[0].setStack(imps[0].getStack().crop(xmin, ymin ,zmin,width, height,depth));//Crop
+		//imps[0].show();
+
 		return sort;
 
 	}
