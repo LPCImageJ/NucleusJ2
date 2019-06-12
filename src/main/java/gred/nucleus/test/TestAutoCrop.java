@@ -63,17 +63,17 @@ public class TestAutoCrop {
        // String outputTristan = "/home/titus/Bureau/data/test_autocrop/";
 
         String ExpectedResult = "/home/tridubos/Bureau/TEST_AUTOCROP/Results_checked";
-		String inputOneImageTristan = "/home/tridubos/Bureau/TEST_AUTOCROP/RAW_TEST";
+		String inputOneImageTristan = "/home/tridubos/Bureau/TEST_AUTOCROP/Test_Version";
 
-		String outputTristan = "/home/tridubos/Bureau/TEST_AUTOCROP/RAW_TEST";
+		String outputTristan = "/home/tridubos/Bureau/TEST_AUTOCROP/out_test_Version";
 
-		OuputFileVerification fw = new OuputFileVerification();
-		fw.GetFileResultExpeted(ExpectedResult);
-		fw.GetFilesOutputFolder(outputTristan);
-		//testStupid(inputOneImageTristan, outputTristan);
+		//OuputFileVerification fw = new OuputFileVerification();
+		//fw.GetFileResultExpeted(ExpectedResult);
+		//fw.GetFilesOutputFolder(outputTristan);
+		testStupid(inputOneImageTristan, outputTristan);
 
-		fw.GetFilesResultingOfAnalysis(outputTristan);
-		fw.CompareAnalysisResult();
+		//fw.GetFilesResultingOfAnalysis(outputTristan);
+		//fw.CompareAnalysisResult();
 		/*
 		String inputOneImageTristan = "/home/tridubos/Bureau/TEST_READING_METADATA/";
 		ImporterOptions options = new ImporterOptions();
