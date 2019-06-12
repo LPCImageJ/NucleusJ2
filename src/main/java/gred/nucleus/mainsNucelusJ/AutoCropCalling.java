@@ -52,11 +52,25 @@ public class AutoCropCalling {
      * @throws FormatException Bioformat exception
      */
     public void run() throws IOException, FormatException,fileInOut,Exception {
+
         Directory directoryInput=new Directory(this._input);
         directoryInput.listFiles(this._input);
+        directoryInput.checkIfEmpty();
         directoryInput.checkAndActualiseNDFiles();
+        for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
+                File currentFile = directoryInput.getFile(i);
+                String fileImg = currentFile.toString();
+                FilesNames outPutFilesNames = new FilesNames(fileImg);
+                this._prefix = outPutFilesNames.PrefixeNameFile();
 
-       /*
+                AutoCrop autoCrop = new AutoCrop(currentFile, this._output, this._prefix);
+                autoCrop.thresholdKernels();
+                autoCrop.cropKernels(autoCrop.computeBoxes(1));
+
+                annotAutoCrop test = new annotAutoCrop(autoCrop.getFileCoordinates(), currentFile);
+                test.run();
+        }
+             /*
        TODO remove after control
         if(directoryInput.getContainNdFile()){
             for (short i = 0; i < directoryInput.getNumberNDFiles(); ++i) {
@@ -75,20 +89,6 @@ public class AutoCropCalling {
         }
         else {
         */
-            for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
-                File currentFile = directoryInput.getFile(i);
-                String fileImg = currentFile.toString();
-                FilesNames outPutFilesNames = new FilesNames(fileImg);
-                this._prefix = outPutFilesNames.PrefixeNameFile();
-
-                AutoCrop autoCrop = new AutoCrop(currentFile, this._output, this._prefix);
-                autoCrop.thresholdKernels();
-                autoCrop.cropKernels(autoCrop.computeBoxes(1));
-
-                annotAutoCrop test = new annotAutoCrop(autoCrop.getFileCoordinates(), currentFile);
-                test.run();
-            }
-
 
     }
 

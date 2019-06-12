@@ -48,7 +48,7 @@ public class AutoCrop {
 	private int m_channelNumbers=0;
 	/** Channel considered to compute OTSU threshold */
 	private int m_channelToComputeThreshold=0;
-	
+
 	/** TODO GESTION OF log4J WARN !!!!! (BF.openImagePlus) */
 
 	public AutoCrop(File imageFile, String outputDirPath ,String outputFilesPrefix ) throws IOException, FormatException, fileInOut,Exception{

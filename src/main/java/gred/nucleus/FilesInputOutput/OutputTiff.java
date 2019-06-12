@@ -14,7 +14,7 @@ public class OutputTiff extends FilesNames {
     /** Method to save file
      * with verification if file already exists
      * TODO ADD ERROR IN LOG FILE*/
-    public void SaveImage(ImagePlus imageToSave)throws Exception {
+    public void SaveImage(ImagePlus imageToSave) {
         try {
             if (!is_fileExist()) {
                 FileSaver fileSaver = new FileSaver(imageToSave);

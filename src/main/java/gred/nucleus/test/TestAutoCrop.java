@@ -2,21 +2,10 @@ package gred.nucleus.test;
 
 import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.mainsNucelusJ.AutoCropCalling;
-import ij.IJ;
-import ij.ImagePlus;
-import ij.plugin.ChannelSplitter;
-import ij.plugin.ImageInfo;
-import loci.formats.*;
-import loci.formats.meta.MetadataStore;
-import loci.plugins.BF;
-import java.util.Map;
-import java.io.File;
+import loci.formats.FormatException;
+
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Set;
-import loci.formats.MetadataTools;
 /**
  * Class dedicated to examples and test of methods in the package.
  * 

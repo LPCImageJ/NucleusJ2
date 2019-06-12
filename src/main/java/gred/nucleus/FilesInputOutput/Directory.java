@@ -2,6 +2,7 @@ package gred.nucleus.FilesInputOutput;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.*;
 import java.util.ArrayList;
 
@@ -12,7 +13,7 @@ import java.util.ArrayList;
  */
 
 
-public class Directory {
+public class Directory  {
     /**
      * Directory path
      */
@@ -29,7 +30,6 @@ public class Directory {
      */
     public Directory(String Path) {
         this._dirPath = Path;
-
     }
 
     /**
@@ -73,7 +73,7 @@ public class Directory {
     }
 
     /**
-     * Method to recursively list files contains in folder and subfolder. (Argument needed because of recursive way)
+     * Method to recursively list files contains in folder and sub folder. (Argument needed because of recursive way)
      * @param Path path of folder
      */
     public void listFiles(String Path) {
@@ -87,7 +87,6 @@ public class Directory {
                 if(FilenameUtils.getExtension(f.getName()).equals("nd")) {
                     this.m_containNdFile=true;
                     this.m_listeOfFilesND.add(f);
-
                 }
             }
         }
@@ -97,15 +96,23 @@ public class Directory {
      * Replace list files if ND files have been listed.
      */
     public void checkAndActualiseNDFiles(){
-        if(this.m_containNdFile ==true){
-            this.m_listeOfFiles=this.m_listeOfFilesND;
+        if (this.m_containNdFile == true) {
+           this.m_listeOfFiles = this.m_listeOfFilesND;
         }
     }
 
     /**
+     * check if input directory is empty
+     */
+    public void checkIfEmpty(){
+        if(this.m_listeOfFiles.isEmpty()) {
+            System.err.println("Folder "+this._dirPath+" is empty");
+        }
+
+    }
+    /**
      * @return list of files
      */
-
     public ArrayList<File> ListFiles() {
         return this.m_listeOfFiles;
     }
@@ -119,16 +126,10 @@ public class Directory {
     }
 
     /**
-     *
      * @return number of file listed
      */
 
-    public int getNumberFiles(){
+    public int getNumberFiles() {
         return this.m_listeOfFiles.size();
     }
-
-
-
-
-
 }
