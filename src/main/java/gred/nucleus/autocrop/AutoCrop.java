@@ -305,15 +305,10 @@ public class AutoCrop {
 		options.setId(this.m_imageFilePath);
 		options.setAutoscale(true);
 		options.setCrop(true);
-		options.setCropRegion(0, new Region(xmin, ymin ,width, height));
+		//options.setCropRegion(0, new Region(xmin, ymin ,width, height));
 		ImagePlus[] imps = BF.openImagePlus(options);
 		ImagePlus sort = new ImagePlus();
-		sort = new Duplicator().run(getImageChannel(channelNumber),zmin,zmin+depth);
-
-
-		//imps[0].setStack(imps[0].getStack().crop(xmin, ymin ,zmin,width, height,depth));//Crop
-		//imps[0].show();
-
+        sort.setStack(imps[channelNumber].getStack().crop(xmin, ymin ,zmin,width, height,depth));//Crop
 		return sort;
 
 	}
