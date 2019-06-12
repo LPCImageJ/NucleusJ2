@@ -48,7 +48,7 @@ public class AutoCrop {
 	private int m_channelNumbers=0;
 	/** Channel considered to compute OTSU threshold */
 	private int m_channelToComputeThreshold=0;
-
+	
 	/** TODO GESTION OF log4J WARN !!!!! (BF.openImagePlus) */
 
 	public AutoCrop(File imageFile, String outputDirPath ,String outputFilesPrefix ) throws IOException, FormatException, fileInOut,Exception{
@@ -105,21 +105,31 @@ public class AutoCrop {
 
 		}
 	}
-	//TODO AJOUTER MESSAGE POUR UTILISATEUR SI THRESHOLD INFERIEUR A 20
-	//TODO AJOUTER INFO DU THRESHLOD DANS LE OUTPUT VOIR PCA
+
+
+	/**
+	 * Method computing OTSU threshold and creating segmented image from this threshold.
+	 * Case where OTSU threshold is under 20 computation using only half of last slice
+	 * (Skipping top slice with lot of noise)
+	 * If OTSU threshold is still under 20 threshold threshold value is 20.
+	 *
+	 * //TODO AJOUTER PARAMETTRAGE DES SLICES
+	 * // TODO MODIFICATION DU THRESHOLD
+	 * //TODO AJOUTER MESSAGE POUR UTILISATEUR SI THRESHOLD INFERIEUR A 20
+	 * 	//TODO AJOUTER INFO DU THRESHLOD DANS LE OUTPUT VOIR PCA
+	 */
 	public void thresholdKernels(){
 		GaussianBlur3D.blur(this.m_imageSeg, 0.5,0.5,1);
 		Thresholding thresholding = new Thresholding();
 		int thresh	=thresholding.computeOtsuThreshold(this.m_imageSeg);
 		if(thresh <20) {
-			ImagePlus imp2 = new Duplicator().run(this.m_imageSeg, 40, this.m_imageSeg.getStackSize());
+			ImagePlus imp2 = new Duplicator().run(this.m_imageSeg, this.m_imageSeg.getStackSize()/2, this.m_imageSeg.getStackSize());
 			int thresh2 = thresholding.computeOtsuThreshold(imp2);
 			if (thresh2<20)
 				thresh=20;
 			else
 				thresh=thresh2;
 		}
-		System.out.println("le theshold "+ thresh);
 		this.m_imageSeg = this.generateSegmentedImage(this.m_imageSeg, thresh);
 
 	}
@@ -305,10 +315,9 @@ public class AutoCrop {
 		options.setId(this.m_imageFilePath);
 		options.setAutoscale(true);
 		options.setCrop(true);
-		//options.setCropRegion(0, new Region(xmin, ymin ,width, height));
 		ImagePlus[] imps = BF.openImagePlus(options);
 		ImagePlus sort = new ImagePlus();
-        sort.setStack(imps[channelNumber].getStack().crop(xmin, ymin ,zmin,width, height,depth));//Crop
+        sort.setStack(imps[channelNumber].getStack().crop(xmin, ymin ,zmin,width, height,depth));
 		return sort;
 
 	}
