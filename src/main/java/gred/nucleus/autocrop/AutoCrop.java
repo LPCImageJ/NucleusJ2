@@ -56,6 +56,17 @@ public class AutoCrop {
 	/** Get some current info fo header */
 	private InfoHeaderOutput m_infoHeader = new InfoHeaderOutput();
 
+
+	/** Number of pixels take plus object size in x */
+	private int xCropBoxSize=40;
+	/** Number of pixels take plus object size in y*/
+	private int yCropBoxSize=40;
+	/** Number of slice take plus object in y */
+	private int zCropBoxSize=20;
+
+	/** Number of slice take plus object in y */
+	private int slicesOTSUcomputing=20;
+
 	/** TODO GESTION OF log4J WARN !!!!! (BF.openImagePlus) */
 
 	public AutoCrop(File imageFile, String outputDirPath ,String outputFilesPrefix ) throws IOException, FormatException, fileInOut,Exception{
@@ -67,6 +78,7 @@ public class AutoCrop {
 		setChannelNumbers();
 		this.m_imageSeg= thresholding.contrastAnd8bits(getImageChannel(this.m_channelToComputeThreshold));
         this.m_outputCropInfo=this.m_outputCropInfo+"#Start analyse:"+m_infoHeader.getLocalTime()+"\n";
+		//this.m_imageSeg.getStackSize()/2;
 	}
 	/** TODO GESTION OF log4J WARN !!!!! (BF.openImagePlus) */
 
@@ -211,9 +223,9 @@ public class AutoCrop {
 
 			for (short i = 0; i < boxes.size(); ++i) {
 				Box box = boxes.get(i);
-				int xmin = box.getXMin() - 40;
-				int ymin = box.getYMin() - 40;
-				int zmin = box.getZMin() - 20;
+				int xmin = box.getXMin() - xCropBoxSize;
+				int ymin = box.getYMin() - yCropBoxSize;
+				int zmin = box.getZMin() - zCropBoxSize;
 				String coord = box.getXMin() + "_" + box.getYMin() + "_" + box.getZMin();
 				this.m_boxCoordinates.add(this.m_outputDirPath + File.separator + this.m_outputFilesPrefix + "_" + coord + i + "\t" + box.getXMin() + "\t" + box.getXMax() + "\t" + box.getYMin() + "\t" + box.getYMax() + "\t" + box.getZMin() + "\t" + box.getZMax());
 				if (xmin <= 0)
@@ -223,9 +235,9 @@ public class AutoCrop {
 				if (zmin <= 0)
 					zmin = 1;
 
-				int width = box.getXMax() + 80 - box.getXMin();
-				int height = box.getYMax() + 80 - box.getYMin();
-				int depth = box.getZMax() + 40 - box.getZMin();
+				int width = box.getXMax() + (2*xCropBoxSize) - box.getXMin();
+				int height = box.getYMax() + (2*yCropBoxSize) - box.getYMin();
+				int depth = box.getZMax() + (2*zCropBoxSize) - box.getZMin();
 				if (width + xmin >= this.m_imageSeg.getWidth())
 					width -= (width + xmin) - this.m_imageSeg.getWidth();
 
@@ -340,6 +352,10 @@ public class AutoCrop {
 		return this.m_nbOfNuc;
 	}
 
+	public String getBoxParameters(){
 
+		return "Crop box size :x-"+xCropBoxSize+";y"+yCropBoxSize+";z"+zCropBoxSize;
+
+	}
 
 }

@@ -4,6 +4,7 @@ import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.FilesInputOutput.FilesNames;
 import gred.nucleus.FilesInputOutput.InfoHeaderOutput;
 import gred.nucleus.autocrop.AutoCrop;
+import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.autocrop.annotAutoCrop;
 import gred.nucleus.exceptions.fileInOut;
 import ij.ImagePlus;
@@ -31,7 +32,8 @@ public class AutoCropCalling {
     private String m_outputCropGeneralInfo="#HEADER\n";
     /** Get some current info fo header */
     private InfoHeaderOutput m_infoHeader = new InfoHeaderOutput();
-
+    /** Parameters crop analyse */
+    private AutocropParameters m_autocropParameters;
 
     /**
      * Constructor
@@ -49,11 +51,25 @@ public class AutoCropCalling {
                 "#Input directory: "+this._input+"\n" +
                 "#Output directory: "+this._output+"\n" +
                 "#Start analyse:"+m_infoHeader.getLocalTime()+"\n" +
-                "#X crop parameter :"+
+                "#X crop parameter :"+"\n" +
                 "";
 
     }
+    public AutoCropCalling(AutocropParameters autocropParameters ) {
+        this.m_autocropParameters =autocropParameters;
+        this._input = autocropParameters.getInputFolder();
+        this._output = autocropParameters.getOutputFolder();
+        Directory dirOutput =new Directory(this._output);
+        dirOutput.CheckAndCreateDir();
+        this._output=dirOutput.get_dirPath();
+        this.m_outputCropGeneralInfo=this.m_outputCropGeneralInfo+
+                "#Input directory: "+this._input+"\n" +
+                "#Output directory: "+this._output+"\n" +
+                "#Start analyse:"+m_infoHeader.getLocalTime()+"\n" +
+                "#X crop parameter :"+"\n" +
+                "";
 
+    }
 
     /**
      * Run auto crop on the input,
