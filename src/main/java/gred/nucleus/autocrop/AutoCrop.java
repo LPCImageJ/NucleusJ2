@@ -1,6 +1,7 @@
 package gred.nucleus.autocrop;
 
 import gred.nucleus.FilesInputOutput.Directory;
+import gred.nucleus.FilesInputOutput.InfoHeaderOutput;
 import gred.nucleus.FilesInputOutput.OutputTiff;
 import gred.nucleus.connectedComponent.ConnectedComponent;
 import gred.nucleus.exceptions.fileInOut;
@@ -22,7 +23,6 @@ import loci.plugins.in.ImporterOptions;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -52,7 +52,10 @@ public class AutoCrop {
 	/** Channel considered to compute OTSU threshold */
 	private int m_channelToComputeThreshold=0;
     /** Get general information of cropping analyse */
-	private String m_outputCropGeneralInfo="#HEADER\n";
+	private String m_outputCropInfo="#HEADER\n";
+	/** Get some current info fo header */
+	private InfoHeaderOutput m_infoHeader = new InfoHeaderOutput();
+
 	/** TODO GESTION OF log4J WARN !!!!! (BF.openImagePlus) */
 
 	public AutoCrop(File imageFile, String outputDirPath ,String outputFilesPrefix ) throws IOException, FormatException, fileInOut,Exception{
@@ -63,8 +66,7 @@ public class AutoCrop {
 		this.m_outputFilesPrefix = outputFilesPrefix;
 		setChannelNumbers();
 		this.m_imageSeg= thresholding.contrastAnd8bits(getImageChannel(this.m_channelToComputeThreshold));
-        String timeStamp = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
-        this.m_outputCropGeneralInfo=this.m_outputCropGeneralInfo+"#Start analyse"+timeStamp+"\n";
+        this.m_outputCropInfo=this.m_outputCropInfo+"#Start analyse:"+m_infoHeader.getLocalTime()+"\n";
 	}
 	/** TODO GESTION OF log4J WARN !!!!! (BF.openImagePlus) */
 
@@ -136,6 +138,7 @@ public class AutoCrop {
 			else
 				thresh=thresh2;
 		}
+
 		this.m_imageSeg = this.generateSegmentedImage(this.m_imageSeg, thresh);
 
 	}
