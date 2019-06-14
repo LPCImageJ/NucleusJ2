@@ -1,7 +1,7 @@
 package gred.nucleus.autocrop;
 
 import gred.nucleus.FilesInputOutput.Directory;
-import gred.nucleus.FilesInputOutput.InfoHeaderOutput;
+import gred.nucleus.FilesInputOutput.OutputTexteFile;
 import gred.nucleus.FilesInputOutput.OutputTiff;
 import gred.nucleus.connectedComponent.ConnectedComponent;
 import gred.nucleus.exceptions.fileInOut;
@@ -21,6 +21,7 @@ import loci.plugins.BF;
 import loci.plugins.in.ImporterOptions;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -49,26 +50,15 @@ public class AutoCrop {
 	private int m_nbOfNuc = 0;
 	/** Number of channels in current image */
 	private int m_channelNumbers=0;
-	/** Channel considered to compute OTSU threshold */
-	private int m_channelToComputeThreshold=0;
-    /** Get general information of cropping analyse */
-	private String m_outputCropInfo="#HEADER\n";
-	/** Get some current info fo header */
-	private InfoHeaderOutput m_infoHeader = new InfoHeaderOutput();
+	/** Get current info inmage analyse */
+	private String m_infoImageAnalyse = "";
+    /** Parameters crop analyse */
+    private AutocropParameters m_autocropParameters;
+    /** OTSU threshold */
+    private int OTSUthreshold;
 
-
-	/** Number of pixels take plus object size in x */
-	private int xCropBoxSize=40;
-	/** Number of pixels take plus object size in y*/
-	private int yCropBoxSize=40;
-	/** Number of slice take plus object in y */
-	private int zCropBoxSize=20;
-
-	/** Number of slice take plus object in y */
-	private int slicesOTSUcomputing=20;
-
-	/** TODO GESTION OF log4J WARN !!!!! (BF.openImagePlus) */
-
+	/** TODO REMOVE */
+    /**
 	public AutoCrop(File imageFile, String outputDirPath ,String outputFilesPrefix ) throws IOException, FormatException, fileInOut,Exception{
 		this.m_currentFile=imageFile;
 		this.m_imageFilePath = imageFile.getAbsolutePath();
@@ -77,10 +67,7 @@ public class AutoCrop {
 		this.m_outputFilesPrefix = outputFilesPrefix;
 		setChannelNumbers();
 		this.m_imageSeg= thresholding.contrastAnd8bits(getImageChannel(this.m_channelToComputeThreshold));
-        this.m_outputCropInfo=this.m_outputCropInfo+"#Start analyse:"+m_infoHeader.getLocalTime()+"\n";
-		//this.m_imageSeg.getStackSize()/2;
 	}
-	/** TODO GESTION OF log4J WARN !!!!! (BF.openImagePlus) */
 
 	public AutoCrop(File imageFile, String outputDirPath ,String outputFilesPrefix,int channelToComputeThreshold ) throws IOException, FormatException, fileInOut,Exception{
 		this.m_currentFile=imageFile;
@@ -89,9 +76,26 @@ public class AutoCrop {
 		Thresholding thresholding = new Thresholding();
 		this.m_outputFilesPrefix = outputFilesPrefix;
 		setChannelNumbers();
-		m_channelToComputeThreshold=channelToComputeThreshold;
 		this.m_imageSeg= thresholding.contrastAnd8bits(getImageChannel(m_channelToComputeThreshold));
 	}
+	*/
+
+
+    /** TODO GESTION OF log4J WARN !!!!! (BF.openImagePlus) */
+
+    public AutoCrop(File imageFile, String outputFilesPrefix, AutocropParameters autocropParametersAnalyse ) throws IOException, FormatException, fileInOut,Exception{
+        this.m_autocropParameters=autocropParametersAnalyse;
+	    this.m_currentFile=imageFile;
+        this.m_imageFilePath = imageFile.getAbsolutePath();
+        this.m_outputDirPath = this.m_autocropParameters.getOutputFolder();
+        Thresholding thresholding = new Thresholding();
+        this.m_outputFilesPrefix = outputFilesPrefix;
+        setChannelNumbers();
+        this.m_imageSeg= thresholding.contrastAnd8bits(getImageChannel(this.m_autocropParameters.getChannelToComputeThreshold()));
+        m_infoImageAnalyse=this.m_autocropParameters.getAnalyseParameters();
+        this.m_infoImageAnalyse=autocropParametersAnalyse.getAnalyseParameters()+getSpecificImageInfo()+getColoneName();
+
+    }
 
 
 
@@ -143,14 +147,14 @@ public class AutoCrop {
 		Thresholding thresholding = new Thresholding();
 		int thresh	=thresholding.computeOtsuThreshold(this.m_imageSeg);
 		if(thresh <20) {
-			ImagePlus imp2 = new Duplicator().run(this.m_imageSeg, this.m_imageSeg.getStackSize()/2, this.m_imageSeg.getStackSize());
+			ImagePlus imp2 = new Duplicator().run(this.m_imageSeg, this.m_autocropParameters.getslicesOTSUcomputing()/2, this.m_imageSeg.getStackSize());
 			int thresh2 = thresholding.computeOtsuThreshold(imp2);
 			if (thresh2<20)
 				thresh=20;
 			else
 				thresh=thresh2;
 		}
-
+        this.OTSUthreshold=thresh;
 		this.m_imageSeg = this.generateSegmentedImage(this.m_imageSeg, thresh);
 
 	}
@@ -223,9 +227,9 @@ public class AutoCrop {
 
 			for (short i = 0; i < boxes.size(); ++i) {
 				Box box = boxes.get(i);
-				int xmin = box.getXMin() - xCropBoxSize;
-				int ymin = box.getYMin() - yCropBoxSize;
-				int zmin = box.getZMin() - zCropBoxSize;
+				int xmin = box.getXMin() - this.m_autocropParameters.getxCropBoxSize();
+				int ymin = box.getYMin() - this.m_autocropParameters.getxCropBoxSize();
+				int zmin = box.getZMin() - this.m_autocropParameters.getzCropBoxSize();
 				String coord = box.getXMin() + "_" + box.getYMin() + "_" + box.getZMin();
 				this.m_boxCoordinates.add(this.m_outputDirPath + File.separator + this.m_outputFilesPrefix + "_" + coord + i + "\t" + box.getXMin() + "\t" + box.getXMax() + "\t" + box.getYMin() + "\t" + box.getYMax() + "\t" + box.getZMin() + "\t" + box.getZMax());
 				if (xmin <= 0)
@@ -235,9 +239,9 @@ public class AutoCrop {
 				if (zmin <= 0)
 					zmin = 1;
 
-				int width = box.getXMax() + (2*xCropBoxSize) - box.getXMin();
-				int height = box.getYMax() + (2*yCropBoxSize) - box.getYMin();
-				int depth = box.getZMax() + (2*zCropBoxSize) - box.getZMin();
+				int width = box.getXMax() + (2*this.m_autocropParameters.getxCropBoxSize()) - box.getXMin();
+				int height = box.getYMax() + (2*this.m_autocropParameters.getxCropBoxSize()) - box.getYMin();
+				int depth = box.getZMax() + (2*this.m_autocropParameters.getzCropBoxSize()) - box.getZMin();
 				if (width + xmin >= this.m_imageSeg.getWidth())
 					width -= (width + xmin) - this.m_imageSeg.getWidth();
 
@@ -252,6 +256,16 @@ public class AutoCrop {
 				Calibration cal = this.m_rawImg.getCalibration();
 				imgResu.setCalibration(cal);
 				OutputTiff fileOutput = new OutputTiff(this.m_outputDirPath + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i +"_C"+y+".tif");
+                this.m_infoImageAnalyse=this.m_infoImageAnalyse+m_outputDirPath + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i +"_C"+y+".tif\t"
+                +"y\t"
+                        +i+"\t"
+                        +xmin+"\t"
+                        +ymin+"\t"
+                        +zmin+"\t"
+                        +width+"\t"
+                        +height+"\t"
+                        +depth+"\n";
+
 				fileOutput.SaveImage(imgResu);
 
 
@@ -352,10 +366,21 @@ public class AutoCrop {
 		return this.m_nbOfNuc;
 	}
 
-	public String getBoxParameters(){
+	public String getSpecificImageInfo(){
+        Calibration cal = this.m_rawImg.getCalibration();
+        return "#Calibration image: x:"+ cal.pixelDepth+"-y:"+cal.pixelWidth+"-z:"+cal.pixelHeight+"\n"
+                +"#Image: "+this.m_imageFilePath+"\n"
+                +"#OTSU threshold: "+this.OTSUthreshold+"\n";
 
-		return "Crop box size :x-"+xCropBoxSize+";y"+yCropBoxSize+";z"+zCropBoxSize;
+    }
+    public String getColoneName() {
 
-	}
+        String colonneName = "FileName\tChannel\tCrop_number\tX_start\tY_start\tZ_start\twidth\theight\tdepth\n";
+        return colonneName;
+    }
+    public void writeAnalyseInfo() throws IOException {
+        OutputTexteFile resultFileOutput=new OutputTexteFile(this.m_outputDirPath + File.separator+ this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix);
+        resultFileOutput.SaveTexteFile(this.m_infoImageAnalyse);
 
+    }
 }

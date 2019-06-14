@@ -1,5 +1,10 @@
 package gred.nucleus.plugins;
 
+import gred.nucleus.FilesInputOutput.Directory;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 public class PluginParameters {
 
     /** Activation of manual calibration parameter */
@@ -20,12 +25,16 @@ public class PluginParameters {
 
     public PluginParameters(String inputFolder,String outputFolder){
         this.m_inputFolder=inputFolder;
-        this.m_outputFolder=outputFolder;
+        Directory dirOutput =new Directory(outputFolder);
+        dirOutput.CheckAndCreateDir();
+        this.m_outputFolder=dirOutput.get_dirPath();
 
     }
     public PluginParameters(String inputFolder,String outputFolder,double xCal ,double yCal,double zCal){
         this.m_inputFolder=inputFolder;
-        this.m_outputFolder=outputFolder;
+        Directory dirOutput =new Directory(outputFolder);
+        dirOutput.CheckAndCreateDir();
+        this.m_outputFolder=dirOutput.get_dirPath();
         this.m_manualParameter=true;
         this.m_xCal=xCal;
         this.m_yCal=xCal;
@@ -38,12 +47,13 @@ public class PluginParameters {
     public String getOutputFolder(){
         return this.m_outputFolder;
     }
-    public String getInfoParameters(){
+    public String getAnalyseParameters(){
         this.m_headerInfo="#Header \n"
+                +"#Star time analyse: "+getLocalTime()+"\n"
                 +"#Input folder: "+this.m_inputFolder+"\n"
                 +"#Output folder: "+this.m_inputFolder+"\n"
-                +"#Calibration:"+getInfoCalibration()+"\n"
-                        +"";
+                +"#Calibration:"+getInfoCalibration()+"\n";
+
         return this.m_headerInfo;
 
     }
@@ -57,5 +67,9 @@ public class PluginParameters {
         }
         return parameters_info;
 
+    }
+    public String getLocalTime() {
+        String timeStamp = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
+        return timeStamp;
     }
 }

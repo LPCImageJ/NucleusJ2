@@ -1,5 +1,6 @@
 package gred.nucleus.test;
 
+import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.mainsNucelusJ.AutoCropCalling;
 import loci.formats.FormatException;
@@ -29,7 +30,8 @@ public class TestAutoCrop {
 	static ArrayList <String> m_test;
 	
 	public static void testStupid(String imageSourceFile, String output) throws IOException, FormatException , fileInOut,Exception {
-        AutoCropCalling autoCrop = new AutoCropCalling(imageSourceFile,output);
+        AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
+        AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
 		autoCrop.run();
 
 	}

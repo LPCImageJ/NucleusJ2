@@ -2,7 +2,6 @@ package gred.nucleus.mainsNucelusJ;
 
 import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.FilesInputOutput.FilesNames;
-import gred.nucleus.FilesInputOutput.InfoHeaderOutput;
 import gred.nucleus.autocrop.AutoCrop;
 import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.autocrop.annotAutoCrop;
@@ -30,8 +29,6 @@ public class AutoCropCalling {
     private String _prefix = "";
     /** Get general information of cropping analyse */
     private String m_outputCropGeneralInfo="#HEADER\n";
-    /** Get some current info fo header */
-    private InfoHeaderOutput m_infoHeader = new InfoHeaderOutput();
     /** Parameters crop analyse */
     private AutocropParameters m_autocropParameters;
 
@@ -47,12 +44,7 @@ public class AutoCropCalling {
         Directory dirOutput =new Directory(this._output);
         dirOutput.CheckAndCreateDir();
         this._output=dirOutput.get_dirPath();
-        this.m_outputCropGeneralInfo=this.m_outputCropGeneralInfo+
-                "#Input directory: "+this._input+"\n" +
-                "#Output directory: "+this._output+"\n" +
-                "#Start analyse:"+m_infoHeader.getLocalTime()+"\n" +
-                "#X crop parameter :"+"\n" +
-                "";
+
 
     }
     public AutoCropCalling(AutocropParameters autocropParameters ) {
@@ -62,12 +54,7 @@ public class AutoCropCalling {
         Directory dirOutput =new Directory(this._output);
         dirOutput.CheckAndCreateDir();
         this._output=dirOutput.get_dirPath();
-        this.m_outputCropGeneralInfo=this.m_outputCropGeneralInfo+
-                "#Input directory: "+this._input+"\n" +
-                "#Output directory: "+this._output+"\n" +
-                "#Start analyse:"+m_infoHeader.getLocalTime()+"\n" +
-                "#X crop parameter :"+"\n" +
-                "";
+        this.m_outputCropGeneralInfo=autocropParameters.getAnalyseParameters();
 
     }
 
@@ -91,33 +78,16 @@ public class AutoCropCalling {
                 FilesNames outPutFilesNames = new FilesNames(fileImg);
                 this._prefix = outPutFilesNames.PrefixeNameFile();
 
-                AutoCrop autoCrop = new AutoCrop(currentFile, this._output, this._prefix);
+                AutoCrop autoCrop = new AutoCrop(currentFile, this._prefix,this.m_autocropParameters);
+
                 autoCrop.thresholdKernels();
                 autoCrop.cropKernels(autoCrop.computeBoxes(1));
-
+                autoCrop.writeAnalyseInfo();
+                /*
                 annotAutoCrop test = new annotAutoCrop(autoCrop.getFileCoordinates(), currentFile);
                 test.run();
+                */
         }
-             /*
-       TODO remove after control
-        if(directoryInput.getContainNdFile()){
-            for (short i = 0; i < directoryInput.getNumberNDFiles(); ++i) {
-                File currentFile = directoryInput.getNDFile(i);
-                String fileImg = currentFile.toString();
-                FilesNames outPutFilesNames = new FilesNames(fileImg);
-                this._prefix = outPutFilesNames.PrefixeNameFile();
-
-                AutoCrop autoCrop = new AutoCrop(currentFile, this._output, this._prefix);
-                autoCrop.thresholdKernels();
-                autoCrop.cropKernels(autoCrop.computeBoxes(1));
-
-                annotAutoCrop test = new annotAutoCrop(autoCrop.getFileCoordinates(), currentFile);
-                test.run();
-            }
-        }
-        else {
-        */
-
     }
 
 }
