@@ -257,7 +257,7 @@ public class AutoCrop {
 				imgResu.setCalibration(cal);
 				OutputTiff fileOutput = new OutputTiff(this.m_outputDirPath + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i +"_C"+y+".tif");
                 this.m_infoImageAnalyse=this.m_infoImageAnalyse+m_outputDirPath + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i +"_C"+y+".tif\t"
-                +"y\t"
+                +y+"\t"
                         +i+"\t"
                         +xmin+"\t"
                         +ymin+"\t"
@@ -374,7 +374,6 @@ public class AutoCrop {
 
     }
     public String getColoneName() {
-
         String colonneName = "FileName\tChannel\tCrop_number\tX_start\tY_start\tZ_start\twidth\theight\tdepth\n";
         return colonneName;
     }
@@ -383,4 +382,7 @@ public class AutoCrop {
         resultFileOutput.SaveTexteFile(this.m_infoImageAnalyse);
 
     }
+    public String getImageCropInfo(){
+		return this.m_imageFilePath+"\t"+getNbOfNuc()+"\n";
+	}
 }

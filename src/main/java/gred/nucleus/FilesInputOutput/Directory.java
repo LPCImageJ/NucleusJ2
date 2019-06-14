@@ -14,10 +14,11 @@ import java.util.ArrayList;
 
 
 public class Directory  {
-    /**
-     * Directory path
-     */
-    public String _dirPath = "";
+
+    /** Directory path */
+    public File m_directory;
+    /** Directory path */
+    public String m_dirPath = "";
     /** List of files in current forlder + recursive folder */
     public ArrayList<File> m_listeOfFiles = new ArrayList<File>();
     /** Check if directory contain nd files */
@@ -29,7 +30,8 @@ public class Directory  {
      * @param Path of directory
      */
     public Directory(String Path) {
-        this._dirPath = Path;
+        this.m_dirPath = Path;
+        this.m_directory=new File(this.m_dirPath);
     }
 
     /**
@@ -45,10 +47,10 @@ public class Directory  {
      * Check if separator exist
      */
     private void ChekSeparatorEndPath() {
-        File dir = new File(this._dirPath);
-        Character SeparatorEnd = this._dirPath.charAt(this._dirPath.length() - 1);
+        File dir = new File(this.m_dirPath);
+        Character SeparatorEnd = this.m_dirPath.charAt(this.m_dirPath.length() - 1);
         if (!(SeparatorEnd.equals(dir.separator))) {
-            this._dirPath = this._dirPath + dir.separator;
+            this.m_dirPath = this.m_dirPath + dir.separator;
 
         }
 
@@ -58,7 +60,7 @@ public class Directory  {
      * Method creating folder if doesn't exist.
      */
     private void CreateDire() {
-        File dir = new File(this._dirPath);
+        File dir = new File(this.m_dirPath);
         if (!dir.exists()) {
             dir.mkdir();
         }
@@ -69,7 +71,7 @@ public class Directory  {
      * @return path current directory
      */
     public String get_dirPath() {
-        return this._dirPath;
+        return this.m_dirPath;
     }
 
     /**
@@ -106,7 +108,7 @@ public class Directory  {
      */
     public void checkIfEmpty(){
         if(this.m_listeOfFiles.isEmpty()) {
-            System.err.println("Folder "+this._dirPath+" is empty");
+            System.err.println("Folder "+this.m_dirPath+" is empty");
         }
 
     }
@@ -132,4 +134,9 @@ public class Directory  {
     public int getNumberFiles() {
         return this.m_listeOfFiles.size();
     }
+    public String getdirPath(){
+        return this.m_directory.getPath()+File.separator;
+    }
+
+
 }

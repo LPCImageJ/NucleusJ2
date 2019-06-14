@@ -2,6 +2,7 @@ package gred.nucleus.mainsNucelusJ;
 
 import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.FilesInputOutput.FilesNames;
+import gred.nucleus.FilesInputOutput.OutputTexteFile;
 import gred.nucleus.autocrop.AutoCrop;
 import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.autocrop.annotAutoCrop;
@@ -54,7 +55,7 @@ public class AutoCropCalling {
         Directory dirOutput =new Directory(this._output);
         dirOutput.CheckAndCreateDir();
         this._output=dirOutput.get_dirPath();
-        this.m_outputCropGeneralInfo=autocropParameters.getAnalyseParameters();
+        this.m_outputCropGeneralInfo=autocropParameters.getAnalyseParameters()+getColnameResult();
 
     }
 
@@ -83,12 +84,18 @@ public class AutoCropCalling {
                 autoCrop.thresholdKernels();
                 autoCrop.cropKernels(autoCrop.computeBoxes(1));
                 autoCrop.writeAnalyseInfo();
-                /*
                 annotAutoCrop test = new annotAutoCrop(autoCrop.getFileCoordinates(), currentFile);
                 test.run();
-                */
+                this.m_outputCropGeneralInfo=this.m_outputCropGeneralInfo+autoCrop.getImageCropInfo();
         }
+        System.out.println(this._input+"result_Autocrop_Analyse");
+        OutputTexteFile resultFileOutput=new OutputTexteFile(directoryInput.getdirPath()+"result_Autocrop_Analyse");
+        resultFileOutput.SaveTexteFile( this.m_outputCropGeneralInfo);
     }
 
-}
+    public String getColnameResult(){
+        return "Filename\tNumber_of_Crop\n";
+    }
+    }
+
 
