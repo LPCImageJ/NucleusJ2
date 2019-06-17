@@ -15,17 +15,13 @@ import ij.plugin.GaussianBlur3D;
 import ij.process.AutoThresholder;
 import ij.process.ImageStatistics;
 import ij.process.StackStatistics;
-import loci.common.Region;
 import loci.formats.FormatException;
 import loci.plugins.BF;
 import loci.plugins.in.ImporterOptions;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 
 public class AutoCrop {
@@ -57,31 +53,14 @@ public class AutoCrop {
     /** OTSU threshold */
     private int OTSUthreshold;
 
-	/** TODO REMOVE */
-    /**
-	public AutoCrop(File imageFile, String outputDirPath ,String outputFilesPrefix ) throws IOException, FormatException, fileInOut,Exception{
-		this.m_currentFile=imageFile;
-		this.m_imageFilePath = imageFile.getAbsolutePath();
-		this.m_outputDirPath = outputDirPath;
-		Thresholding thresholding = new Thresholding();
-		this.m_outputFilesPrefix = outputFilesPrefix;
-		setChannelNumbers();
-		this.m_imageSeg= thresholding.contrastAnd8bits(getImageChannel(this.m_channelToComputeThreshold));
-	}
-
-	public AutoCrop(File imageFile, String outputDirPath ,String outputFilesPrefix,int channelToComputeThreshold ) throws IOException, FormatException, fileInOut,Exception{
-		this.m_currentFile=imageFile;
-		this.m_imageFilePath = imageFile.getAbsolutePath();
-		this.m_outputDirPath = outputDirPath;
-		Thresholding thresholding = new Thresholding();
-		this.m_outputFilesPrefix = outputFilesPrefix;
-		setChannelNumbers();
-		this.m_imageSeg= thresholding.contrastAnd8bits(getImageChannel(m_channelToComputeThreshold));
-	}
-	*/
 
 
-    /** TODO GESTION OF log4J WARN !!!!! (BF.openImagePlus) */
+    /** TODO GESTION OF log4J WARN !!!!! (BF.openImagePlus)
+     *  Autocrop constructor : initialisation of analyse parameter
+     * @param imageFile : current image analyse
+     * @param outputFilesPrefix : prefix use for output file name
+     * @param autocropParametersAnalyse : list of analyse parameter
+     */
 
     public AutoCrop(File imageFile, String outputFilesPrefix, AutocropParameters autocropParametersAnalyse ) throws IOException, FormatException, fileInOut,Exception{
         this.m_autocropParameters=autocropParametersAnalyse;
@@ -366,6 +345,10 @@ public class AutoCrop {
 		return this.m_nbOfNuc;
 	}
 
+    /**
+     *
+     * @return Header current image info analyse
+     */
 	public String getSpecificImageInfo(){
         Calibration cal = this.m_rawImg.getCalibration();
         return "#Calibration image: x:"+ cal.pixelDepth+"-y:"+cal.pixelWidth+"-z:"+cal.pixelHeight+"\n"
@@ -373,10 +356,20 @@ public class AutoCrop {
                 +"#OTSU threshold: "+this.OTSUthreshold+"\n";
 
     }
+
+    /**
+     *
+     * @return columns name for output text file
+     */
     public String getColoneName() {
         String colonneName = "FileName\tChannel\tCrop_number\tX_start\tY_start\tZ_start\twidth\theight\tdepth\n";
         return colonneName;
     }
+
+    /**
+     * Write analyse info in output texte file
+     * @throws IOException
+     */
     public void writeAnalyseInfo() throws IOException {
         OutputTexteFile resultFileOutput=new OutputTexteFile(this.m_outputDirPath + File.separator+ this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix);
         resultFileOutput.SaveTexteFile(this.m_infoImageAnalyse);

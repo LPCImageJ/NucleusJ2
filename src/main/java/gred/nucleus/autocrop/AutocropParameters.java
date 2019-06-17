@@ -26,14 +26,22 @@ public class AutocropParameters extends PluginParameters {
      */
     private int m_slicesOTSUcomputing = 20;
 
-    /**
-     * Default constructor taking all parameters
+    /** Constructor with default parameter
+     * @param inputFolder : path folder containing Images
+     * @param outputFolder : path folder output analyse
+     *
      */
     public AutocropParameters(String inputFolder, String outputFolder){
         super(inputFolder, outputFolder);
 
     }
-
+    /** Constructor with box size modifications
+     * @param inputFolder : path folder containing Images
+     * @param outputFolder : path folder output analyse
+     * @param xCropBoxSize : number of voxels add in x axis around object
+     * @param yCropBoxSize : number of voxels add in z axis around object
+     * @param zCropBoxSize : number of stack add in z axis around object
+     */
     public AutocropParameters(String inputFolder, String outputFolder, int xCropBoxSize, int yCropBoxSize, int zCropBoxSize, int slicesOTSUcomputing) {
         super(inputFolder, outputFolder);
         this.m_xCropBoxSize = xCropBoxSize;
@@ -42,10 +50,15 @@ public class AutocropParameters extends PluginParameters {
         this.m_slicesOTSUcomputing = slicesOTSUcomputing;
     }
 
-    /**
-     * Constructor taking manual calibration parameters
+    /** Constructor with box size modification and slice number used to start OTSU threshold calculation
+     * to last slice
+     * @param inputFolder : path folder containing Images
+     * @param outputFolder : path folder output analyse
+     * @param xCropBoxSize : number of voxels add in x axis around object
+     * @param yCropBoxSize : number of voxels add in z axis around object
+     * @param zCropBoxSize : number of stack add in z axis around object
+     * @param slicesOTSUcomputing : slice from OTSU threshold calculation start
      */
-
     public AutocropParameters(String inputFolder, String outputFolder, double xCal, double yCal, double zCal,
                               int xCropBoxSize, int yCropBoxSize, int zCropBoxSize, int slicesOTSUcomputing) {
 
@@ -56,7 +69,10 @@ public class AutocropParameters extends PluginParameters {
         this.m_slicesOTSUcomputing = slicesOTSUcomputing;
     }
 
-
+    /**
+     * Getter : Herder with analyse parameters image x y z calibration
+     * @return output path folder
+     */
 
     public String getAnalyseParameters() {
         super.getAnalyseParameters();

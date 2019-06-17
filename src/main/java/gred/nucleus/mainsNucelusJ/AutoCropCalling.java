@@ -7,7 +7,6 @@ import gred.nucleus.autocrop.AutoCrop;
 import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.autocrop.annotAutoCrop;
 import gred.nucleus.exceptions.fileInOut;
-import ij.ImagePlus;
 import loci.formats.FormatException;
 import java.io.File;
 import java.io.IOException;
