@@ -126,7 +126,7 @@ public class AutoCrop {
 		Thresholding thresholding = new Thresholding();
 		int thresh	=thresholding.computeOtsuThreshold(this.m_imageSeg);
 		if(thresh <20) {
-			ImagePlus imp2 = new Duplicator().run(this.m_imageSeg, this.m_autocropParameters.getslicesOTSUcomputing()/2, this.m_imageSeg.getStackSize());
+			ImagePlus imp2 = new Duplicator().run(this.m_imageSeg, this.m_autocropParameters.getThresholdOTSUcomputing()/2, this.m_imageSeg.getStackSize());
 			int thresh2 = thresholding.computeOtsuThreshold(imp2);
 			if (thresh2<20)
 				thresh=20;
