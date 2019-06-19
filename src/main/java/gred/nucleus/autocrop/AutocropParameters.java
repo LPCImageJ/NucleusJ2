@@ -4,11 +4,6 @@ import gred.nucleus.plugins.PluginParameters;
 
 public class AutocropParameters extends PluginParameters {
     /**
-     * Channel to compute OTSU threshold
-     */
-    private int m_channelToComputeThreshold=0;
-
-    /**
      * Number of pixels take plus object size in x
      */
     private int m_xCropBoxSize = 40;
@@ -22,9 +17,27 @@ public class AutocropParameters extends PluginParameters {
     private int m_zCropBoxSize = 20;
 
     /**
+     * Minimal object volume to crop
+     */
+    int m_minVolumeNucleus;
+    /**
+     * Maximal object volume to crop
+     */
+    int m_maxVolumeNucleus;
+
+    /**
      * Minimal default OTSU threshold
      */
     private int m_thresholdOTSUcomputing = 20;
+    /**
+     * Channel to compute OTSU threshold
+     */
+    private int m_channelToComputeThreshold=0;
+    /**
+     * Slice start to compute OTSU threshold
+     */
+    private int m_slicesOTSUcomputing=0;
+
 
     /** Constructor with default parameter
      * @param inputFolder : path folder containing Images
@@ -42,7 +55,8 @@ public class AutocropParameters extends PluginParameters {
      * @param yCropBoxSize : number of voxels add in z axis around object
      * @param zCropBoxSize : number of stack add in z axis around object
      */
-    public AutocropParameters(String inputFolder, String outputFolder, int xCropBoxSize, int yCropBoxSize, int zCropBoxSize, int thresholdOTSUcomputing,int channelToComputeThreshold) {
+    public AutocropParameters(String inputFolder, String outputFolder, int xCropBoxSize, int yCropBoxSize, int zCropBoxSize
+            , int thresholdOTSUcomputing,int channelToComputeThreshold) {
         super(inputFolder, outputFolder);
         this.m_xCropBoxSize = xCropBoxSize;
         this.m_yCropBoxSize = yCropBoxSize;
@@ -64,14 +78,20 @@ public class AutocropParameters extends PluginParameters {
      *
      */
     public AutocropParameters(String inputFolder, String outputFolder, double xCal, double yCal, double zCal,
-                              int xCropBoxSize, int yCropBoxSize, int zCropBoxSize, int slicesOTSUcomputing,int thresholdOTSUcomputing) {
+                              int xCropBoxSize, int yCropBoxSize, int zCropBoxSize,
+                              int slicesOTSUcomputing,int thresholdOTSUcomputing,int channelToComputeThreshold,
+                              int minVolumeNucleus, int maxVolumeNucleus) {
 
         super(inputFolder, outputFolder, xCal, yCal, zCal);
         this.m_xCropBoxSize = xCropBoxSize;
         this.m_yCropBoxSize = yCropBoxSize;
         this.m_zCropBoxSize = zCropBoxSize;
         this.m_thresholdOTSUcomputing = thresholdOTSUcomputing;
-        this.m_thresholdOTSUcomputing = slicesOTSUcomputing;
+        this.m_slicesOTSUcomputing = slicesOTSUcomputing;
+        this.m_channelToComputeThreshold=channelToComputeThreshold;
+        this.m_maxVolumeNucleus=maxVolumeNucleus;
+        this.m_minVolumeNucleus=minVolumeNucleus;
+
     }
 
     /**
