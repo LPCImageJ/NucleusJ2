@@ -123,4 +123,5 @@ public class AutocropParameters extends PluginParameters {
         return this.m_channelToComputeThreshold;
     }
 
+
 }

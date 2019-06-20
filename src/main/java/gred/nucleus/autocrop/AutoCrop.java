@@ -6,6 +6,7 @@ import gred.nucleus.FilesInputOutput.OutputTiff;
 import gred.nucleus.connectedComponent.ConnectedComponent;
 import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.imageProcess.Thresholding;
+import gred.nucleus.utils.Histogram;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.measure.Calibration;
@@ -15,6 +16,7 @@ import ij.plugin.GaussianBlur3D;
 import ij.process.AutoThresholder;
 import ij.process.ImageStatistics;
 import ij.process.StackStatistics;
+
 import loci.formats.FormatException;
 import loci.plugins.BF;
 import loci.plugins.in.ImporterOptions;
@@ -22,16 +24,26 @@ import loci.plugins.in.ImporterOptions;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+
+import inra.ijpb.binary.BinaryImages;
+import inra.ijpb.label.LabelImages;
+
 
 
 public class AutoCrop {
 
 	/** File to process (Image input) */
 	File m_currentFile;
-    /** Raw Image */
+    /** Raw image */
 	private ImagePlus m_rawImg;
-    /** Image segmented */
+    /** Segmented image  */
 	private ImagePlus m_imageSeg;
+	/** Segmented image connect component labelled */
+	private ImagePlus m_imageSeg_labelled;
+
 	/** The path of the image to be processed */
 	private String m_imageFilePath;
 	/** the path of the directory where are saved the crop of the object */
@@ -52,7 +64,8 @@ public class AutoCrop {
     private AutocropParameters m_autocropParameters;
     /** OTSU threshold */
     private int OTSUthreshold;
-
+    /**List of boxes  to crop*/
+    private ArrayList <Box> m_boxes;
 
 
     /** TODO GESTION OF log4J WARN !!!!! (BF.openImagePlus)
@@ -94,6 +107,7 @@ public class AutoCrop {
 
 
 	/**
+	 * //TODO to Simplify
 	 * Method to check multichannel
 	 * @throws Exception
 	 */
@@ -138,6 +152,17 @@ public class AutoCrop {
 
 	}
 
+	public void computeConnectcomponent(){
+		this.m_imageSeg_labelled = BinaryImages.componentsLabeling(this.m_imageSeg, 26, 32);
+	}
+
+	public void componentSizeFilter(){
+
+	}
+	public void componentBorderFilter(){
+
+	}
+
 	/**
 	 * Detection of the of the bounding box for each object of the image.
 	 * A Connected component detection is do on the  m_imageThresholding and all the object on the border and inferior a at the threshold volume
@@ -154,13 +179,36 @@ public class AutoCrop {
 		ArrayList <Box> boxes =  new ArrayList <Box>();
 		try {
 			connectedComponent = ConnectedComponent.getLabelledConnectedComponent(m_imageSeg, 255, true, thresholdVolumeVoxel, true);
+			ImagePlus imagePlusLabels = BinaryImages.componentsLabeling(m_imageSeg, 26, 32);
+
+			Histogram histogram = new Histogram ();
+			histogram.run(m_imageSeg);
+			histogram.getHistogram();
+			HashMap<Double , Integer> parcour =histogram.getHistogram();
+			for(Map.Entry<Double , Integer> entry : parcour.entrySet()) {
+				Double cle = entry.getKey();
+				Integer valeur = entry.getValue();
+				//System.out.println(cle+"   "+valeur+"\n");
+
+			}
+
+
+
+			int[] test=new int [10];
+			LabelImages.replaceLabels(m_imageSeg,test,12);
+
+
 			Box box = null;
 			//ArrayList initialisation
 			this.m_nbOfNuc = connectedComponent.getNumberOfComponents();
 			System.out.println("la taille des boxes " +boxes.size());
 
-			for(short i = 0; i< connectedComponent.getNumberOfComponents();++i)
+			for(short i = 0; i< connectedComponent.getNumberOfComponents();++i) {
 				boxes.add(new Box(Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE));
+				System.out.println("La box " +i+"\n"
+						+Short.MAX_VALUE+" "+ Short.MIN_VALUE+" "+Short.MAX_VALUE+" "+Short.MIN_VALUE+" "+Short.MAX_VALUE+" "+Short.MIN_VALUE+"\n"
+				);
+			}
 
 			// Check the predicate
 			for (short k = 0; k < this.m_imageSeg.getNSlices(); ++k) {
@@ -168,6 +216,7 @@ public class AutoCrop {
 					for (short j = 0; j < this.m_imageSeg.getHeight(); ++j) {
 						// if label different of the background
 						if (connectedComponent.getLabel(i, j, k) > 0) {
+							System.out.println("la taille des boxes "+ connectedComponent.getLabel(i, j, k));
 							box = boxes.get(connectedComponent.getLabel(i, j, k)-1);
 							if (i < box.getXMin())
 								box.setXMin(i);
