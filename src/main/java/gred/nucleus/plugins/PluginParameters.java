@@ -109,4 +109,8 @@ public class PluginParameters {
         String timeStamp = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
         return timeStamp;
     }
+    public double getVoxelVolume(){
+        return this.m_xCal*this.m_yCal*this.m_zCal;
+
+    }
 }

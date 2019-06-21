@@ -31,6 +31,7 @@ import java.util.Map;
 import inra.ijpb.binary.BinaryImages;
 import inra.ijpb.label.LabelImages;
 
+import static inra.ijpb.label.LabelImages.removeBorderLabels;
 
 
 public class AutoCrop {
@@ -64,8 +65,8 @@ public class AutoCrop {
     private AutocropParameters m_autocropParameters;
     /** OTSU threshold */
     private int OTSUthreshold;
-    /**List of boxes  to crop*/
-    private ArrayList <Box> m_boxes;
+    /**List of boxes  to crop link to label value */
+    private HashMap <Double,Box> m_boxes = new HashMap <Double,Box>();
 
 
     /** TODO GESTION OF log4J WARN !!!!! (BF.openImagePlus)
@@ -154,14 +155,77 @@ public class AutoCrop {
 
 	public void computeConnectcomponent(){
 		this.m_imageSeg_labelled = BinaryImages.componentsLabeling(this.m_imageSeg, 26, 32);
+        Histogram histogram = new Histogram ();
+        histogram.run(this.m_imageSeg_labelled);
+        histogram.getHistogram();
+        HashMap<Double , Integer> parcour =histogram.getHistogram();
+        for(Map.Entry<Double , Integer> entry : parcour.entrySet()) {
+            Double cle = entry.getKey();
+            Integer valeur = entry.getValue();
+            Box initializeBox =new Box(Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE);
+            this.m_boxes.put(cle,initializeBox);
+        }
+
 	}
 
 	public void componentSizeFilter(){
+        this.m_imageSeg_labelled = BinaryImages.componentsLabeling(this.m_imageSeg, 26, 32);
+        Histogram histogram = new Histogram ();
+        histogram.run(m_imageSeg);
+        histogram.getHistogram();
+        HashMap<Double , Integer> parcour =histogram.getHistogram();
 
-	}
+        for(Map.Entry<Double , Integer> entry : parcour.entrySet()) {
+            Double cle = entry.getKey();
+            Integer valeur = entry.getValue();
+            if((valeur*this.m_autocropParameters.getVoxelVolume()<this.m_autocropParameters.getM_minVolumeNucleus()) ||
+                    (valeur*this.m_autocropParameters.getVoxelVolume()>this.m_autocropParameters.getM_maxVolumeNucleus())){
+                this.m_boxes.remove(cle);
+
+            }
+
+        }
+        getNumberOfBox();
+
+    }
 	public void componentBorderFilter(){
-
+		ImagePlus Avoir =this.m_imageSeg_labelled;
+        LabelImages.removeBorderLabels(Avoir);
 	}
+    public void computeBoxes2() {
+		Directory dirOutput= new Directory(this.m_outputDirPath+File.separator+this.m_outputFilesPrefix);
+		dirOutput.CheckAndCreateDir();
+        try {
+            ImageStack imageStackInput = this.m_imageSeg_labelled.getStack();
+            Box box;
+            for (short k = 0; k < this.m_imageSeg_labelled.getNSlices(); ++k) {
+                for (short i = 0; i < this.m_imageSeg_labelled.getWidth(); ++i) {
+                    for (short j = 0; j < this.m_imageSeg_labelled.getHeight(); ++j) {
+                        // if label different of the background
+                        if (imageStackInput.getVoxel(i, j, k) > 0) {
+                            box = this.m_boxes.get(imageStackInput.getVoxel(i, j, k));
+                            if (i < box.getXMin())
+                                box.setXMin(i);
+                            else if (i > box.getXMax())
+                                box.setXMax(i);
+                            if (j < box.getYMin())
+                                box.setYMin(j);
+                            else if(j > box.getYMax())
+                                box.setYMax(j);
+
+                            if (k < box.getZMin())
+                                box.setZMin(k);
+                            else if (k > box.getZMax())
+                                box.setZMax(k);
+                        }
+                    }
+                }
+            }
+        }
+		catch (Exception e){ e.printStackTrace(); }
+
+
+    }
 
 	/**
 	 * Detection of the of the bounding box for each object of the image.
@@ -188,7 +252,7 @@ public class AutoCrop {
 			for(Map.Entry<Double , Integer> entry : parcour.entrySet()) {
 				Double cle = entry.getKey();
 				Integer valeur = entry.getValue();
-				//System.out.println(cle+"   "+valeur+"\n");
+				System.out.println(cle+"   "+valeur+"\n");
 
 			}
 
@@ -427,4 +491,8 @@ public class AutoCrop {
     public String getImageCropInfo(){
 		return this.m_imageFilePath+"\t"+getNbOfNuc()+"\n";
 	}
+
+	public void getNumberOfBox(){
+        System.out.println("Number of box :"+this.m_boxes.size());
+    }
 }

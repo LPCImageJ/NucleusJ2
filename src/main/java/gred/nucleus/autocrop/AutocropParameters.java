@@ -19,11 +19,11 @@ public class AutocropParameters extends PluginParameters {
     /**
      * Minimal object volume to crop
      */
-    int m_minVolumeNucleus;
+    int m_minVolumeNucleus=1;
     /**
      * Maximal object volume to crop
      */
-    int m_maxVolumeNucleus;
+    int m_maxVolumeNucleus=2147483647;
 
     /**
      * Minimal default OTSU threshold
@@ -122,6 +122,8 @@ public class AutocropParameters extends PluginParameters {
     public int getChannelToComputeThreshold(){
         return this.m_channelToComputeThreshold;
     }
+    public int getM_minVolumeNucleus(){return this.m_minVolumeNucleus;}
+    public int getM_maxVolumeNucleus(){return  this.m_maxVolumeNucleus;}
 
 
 }

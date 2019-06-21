@@ -55,7 +55,6 @@ public class AutoCropCalling {
         dirOutput.CheckAndCreateDir();
         this._output=dirOutput.get_dirPath();
         this.m_outputCropGeneralInfo=autocropParameters.getAnalyseParameters()+getColnameResult();
-
     }
 
     /**
@@ -77,11 +76,16 @@ public class AutoCropCalling {
                 String fileImg = currentFile.toString();
                 FilesNames outPutFilesNames = new FilesNames(fileImg);
                 this._prefix = outPutFilesNames.PrefixeNameFile();
-
+                System.out.println("le prefix "+this._prefix);
                 AutoCrop autoCrop = new AutoCrop(currentFile, this._prefix,this.m_autocropParameters);
 
                 autoCrop.thresholdKernels();
-                autoCrop.cropKernels(autoCrop.computeBoxes(1));
+                autoCrop.computeConnectcomponent();
+                autoCrop.componentBorderFilter();
+                autoCrop.computeBoxes2();
+                autoCrop.componentSizeFilter();
+
+                //autoCrop.cropKernels(autoCrop.computeBoxes(1));
                 autoCrop.writeAnalyseInfo();
                 annotAutoCrop test = new annotAutoCrop(autoCrop.getFileCoordinates(), currentFile);
                 test.run();
