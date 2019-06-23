@@ -155,6 +155,8 @@ public class AutoCrop {
 
 	public void computeConnectcomponent(){
 		this.m_imageSeg_labelled = BinaryImages.componentsLabeling(this.m_imageSeg, 26, 32);
+
+       /**
         Histogram histogram = new Histogram ();
         histogram.run(this.m_imageSeg_labelled);
         histogram.getHistogram();
@@ -165,46 +167,69 @@ public class AutoCrop {
             Box initializeBox =new Box(Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE);
             this.m_boxes.put(cle,initializeBox);
         }
+        */
 
 	}
 
 	public void componentSizeFilter(){
-        this.m_imageSeg_labelled = BinaryImages.componentsLabeling(this.m_imageSeg, 26, 32);
         Histogram histogram = new Histogram ();
-        histogram.run(m_imageSeg);
+        histogram.run(this.m_imageSeg_labelled);
         histogram.getHistogram();
         HashMap<Double , Integer> parcour =histogram.getHistogram();
 
         for(Map.Entry<Double , Integer> entry : parcour.entrySet()) {
             Double cle = entry.getKey();
             Integer valeur = entry.getValue();
-            if((valeur*this.m_autocropParameters.getVoxelVolume()<this.m_autocropParameters.getM_minVolumeNucleus()) ||
-                    (valeur*this.m_autocropParameters.getVoxelVolume()>this.m_autocropParameters.getM_maxVolumeNucleus())){
+            if((valeur*getVoxelVolume()<this.m_autocropParameters.getM_minVolumeNucleus()) ||
+                    (valeur*getVoxelVolume()>this.m_autocropParameters.getM_maxVolumeNucleus())){
                 this.m_boxes.remove(cle);
+				System.out.println(valeur*getVoxelVolume() + " euuue "+this.m_autocropParameters.getM_minVolumeNucleus() + " "+ cle);
 
             }
 
+
         }
-        getNumberOfBox();
+		System.out.println("Test apres size"+this.m_boxes.size());
+
+		getNumberOfBox();
 
     }
 	public void componentBorderFilter(){
-		ImagePlus Avoir =this.m_imageSeg_labelled;
-        LabelImages.removeBorderLabels(Avoir);
+
+		LabelImages.removeBorderLabels(this.m_imageSeg_labelled);
+		Histogram histogram = new Histogram ();
+		histogram.run(this.m_imageSeg_labelled);
+		histogram.getHistogram();
+		HashMap<Double , Integer> parcour =histogram.getHistogram();
+		for(Map.Entry<Double , Integer> entry : parcour.entrySet()) {
+			Double cle = entry.getKey();
+			Integer valeur = entry.getValue();
+			Box initializeBox =new Box(Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE);
+			this.m_boxes.put(cle,initializeBox);
+		}
+		System.out.println("Test avant border"+this.m_boxes.size());
+
+
+
 	}
     public void computeBoxes2() {
 		Directory dirOutput= new Directory(this.m_outputDirPath+File.separator+this.m_outputFilesPrefix);
 		dirOutput.CheckAndCreateDir();
+
         try {
             ImageStack imageStackInput = this.m_imageSeg_labelled.getStack();
+			System.out.println("limage "+ this.m_imageSeg_labelled.getStack().getSize() + " et eu "+imageStackInput.getVoxel(484, 268, 43));
             Box box;
             for (short k = 0; k < this.m_imageSeg_labelled.getNSlices(); ++k) {
                 for (short i = 0; i < this.m_imageSeg_labelled.getWidth(); ++i) {
                     for (short j = 0; j < this.m_imageSeg_labelled.getHeight(); ++j) {
                         // if label different of the background
+
                         if (imageStackInput.getVoxel(i, j, k) > 0) {
                             box = this.m_boxes.get(imageStackInput.getVoxel(i, j, k));
-                            if (i < box.getXMin())
+							System.out.println(i+" " +j+" " +k+ " "+ box.getXMin());
+
+							if (i < box.getXMin())
                                 box.setXMin(i);
                             else if (i > box.getXMax())
                                 box.setXMax(i);
@@ -223,6 +248,15 @@ public class AutoCrop {
             }
         }
 		catch (Exception e){ e.printStackTrace(); }
+		for(Map.Entry<Double , Box> entry : this.m_boxes.entrySet()) {
+			Double cle = entry.getKey();
+			Box valeur = entry.getValue();
+			//System.out.println(cle);
+			//System.out.println(valeur.getXMax() +" "+valeur.getXMin()+" "+valeur.getYMin()+" "+valeur.getYMax());
+
+
+
+		}
 
 
     }
@@ -315,6 +349,9 @@ public class AutoCrop {
 	public void cropKernels(ArrayList <Box> boxes)throws IOException, FormatException, Exception {
 		Directory dirOutput= new Directory(this.m_outputDirPath+File.separator+this.m_outputFilesPrefix);
 		dirOutput.CheckAndCreateDir();
+
+
+
 		for (int y =0 ;y<=this.m_channelNumbers;y++) {
 
 			for (short i = 0; i < boxes.size(); ++i) {
@@ -365,7 +402,62 @@ public class AutoCrop {
 			}
 		}
 	}
+	public void cropKernels2()throws IOException, FormatException, Exception {
+		Directory dirOutput= new Directory(this.m_outputDirPath+File.separator+this.m_outputFilesPrefix);
+		dirOutput.CheckAndCreateDir();
 
+		for (int y =0 ;y<=this.m_channelNumbers;y++) {
+			int i=0;
+			for(Map.Entry<Double , Box> entry : this.m_boxes.entrySet()) {
+				Box box =  entry.getValue();
+				int xmin = box.getXMin() - this.m_autocropParameters.getxCropBoxSize();
+				int ymin = box.getYMin() - this.m_autocropParameters.getxCropBoxSize();
+				int zmin = box.getZMin() - this.m_autocropParameters.getzCropBoxSize();
+				String coord = box.getXMin() + "_" + box.getYMin() + "_" + box.getZMin();
+				this.m_boxCoordinates.add(this.m_outputDirPath + File.separator + this.m_outputFilesPrefix + "_" + coord + i + "\t" + box.getXMin() + "\t" + box.getXMax() + "\t" + box.getYMin() + "\t" + box.getYMax() + "\t" + box.getZMin() + "\t" + box.getZMax());
+				if (xmin <= 0)
+					xmin = 1;
+				if (ymin <= 0)
+					ymin = 1;
+				if (zmin <= 0)
+					zmin = 1;
+
+				int width = box.getXMax() + (2*this.m_autocropParameters.getxCropBoxSize()) - box.getXMin();
+				int height = box.getYMax() + (2*this.m_autocropParameters.getxCropBoxSize()) - box.getYMin();
+				int depth = box.getZMax() + (2*this.m_autocropParameters.getzCropBoxSize()) - box.getZMin();
+				if (width + xmin >= this.m_imageSeg.getWidth())
+					width -= (width + xmin) - this.m_imageSeg.getWidth();
+
+				if (height + ymin >= this.m_imageSeg.getHeight())
+					height -= (height + ymin) - this.m_imageSeg.getHeight();
+
+				if (depth + zmin >= this.m_imageSeg.getNSlices())
+					depth -= (depth + zmin) - this.m_imageSeg.getNSlices();
+
+				System.out.println("La clef "+entry.getKey());
+				ImagePlus imgResu = cropImage(xmin, ymin, zmin, width, height, depth,y);
+
+				Calibration cal = this.m_rawImg.getCalibration();
+				imgResu.setCalibration(cal);
+				OutputTiff fileOutput = new OutputTiff(this.m_outputDirPath + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i +"_C"+y+".tif");
+				this.m_infoImageAnalyse=this.m_infoImageAnalyse+m_outputDirPath + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i +"_C"+y+".tif\t"
+						+y+"\t"
+						+i+"\t"
+						+xmin+"\t"
+						+ymin+"\t"
+						+zmin+"\t"
+						+width+"\t"
+						+height+"\t"
+						+depth+"\n";
+
+				fileOutput.SaveImage(imgResu);
+
+
+				this.m_outputFile.add(this.m_outputDirPath + File.separator + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i + ".tif");
+				i++;
+			}
+		}
+	}
 	/**
 	 * Getter for the m_outoutFiel ArrayList
 	 * @return m_outputFile: ArrayList of String for the path of the output files created.
@@ -444,6 +536,7 @@ public class AutoCrop {
 		options.setCrop(true);
 		ImagePlus[] imps = BF.openImagePlus(options);
 		ImagePlus sort = new ImagePlus();
+		System.out.println(xmin+" "+ ymin+" "+ zmin+" "+ width+" "+ height+" "+ depth+" "+ channelNumber);
         sort.setStack(imps[channelNumber].getStack().crop(xmin, ymin ,zmin,width, height,depth));
 		return sort;
 
@@ -495,4 +588,16 @@ public class AutoCrop {
 	public void getNumberOfBox(){
         System.out.println("Number of box :"+this.m_boxes.size());
     }
+    public double getVoxelVolume(){
+		double calibration=0;
+    	if(this.m_autocropParameters.m_manualParameter==false){
+    		calibration=m_autocropParameters.getVoxelVolume();
+		}
+		else{
+			Calibration cal = this.m_rawImg.getCalibration();
+			calibration= cal.pixelDepth*cal.pixelWidth*cal.pixelHeight;
+		}
+
+    	return calibration ;
+	}
 }
