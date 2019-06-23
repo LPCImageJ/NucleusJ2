@@ -67,8 +67,8 @@ public class TestAutoCrop {
 		String imagetestmulti = "/home/tridubos/Bureau/TEST_AUTOCROP/RAW_TEST/Raw_Multi/Z_Col_cot15&19&23__w11 DAPI SIM_s5.TIF";
 
 
-		String imagetestmulti2 = "/home/tridubos/Bureau/TEST_AUTOCROP/Test_Version";
-		String outputTristan = "/home/tridubos/Bureau/TEST_AUTOCROP/out_test_Version";
+		String imagetestmulti2 = "/home/titus/Bureau/data/ChampLarge";
+		String outputTristan = "/home/titus/Bureau/test_autocrop";
 		testStupid(imagetestmulti2, outputTristan);
 
 
