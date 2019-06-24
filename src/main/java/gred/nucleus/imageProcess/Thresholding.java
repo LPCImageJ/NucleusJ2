@@ -2,10 +2,7 @@ package gred.nucleus.imageProcess;
 
 import ij.ImagePlus;
 import ij.plugin.ContrastEnhancer;
-import ij.process.AutoThresholder;
-import ij.process.ImageStatistics;
-import ij.process.StackConverter;
-import ij.process.StackStatistics;
+import ij.process.*;
 
 public class Thresholding {
 
@@ -26,14 +23,25 @@ public class Thresholding {
         return autoThresholder.getThreshold(AutoThresholder.Method.Otsu,tHisto);
     }
 
+    /**
+     * TODO COMMENTAIRE !!!! 2D 3D
+     * @param imagePlusInput
+     * @return
+     */
     public ImagePlus contrastAnd8bits(ImagePlus imagePlusInput){
         ContrastEnhancer enh = new ContrastEnhancer();
         enh.setNormalize(true);
         enh.setUseStackHistogram(true);
         enh.setProcessStack(true);
         enh.stretchHistogram(imagePlusInput.getProcessor(), 0.05);
-        StackConverter stackConverter = new StackConverter(imagePlusInput );
-        stackConverter.convertToGray8();
+        if(imagePlusInput.getNSlices()>1) { // 3D
+            StackConverter stackConverter = new StackConverter(imagePlusInput);
+            stackConverter.convertToGray8();
+        }
+        else{ // 2D
+            ImageConverter imageConverter = new ImageConverter(imagePlusInput);
+            imageConverter.convertToGray8();
+        }
         return imagePlusInput;
 
     }

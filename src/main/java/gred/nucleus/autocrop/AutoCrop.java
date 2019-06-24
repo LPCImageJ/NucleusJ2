@@ -279,8 +279,13 @@ public class AutoCrop {
 
 				if (depth + zmin >= this.m_imageSeg.getNSlices())
 					depth -= (depth + zmin) - this.m_imageSeg.getNSlices();
-
-				ImagePlus imgResu = cropImage(xmin, ymin, zmin, width, height, depth,y);
+				ImagePlus imgResu;
+				if(this.m_rawImg.getNSlices()>1) {
+					imgResu = cropImage(xmin, ymin, zmin, width, height, depth, y);
+				}
+				else{
+					imgResu = cropImage2D(xmin, ymin, width, height,  y);
+				}
 
 				Calibration cal = this.m_rawImg.getCalibration();
 				imgResu.setCalibration(cal);
@@ -294,9 +299,13 @@ public class AutoCrop {
 						+width+"\t"
 						+height+"\t"
 						+depth+"\n";
+				if(this.m_rawImg.getNSlices()>1) {
 
-				fileOutput.SaveImage(imgResu);
+					fileOutput.SaveImage(imgResu);
+				}
+				else{
 
+				}
 
 				this.m_outputFile.add(this.m_outputDirPath + File.separator + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i + ".tif");
 				i++;
@@ -385,6 +394,20 @@ public class AutoCrop {
 		return sort;
 
 	}
+
+	public ImagePlus cropImage2D(int xmin, int ymin,  int width, int height, int channelNumber)throws IOException, FormatException,Exception {
+		ImporterOptions options = new ImporterOptions();
+		options.setId(this.m_imageFilePath);
+		options.setAutoscale(true);
+		options.setCrop(true);
+		ImagePlus[] imps = BF.openImagePlus(options);
+		ImagePlus sort = imps[channelNumber];
+		sort.setRoi(xmin, ymin ,width, height);
+		sort.crop();
+		return sort;
+
+	}
+
 
 	/**
 	 *Getter of the number of nuclei contained in the input image

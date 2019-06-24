@@ -17,8 +17,14 @@ public class OutputTiff extends FilesNames {
     public void SaveImage(ImagePlus imageToSave) {
         try {
             if (!is_fileExist()) {
-                FileSaver fileSaver = new FileSaver(imageToSave);
-                fileSaver.saveAsTiffStack(this._fullPathFile);
+                if(imageToSave.getNSlices()>1) {
+                    FileSaver fileSaver = new FileSaver(imageToSave);
+                    fileSaver.saveAsTiffStack(this._fullPathFile);
+                }
+                else{
+                    FileSaver fileSaver = new FileSaver(imageToSave);
+                    fileSaver.saveAsTiff(this._fullPathFile);
+                }
             }
             else{
                 throw new fileInOut(imageToSave.getTitle());
