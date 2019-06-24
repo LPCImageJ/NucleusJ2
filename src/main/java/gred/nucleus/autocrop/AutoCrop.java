@@ -58,10 +58,15 @@ public class AutoCrop {
 	private String m_infoImageAnalyse = "";
     /** Parameters crop analyse */
     private AutocropParameters m_autocropParameters;
-    /** OTSU threshold */
+    /** OTSU threshold  used to compute segmented image*/
     private int OTSUthreshold;
+    /** Slice start to compute OTSU */
+	private String sliceUsedForOTSU;
+
+
     /**List of boxes  to crop link to label value */
     private HashMap <Double,Box> m_boxes = new HashMap <Double,Box>();
+
 
 
     /** TODO GESTION OF log4J WARN !!!!! (BF.openImagePlus)
@@ -81,7 +86,7 @@ public class AutoCrop {
         setChannelNumbers();
         this.m_imageSeg= thresholding.contrastAnd8bits(getImageChannel(this.m_autocropParameters.getChannelToComputeThreshold()));
         m_infoImageAnalyse=this.m_autocropParameters.getAnalyseParameters();
-        this.m_infoImageAnalyse=autocropParametersAnalyse.getAnalyseParameters()+getSpecificImageInfo()+getColoneName();
+        this.m_infoImageAnalyse=autocropParametersAnalyse.getAnalyseParameters();
 
     }
 
@@ -130,21 +135,31 @@ public class AutoCrop {
 	 * 	//TODO AJOUTER INFO DU THRESHLOD DANS LE OUTPUT VOIR PCA
 	 */
 	public void thresholdKernels(){
+		this.sliceUsedForOTSU="default";
 		GaussianBlur3D.blur(this.m_imageSeg, 0.5,0.5,1);
 		Thresholding thresholding = new Thresholding();
-		int thresh	=thresholding.computeOtsuThreshold(this.m_imageSeg);
-		if(thresh <20) {
-			ImagePlus imp2 = new Duplicator().run(this.m_imageSeg, this.m_autocropParameters.getThresholdOTSUcomputing()/2, this.m_imageSeg.getStackSize());
-			int thresh2 = thresholding.computeOtsuThreshold(imp2);
-			if (thresh2<20)
-				thresh=20;
-			else
-				thresh=thresh2;
-		}
-        this.OTSUthreshold=thresh;
-		this.m_imageSeg = this.generateSegmentedImage(this.m_imageSeg, thresh);
+			int thresh = thresholding.computeOtsuThreshold(this.m_imageSeg);
+			if (thresh < 20) {
+				ImagePlus imp2;
+				if(m_autocropParameters.getSlicesOTSUcomputing()==0) {
+					this.sliceUsedForOTSU="Start:"+this.m_imageSeg.getStackSize() / 2+"-"+this.m_imageSeg.getStackSize();
 
-	}
+					imp2 = new Duplicator().run(this.m_imageSeg, this.m_imageSeg.getStackSize() / 2, this.m_imageSeg.getStackSize());
+				}
+				else {
+					this.sliceUsedForOTSU="Start:"+this.m_autocropParameters.getSlicesOTSUcomputing()+"-"+this.m_imageSeg.getStackSize();
+					imp2 = new Duplicator().run(this.m_imageSeg, this.m_autocropParameters.getSlicesOTSUcomputing(), this.m_imageSeg.getStackSize());
+				}
+				int thresh2 = thresholding.computeOtsuThreshold(imp2);
+				if (thresh2 < 20)
+					thresh = 20;
+				else
+					thresh = thresh2;
+			}
+
+			this.OTSUthreshold = thresh;
+			this.m_imageSeg = this.generateSegmentedImage(this.m_imageSeg, thresh);
+		}
 
 	/**
  	* MorpholibJ Method computing connect component from OTSU segmented image
@@ -236,7 +251,7 @@ public class AutoCrop {
 	public void cropKernels2()throws IOException, FormatException, Exception {
 		Directory dirOutput= new Directory(this.m_outputDirPath+File.separator+this.m_outputFilesPrefix);
 		dirOutput.CheckAndCreateDir();
-
+		this.m_infoImageAnalyse += getSpecificImageInfo() + getColoneName();
 		for (int y =0 ;y<=this.m_channelNumbers;y++) {
 			int i=0;
 			for(Map.Entry<Double , Box> entry : this.m_boxes.entrySet()) {
@@ -388,9 +403,11 @@ public class AutoCrop {
         Calibration cal = this.m_rawImg.getCalibration();
         return "#Calibration image: x:"+ cal.pixelDepth+"-y:"+cal.pixelWidth+"-z:"+cal.pixelHeight+"\n"
                 +"#Image: "+this.m_imageFilePath+"\n"
-                +"#OTSU threshold: "+this.OTSUthreshold+"\n";
+                +"#OTSU threshold: "+this.OTSUthreshold+"\n"
+				+"#Slice used for OTSU threshol: "+this.sliceUsedForOTSU+"\n";
 
-    }
+
+	}
 
     /**
      *
