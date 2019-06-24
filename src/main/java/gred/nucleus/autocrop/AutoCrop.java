@@ -280,6 +280,7 @@ public class AutoCrop {
 				if (depth + zmin >= this.m_imageSeg.getNSlices())
 					depth -= (depth + zmin) - this.m_imageSeg.getNSlices();
 				ImagePlus imgResu;
+
 				if(this.m_rawImg.getNSlices()>1) {
 					imgResu = cropImage(xmin, ymin, zmin, width, height, depth, y);
 				}
@@ -299,13 +300,10 @@ public class AutoCrop {
 						+width+"\t"
 						+height+"\t"
 						+depth+"\n";
-				if(this.m_rawImg.getNSlices()>1) {
 
 					fileOutput.SaveImage(imgResu);
-				}
-				else{
 
-				}
+				
 
 				this.m_outputFile.add(this.m_outputDirPath + File.separator + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i + ".tif");
 				i++;
