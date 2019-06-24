@@ -3,7 +3,6 @@ package gred.nucleus.autocrop;
 import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.FilesInputOutput.OutputTexteFile;
 import gred.nucleus.FilesInputOutput.OutputTiff;
-import gred.nucleus.connectedComponent.ConnectedComponent;
 import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.imageProcess.Thresholding;
 import gred.nucleus.utils.Histogram;
@@ -31,8 +30,6 @@ import java.util.Map;
 import inra.ijpb.binary.BinaryImages;
 import inra.ijpb.label.LabelImages;
 
-import static inra.ijpb.label.LabelImages.removeBorderLabels;
-
 
 public class AutoCrop {
 
@@ -55,8 +52,6 @@ public class AutoCrop {
 	private ArrayList<String> m_outputFile =  new ArrayList <String>();
 	/** List of boxes coordinates */
 	private ArrayList <String> m_boxCoordinates = new ArrayList<String>();
-	/** Number of nuclei cropped */
-	private int m_nbOfNuc = 0;
 	/** Number of channels in current image */
 	private int m_channelNumbers=0;
 	/** Get current info inmage analyse */
@@ -89,8 +84,6 @@ public class AutoCrop {
         this.m_infoImageAnalyse=autocropParametersAnalyse.getAnalyseParameters()+getSpecificImageInfo()+getColoneName();
 
     }
-
-
 
 	/**
 	 * Method to get specific channel
@@ -153,23 +146,19 @@ public class AutoCrop {
 
 	}
 
+	/**
+ 	* MorpholibJ Method computing connect component from OTSU segmented image
+	*/
 	public void computeConnectcomponent(){
 		this.m_imageSeg_labelled = BinaryImages.componentsLabeling(this.m_imageSeg, 26, 32);
-
-       /**
-        Histogram histogram = new Histogram ();
-        histogram.run(this.m_imageSeg_labelled);
-        histogram.getHistogram();
-        HashMap<Double , Integer> parcour =histogram.getHistogram();
-        for(Map.Entry<Double , Integer> entry : parcour.entrySet()) {
-            Double cle = entry.getKey();
-            Integer valeur = entry.getValue();
-            Box initializeBox =new Box(Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE);
-            this.m_boxes.put(cle,initializeBox);
-        }
-        */
-
 	}
+
+	/**
+	 * Initialize hashMap m_boxes containing component connect pixel value
+	 * associate to number of voxels composing it.
+	 * Filter connect component based on volume minimum (default 1 )
+	 * and volume maximum (default 2147483647 )
+	 */
 
 	public void componentSizeFilter(){
         Histogram histogram = new Histogram ();
@@ -180,55 +169,42 @@ public class AutoCrop {
         for(Map.Entry<Double , Integer> entry : parcour.entrySet()) {
             Double cle = entry.getKey();
             Integer valeur = entry.getValue();
-            if((valeur*getVoxelVolume()<this.m_autocropParameters.getM_minVolumeNucleus()) ||
-                    (valeur*getVoxelVolume()>this.m_autocropParameters.getM_maxVolumeNucleus())){
-                this.m_boxes.remove(cle);
-				System.out.println(valeur*getVoxelVolume() + " euuue "+this.m_autocropParameters.getM_minVolumeNucleus() + " "+ cle);
-
-            }
-
-
+            if(!((valeur*getVoxelVolume()<this.m_autocropParameters.getM_minVolumeNucleus()) ||
+                    (valeur*getVoxelVolume()>this.m_autocropParameters.getM_maxVolumeNucleus()))){
+				Box initializeBox =new Box(Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE);
+				this.m_boxes.put(cle,initializeBox);
+			}
         }
-		System.out.println("Test apres size"+this.m_boxes.size());
-
-		getNumberOfBox();
-
     }
+	/**
+	 * MorpholibJ Method filtering border connect component
+	 */
 	public void componentBorderFilter(){
-
 		LabelImages.removeBorderLabels(this.m_imageSeg_labelled);
-		Histogram histogram = new Histogram ();
-		histogram.run(this.m_imageSeg_labelled);
-		histogram.getHistogram();
-		HashMap<Double , Integer> parcour =histogram.getHistogram();
-		for(Map.Entry<Double , Integer> entry : parcour.entrySet()) {
-			Double cle = entry.getKey();
-			Integer valeur = entry.getValue();
-			Box initializeBox =new Box(Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE);
-			this.m_boxes.put(cle,initializeBox);
-		}
-		System.out.println("Test avant border"+this.m_boxes.size());
-
-
-
 	}
+	/**
+	 * Detection of the of the bounding box for each object of the image.
+	 * A Connected component detection is do on the  m_imageThresholding and all the object on the border and inferior a at the threshold volume
+	 * are removed. The coordinates allow the implementation of the box objects which define the bounding box, and these objects are stocked in a
+	 * ArrayList.
+	 * In order to use with a grey-level image, use either @see # thresholdKernels() or
+	 * your own binarisation method.
+	 */
     public void computeBoxes2() {
 		Directory dirOutput= new Directory(this.m_outputDirPath+File.separator+this.m_outputFilesPrefix);
 		dirOutput.CheckAndCreateDir();
 
         try {
             ImageStack imageStackInput = this.m_imageSeg_labelled.getStack();
-			System.out.println("limage "+ this.m_imageSeg_labelled.getStack().getSize() + " et eu "+imageStackInput.getVoxel(484, 268, 43));
             Box box;
             for (short k = 0; k < this.m_imageSeg_labelled.getNSlices(); ++k) {
                 for (short i = 0; i < this.m_imageSeg_labelled.getWidth(); ++i) {
                     for (short j = 0; j < this.m_imageSeg_labelled.getHeight(); ++j) {
                         // if label different of the background
 
-                        if (imageStackInput.getVoxel(i, j, k) > 0) {
+                        if ((imageStackInput.getVoxel(i, j, k) > 0) &&
+								(this.m_boxes.containsKey(imageStackInput.getVoxel(i, j, k)))) {
                             box = this.m_boxes.get(imageStackInput.getVoxel(i, j, k));
-							System.out.println(i+" " +j+" " +k+ " "+ box.getXMin());
-
 							if (i < box.getXMin())
                                 box.setXMin(i);
                             else if (i > box.getXMax())
@@ -248,160 +224,15 @@ public class AutoCrop {
             }
         }
 		catch (Exception e){ e.printStackTrace(); }
-		for(Map.Entry<Double , Box> entry : this.m_boxes.entrySet()) {
-			Double cle = entry.getKey();
-			Box valeur = entry.getValue();
-			//System.out.println(cle);
-			//System.out.println(valeur.getXMax() +" "+valeur.getXMin()+" "+valeur.getYMin()+" "+valeur.getYMax());
-
-
-
-		}
-
-
-    }
-
-	/**
-	 * Detection of the of the bounding box for each object of the image.
-	 * A Connected component detection is do on the  m_imageThresholding and all the object on the border and inferior a at the threshold volume
-	 * are removed. The coordinates allow the implementation of the box objects which define the bounding box, and these objects are stocked in a
-	 * ArrayList.
-	 * @pre the input image must be a binary image with values 255 and 0 only.
-	 * In order to use with a grey-level image, use either @see # thresholdKernels() or
-	 * your own binarisation method.
-	 * @param thresholdVolumeVoxel: threshold volume of the objects detected by the connected component
-	 * @return the ArrayList of the bounding boxes.
-	 */
-	public ArrayList <Box> computeBoxes(double thresholdVolumeVoxel) {
-		ConnectedComponent connectedComponent;
-		ArrayList <Box> boxes =  new ArrayList <Box>();
-		try {
-			connectedComponent = ConnectedComponent.getLabelledConnectedComponent(m_imageSeg, 255, true, thresholdVolumeVoxel, true);
-			ImagePlus imagePlusLabels = BinaryImages.componentsLabeling(m_imageSeg, 26, 32);
-
-			Histogram histogram = new Histogram ();
-			histogram.run(m_imageSeg);
-			histogram.getHistogram();
-			HashMap<Double , Integer> parcour =histogram.getHistogram();
-			for(Map.Entry<Double , Integer> entry : parcour.entrySet()) {
-				Double cle = entry.getKey();
-				Integer valeur = entry.getValue();
-				System.out.println(cle+"   "+valeur+"\n");
-
-			}
-
-
-
-			int[] test=new int [10];
-			LabelImages.replaceLabels(m_imageSeg,test,12);
-
-
-			Box box = null;
-			//ArrayList initialisation
-			this.m_nbOfNuc = connectedComponent.getNumberOfComponents();
-			System.out.println("la taille des boxes " +boxes.size());
-
-			for(short i = 0; i< connectedComponent.getNumberOfComponents();++i) {
-				boxes.add(new Box(Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE));
-				System.out.println("La box " +i+"\n"
-						+Short.MAX_VALUE+" "+ Short.MIN_VALUE+" "+Short.MAX_VALUE+" "+Short.MIN_VALUE+" "+Short.MAX_VALUE+" "+Short.MIN_VALUE+"\n"
-				);
-			}
-
-			// Check the predicate
-			for (short k = 0; k < this.m_imageSeg.getNSlices(); ++k) {
-				for (short i = 0; i < this.m_imageSeg.getWidth(); ++i) {
-					for (short j = 0; j < this.m_imageSeg.getHeight(); ++j) {
-						// if label different of the background
-						if (connectedComponent.getLabel(i, j, k) > 0) {
-							System.out.println("la taille des boxes "+ connectedComponent.getLabel(i, j, k));
-							box = boxes.get(connectedComponent.getLabel(i, j, k)-1);
-							if (i < box.getXMin())
-								box.setXMin(i);
-							else if (i > box.getXMax())
-								box.setXMax(i);
-							if (j < box.getYMin())
-								box.setYMin(j);
-							else if(j > box.getYMax())
-								box.setYMax(j);
-
-							if (k < box.getZMin())
-								box.setZMin(k);
-							else if (k > box.getZMax())
-								box.setZMax(k);
-						}
-					}
-				}
-			}
-		}
-		catch (Exception e){ e.printStackTrace(); }
-
-		return boxes;
 	}
+
 
 	/**
 	 * Method crops a box of interest, create and save a new small image. This process allow the crop of all the bounding box
 	 * contained in the input ArrayList and the crop is did on the ImageCore put in input in this method (crop method available in the imagej wrapper). Then the image results
 	 * obtained was used to create a new ImageCoreIJ, and the image is saved.
 	 *
-	 * @param boxes: containing object boxes.
 	 */
-	public void cropKernels(ArrayList <Box> boxes)throws IOException, FormatException, Exception {
-		Directory dirOutput= new Directory(this.m_outputDirPath+File.separator+this.m_outputFilesPrefix);
-		dirOutput.CheckAndCreateDir();
-
-
-
-		for (int y =0 ;y<=this.m_channelNumbers;y++) {
-
-			for (short i = 0; i < boxes.size(); ++i) {
-				Box box = boxes.get(i);
-				int xmin = box.getXMin() - this.m_autocropParameters.getxCropBoxSize();
-				int ymin = box.getYMin() - this.m_autocropParameters.getxCropBoxSize();
-				int zmin = box.getZMin() - this.m_autocropParameters.getzCropBoxSize();
-				String coord = box.getXMin() + "_" + box.getYMin() + "_" + box.getZMin();
-				this.m_boxCoordinates.add(this.m_outputDirPath + File.separator + this.m_outputFilesPrefix + "_" + coord + i + "\t" + box.getXMin() + "\t" + box.getXMax() + "\t" + box.getYMin() + "\t" + box.getYMax() + "\t" + box.getZMin() + "\t" + box.getZMax());
-				if (xmin <= 0)
-					xmin = 1;
-				if (ymin <= 0)
-					ymin = 1;
-				if (zmin <= 0)
-					zmin = 1;
-
-				int width = box.getXMax() + (2*this.m_autocropParameters.getxCropBoxSize()) - box.getXMin();
-				int height = box.getYMax() + (2*this.m_autocropParameters.getxCropBoxSize()) - box.getYMin();
-				int depth = box.getZMax() + (2*this.m_autocropParameters.getzCropBoxSize()) - box.getZMin();
-				if (width + xmin >= this.m_imageSeg.getWidth())
-					width -= (width + xmin) - this.m_imageSeg.getWidth();
-
-				if (height + ymin >= this.m_imageSeg.getHeight())
-					height -= (height + ymin) - this.m_imageSeg.getHeight();
-
-				if (depth + zmin >= this.m_imageSeg.getNSlices())
-					depth -= (depth + zmin) - this.m_imageSeg.getNSlices();
-
-				ImagePlus imgResu = cropImage(xmin, ymin, zmin, width, height, depth,y);
-
-				Calibration cal = this.m_rawImg.getCalibration();
-				imgResu.setCalibration(cal);
-				OutputTiff fileOutput = new OutputTiff(this.m_outputDirPath + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i +"_C"+y+".tif");
-                this.m_infoImageAnalyse=this.m_infoImageAnalyse+m_outputDirPath + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i +"_C"+y+".tif\t"
-                +y+"\t"
-                        +i+"\t"
-                        +xmin+"\t"
-                        +ymin+"\t"
-                        +zmin+"\t"
-                        +width+"\t"
-                        +height+"\t"
-                        +depth+"\n";
-
-				fileOutput.SaveImage(imgResu);
-
-
-				this.m_outputFile.add(this.m_outputDirPath + File.separator + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i + ".tif");
-			}
-		}
-	}
 	public void cropKernels2()throws IOException, FormatException, Exception {
 		Directory dirOutput= new Directory(this.m_outputDirPath+File.separator+this.m_outputFilesPrefix);
 		dirOutput.CheckAndCreateDir();
@@ -434,7 +265,6 @@ public class AutoCrop {
 				if (depth + zmin >= this.m_imageSeg.getNSlices())
 					depth -= (depth + zmin) - this.m_imageSeg.getNSlices();
 
-				System.out.println("La clef "+entry.getKey());
 				ImagePlus imgResu = cropImage(xmin, ymin, zmin, width, height, depth,y);
 
 				Calibration cal = this.m_rawImg.getCalibration();
@@ -536,7 +366,6 @@ public class AutoCrop {
 		options.setCrop(true);
 		ImagePlus[] imps = BF.openImagePlus(options);
 		ImagePlus sort = new ImagePlus();
-		System.out.println(xmin+" "+ ymin+" "+ zmin+" "+ width+" "+ height+" "+ depth+" "+ channelNumber);
         sort.setStack(imps[channelNumber].getStack().crop(xmin, ymin ,zmin,width, height,depth));
 		return sort;
 
@@ -548,7 +377,7 @@ public class AutoCrop {
 	 * @return int the nb of nuclei
 	 */
 	public int getNbOfNuc(){
-		return this.m_nbOfNuc;
+		return this.m_boxes.size();
 	}
 
     /**
@@ -581,14 +410,23 @@ public class AutoCrop {
         resultFileOutput.SaveTexteFile(this.m_infoImageAnalyse);
 
     }
-    public String getImageCropInfo(){
+
+	/**
+	 * @return number of object detected
+	 */
+	public String getImageCropInfo(){
 		return this.m_imageFilePath+"\t"+getNbOfNuc()+"\n";
 	}
 
 	public void getNumberOfBox(){
         System.out.println("Number of box :"+this.m_boxes.size());
     }
-    public double getVoxelVolume(){
+
+	/**
+	 * Compute volume voxel of current image analysed
+	 * @return voxel volume
+	 */
+	public double getVoxelVolume(){
 		double calibration=0;
     	if(this.m_autocropParameters.m_manualParameter==false){
     		calibration=m_autocropParameters.getVoxelVolume();
