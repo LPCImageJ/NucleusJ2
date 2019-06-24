@@ -116,19 +116,22 @@ public class AutocropParameters extends PluginParameters {
     public int getM_minVolumeNucleus(){return this.m_minVolumeNucleus;}
     public int getM_maxVolumeNucleus(){return  this.m_maxVolumeNucleus;}
 
+
+    public int getSlicesOTSUcomputing(){
+        return this.m_slicesOTSUcomputing;
+    }
     public String getThresholdOTSUcomputingParameter(){
-        if(this.m_thresholdOTSUcomputing==0){
+        if(this.m_slicesOTSUcomputing==0){
             return "all stack";
         }else {
-            return "" + this.m_thresholdOTSUcomputing;
+            return "" + this.m_slicesOTSUcomputing;
         }
     }
     public String getAnalyseParameters() {
         super.getAnalyseParameters();
         this.m_headerInfo+="#X box size: "+getxCropBoxSize()+"\n"
                 +"#Y box size: "+getyCropBoxSize()+"\n"
-                +"#Z box size: "+getzCropBoxSize()+"\n"
-                +"#Slice used for OTSU threshol: "+getThresholdOTSUcomputingParameter()+"\n";
+                +"#Z box size: "+getzCropBoxSize()+"\n";
         return this.m_headerInfo;
     }
 }
