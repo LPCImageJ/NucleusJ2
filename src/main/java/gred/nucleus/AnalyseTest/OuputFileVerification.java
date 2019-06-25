@@ -135,7 +135,6 @@ public class OuputFileVerification {
      * @param path path of file
      * @return hash md5 of file
      * @throws IOException
-     *  TODO ADD exception handeling
      */
 
     public String md5(String path) throws IOException  {

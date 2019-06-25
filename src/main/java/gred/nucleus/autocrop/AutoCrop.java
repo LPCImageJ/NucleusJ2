@@ -92,7 +92,6 @@ public class AutoCrop {
 
 	/**
 	 * Method to get specific channel
-	 *
 	 * @return image of specific channel
 	 */
 
@@ -106,8 +105,8 @@ public class AutoCrop {
 
 
 	/**
-	 * //TODO to Simplify
-	 * Method to check multichannel
+	 *
+	 * Method to check multichannel and initialising channelNumbers
 	 * @throws Exception
 	 */
 
@@ -118,7 +117,6 @@ public class AutoCrop {
 		this.m_rawImg=currentImage[0];
         if(currentImage.length>1){
 			this.m_channelNumbers=currentImage.length;
-
 		}
 	}
 
@@ -129,10 +127,10 @@ public class AutoCrop {
 	 * (Skipping top slice with lot of noise)
 	 * If OTSU threshold is still under 20 threshold threshold value is 20.
 	 *
-	 * //TODO AJOUTER PARAMETTRAGE DES SLICES
-	 * // TODO MODIFICATION DU THRESHOLD
+	 *
+	 *
 	 * //TODO AJOUTER MESSAGE POUR UTILISATEUR SI THRESHOLD INFERIEUR A 20
-	 * 	//TODO AJOUTER INFO DU THRESHLOD DANS LE OUTPUT VOIR PCA
+	 *
 	 */
 	public void thresholdKernels(){
 		this.sliceUsedForOTSU="default";
@@ -196,6 +194,7 @@ public class AutoCrop {
 	 * MorpholibJ Method filtering border connect component
 	 */
 	public void componentBorderFilter(){
+
 		LabelImages.removeBorderLabels(this.m_imageSeg_labelled);
 	}
 	/**
@@ -241,8 +240,6 @@ public class AutoCrop {
         }
 		catch (Exception e){ e.printStackTrace(); }
 	}
-
-
 
 	/**
 	 * Method crops a box of interest, create and save a new small image. This process allow the crop of all the bounding box
@@ -327,21 +324,6 @@ public class AutoCrop {
 		return m_boxCoordinates;
 	}
 
-	/**
-	 * Compute the initial threshold value
-	 *
-	 * @param imagePlusInput raw image
-	 * @return
-	 *
-	 * //TODO FACTORING THRESHOLD FONCTION
-	 */
-	private int computeOtsuThreshold (ImagePlus imagePlusInput) {
-		AutoThresholder autoThresholder = new AutoThresholder();
-		ImageStatistics imageStatistics = new StackStatistics(imagePlusInput);
-		int [] tHisto = imageStatistics.histogram;
-		return autoThresholder.getThreshold(AutoThresholder.Method.Otsu,tHisto);
-	}
-
 
 
 	/**
@@ -365,9 +347,6 @@ public class AutoCrop {
 		}
 		return imagePlusSegmented;
 	}
-
-
-
 
 	/**
 	 *

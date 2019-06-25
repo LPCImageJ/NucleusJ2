@@ -65,8 +65,7 @@ public class AutocropParameters extends PluginParameters {
         this.m_channelToComputeThreshold=channelToComputeThreshold;
     }
 
-    /**  TODO REMOVE
-     *
+    /**
      * Constructor with box size modification and slice number used to start OTSU threshold calculation
      * to last slice
      * @param inputFolder : path folder containing Images
