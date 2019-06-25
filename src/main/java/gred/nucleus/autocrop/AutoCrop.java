@@ -282,8 +282,6 @@ public class AutoCrop {
 				if (depth + zmin >= this.m_imageSeg.getNSlices())
 					depth -= (depth + zmin) - this.m_imageSeg.getNSlices();
 				ImagePlus imgResu;
-				System.out.println("channel "+y+" eu "+this.m_channelNumbers);
-				System.out.println(xmin+" "+ ymin+" "+zmin+" "+width+" "+height+" "+depth+" "+y);
 				if(this.m_rawImg.getNSlices()>1) {
 					imgResu = cropImage(xmin, ymin, zmin, width, height, depth, y);
 				}
