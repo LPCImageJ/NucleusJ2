@@ -53,7 +53,7 @@ public class AutoCrop {
 	/** List of boxes coordinates */
 	private ArrayList <String> m_boxCoordinates = new ArrayList<String>();
 	/** Number of channels in current image */
-	private int m_channelNumbers=0;
+	private int m_channelNumbers=1;
 	/** Get current info inmage analyse */
 	private String m_infoImageAnalyse = "";
     /** Parameters crop analyse */
@@ -190,6 +190,7 @@ public class AutoCrop {
 				this.m_boxes.put(cle,initializeBox);
 			}
         }
+        getNumberOfBox();
     }
 	/**
 	 * MorpholibJ Method filtering border connect component
@@ -301,7 +302,6 @@ public class AutoCrop {
 						+width+"\t"
 						+height+"\t"
 						+depth+"\n";
-
 					fileOutput.SaveImage(imgResu);
 
 

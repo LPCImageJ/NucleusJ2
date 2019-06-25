@@ -30,7 +30,7 @@ public class TestAutoCrop {
 	static ArrayList <String> m_test;
 	
 	public static void testStupid(String imageSourceFile, String output) throws IOException, FormatException , fileInOut,Exception {
-        AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,40,40,20,0,0);
+        AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,40,40,20,40,40,20,0,20,0,1,1000000000);
         AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
 		autoCrop.run();
 

@@ -120,6 +120,7 @@ public class AutocropParameters extends PluginParameters {
     public int getSlicesOTSUcomputing(){
         return this.m_slicesOTSUcomputing;
     }
+
     public String getThresholdOTSUcomputingParameter(){
         if(this.m_slicesOTSUcomputing==0){
             return "all stack";
