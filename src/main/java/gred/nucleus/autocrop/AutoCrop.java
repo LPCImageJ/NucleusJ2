@@ -242,6 +242,7 @@ public class AutoCrop {
 	}
 
 
+
 	/**
 	 * Method crops a box of interest, create and save a new small image. This process allow the crop of all the bounding box
 	 * contained in the input ArrayList and the crop is did on the ImageCore put in input in this method (crop method available in the imagej wrapper). Then the image results
@@ -252,7 +253,8 @@ public class AutoCrop {
 		Directory dirOutput= new Directory(this.m_outputDirPath+File.separator+this.m_outputFilesPrefix);
 		dirOutput.CheckAndCreateDir();
 		this.m_infoImageAnalyse += getSpecificImageInfo() + getColoneName();
-		for (int y =0 ;y<=this.m_channelNumbers;y++) {
+		for (int y =0 ;y<this.m_channelNumbers;y++) {
+
 			int i=0;
 			for(Map.Entry<Double , Box> entry : this.m_boxes.entrySet()) {
 				Box box =  entry.getValue();
@@ -280,7 +282,8 @@ public class AutoCrop {
 				if (depth + zmin >= this.m_imageSeg.getNSlices())
 					depth -= (depth + zmin) - this.m_imageSeg.getNSlices();
 				ImagePlus imgResu;
-
+				System.out.println("channel "+y+" eu "+this.m_channelNumbers);
+				System.out.println(xmin+" "+ ymin+" "+zmin+" "+width+" "+height+" "+depth+" "+y);
 				if(this.m_rawImg.getNSlices()>1) {
 					imgResu = cropImage(xmin, ymin, zmin, width, height, depth, y);
 				}
@@ -303,7 +306,7 @@ public class AutoCrop {
 
 					fileOutput.SaveImage(imgResu);
 
-				
+
 
 				this.m_outputFile.add(this.m_outputDirPath + File.separator + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i + ".tif");
 				i++;
@@ -370,7 +373,7 @@ public class AutoCrop {
 
 	/**
 	 *
-	 * Crop of the bounding box on the image. The coordinates are inputs of this methods
+	 * Crop of the bounding box on 3D image. The coordinates are inputs of this methods
 	 *
 	 * @param xmin: coordinate x min of the crop
 	 * @param ymin: coordinate y min of the crop
@@ -388,11 +391,23 @@ public class AutoCrop {
 		options.setCrop(true);
 		ImagePlus[] imps = BF.openImagePlus(options);
 		ImagePlus sort = new ImagePlus();
-        sort.setStack(imps[channelNumber].getStack().crop(xmin, ymin ,zmin,width, height,depth));
+		ChannelSplitter channelSplitter = new ChannelSplitter();
+		imps = channelSplitter.split(imps[0]);
+		sort.setStack(imps[channelNumber].getStack().crop(xmin, ymin ,zmin,width, height,depth));
 		return sort;
 
 	}
-
+	/**
+	 *
+	 * Crop of the bounding box on 2D image. The coordinates are inputs of this methods
+	 *
+	 * @param xmin: coordinate x min of the crop
+	 * @param ymin: coordinate y min of the crop
+	 * @param width: coordinate x max of the crop
+	 * @param height: coordinate y max of the crop
+	 * @param channelNumber: channel to crop
+	 * @return : ImageCoreIJ of the cropped image.
+	 */
 	public ImagePlus cropImage2D(int xmin, int ymin,  int width, int height, int channelNumber)throws IOException, FormatException,Exception {
 		ImporterOptions options = new ImporterOptions();
 		options.setId(this.m_imageFilePath);
