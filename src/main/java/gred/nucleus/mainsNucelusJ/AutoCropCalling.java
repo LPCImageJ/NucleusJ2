@@ -83,6 +83,8 @@ public class AutoCropCalling {
                 autoCrop.computeConnectcomponent();
                 autoCrop.componentBorderFilter();
                 autoCrop.componentSizeFilter();
+            //autoCrop.cziLecture();
+
                 autoCrop.computeBoxes2();
                 autoCrop.cropKernels2();
                 //autoCrop.cropKernels(autoCrop.computeBoxes(1));
@@ -90,6 +92,7 @@ public class AutoCropCalling {
                 annotAutoCrop test = new annotAutoCrop(autoCrop.getFileCoordinates(), currentFile);
                 test.run();
                 this.m_outputCropGeneralInfo=this.m_outputCropGeneralInfo+autoCrop.getImageCropInfo();
+
         }
         System.out.println(this._input+"result_Autocrop_Analyse");
         OutputTexteFile resultFileOutput=new OutputTexteFile(directoryInput.getdirPath()+"result_Autocrop_Analyse");
