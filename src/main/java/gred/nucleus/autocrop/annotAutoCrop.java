@@ -46,10 +46,11 @@ public class annotAutoCrop {
     /** the path of the directory where image with boxes is saved  */
     private String m_outputDirPath;
 
-    public annotAutoCrop(ArrayList<String> ListBox, File imageFile) throws IOException, FormatException {
+    public annotAutoCrop(ArrayList<String> ListBox, File imageFile,String outputDirPath) throws IOException, FormatException {
         this.m_currentFile=imageFile;
         this.m_zProjection = BF.openImagePlus(imageFile.getAbsolutePath())[0];
         this.m_boxCoordinates = ListBox;
+        this.m_outputDirPath=outputDirPath;
 
 
     }
@@ -66,7 +67,7 @@ public class annotAutoCrop {
         }
 
         FilesNames outPutFilesNames=new FilesNames(this.m_currentFile.getAbsolutePath());
-        String outFileZbox = outPutFilesNames.get_pathFile()+outPutFilesNames.PrefixeNameFile()+"_Zprojection.tif";
+        String outFileZbox = this.m_outputDirPath+"_Zprojection.tif";
         File outputFile = new File(outFileZbox);
         saveFile(this.m_zProjection,outFileZbox);
 
