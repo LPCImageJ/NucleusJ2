@@ -15,6 +15,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
 import gred.nucleus.FilesInputOutput.Directory;
 
 
@@ -183,9 +184,10 @@ public class SegmentationMethods {
                     if (!file.exists()){
                         file.mkdir();
                     }
-                    IJ.log("test "+this._inputDir+"/BadCrop/"+img.getTitle()+"\n");
                     File fileToMove = new File(fileImg);
-                    fileToMove.renameTo(new File(this._inputDir+"BadCrop/"+img.getTitle()));
+                    fileToMove.renameTo(new File(this._inputDir+fileToMove.separator+"BadCrop"+fileToMove.separator+img.getTitle()));
+                    IJ.log("test "+this._inputDir+fileToMove.separator+"BadCrop"+fileToMove.separator+img.getTitle()+"\n");
+
                     //FileUtils.moveFileToDirectory(fileImg, this._inputDir+"/BadCrop"/, REPLACE_EXISTING);
 
 
