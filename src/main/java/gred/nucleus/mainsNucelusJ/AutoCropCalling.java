@@ -85,7 +85,7 @@ public class AutoCropCalling {
                 autoCrop.computeBoxes2();
                 autoCrop.cropKernels2();
                 autoCrop.writeAnalyseInfo();
-                annotAutoCrop test = new annotAutoCrop(autoCrop.getFileCoordinates(), currentFile,this._output+this._prefix);
+                annotAutoCrop test = new annotAutoCrop(autoCrop.getFileCoordinates(), currentFile, this._output + this._prefix);
                 test.run();
                 this.m_outputCropGeneralInfo=this.m_outputCropGeneralInfo+autoCrop.getImageCropInfo();
 

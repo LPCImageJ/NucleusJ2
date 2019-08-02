@@ -103,22 +103,22 @@ public class TestSegmentationMethods {
         String ExpectedResult = "/home/tridubos/Bureau/TEST_SEG/Results_checked/Z_Col_cot21&17&22__w11 DAPI SIM_s3/";
         String ExpectedResultOutOTSU = "/home/tridubos/Bureau/TEST_SEG/Results_checked/Z_Col_cot21&17&22__w11 DAPI SIM_s3/OTSU/";
 
-        String inputTristan= "/home/tridubos/Bureau/TEST_SEG/Test_analysis/Z_Col_cot21&17&22__w11 DAPI SIM_s3/";
+        String inputTristan= "/media/tridubos/DATA1/SPERMATO/Manipe_1_57_images_input/Segmentation/Analyse_Segmentation/NucleusPB";
         String outputTristanGift = "/home/tridubos/Bureau/TEST_SEG/Test_analysis/Z_Col_cot21&17&22__w11 DAPI SIM_s3/GIFT/";
-        String outputTristanOtsu = "/home/tridubos/Bureau/TEST_SEG/Test_analysis/Z_Col_cot21&17&22__w11 DAPI SIM_s3/OTSU";
-
+        String outputTristanOtsu = "/media/tridubos/DATA1/SPERMATO/Manipe_1_57_images_input/Segmentation/Analyse_Segmentation/Segmented";
+        /*
         OuputFileVerification fw = new OuputFileVerification(ExpectedResult,inputTristan);
         fw.GetFileResultExpeted(ExpectedResult);
         fw.GetFilesOutputFolder(inputTristan);
-
+        */
         testStupidSeveralImages(inputTristan, outputTristanOtsu , (short)1.0, 300000000,true);
 
        // testStupidSeveralImages(ExpectedResult, ExpectedResult, (short)6.0, 300000000,true);
-
+ /*
         fw.GetFilesResultingOfAnalysis(inputTristan);
         fw.CompareAnalysisResult();
 
-        /*
+
         OuputFileVerification fw = new OuputFileVerification();
         fw.GetFileResultExpeted(ExpectedResult);
         fw.GetFilesOutputFolder(outputTristan);

@@ -260,7 +260,9 @@ public class AutoCrop {
 				int ymin = box.getYMin() - this.m_autocropParameters.getxCropBoxSize();
 				int zmin = box.getZMin() - this.m_autocropParameters.getzCropBoxSize();
 				String coord = box.getXMin() + "_" + box.getYMin() + "_" + box.getZMin();
-				this.m_boxCoordinates.add(this.m_outputDirPath + File.separator + this.m_outputFilesPrefix + "_" + coord + i + "\t" + box.getXMin() + "\t" + box.getXMax() + "\t" + box.getYMin() + "\t" + box.getYMax() + "\t" + box.getZMin() + "\t" + box.getZMax());
+				if(y==0) {
+					this.m_boxCoordinates.add(this.m_outputDirPath + File.separator + this.m_outputFilesPrefix + "_" + coord + i + "\t" + box.getXMin() + "\t" + box.getXMax() + "\t" + box.getYMin() + "\t" + box.getYMax() + "\t" + box.getZMin() + "\t" + box.getZMax());
+				}
 				if (xmin <= 0)
 					xmin = 1;
 				if (ymin <= 0)
@@ -321,7 +323,7 @@ public class AutoCrop {
 	 * @return m_boxCoordinates: ArrayList of String which contain the coordinates of the boxes
 	 */
 	public ArrayList <String> getFileCoordinates(){
-		return m_boxCoordinates;
+		return this.m_boxCoordinates;
 	}
 
 

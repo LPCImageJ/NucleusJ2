@@ -30,7 +30,7 @@ public class TestAutoCrop {
 	static ArrayList <String> m_test;
 	
 	public static void testStupid(String imageSourceFile, String output) throws IOException, FormatException , fileInOut,Exception {
-        AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,40,40,20,40,40,20,0,20,0,1,1000000000);
+        AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,40,40,20,40,40,20,0,20,1,1,1000000000);
         AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
 		autoCrop.run();
 
@@ -67,8 +67,9 @@ public class TestAutoCrop {
 		String imagetestmulti = "/home/tridubos/Bureau/TEST_AUTOCROP/RAW_TEST/Raw_Multi/Z_Col_cot15&19&23__w11 DAPI SIM_s5.TIF";
 
 
-		String imagetestmulti2 = "/home/tridubos/Bureau/TEST_AUTOCROP/Test_Version";
-		String outputTristan = "/home/tridubos/Bureau/TEST_AUTOCROP/out_test_Version";
+		String imagetestmulti2 = "/media/tridubos/DATA1/SPERMATO/Manipe_3_30_images/RawData";
+		String outputTristan = "/media/tridubos/DATA1/SPERMATO/Manipe_3_30_images/Autocrop";
+
 		testStupid(imagetestmulti2, outputTristan);
 
 
