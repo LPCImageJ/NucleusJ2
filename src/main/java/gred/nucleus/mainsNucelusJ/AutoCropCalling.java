@@ -1,14 +1,16 @@
 package gred.nucleus.mainsNucelusJ;
 
+import gred.nucleus.FilesInputOutput.Directory;
+import gred.nucleus.FilesInputOutput.FilesNames;
+import gred.nucleus.FilesInputOutput.OutputTexteFile;
 import gred.nucleus.autocrop.AutoCrop;
+import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.autocrop.annotAutoCrop;
-import ij.IJ;
-import ij.ImagePlus;
-import ij.measure.Calibration;
+import gred.nucleus.exceptions.fileInOut;
 import loci.formats.FormatException;
-import loci.plugins.BF;
 import java.io.File;
 import java.io.IOException;
+
 
 
 /**
@@ -23,10 +25,12 @@ public class AutoCropCalling {
     private String _input;
     /** output to save the images cropped*/
     private String _output;
-    /** prefix for the name of the image*/
+    /** image prefix name */
     private String _prefix = "";
-
-
+    /** Get general information of cropping analyse */
+    private String m_outputCropGeneralInfo="#HEADER\n";
+    /** Parameters crop analyse */
+    private AutocropParameters m_autocropParameters;
 
     /**
      * Constructor
@@ -37,11 +41,21 @@ public class AutoCropCalling {
     public AutoCropCalling(String imageSourceFile, String output ) {
         this._input = imageSourceFile;
         this._output = output;
-        File outputFile = new File(this._output);
-        if(!(outputFile .exists()))
-            outputFile.mkdir();
-    }
+        Directory dirOutput =new Directory(this._output);
+        dirOutput.CheckAndCreateDir();
+        this._output=dirOutput.get_dirPath();
 
+
+    }
+    public AutoCropCalling(AutocropParameters autocropParameters ) {
+        this.m_autocropParameters =autocropParameters;
+        this._input = autocropParameters.getInputFolder();
+        this._output = autocropParameters.getOutputFolder();
+        Directory dirOutput =new Directory(this._output);
+        dirOutput.CheckAndCreateDir();
+        this._output=dirOutput.get_dirPath();
+        this.m_outputCropGeneralInfo=autocropParameters.getAnalyseParameters()+getColnameResult();
+    }
 
     /**
      * Run auto crop on the input,
@@ -51,69 +65,39 @@ public class AutoCropCalling {
      * @throws IOException if file problem
      * @throws FormatException Bioformat exception
      */
-    public void run() throws IOException, FormatException {
-        File inputFile = new File(_input);
-        if(inputFile.isFile()){
-            String[] tNameFile =  this._input.split(File.separator);
-            this._prefix = tNameFile[tNameFile.length-1].replaceAll(".tif","");
-            this._prefix = _prefix.replaceAll(".TIF","");
-            ImagePlus[] img = BF.openImagePlus(_input);
-            Calibration cal = img[0].getCalibration();
-            System.out.println(img[0].getTitle()+"\t"+cal.pixelWidth+"\t"+cal.pixelHeight+"\t"+cal.pixelDepth);
-            autocropMethod(img[0]);
+    public void run() throws IOException, FormatException,fileInOut,Exception {
+
+        Directory directoryInput=new Directory(this._input);
+        directoryInput.listFiles(this._input);
+        directoryInput.checkIfEmpty();
+        directoryInput.checkAndActualiseNDFiles();
+        for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
+                File currentFile = directoryInput.getFile(i);
+                String fileImg = currentFile.toString();
+                FilesNames outPutFilesNames = new FilesNames(fileImg);
+                this._prefix = outPutFilesNames.PrefixeNameFile();
+                AutoCrop autoCrop = new AutoCrop(currentFile, this._prefix,this.m_autocropParameters);
+
+                autoCrop.thresholdKernels();
+                autoCrop.computeConnectcomponent();
+                autoCrop.componentBorderFilter();
+                autoCrop.componentSizeFilter();
+                autoCrop.computeBoxes2();
+                autoCrop.cropKernels2();
+                autoCrop.writeAnalyseInfo();
+                annotAutoCrop test = new annotAutoCrop(autoCrop.getFileCoordinates(), currentFile, this._output + this._prefix);
+                test.run();
+                this.m_outputCropGeneralInfo=this.m_outputCropGeneralInfo+autoCrop.getImageCropInfo();
+
         }
-        else{
-            File[] listOfFiles = new File(_input).listFiles();
-            for(int i = 0; i < listOfFiles.length; ++i) {
-                String fileImg = listOfFiles[i].toString();
-                if (fileImg.contains(".tif") || fileImg.contains(".TIF")) {
-                    long maxMemory = Runtime.getRuntime().freeMemory();
-                    /* Maximum amount of memory the JVM will attempt to use */
-                    System.out.println("Image suivante : "+listOfFiles[i].toString()+" la ram en est la : " +
-                            (maxMemory == Long.MAX_VALUE ? "no limit" : maxMemory*1e-9));
-                    String[] tNameFile =  fileImg.split(File.separator);
-                    this._prefix = tNameFile[tNameFile.length-1].replaceAll(".tif","");
-                    this._prefix = _prefix.replaceAll(".TIF","");
-                    ImagePlus[] img = BF.openImagePlus(fileImg);
-                    Calibration cal = img[0].getCalibration();
-                    System.out.println(img[0].getTitle()+"\t"+cal.pixelWidth+"\t"+cal.pixelHeight+"\t"+cal.pixelDepth);
-                    autocropMethod(img[0]);
-                }
-            }
-        }
+        System.out.println(this._input+"result_Autocrop_Analyse");
+        OutputTexteFile resultFileOutput=new OutputTexteFile(this._output+"result_Autocrop_Analyse");
+        resultFileOutput.SaveTexteFile( this.m_outputCropGeneralInfo);
+    }
+
+    public String getColnameResult(){
+        return "Filename\tNumber_of_Crop\n";
+    }
     }
 
 
-    /**
-     *  @throws IOException if file problem
-     *  @throws FormatException Bioformat exception
-     *
-     * private method calling the autoCrop Class,
-     * @param img ImagePlus input to crop
-     */
-    // TODO Clean method
-    private void autocropMethod(ImagePlus img)throws IOException, FormatException{
-        System.out.println("Ici on a le truc"+ img.getTitle()+" "+this._prefix+" "+this._output+" "+this._input);
-        AutoCrop autoCrop = new AutoCrop (img,this._prefix,this._output,this._input);
-        autoCrop.thresholdKernels();
-        autoCrop.cropKernels(autoCrop.computeBoxes(1));
-        autoCrop.getOutputFileArrayList();
-        // annotAutoCrop projectionWithBoxes  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input+img.getTitle());
-        // annotAutoCrop test  = new annotAutoCrop(autoCrop.getFileCoordinates(),this._input+img.getTitle());
-        /*
-        ICI C ETAIT UN AUTOCROP SUR LA Z PROJECTION !!!!
-        AutoCrop autoCropZ = new AutoCrop (img,this._prefix,this._outputZprojection,this._input);
-        autoCropZ.thresholdKernelsZprojection();
-        autoCropZ.cropKernels(autoCropZ.computeBoxes(1));
-        autoCropZ.getOutputFileArrayList();
-        annotAutoCrop projectionWithBoxesZ  = new annotAutoCrop(autoCropZ.getFileCoordinates(),this._input+img.getTitle());
-        annotAutoCrop testZ  = new annotAutoCrop(autoCropZ.getFileCoordinates(),this._input+img.getTitle());
-
-        */
-        System.out.println(_prefix+"\t"+autoCrop.getNbOfNuc()+" nuclei detected");
-
-
-    }
-
-
-}

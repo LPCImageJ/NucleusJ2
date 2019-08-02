@@ -16,6 +16,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import gred.nucleus.FilesInputOutput.Directory;
+
 
 /**
  * This class call the different segmentation methods available to detect the nucleus.
@@ -88,10 +90,9 @@ public class SegmentationMethods {
         this._vMax = vMax;
         this._inputDir = inputDir;
         this._output = outputDir;
-        File file = new File(this._output);
-        if (!file.exists()){
-            file.mkdir();
-        }
+        Directory dirOutput =new Directory(this._output );
+        dirOutput.CheckAndCreateDir();
+        this._output=dirOutput.get_dirPath();
     }
 
     /**
@@ -170,7 +171,6 @@ public class SegmentationMethods {
                 ImagePlus[] imgTab = BF.openImagePlus(fileImg);
                 ImagePlus img = imgTab[0];
                 ImagePlus imgSeg = img;
-                // IJ.log(""+getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() +" image type " +imgSeg.getType()+"\n");
                 if (imgSeg.getType() == ImagePlus.GRAY16)
                     this.preProcessImage(imgSeg);
                 NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(this._vMin, this._vMax);
@@ -184,9 +184,10 @@ public class SegmentationMethods {
                     if (!file.exists()){
                         file.mkdir();
                     }
-                    IJ.log("test "+this._inputDir+"/BadCrop/"+img.getTitle()+"\n");
                     File fileToMove = new File(fileImg);
-                    fileToMove.renameTo(new File(this._inputDir+"BadCrop/"+img.getTitle()));
+                    fileToMove.renameTo(new File(this._inputDir+fileToMove.separator+"BadCrop"+fileToMove.separator+img.getTitle()));
+                    IJ.log("test "+this._inputDir+fileToMove.separator+"BadCrop"+fileToMove.separator+img.getTitle()+"\n");
+
                     //FileUtils.moveFileToDirectory(fileImg, this._inputDir+"/BadCrop"/, REPLACE_EXISTING);
 
 

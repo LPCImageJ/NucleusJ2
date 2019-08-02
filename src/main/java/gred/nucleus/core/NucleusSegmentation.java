@@ -114,7 +114,6 @@ public class NucleusSegmentation {
 		if(_bestThreshold != -1 ) {
 			morphologicalCorrection(imagePlusSegmented);
 		}
-
 		checkBorder(imagePlusSegmented);
 
 		return imagePlusSegmented;

@@ -1,4 +1,6 @@
 package gred.nucleus.test;
+import gred.nucleus.autocrop.AutocropParameters;
+import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.mainsNucelusJ.AutoCropCalling;
 import gred.nucleus.mainsNucelusJ.SegmentationMethods;
 
@@ -15,8 +17,9 @@ public class main {
 
     static ArrayList <String> m_test;
 
-    public static void ruAutoCrop(String imageSourceFile, String output) throws IOException, FormatException {
-        AutoCropCalling autoCrop = new AutoCropCalling(imageSourceFile,output);
+    public static void ruAutoCrop(String imageSourceFile, String output) throws IOException, FormatException ,fileInOut,Exception{
+        AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
+        AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
         autoCrop.run();
     }
     public static void segmentation(String input, String output, short vMin, int vMax, boolean gift ) throws FormatException {
@@ -30,7 +33,7 @@ public class main {
 
 
 
-    public static void main(String[] args) throws IOException, FormatException {
+    public static void main(String[] args) throws IOException, FormatException, fileInOut,Exception {
 
 
       //  Options options = new Options();
@@ -71,3 +74,8 @@ public class main {
 
     }
 }
+
+//IJ.log(""+getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() +" image type " +imgSeg.getType()+"\n");
+
+//long maxMemory = Runtime.getRuntime().maxMemory();
+//System.out.println("Maximum memory (bytes): " +(maxMemory == Long.MAX_VALUE ? "no limit" : maxMemory*1e-9));
