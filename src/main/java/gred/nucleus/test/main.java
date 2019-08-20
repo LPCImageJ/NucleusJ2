@@ -18,10 +18,21 @@ public class main {
     static ArrayList <String> m_test;
 
     public static void ruAutoCrop(String imageSourceFile, String output) throws IOException, FormatException ,fileInOut,Exception{
-        AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
+        //AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
+        AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,40,40,20,40,40,20,0,20,1,1,1000000000);
+
         AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
         autoCrop.run();
     }
+
+    public static void ruAutoCrop(String imageSourceFile, String output, String pathToConfig) throws IOException, FormatException ,fileInOut,Exception{
+        AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,pathToConfig);
+        //AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,40,40,20,40,40,20,1,20,channel,1,1000000000);
+
+        AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
+        autoCrop.run();
+    }
+
     public static void segmentation(String input, String output, short vMin, int vMax, boolean gift ) throws FormatException {
         SegmentationMethods otsuModif = new SegmentationMethods(input, output, vMin, vMax);
         try {
@@ -48,7 +59,15 @@ public class main {
             //String inputOneImageTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/raw/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s9.TIF";
             String inputDirTristan = "/home/tridubos/Bureau/Bille_4Micro_02-2019/AutocropDuSchnaps/";
             String outputTristan = "/home/tridubos/Bureau/Bille_4Micro_02-2019/OutputDuSchnaps/";
-            ruAutoCrop(args[1], args[2]);
+            if(args[3].equals("ConfigFile")){
+                ruAutoCrop(args[1], args[2], args[4]);
+
+            }
+            else{
+                ruAutoCrop(args[1], args[2]);
+
+
+            }
 
         }
         else if(args[0].equals("segmentation")) {
@@ -73,6 +92,8 @@ public class main {
 
 
     }
+
+
 }
 
 //IJ.log(""+getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() +" image type " +imgSeg.getType()+"\n");
