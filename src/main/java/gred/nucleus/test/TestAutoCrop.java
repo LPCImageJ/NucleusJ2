@@ -1,6 +1,8 @@
 package gred.nucleus.test;
 
 import gred.nucleus.AnalyseTest.OuputFileVerification;
+import gred.nucleus.autocrop.AutocropParameters;
+import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.mainsNucelusJ.AutoCropCalling;
 import ij.ImagePlus;
 import ij.io.FileSaver;
@@ -36,10 +38,16 @@ public class TestAutoCrop {
 	static ArrayList <String> m_test;
 	
 	public static void testStupid(String imageSourceFile, String output) throws IOException, FormatException,Exception {
-        AutoCropCalling autoCrop = new AutoCropCalling(imageSourceFile,output);
+		AutoCropCalling autoCrop = new AutoCropCalling(imageSourceFile,output);
         autoCrop.run();
 	}
+	public static void ruAutoCrop(String imageSourceFile, String output, String pathToConfig) throws IOException, FormatException , fileInOut,Exception{
+		AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,pathToConfig);
+		//AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,40,40,20,40,40,20,1,20,channel,1,1000000000);
 
+		//AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
+		//autoCrop.run();
+	}
 
 	/**
 	 * Main function of the package's tests.
@@ -70,7 +78,7 @@ public class TestAutoCrop {
 		//OuputFileVerification fw = new OuputFileVerification();
 		//fw.GetFileResultExpeted(ExpectedResult);
 		//fw.GetFilesOutputFolder(outputTristan);
-		testStupid(inputOneImageTristan, outputTristan);
+		ruAutoCrop(inputOneImageTristan, outputTristan,"/home/tridubos/Bureau/config_file_test");
 
 		//fw.GetFilesResultingOfAnalysis(outputTristan);
 		//fw.CompareAnalysisResult();
