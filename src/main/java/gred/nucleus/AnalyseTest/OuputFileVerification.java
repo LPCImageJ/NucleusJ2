@@ -11,13 +11,18 @@ import java.util.Map;
 import org.apache.commons.codec.digest.DigestUtils;
 
 
+/**
+ *
+ * @author Tristan Dubos
+ */
+
 public class OuputFileVerification {
 
     /** Key of files expected in the result directory */
     Map<String,String> _myMapInitialFilesInputFolder = new HashMap<String,String>();
-    /** Key of files produce by the analysis*/
+    /** Key of files produce by the analysis */
     Map<String,String> _myMapInitialFileOutputFolder = new HashMap<String,String>();
-    /** list of files produce by the analysis*/
+    /** list of files produce by the analysis */
     Map<String,String> _myMapFilesProduceByAnlaysis = new HashMap<String,String>();
 
 
