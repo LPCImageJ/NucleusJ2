@@ -2,6 +2,12 @@ package gred.nucleus.autocrop;
 
 import gred.nucleus.plugins.PluginParameters;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 public class AutocropParameters extends PluginParameters {
     /**
      * Number of pixels take plus object size in x
@@ -92,6 +98,48 @@ public class AutocropParameters extends PluginParameters {
         this.m_minVolumeNucleus=minVolumeNucleus;
 
     }
+    public AutocropParameters (String inputFolder, String outputFolder, String pathToConfigFile){
+        super(inputFolder, outputFolder);
+        Properties prop = new Properties();
+        String fileName = pathToConfigFile;
+        InputStream is = null;
+        try {
+            is = new FileInputStream(fileName);
+        } catch (FileNotFoundException ex) {
+
+        }
+        try {
+            prop.load(is);
+        } catch (IOException ex) {
+
+        }
+        if(!(prop.getProperty("xCropBoxSize").isEmpty())){
+            this.m_xCropBoxSize = Integer.valueOf(prop.getProperty("xCropBoxSize"));
+        }
+        if(!(prop.getProperty("yCropBoxSize").isEmpty())){
+            this.m_xCropBoxSize = Integer.valueOf(prop.getProperty("yCropBoxSize"));
+        }
+        if(!(prop.getProperty("zCropBoxSize").isEmpty())){
+            this.m_xCropBoxSize = Integer.valueOf(prop.getProperty("zCropBoxSize"));
+        }
+        if(!(prop.getProperty("thresholdOTSUcomputing").isEmpty())){
+            this.m_thresholdOTSUcomputing = Integer.valueOf(prop.getProperty("thresholdOTSUcomputing"));
+        }
+        if(!(prop.getProperty("slicesOTSUcomputing").isEmpty())){
+            this.m_slicesOTSUcomputing = Integer.valueOf(prop.getProperty("slicesOTSUcomputing"));
+        }
+        if(!(prop.getProperty("channelToComputeThreshold").isEmpty())){
+            this.m_channelToComputeThreshold = Integer.valueOf(prop.getProperty("channelToComputeThreshold"));
+        }
+        if(!(prop.getProperty("maxVolumeNucleus").isEmpty())){
+            this.m_maxVolumeNucleus = Integer.valueOf(prop.getProperty("maxVolumeNucleus"));
+        }
+        if(!(prop.getProperty("minVolumeNucleus").isEmpty())){
+            this.m_minVolumeNucleus = Integer.valueOf(prop.getProperty("minVolumeNucleus"));
+        }
+
+    }
+
 
     /**
      * Getter : Herder with analyse parameters image x y z calibration
@@ -134,4 +182,5 @@ public class AutocropParameters extends PluginParameters {
                 +"#Z box size: "+getzCropBoxSize()+"\n";
         return this.m_headerInfo;
     }
+
 }

@@ -1,8 +1,6 @@
 package gred.nucleus.test;
 
 import gred.nucleus.AnalyseTest.OuputFileVerification;
-import gred.nucleus.autocrop.AutocropParameters;
-import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.mainsNucelusJ.AutoCropCalling;
 import ij.ImagePlus;
 import ij.io.FileSaver;
@@ -36,18 +34,18 @@ public class TestAutoCrop {
 	 */
 	
 	static ArrayList <String> m_test;
-	public static void testStupid(String imageSourceFile, String output) throws IOException, FormatException , fileInOut,Exception {
-		AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,40,40,20,40,40,20,0,20,1,1,1000000000);
-		AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
-		autoCrop.run();
-
+	
+	public static void testStupid(String imageSourceFile, String output) throws IOException, FormatException {
+        AutoCropCalling autoCrop = new AutoCropCalling(imageSourceFile,output);
+        autoCrop.run();
 	}
+
 
 	/**
 	 * Main function of the package's tests.
 	 * @param args
 	 */
-	public static void main(String[] args) throws IOException, FormatException ,Exception{
+	public static void main(String[] args) throws IOException, FormatException {
 
 	    System.err.println("start prog");
 		long maxMemory = Runtime.getRuntime().maxMemory();

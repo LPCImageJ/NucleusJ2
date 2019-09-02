@@ -18,10 +18,19 @@ public class main {
     static ArrayList <String> m_test;
 
     public static void ruAutoCrop(String imageSourceFile, String output) throws IOException, FormatException ,fileInOut,Exception{
-        AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
+        //AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
+        AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,40,40,20,40,40,20,0,20,1,1,1000000000);
         AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
         autoCrop.run();
     }
+
+    public static void ruAutoCrop(String imageSourceFile, String output, String pathToConfig) throws IOException, FormatException ,fileInOut,Exception{
+        AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,pathToConfig);
+        //AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,40,40,20,40,40,20,1,20,channel,1,1000000000);
+        AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
+        autoCrop.run();
+    }
+
     public static void segmentation(String input, String output, short vMin, int vMax, boolean gift ) throws FormatException {
         SegmentationMethods otsuModif = new SegmentationMethods(input, output, vMin, vMax);
         try {
@@ -34,10 +43,7 @@ public class main {
 
 
     public static void main(String[] args) throws IOException, FormatException, fileInOut,Exception {
-
-
       //  Options options = new Options();
-
         if(args[0].equals("autocrop")) {
             System.out.println("start "+args[0]);
             String inputOneImageAxel = "/home/plop/Bureau/image/wideField/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s4.TIF";
@@ -48,17 +54,19 @@ public class main {
             //String inputOneImageTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/raw/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s9.TIF";
             String inputDirTristan = "/home/tridubos/Bureau/Bille_4Micro_02-2019/AutocropDuSchnaps/";
             String outputTristan = "/home/tridubos/Bureau/Bille_4Micro_02-2019/OutputDuSchnaps/";
-            ruAutoCrop(args[1], args[2]);
+            if(args[3].equals("ConfigFile")){
+                ruAutoCrop(args[1], args[2], args[4]);
+
+            }
+            else{
+                ruAutoCrop(args[1], args[2]);
+            }
 
         }
         else if(args[0].equals("segmentation")) {
             System.out.println("start "+args[0]);
-
-
             segmentation(args[1], args[2]+"/OTSU/" , (short)1.0, 300000000,false);
-
             segmentation(args[1], args[2]+"/GIFT/", (short)6.0, 300000000,true);
-
         }
         else{
             System.out.println("Argument le premier argument doit être   autocrop  ou   segmentation");
@@ -66,12 +74,8 @@ public class main {
             System.out.println("\njava NucleusJ_giftwrapping.jar autocrop dossier/raw/ dossier/out/");
             System.out.println("\njava NucleusJ_giftwrapping.jar segmentation dossier/raw/ dossier/out/");
             System.out.println("\n\n");
-
-
         }
         System.err.println("The program ended normally.");
-
-
     }
 }
 
