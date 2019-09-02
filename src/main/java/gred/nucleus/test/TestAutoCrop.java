@@ -35,7 +35,7 @@ public class TestAutoCrop {
 	
 	static ArrayList <String> m_test;
 	
-	public static void testStupid(String imageSourceFile, String output) throws IOException, FormatException {
+	public static void testStupid(String imageSourceFile, String output) throws IOException, FormatException ,Exception{
         AutoCropCalling autoCrop = new AutoCropCalling(imageSourceFile,output);
         autoCrop.run();
 	}
@@ -45,7 +45,7 @@ public class TestAutoCrop {
 	 * Main function of the package's tests.
 	 * @param args
 	 */
-	public static void main(String[] args) throws IOException, FormatException {
+	public static void main(String[] args) throws IOException, FormatException ,Exception{
 
 	    System.err.println("start prog");
 		long maxMemory = Runtime.getRuntime().maxMemory();
