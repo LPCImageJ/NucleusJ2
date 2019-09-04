@@ -1,6 +1,8 @@
 package gred.nucleus.test;
 
 import gred.nucleus.AnalyseTest.OuputFileVerification;
+import gred.nucleus.autocrop.AutocropParameters;
+import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.mainsNucelusJ.AutoCropCalling;
 import ij.ImagePlus;
 import ij.io.FileSaver;
@@ -40,6 +42,12 @@ public class TestAutoCrop {
         autoCrop.run();
 	}
 
+	public static void ruAutoCrop(String imageSourceFile, String output) throws IOException, FormatException , fileInOut,Exception{
+		//AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
+		AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,40,40,20,40,40,20,0,20,0,1,1000000000);
+		AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
+		autoCrop.run();
+	}
 
 	/**
 	 * Main function of the package's tests.
@@ -70,8 +78,8 @@ public class TestAutoCrop {
 		//OuputFileVerification fw = new OuputFileVerification();
 		//fw.GetFileResultExpeted(ExpectedResult);
 		//fw.GetFilesOutputFolder(outputTristan);
-		testStupid(inputOneImageTristan, outputTristan);
-
+		//testStupid(inputOneImageTristan, outputTristan);
+		ruAutoCrop("/home/titus/Bureau/TestUnitAutocrop/Raw", "/home/titus/Bureau/TestUnitAutocrop/Output/");
 		//fw.GetFilesResultingOfAnalysis(outputTristan);
 		//fw.CompareAnalysisResult();
 		/*

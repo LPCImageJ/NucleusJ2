@@ -17,14 +17,14 @@ public class main {
 
     static ArrayList <String> m_test;
 
-    public static void ruAutoCrop(String imageSourceFile, String output) throws IOException, FormatException ,fileInOut,Exception{
+    public static void runAutoCrop(String imageSourceFile, String output) throws IOException, FormatException ,fileInOut,Exception{
         //AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
-        AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,40,40,20,40,40,20,0,20,1,1,1000000000);
+        AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,40,40,20,40,40,20,0,20,0,1,1000000000);
         AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
         autoCrop.run();
     }
 
-    public static void ruAutoCrop(String imageSourceFile, String output, String pathToConfig) throws IOException, FormatException ,fileInOut,Exception{
+    public static void runAutoCrop(String imageSourceFile, String output, String pathToConfig) throws IOException, FormatException ,fileInOut,Exception{
         AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,pathToConfig);
         //AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,40,40,20,40,40,20,1,20,channel,1,1000000000);
         AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
@@ -55,11 +55,11 @@ public class main {
             String inputDirTristan = "/home/tridubos/Bureau/Bille_4Micro_02-2019/AutocropDuSchnaps/";
             String outputTristan = "/home/tridubos/Bureau/Bille_4Micro_02-2019/OutputDuSchnaps/";
             if(args[3].equals("ConfigFile")){
-                ruAutoCrop(args[1], args[2], args[4]);
+                runAutoCrop(args[1], args[2], args[4]);
 
             }
             else{
-                ruAutoCrop(args[1], args[2]);
+                runAutoCrop(args[1], args[2]);
             }
 
         }
