@@ -70,7 +70,22 @@ public class AutocropParameters extends PluginParameters {
         this.m_thresholdOTSUcomputing = thresholdOTSUcomputing;
         this.m_channelToComputeThreshold=channelToComputeThreshold;
     }
+    public AutocropParameters(String inputFolder, String outputFolder,
+                              int xCropBoxSize, int yCropBoxSize, int zCropBoxSize,
+                              int slicesOTSUcomputing,int thresholdOTSUcomputing,int channelToComputeThreshold,
+                              int minVolumeNucleus, int maxVolumeNucleus) {
 
+        super(inputFolder, outputFolder);
+        this.m_xCropBoxSize = xCropBoxSize;
+        this.m_yCropBoxSize = yCropBoxSize;
+        this.m_zCropBoxSize = zCropBoxSize;
+        this.m_thresholdOTSUcomputing = thresholdOTSUcomputing;
+        this.m_slicesOTSUcomputing = slicesOTSUcomputing;
+        this.m_channelToComputeThreshold=channelToComputeThreshold;
+        this.m_maxVolumeNucleus=maxVolumeNucleus;
+        this.m_minVolumeNucleus=minVolumeNucleus;
+
+    }
     /**
      * Constructor with box size modification and slice number used to start OTSU threshold calculation
      * to last slice
@@ -136,7 +151,9 @@ public class AutocropParameters extends PluginParameters {
         }
         if(!(prop.getProperty("minVolumeNucleus").isEmpty())){
             this.m_minVolumeNucleus = Integer.valueOf(prop.getProperty("minVolumeNucleus"));
+
         }
+
 
     }
 
@@ -182,5 +199,6 @@ public class AutocropParameters extends PluginParameters {
                 +"#Z box size: "+getzCropBoxSize()+"\n";
         return this.m_headerInfo;
     }
+
 
 }
