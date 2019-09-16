@@ -79,7 +79,7 @@ public class PluginParameters {
         this.m_headerInfo="#Header \n"
                 +"#Star time analyse: "+getLocalTime()+"\n"
                 +"#Input folder: "+this.m_inputFolder+"\n"
-                +"#Output folder: "+this.m_inputFolder+"\n"
+                +"#Output folder: "+this.m_outputFolder+"\n"
                 +"#Calibration:"+getInfoCalibration()+"\n";
 
         return this.m_headerInfo;
