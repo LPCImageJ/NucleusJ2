@@ -17,16 +17,44 @@ public class main {
 
     static ArrayList <String> m_test;
 
+    /**
+     * Method to run autocrop with only input output folder and with default parameters which are:
+     *
+     * xCropBoxSize:40
+     * yCropBoxSize:40
+     * zCropBoxSize:20
+     * thresholdOTSUcomputing:20
+     * slicesOTSUcomputing:0
+     * channelToComputeThreshold:1
+     * maxVolumeNucleus:2147483647
+     * minVolumeNucleus:1
+     *
+     * @param imageSourceFile : path to the image's folder
+     * @param output : path to output folder analysis
+     * @throws IOException
+     * @throws FormatException
+     * @throws fileInOut
+     * @throws Exception
+     */
     public static void runAutoCrop(String imageSourceFile, String output) throws IOException, FormatException ,fileInOut,Exception{
         //AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
-        AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,40,40,20,0,20,0,1,1000000000);
+        AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,40,40,20,0,20,0,1,2147483647);
         AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
         autoCrop.run();
     }
 
+    /**
+     * Method to run autocrop with input folder, output folder and with config file analysis:
+     * @param imageSourceFile :: path to the image's folder
+     * @param output : path to output folder analysis
+     * @param pathToConfig : path to config file
+     * @throws IOException
+     * @throws FormatException
+     * @throws fileInOut
+     * @throws Exception
+     */
     public static void runAutoCrop(String imageSourceFile, String output, String pathToConfig) throws IOException, FormatException ,fileInOut,Exception{
         AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,pathToConfig);
-        //AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,40,40,20,40,40,20,1,20,channel,1,1000000000);
         AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
         autoCrop.run();
     }

@@ -113,4 +113,14 @@ public class PluginParameters {
         return this.m_xCal*this.m_yCal*this.m_zCal;
 
     }
+    public void  setXCal(double nanualXcal){
+        this.m_xCal=nanualXcal;
+    }
+    public void  setYCal(double nanualYcal){
+        this.m_yCal=nanualYcal;
+    }
+    public void  setZCal(double nanualZcal){
+        this.m_yCal=nanualZcal;
+    }
+
 }

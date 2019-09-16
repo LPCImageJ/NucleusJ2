@@ -151,7 +151,6 @@ public class AutocropParameters extends PluginParameters {
         }
         if(!(prop.getProperty("minVolumeNucleus").isEmpty())){
             this.m_minVolumeNucleus = Integer.valueOf(prop.getProperty("minVolumeNucleus"));
-
         }
 
 
