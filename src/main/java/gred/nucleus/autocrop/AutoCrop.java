@@ -85,7 +85,6 @@ public class AutoCrop {
         this.m_outputFilesPrefix = outputFilesPrefix;
         setChannelNumbers();
         this.m_imageSeg= thresholding.contrastAnd8bits(getImageChannel(this.m_autocropParameters.getChannelToComputeThreshold()));
-        m_infoImageAnalyse=this.m_autocropParameters.getAnalyseParameters();
         this.m_infoImageAnalyse=autocropParametersAnalyse.getAnalyseParameters();
 
     }
@@ -416,8 +415,7 @@ public class AutoCrop {
      */
 	public String getSpecificImageInfo(){
         Calibration cal = this.m_rawImg.getCalibration();
-        return "#Calibration image: x:"+ cal.pixelDepth+"-y:"+cal.pixelWidth+"-z:"+cal.pixelHeight+"\n"
-                +"#Image: "+this.m_imageFilePath+"\n"
+        return  "#Image: "+this.m_imageFilePath+"\n"
                 +"#OTSU threshold: "+this.OTSUthreshold+"\n"
 				+"#Slice used for OTSU threshol: "+this.sliceUsedForOTSU+"\n";
 

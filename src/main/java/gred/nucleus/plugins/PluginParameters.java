@@ -115,12 +115,15 @@ public class PluginParameters {
     }
     public void  setXCal(double nanualXcal){
         this.m_xCal=nanualXcal;
+        this.m_manualParameter=true;
     }
     public void  setYCal(double nanualYcal){
         this.m_yCal=nanualYcal;
+        this.m_manualParameter=true;
     }
     public void  setZCal(double nanualZcal){
         this.m_yCal=nanualZcal;
+        this.m_manualParameter=true;
     }
 
 }
