@@ -81,7 +81,6 @@ public class PluginParameters {
                 +"#Input folder: "+this.m_inputFolder+"\n"
                 +"#Output folder: "+this.m_outputFolder+"\n"
                 +"#Calibration:"+getInfoCalibration()+"\n";
-
         return this.m_headerInfo;
 
     }

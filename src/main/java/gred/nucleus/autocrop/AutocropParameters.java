@@ -130,13 +130,13 @@ public class AutocropParameters extends PluginParameters {
         }
         for (String idProp :prop.stringPropertyNames()){
             if(idProp.equals("xCropBoxSize")){this.m_xCropBoxSize = Integer.valueOf(prop.getProperty("xCropBoxSize"));}
-            if(idProp.equals("yCropBoxSize")){this.m_xCropBoxSize = Integer.valueOf(prop.getProperty("yCropBoxSize"));}
-            if(idProp.equals("zCropBoxSize")){this.m_xCropBoxSize = Integer.valueOf(prop.getProperty("zCropBoxSize"));}
-            if(idProp.equals("thresholdOTSUcomputing")){this.m_xCropBoxSize = Integer.valueOf(prop.getProperty("thresholdOTSUcomputing"));}
-            if(idProp.equals("slicesOTSUcomputing")){this.m_xCropBoxSize = Integer.valueOf(prop.getProperty("slicesOTSUcomputing"));}
-            if(idProp.equals("channelToComputeThreshold")){this.m_xCropBoxSize = Integer.valueOf(prop.getProperty("channelToComputeThreshold"));}
-            if(idProp.equals("maxVolumeNucleus")){this.m_xCropBoxSize = Integer.valueOf(prop.getProperty("maxVolumeNucleus"));}
-            if(idProp.equals("minVolumeNucleus")){this.m_xCropBoxSize = Integer.valueOf(prop.getProperty("minVolumeNucleus"));}
+            if(idProp.equals("yCropBoxSize")){this.m_yCropBoxSize = Integer.valueOf(prop.getProperty("yCropBoxSize"));}
+            if(idProp.equals("zCropBoxSize")){this.m_zCropBoxSize = Integer.valueOf(prop.getProperty("zCropBoxSize"));}
+            if(idProp.equals("thresholdOTSUcomputing")){this.m_thresholdOTSUcomputing = Integer.valueOf(prop.getProperty("thresholdOTSUcomputing"));}
+            if(idProp.equals("slicesOTSUcomputing")){this.m_slicesOTSUcomputing = Integer.valueOf(prop.getProperty("slicesOTSUcomputing"));}
+            if(idProp.equals("channelToComputeThreshold")){this.m_channelToComputeThreshold = Integer.valueOf(prop.getProperty("channelToComputeThreshold"));}
+            if(idProp.equals("maxVolumeNucleus")){this.m_maxVolumeNucleus = Integer.valueOf(prop.getProperty("maxVolumeNucleus"));}
+            if(idProp.equals("minVolumeNucleus")){this.m_minVolumeNucleus = Integer.valueOf(prop.getProperty("minVolumeNucleus"));}
             if(idProp.equals("xcal")){ setXCal(Double.valueOf(prop.getProperty("xcal")));}
             if(idProp.equals("ycal")){ setYCal(Double.valueOf(prop.getProperty("ycal")));}
             if(idProp.equals("zcal")){ setZCal(Double.valueOf(prop.getProperty("zcal")));}
@@ -183,7 +183,12 @@ public class AutocropParameters extends PluginParameters {
         super.getAnalyseParameters();
         this.m_headerInfo+="#X box size: "+getxCropBoxSize()+"\n"
                 +"#Y box size: "+getyCropBoxSize()+"\n"
-                +"#Z box size: "+getzCropBoxSize()+"\n";
+                +"#Z box size: "+getzCropBoxSize()+"\n"
+                +"#thresholdOTSUcomputing: "+getThresholdOTSUcomputing()+"\n"
+                +"#slicesOTSUcomputing: "  +getSlicesOTSUcomputing()+"\n"
+                +"#channelToComputeThreshold: "+getChannelToComputeThreshold()+"\n"
+                +"#maxVolumeNucleus:"+getM_maxVolumeNucleus()+"\n"
+                +"#minVolumeNucleus: "+getM_minVolumeNucleus()+"\n";
         return this.m_headerInfo;
     }
 
