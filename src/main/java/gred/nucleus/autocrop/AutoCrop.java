@@ -41,7 +41,6 @@ public class AutoCrop {
 	private ImagePlus m_imageSeg;
 	/** Segmented image connect component labelled */
 	private ImagePlus m_imageSeg_labelled;
-
 	/** The path of the image to be processed */
 	private String m_imageFilePath;
 	/** the path of the directory where are saved the crop of the object */
@@ -458,7 +457,7 @@ public class AutoCrop {
 	 */
 	public double getVoxelVolume(){
 		double calibration=0;
-    	if(this.m_autocropParameters.m_manualParameter==false){
+    	if(this.m_autocropParameters.m_manualParameter==true){
     		calibration=m_autocropParameters.getVoxelVolume();
 		}
 		else{
