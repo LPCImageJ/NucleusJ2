@@ -70,6 +70,18 @@ public class AutocropParameters extends PluginParameters {
         this.m_thresholdOTSUcomputing = thresholdOTSUcomputing;
         this.m_channelToComputeThreshold=channelToComputeThreshold;
     }
+    /** Constructor with all manual parameters
+     * @param inputFolder : path folder containing Images
+     * @param outputFolder : path folder output analyse
+     * @param xCropBoxSize : number of voxels add in x axis around object
+     * @param yCropBoxSize : number of voxels add in z axis around object
+     * @param zCropBoxSize : number of stack add in z axis around object
+     * @param channelToComputeThreshold : channel number to compute OTSU
+     * @param slicesOTSUcomputing : slice start to compute OTSU
+     * @param thresholdOTSUcomputing : minimum OTSU threshold used
+     * @param maxVolumeNucleus : volume maximum of objects detected
+     * @param minVolumeNucleus : volume minimum of objects detected
+     */
     public AutocropParameters(String inputFolder, String outputFolder,
                               int xCropBoxSize, int yCropBoxSize, int zCropBoxSize,
                               int slicesOTSUcomputing,int thresholdOTSUcomputing,int channelToComputeThreshold,
@@ -113,6 +125,13 @@ public class AutocropParameters extends PluginParameters {
         this.m_minVolumeNucleus=minVolumeNucleus;
 
     }
+
+    /**
+     * Constructor using input , output folders and config file (for command line execution)
+     * @param inputFolder : path folder containing Images
+     * @param outputFolder : path folder output analyse
+     * @param pathToConfigFile : path to the config file
+     */
     public AutocropParameters (String inputFolder, String outputFolder, String pathToConfigFile){
         super(inputFolder, outputFolder);
         Properties prop = new Properties();
@@ -144,41 +163,10 @@ public class AutocropParameters extends PluginParameters {
 
     }
 
-
-    /**
-     * Getter : Herder with analyse parameters image x y z calibration
-     * @return output path folder
+     /**
+     * Method to get parameters of the analyse
+     * @return : list of the parameters used for the analyse
      */
-
-
-    public int getxCropBoxSize(){
-        return this.m_xCropBoxSize;
-    }
-    public int getyCropBoxSize(){
-        return this.m_yCropBoxSize;
-    }
-    public int getzCropBoxSize(){
-        return this.m_zCropBoxSize;
-    }
-
-
-    public int getThresholdOTSUcomputing(){return this.m_thresholdOTSUcomputing;}
-    public int getChannelToComputeThreshold(){return this.m_channelToComputeThreshold;}
-    public int getM_minVolumeNucleus(){return this.m_minVolumeNucleus;}
-    public int getM_maxVolumeNucleus(){return  this.m_maxVolumeNucleus;}
-
-
-    public int getSlicesOTSUcomputing(){
-        return this.m_slicesOTSUcomputing;
-    }
-
-    public String getThresholdOTSUcomputingParameter(){
-        if(this.m_slicesOTSUcomputing==0){
-            return "all stack";
-        }else {
-            return "" + this.m_slicesOTSUcomputing;
-        }
-    }
     public String getAnalyseParameters() {
         super.getAnalyseParameters();
         this.m_headerInfo+="#X box size: "+getxCropBoxSize()+"\n"
@@ -191,6 +179,13 @@ public class AutocropParameters extends PluginParameters {
                 +"#minVolumeNucleus: "+getM_minVolumeNucleus()+"\n";
         return this.m_headerInfo;
     }
-
+    public int getxCropBoxSize(){return this.m_xCropBoxSize;}
+    public int getyCropBoxSize(){return this.m_yCropBoxSize;}
+    public int getzCropBoxSize(){return this.m_zCropBoxSize;}
+    public int getThresholdOTSUcomputing(){return this.m_thresholdOTSUcomputing;}
+    public int getChannelToComputeThreshold(){return this.m_channelToComputeThreshold;}
+    public int getM_minVolumeNucleus(){return this.m_minVolumeNucleus;}
+    public int getM_maxVolumeNucleus(){return  this.m_maxVolumeNucleus;}
+    public int getSlicesOTSUcomputing(){return this.m_slicesOTSUcomputing;}
 
 }
