@@ -128,31 +128,19 @@ public class AutocropParameters extends PluginParameters {
         } catch (IOException ex) {
 
         }
-        if(!(prop.getProperty("xCropBoxSize").isEmpty())){
-            this.m_xCropBoxSize = Integer.valueOf(prop.getProperty("xCropBoxSize"));
+        for (String idProp :prop.stringPropertyNames()){
+            if(idProp.equals("xCropBoxSize")){this.m_xCropBoxSize = Integer.valueOf(prop.getProperty("xCropBoxSize"));}
+            if(idProp.equals("yCropBoxSize")){this.m_xCropBoxSize = Integer.valueOf(prop.getProperty("yCropBoxSize"));}
+            if(idProp.equals("zCropBoxSize")){this.m_xCropBoxSize = Integer.valueOf(prop.getProperty("zCropBoxSize"));}
+            if(idProp.equals("thresholdOTSUcomputing")){this.m_xCropBoxSize = Integer.valueOf(prop.getProperty("thresholdOTSUcomputing"));}
+            if(idProp.equals("slicesOTSUcomputing")){this.m_xCropBoxSize = Integer.valueOf(prop.getProperty("slicesOTSUcomputing"));}
+            if(idProp.equals("channelToComputeThreshold")){this.m_xCropBoxSize = Integer.valueOf(prop.getProperty("channelToComputeThreshold"));}
+            if(idProp.equals("maxVolumeNucleus")){this.m_xCropBoxSize = Integer.valueOf(prop.getProperty("maxVolumeNucleus"));}
+            if(idProp.equals("minVolumeNucleus")){this.m_xCropBoxSize = Integer.valueOf(prop.getProperty("minVolumeNucleus"));}
+            if(idProp.equals("xcal")){ setXCal(Double.valueOf(prop.getProperty("xcal")));}
+            if(idProp.equals("ycal")){ setYCal(Double.valueOf(prop.getProperty("ycal")));}
+            if(idProp.equals("zcal")){ setZCal(Double.valueOf(prop.getProperty("zcal")));}
         }
-        if(!(prop.getProperty("yCropBoxSize").isEmpty())){
-            this.m_xCropBoxSize = Integer.valueOf(prop.getProperty("yCropBoxSize"));
-        }
-        if(!(prop.getProperty("zCropBoxSize").isEmpty())){
-            this.m_xCropBoxSize = Integer.valueOf(prop.getProperty("zCropBoxSize"));
-        }
-        if(!(prop.getProperty("thresholdOTSUcomputing").isEmpty())){
-            this.m_thresholdOTSUcomputing = Integer.valueOf(prop.getProperty("thresholdOTSUcomputing"));
-        }
-        if(!(prop.getProperty("slicesOTSUcomputing").isEmpty())){
-            this.m_slicesOTSUcomputing = Integer.valueOf(prop.getProperty("slicesOTSUcomputing"));
-        }
-        if(!(prop.getProperty("channelToComputeThreshold").isEmpty())){
-            this.m_channelToComputeThreshold = Integer.valueOf(prop.getProperty("channelToComputeThreshold"));
-        }
-        if(!(prop.getProperty("maxVolumeNucleus").isEmpty())){
-            this.m_maxVolumeNucleus = Integer.valueOf(prop.getProperty("maxVolumeNucleus"));
-        }
-        if(!(prop.getProperty("minVolumeNucleus").isEmpty())){
-            this.m_minVolumeNucleus = Integer.valueOf(prop.getProperty("minVolumeNucleus"));
-        }
-
 
     }
 
