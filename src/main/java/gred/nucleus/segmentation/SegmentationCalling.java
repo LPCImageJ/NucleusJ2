@@ -1,5 +1,7 @@
 package gred.nucleus.segmentation;
 
+
+import gred.nucleus.FilesInputOutput.FilesNames;
 import gred.nucleus.core.ConvexHullSegmentation;
 import gred.nucleus.core.NucleusSegmentation;
 import gred.nucleus.nucleusCaracterisations.NucleusAnalysis;
@@ -38,7 +40,6 @@ public class SegmentationCalling {
     private ImagePlus _imgInput = new ImagePlus();
     /** ImagePlus segmented image*/
     private ImagePlus _imgSeg = new ImagePlus();
-
     /** String of of the path for the output files*/
     private String _output;
     /** String of the input dir for several nuclei analysis*/
@@ -47,6 +48,7 @@ public class SegmentationCalling {
     private SegmentationParameters m_semgemtationParameters;
 
 
+    public SegmentationCalling(){}
     /**
      *  Constructor for ImagePlus input
      *
@@ -116,10 +118,9 @@ public class SegmentationCalling {
      * If a segmentation results is find the method will then computed the different parameters with the NucleusAnalysis
      * class, results will be print in the console. If no nucleus is detected a log message is print in teh console
      *
-     * @param giftWrapping boolean if true used GiftWrapping, else Otsu Modified
      * @return ImagePlus the segmented nucleus
      */
-    public int runOneImage(boolean giftWrapping) {
+    public int runOneImage() {
         ImagePlus imgSeg= this._imgInput;
         NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(this.m_semgemtationParameters.getM_minVolumeNucleus(), this.m_semgemtationParameters.getM_maxVolumeNucleus());
 
@@ -133,7 +134,7 @@ public class SegmentationCalling {
             System.out.println("Segmentation error: \nNo object is detected between "+this.m_semgemtationParameters.getM_minVolumeNucleus() + "and"+this.m_semgemtationParameters.getM_maxVolumeNucleus());
         else{
             System.out.println("otsu modif threshold: "+nucleusSegmentation.getBestThreshold()+"\n");
-            if (giftWrapping){
+            if (this.m_semgemtationParameters.getGiftWrapping()){
                 ConvexHullSegmentation nuc = new ConvexHullSegmentation();
                 imgSeg = nuc.run(imgSeg);
             }
@@ -169,13 +170,52 @@ public class SegmentationCalling {
      * Open the image with bioformat plugin to obtain the metadata:
      *          ImagePlus[] imgTab = BF.openImagePlus(fileImg);
      *
-     * @param giftWrapping boolean if true used GiftWrapping, else Otsu Modified
      * @return String with the name files which failed in the segmentation step
      * @throws IOException if file doesn't existed
      * @throws FormatException Bioformat exception
      */
 
-    public String runSeveralImages(boolean giftWrapping) throws IOException, FormatException {
+    public void runSeveralImages2() throws IOException, FormatException {
+        Directory directoryInput = new Directory(this.m_semgemtationParameters.getInputFolder());
+        directoryInput.listFiles(this.m_semgemtationParameters.getInputFolder());
+        directoryInput.checkIfEmpty();
+        for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
+            File currentFile = directoryInput.getFile(i);
+            String fileImg = currentFile.toString();
+            FilesNames outPutFilesNames = new FilesNames(fileImg);
+            this._prefix = outPutFilesNames.PrefixeNameFile();
+
+            /**
+            public void run() throws IOException, FormatException,fileInOut,Exception {
+
+                Directory directoryInput=new Directory(this.m_autocropParameters.getInputFolder());
+                directoryInput.listFiles(this.m_autocropParameters.getInputFolder());
+                directoryInput.checkIfEmpty();
+                directoryInput.checkAndActualiseNDFiles();
+                for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
+                    File currentFile = directoryInput.getFile(i);
+                    String fileImg = currentFile.toString();
+                    FilesNames outPutFilesNames = new FilesNames(fileImg);
+                    this._prefix = outPutFilesNames.PrefixeNameFile();
+                    AutoCrop autoCrop = new AutoCrop(currentFile, this._prefix,this.m_autocropParameters);
+                    autoCrop.thresholdKernels();
+                    autoCrop.computeConnectcomponent();
+                    autoCrop.componentBorderFilter();
+                    autoCrop.componentSizeFilter();
+                    autoCrop.computeBoxes2();
+                    autoCrop.cropKernels2();
+                    autoCrop.writeAnalyseInfo();
+                    annotAutoCrop test = new annotAutoCrop(autoCrop.getFileCoordinates(), currentFile, this.m_autocropParameters.getOutputFolder() + this._prefix);
+                    test.run();
+                    this.m_outputCropGeneralInfo=this.m_outputCropGeneralInfo+autoCrop.getImageCropInfo();
+
+                }
+             */
+
+        }
+
+    }
+        public String runSeveralImages() throws IOException, FormatException {
         String log = "";
         String resu = "";
         File [] fileList = new File(this._inputDir).listFiles();
@@ -211,7 +251,7 @@ public class SegmentationCalling {
                         log = log + fileImg + "\n";
                     } else {
                         System.out.println(fileImg + "\totsu modif threshold " + nucleusSegmentation.getBestThreshold() + "\n");
-                        if (giftWrapping) {
+                        if (this.m_semgemtationParameters.getGiftWrapping()) {
                             ConvexHullSegmentation nuc = new ConvexHullSegmentation();
                             imgSeg = nuc.run(imgSeg);
                         }

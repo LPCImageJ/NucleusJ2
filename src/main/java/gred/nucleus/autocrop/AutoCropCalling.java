@@ -63,7 +63,6 @@ public class AutoCropCalling {
                 FilesNames outPutFilesNames = new FilesNames(fileImg);
                 this._prefix = outPutFilesNames.PrefixeNameFile();
                 AutoCrop autoCrop = new AutoCrop(currentFile, this._prefix,this.m_autocropParameters);
-
                 autoCrop.thresholdKernels();
                 autoCrop.computeConnectcomponent();
                 autoCrop.componentBorderFilter();

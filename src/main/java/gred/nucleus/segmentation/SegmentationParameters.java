@@ -28,6 +28,13 @@ public class SegmentationParameters extends PluginParameters {
      */
     public SegmentationParameters(String inputFolder, String outputFolder){
         super(inputFolder, outputFolder);
+    }
+
+    public SegmentationParameters(String inputFolder, String outputFolder,int minVolume,int maxVolume,boolean gift){
+        super(inputFolder, outputFolder);
+        this.m_minVolumeNucleus=minVolume;
+        this.m_maxVolumeNucleus=maxVolume;
+        this.m_giftVrapping=gift;
 
     }
     public SegmentationParameters (String inputFolder, String outputFolder, String pathToConfigFile){
