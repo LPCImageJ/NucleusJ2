@@ -35,7 +35,8 @@ public class TestAutoCrop {
 	static ArrayList <String> m_test;
 	
 	public static void testStupid(String imageSourceFile, String output) throws IOException, FormatException ,Exception{
-        AutoCropCalling autoCrop = new AutoCropCalling(imageSourceFile,output);
+		AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
+		AutoCropCalling autoCrop = new AutoCropCalling();
         autoCrop.run();
 	}
 

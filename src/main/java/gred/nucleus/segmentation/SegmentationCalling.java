@@ -33,32 +33,32 @@ import gred.nucleus.FilesInputOutput.Directory;
  * @author Tristan Dubos and Axel Poulet
  *
  */
-public class SegmentationMethods {
+public class SegmentationCalling {
     /** ImagePlus raw image*/
     private ImagePlus _imgInput = new ImagePlus();
     /** ImagePlus segmented image*/
     private ImagePlus _imgSeg = new ImagePlus();
-    /** volume min of the detected object*/
-    private short _vMin;
-    /** volume max of the detected object*/
-    private int _vMax;
+
     /** String of of the path for the output files*/
     private String _output;
     /** String of the input dir for several nuclei analysis*/
     private String _inputDir = "";
 
+    private SegmentationParameters m_semgemtationParameters;
 
 
     /**
      *  Constructor for ImagePlus input
      *
-     * @param img ImagePlus raw image
-     * @param vMin volume min of the detected object
-     * @param vMax volume max of the detected object
-     * @param outputImg String of of the path to save the img of the segmented nucleus.
+     * @param inputDir String path of the input containing the tif/TIF file
+     * @param outputDir String of of the path to save results img of the segmented nucleus.
+     * @param semgemtationParameters : list of parameters in config file.
      *
      */
-    public SegmentationMethods( SegmentationParameters semgemtationParameters) {
+    public SegmentationCalling(String inputDir, String outputDir,SegmentationParameters semgemtationParameters) {
+        this._inputDir = inputDir;
+        this._output = outputDir;
+        this.m_semgemtationParameters=semgemtationParameters;
 
     }
 
@@ -71,9 +71,9 @@ public class SegmentationMethods {
      * @param outputImg String of of the path to save the img of the segmented nucleus.
      *
      */
-    public SegmentationMethods(ImagePlus img, short vMin, int vMax, String outputImg) {
-        this._vMin = vMin;
-        this._vMax = vMax;
+    public SegmentationCalling(ImagePlus img, short vMin, int vMax, String outputImg) {
+        this.m_semgemtationParameters.setMinVolumeNucleus(vMin);
+        this.m_semgemtationParameters.setMaxVolumeNucleus(vMax);
         this._imgInput = img;
         this._output = outputImg + File.separator + "Segmented" + this._imgInput.getTitle();
     }
@@ -86,9 +86,9 @@ public class SegmentationMethods {
      * @param vMax volume max of the detected object
      *
      */
-    public SegmentationMethods(ImagePlus img, short vMin, int vMax) {
-        this._vMin = vMin;
-        this._vMax = vMax;
+    public SegmentationCalling(ImagePlus img, short vMin, int vMax) {
+        this.m_semgemtationParameters.setMinVolumeNucleus(vMin);
+        this.m_semgemtationParameters.setMaxVolumeNucleus(vMax);
         this._imgInput = img;
     }
 
@@ -100,16 +100,15 @@ public class SegmentationMethods {
      * @param vMin volume min of the detected object
      * @param vMax volume max of the detected object
      */
-    public SegmentationMethods(String inputDir, String outputDir, short vMin, int vMax) {
-        this._vMin = vMin;
-        this._vMax = vMax;
+    public SegmentationCalling(String inputDir, String outputDir, short vMin, int vMax) {
+        this.m_semgemtationParameters.setMinVolumeNucleus(vMin);
+        this.m_semgemtationParameters.setMaxVolumeNucleus(vMax);
         this._inputDir = inputDir;
         this._output = outputDir;
         Directory dirOutput =new Directory(this._output );
         dirOutput.CheckAndCreateDir();
         this._output=dirOutput.get_dirPath();
     }
-
     /**
      * Method to run an ImagePlus input
      * the method will call method in NucleusSegmentation and ConvexHullSegmentation to segment the input nucleus.
@@ -122,7 +121,7 @@ public class SegmentationMethods {
      */
     public int runOneImage(boolean giftWrapping) {
         ImagePlus imgSeg= this._imgInput;
-        NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(this._vMin, this._vMax);
+        NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(this.m_semgemtationParameters.getM_minVolumeNucleus(), this.m_semgemtationParameters.getM_maxVolumeNucleus());
 
         Calibration cal = imgSeg.getCalibration();
         System.out.println(imgSeg.getTitle()+"\t"+cal.pixelWidth+"\t"+cal.pixelHeight+"\t"+cal.pixelDepth);
@@ -131,7 +130,7 @@ public class SegmentationMethods {
 
         imgSeg = nucleusSegmentation.applySegmentation(imgSeg);
         if(nucleusSegmentation.getBestThreshold() == -1)
-            System.out.println("Segmentation error: \nNo object is detected between "+this._vMin + "and"+this._vMax);
+            System.out.println("Segmentation error: \nNo object is detected between "+this.m_semgemtationParameters.getM_minVolumeNucleus() + "and"+this.m_semgemtationParameters.getM_maxVolumeNucleus());
         else{
             System.out.println("otsu modif threshold: "+nucleusSegmentation.getBestThreshold()+"\n");
             if (giftWrapping){
@@ -188,7 +187,7 @@ public class SegmentationMethods {
                 ImagePlus imgSeg = img;
                 if (imgSeg.getType() == ImagePlus.GRAY16)
                     this.preProcessImage(imgSeg);
-                NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(this._vMin, this._vMax);
+                NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(this.m_semgemtationParameters.getM_minVolumeNucleus(), this.m_semgemtationParameters.getM_maxVolumeNucleus());
 
                 imgSeg = nucleusSegmentation.applySegmentation(imgSeg);
                 // TODO A Nettoyer les else !!!

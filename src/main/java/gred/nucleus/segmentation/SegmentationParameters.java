@@ -14,11 +14,11 @@ import java.util.Properties;
 
 public class SegmentationParameters extends PluginParameters {
     /** GIFT wrapping option */
-    boolean m_giftVrapping=false;
+    boolean m_giftVrapping=true;
     /** Minimal object volume to segment */
     int m_minVolumeNucleus=1;
     /** Maximal object volume to segment */
-    int m_maxVolumeNucleus=2147483647;
+    int m_maxVolumeNucleus=3000000;
 
 
     /** Constructor with default parameter
@@ -55,6 +55,16 @@ public class SegmentationParameters extends PluginParameters {
 
         }
     }
+
+    public void setMinVolumeNucleus(int vMin){
+        this.m_minVolumeNucleus=vMin;
+    }
+
+    public void setMaxVolumeNucleus(int vMax){
+        this.m_maxVolumeNucleus=vMax;
+    }
+
+
 
     public String getAnalyseParameters() {
         super.getAnalyseParameters();

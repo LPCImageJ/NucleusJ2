@@ -1,6 +1,6 @@
 package gred.nucleus.test;
 
-import gred.nucleus.segmentation.SegmentationMethods;
+import gred.nucleus.segmentation.SegmentationCalling;
 import ij.ImagePlus;
 import loci.formats.FormatException;
 
@@ -19,7 +19,7 @@ public class TestSegmentationMethods {
      */
 
     public static void testStupid(ImagePlus img, short vMin, int vMax, String outputImgString, boolean gift ) {
-        SegmentationMethods otsuModif = new SegmentationMethods(img, vMin, vMax, outputImgString);
+        SegmentationCalling otsuModif = new SegmentationCalling(img, vMin, vMax, outputImgString);
         otsuModif.runOneImage(gift);
     }
 
@@ -32,7 +32,7 @@ public class TestSegmentationMethods {
 
      */
     public static void testStupidSeveralImages(String input, String output, short vMin, int vMax, boolean gift ) throws FormatException {
-        SegmentationMethods otsuModif = new SegmentationMethods(input, output, vMin, vMax);
+        SegmentationCalling otsuModif = new SegmentationCalling(input, output, vMin, vMax);
         try {
             String log = otsuModif.runSeveralImages(gift);
             if(!(log.equals("")))

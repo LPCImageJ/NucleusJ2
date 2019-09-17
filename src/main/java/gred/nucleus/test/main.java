@@ -2,7 +2,7 @@ package gred.nucleus.test;
 import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.autocrop.AutoCropCalling;
-import gred.nucleus.segmentation.SegmentationMethods;
+import gred.nucleus.segmentation.SegmentationCalling;
 
 import loci.formats.FormatException;
 //import org.apache.commons.cli.Options;
@@ -37,8 +37,7 @@ public class main {
      * @throws Exception
      */
     public static void runAutoCrop(String imageSourceFile, String output) throws IOException, FormatException ,fileInOut,Exception{
-        //AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
-        AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,40,40,20,0,20,0,1,2147483647);
+        AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
         AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
         autoCrop.run();
     }
@@ -60,7 +59,7 @@ public class main {
     }
 
     public static void segmentation(String input, String output, short vMin, int vMax, boolean gift ) throws FormatException {
-        SegmentationMethods otsuModif = new SegmentationMethods(input, output, vMin, vMax);
+        SegmentationCalling otsuModif = new SegmentationCalling(input, output, vMin, vMax);
         try {
             String log = otsuModif.runSeveralImages(gift);
             if(!(log.equals("")))
@@ -82,7 +81,7 @@ public class main {
             //String inputOneImageTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/raw/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s9.TIF";
             String inputDirTristan = "/home/tridubos/Bureau/Bille_4Micro_02-2019/AutocropDuSchnaps/";
             String outputTristan = "/home/tridubos/Bureau/Bille_4Micro_02-2019/OutputDuSchnaps/";
-            if(args[3].equals("ConfigFile")){
+            if((args.length==2)&& (args[3].equals("ConfigFile"))){
                 runAutoCrop(args[1], args[2], args[4]);
 
             }

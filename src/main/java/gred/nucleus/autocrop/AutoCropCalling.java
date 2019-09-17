@@ -21,10 +21,8 @@ import java.io.IOException;
  */
 
 public class AutoCropCalling {
-    /** path of the input file*/
-    private String _input;
-    /** output to save the images cropped*/
-    private String _output;
+
+
     /** image prefix name */
     private String _prefix = "";
     /** Get general information of cropping analyse */
@@ -35,25 +33,13 @@ public class AutoCropCalling {
     /**
      * Constructor
      * Create the output directory if he isn't existed.
-     * @param imageSourceFile  String path of input file(s)
-     * @param output String to save the results image
-     */
-    public AutoCropCalling(String imageSourceFile, String output ) {
-        this._input = imageSourceFile;
-        this._output = output;
-        Directory dirOutput =new Directory(this._output);
-        dirOutput.CheckAndCreateDir();
-        this._output=dirOutput.get_dirPath();
 
+     */
+    public AutoCropCalling( ) {
 
     }
     public AutoCropCalling(AutocropParameters autocropParameters ) {
         this.m_autocropParameters =autocropParameters;
-        this._input = autocropParameters.getInputFolder();
-        this._output = autocropParameters.getOutputFolder();
-        Directory dirOutput =new Directory(this._output);
-        dirOutput.CheckAndCreateDir();
-        this._output=dirOutput.get_dirPath();
         this.m_outputCropGeneralInfo=autocropParameters.getAnalyseParameters()+getColnameResult();
     }
 
@@ -67,8 +53,8 @@ public class AutoCropCalling {
      */
     public void run() throws IOException, FormatException,fileInOut,Exception {
 
-        Directory directoryInput=new Directory(this._input);
-        directoryInput.listFiles(this._input);
+        Directory directoryInput=new Directory(this.m_autocropParameters.getInputFolder());
+        directoryInput.listFiles(this.m_autocropParameters.getInputFolder());
         directoryInput.checkIfEmpty();
         directoryInput.checkAndActualiseNDFiles();
         for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
@@ -85,13 +71,13 @@ public class AutoCropCalling {
                 autoCrop.computeBoxes2();
                 autoCrop.cropKernels2();
                 autoCrop.writeAnalyseInfo();
-                annotAutoCrop test = new annotAutoCrop(autoCrop.getFileCoordinates(), currentFile, this._output + this._prefix);
+                annotAutoCrop test = new annotAutoCrop(autoCrop.getFileCoordinates(), currentFile, this.m_autocropParameters.getOutputFolder() + this._prefix);
                 test.run();
                 this.m_outputCropGeneralInfo=this.m_outputCropGeneralInfo+autoCrop.getImageCropInfo();
 
         }
-        System.out.println(this._input+"result_Autocrop_Analyse");
-        OutputTexteFile resultFileOutput=new OutputTexteFile(this._output+"result_Autocrop_Analyse");
+        System.out.println(this.m_autocropParameters.getInputFolder()+"result_Autocrop_Analyse");
+        OutputTexteFile resultFileOutput=new OutputTexteFile(this.m_autocropParameters.getOutputFolder()+"result_Autocrop_Analyse");
         resultFileOutput.SaveTexteFile( this.m_outputCropGeneralInfo);
     }
 
