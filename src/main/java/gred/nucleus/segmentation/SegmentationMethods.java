@@ -1,7 +1,8 @@
-package gred.nucleus.mainsNucelusJ;
+package gred.nucleus.segmentation;
 
 import gred.nucleus.core.ConvexHullSegmentation;
 import gred.nucleus.core.NucleusSegmentation;
+import gred.nucleus.nucleusCaracterisations.NucleusAnalysis;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
@@ -46,6 +47,20 @@ public class SegmentationMethods {
     /** String of the input dir for several nuclei analysis*/
     private String _inputDir = "";
 
+
+
+    /**
+     *  Constructor for ImagePlus input
+     *
+     * @param img ImagePlus raw image
+     * @param vMin volume min of the detected object
+     * @param vMax volume max of the detected object
+     * @param outputImg String of of the path to save the img of the segmented nucleus.
+     *
+     */
+    public SegmentationMethods( SegmentationParameters semgemtationParameters) {
+
+    }
 
     /**
      *  Constructor for ImagePlus input

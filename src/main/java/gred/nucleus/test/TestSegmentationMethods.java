@@ -1,20 +1,12 @@
 package gred.nucleus.test;
 
-import gred.nucleus.AnalyseTest.OuputFileVerification;
-import gred.nucleus.mainsNucelusJ.SegmentationMethods;
-import gred.nucleus.utils.Histogram;
-import ij.IJ;
+import gred.nucleus.segmentation.SegmentationMethods;
 import ij.ImagePlus;
-import ij.measure.Calibration;
-import ij.process.ImageProcessor;
 import loci.formats.FormatException;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 import static ij.IJ.open;
-
-import ij.plugin.filter.GaussianBlur;
 
 
 public class TestSegmentationMethods {

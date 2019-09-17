@@ -1,8 +1,8 @@
 package gred.nucleus.test;
 import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.exceptions.fileInOut;
-import gred.nucleus.mainsNucelusJ.AutoCropCalling;
-import gred.nucleus.mainsNucelusJ.SegmentationMethods;
+import gred.nucleus.autocrop.AutoCropCalling;
+import gred.nucleus.segmentation.SegmentationMethods;
 
 import loci.formats.FormatException;
 //import org.apache.commons.cli.Options;

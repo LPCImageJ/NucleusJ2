@@ -1,4 +1,4 @@
-package gred.nucleus.mainsNucelusJ;
+package gred.nucleus.autocrop;
 
 import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.FilesInputOutput.FilesNames;

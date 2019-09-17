@@ -1,9 +1,8 @@
 package gred.nucleus.plugins;
-import java.io.File;
 import java.io.IOException;
 
 import gred.nucleus.dialogs.NucleusSegmentationAndAnalysisBatchDialog;
-import gred.nucleus.mainsNucelusJ.SegmentationMethods;
+import gred.nucleus.segmentation.SegmentationMethods;
 import ij.IJ;
 import ij.plugin.PlugIn;
 import loci.formats.FormatException;

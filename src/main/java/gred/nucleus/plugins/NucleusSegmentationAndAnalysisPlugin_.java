@@ -1,7 +1,7 @@
 package gred.nucleus.plugins;
 import gred.nucleus.dialogs.NucleusSegmentationAndAnalysisDialog;
-import gred.nucleus.mainsNucelusJ.NucleusAnalysis;
-import gred.nucleus.mainsNucelusJ.SegmentationMethods;
+import gred.nucleus.nucleusCaracterisations.NucleusAnalysis;
+import gred.nucleus.segmentation.SegmentationMethods;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.WindowManager;

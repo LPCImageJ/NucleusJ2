@@ -1,11 +1,8 @@
 package gred.nucleus.test;
 
-import gred.nucleus.AnalyseTest.OuputFileVerification;
 import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.exceptions.fileInOut;
-import gred.nucleus.mainsNucelusJ.AutoCropCalling;
-import ij.ImagePlus;
-import ij.io.FileSaver;
+import gred.nucleus.autocrop.AutoCropCalling;
 
 import loci.formats.FormatException;
 

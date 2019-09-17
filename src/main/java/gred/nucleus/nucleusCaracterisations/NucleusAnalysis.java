@@ -1,4 +1,4 @@
-package gred.nucleus.mainsNucelusJ;
+package gred.nucleus.nucleusCaracterisations;
 
 import gred.nucleus.core.Measure3D;
 import ij.IJ;

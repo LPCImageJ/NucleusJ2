@@ -1,7 +1,7 @@
 package gred.nucleus.plugins;
 import java.io.File;
 import gred.nucleus.dialogs.NucleusSegmentationBatchDialog;
-import gred.nucleus.mainsNucelusJ.SegmentationMethods;
+import gred.nucleus.segmentation.SegmentationMethods;
 import gred.nucleus.utils.FileList;
 import ij.IJ;
 import ij.ImagePlus;
