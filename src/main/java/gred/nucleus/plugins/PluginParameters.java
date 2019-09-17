@@ -90,7 +90,7 @@ public class PluginParameters {
      */
     public String getInfoCalibration(){
         String parameters_info;
-        if(this.m_manualParameter=true){
+        if(this.m_manualParameter==true){
             parameters_info="x:"+this.m_xCal+"-y:"+this.m_yCal+"-z:"+this.m_zCal;
         }
         else{
@@ -123,6 +123,9 @@ public class PluginParameters {
     public void  setZCal(double nanualZcal){
         this.m_yCal=nanualZcal;
         this.m_manualParameter=true;
+    }
+    public boolean getManualParameter(){
+        return this.m_manualParameter;
     }
 
 }

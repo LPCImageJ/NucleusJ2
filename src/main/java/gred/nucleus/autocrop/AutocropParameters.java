@@ -160,7 +160,6 @@ public class AutocropParameters extends PluginParameters {
             if(idProp.equals("ycal")){ setYCal(Double.valueOf(prop.getProperty("ycal")));}
             if(idProp.equals("zcal")){ setZCal(Double.valueOf(prop.getProperty("zcal")));}
         }
-
     }
 
      /**
