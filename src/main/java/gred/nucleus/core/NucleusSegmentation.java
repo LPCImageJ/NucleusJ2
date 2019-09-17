@@ -24,7 +24,7 @@ public class NucleusSegmentation {
     /** Threshold detected by the Otsu modified method*/
 	private int _bestThreshold = -1;
     /** volume min of the detected object*/
-	private short _vMin;
+	private int _vMin;
     /** volume max of the detected object*/
     private  int _vMax;
 	/** String stocking the file name if any nucleus is detected*/
@@ -37,7 +37,7 @@ public class NucleusSegmentation {
 	/**
 	 *
 	 */
-	public NucleusSegmentation (short vMin, int vMax){
+	public NucleusSegmentation (int vMin, int vMax){
         this._vMin = vMin;
         this._vMax = vMax;
 	}
