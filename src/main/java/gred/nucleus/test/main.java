@@ -4,6 +4,7 @@ import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.autocrop.AutoCropCalling;
 import gred.nucleus.segmentation.SegmentationCalling;
 
+import gred.nucleus.segmentation.SegmentationParameters;
 import loci.formats.FormatException;
 //import org.apache.commons.cli.Options;
 
@@ -59,9 +60,10 @@ public class main {
     }
 
     public static void segmentation(String input, String output, short vMin, int vMax, boolean gift ) throws FormatException {
-        SegmentationCalling otsuModif = new SegmentationCalling(input, output, vMin, vMax);
+        SegmentationParameters segmentationParameters = new SegmentationParameters(input,output,vMin, vMax,gift);
+        SegmentationCalling otsuModif = new SegmentationCalling();
         try {
-            String log = otsuModif.runSeveralImages(gift);
+            String log = otsuModif.runSeveralImages();
             if(!(log.equals("")))
                 System.out.println("Nuclei which didn't pass the segmentation\n"+log);
         }catch (IOException e) { e.printStackTrace();}

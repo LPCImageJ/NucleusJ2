@@ -4,6 +4,7 @@ package gred.nucleus.segmentation;
 import gred.nucleus.FilesInputOutput.FilesNames;
 import gred.nucleus.core.ConvexHullSegmentation;
 import gred.nucleus.core.NucleusSegmentation;
+import gred.nucleus.imageProcess.ConvertTo8bits;
 import gred.nucleus.nucleusCaracterisations.NucleusAnalysis;
 import ij.IJ;
 import ij.ImagePlus;
@@ -44,6 +45,8 @@ public class SegmentationCalling {
     private String _output;
     /** String of the input dir for several nuclei analysis*/
     private String _inputDir = "";
+
+    String _prefix="";
 
     private SegmentationParameters m_semgemtationParameters;
 
@@ -175,7 +178,7 @@ public class SegmentationCalling {
      * @throws FormatException Bioformat exception
      */
 
-    public void runSeveralImages2() throws IOException, FormatException {
+    public void runSeveralImages2() throws IOException, FormatException , Exception{
         Directory directoryInput = new Directory(this.m_semgemtationParameters.getInputFolder());
         directoryInput.listFiles(this.m_semgemtationParameters.getInputFolder());
         directoryInput.checkIfEmpty();
@@ -184,6 +187,12 @@ public class SegmentationCalling {
             String fileImg = currentFile.toString();
             FilesNames outPutFilesNames = new FilesNames(fileImg);
             this._prefix = outPutFilesNames.PrefixeNameFile();
+            NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(currentFile ,this._prefix,this.m_semgemtationParameters);
+            nucleusSegmentation.applySegmentation();
+
+
+
+
 
             /**
             public void run() throws IOException, FormatException,fileInOut,Exception {
@@ -290,6 +299,7 @@ public class SegmentationCalling {
      * convert the image in 8bits
      * @param img 16bits ImagePlus
      */
+    //TODO A ENLEVER APRES RESTRUCTURATION !!!!!
     private void preProcessImage(ImagePlus img){
         ContrastEnhancer enh = new ContrastEnhancer();
         enh.setNormalize(true);

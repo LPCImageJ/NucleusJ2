@@ -1,16 +1,24 @@
 package gred.nucleus.core;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Map.Entry;
+
+import gred.nucleus.autocrop.AutocropParameters;
+import gred.nucleus.imageProcess.ConvertTo8bits;
+import gred.nucleus.imageProcess.Thresholding;
+import gred.nucleus.segmentation.SegmentationParameters;
 import gred.nucleus.utils.FillingHoles;
 import gred.nucleus.utils.Gradient;
 import gred.nucleus.utils.Histogram;
 import ij.*;
+import ij.plugin.ChannelSplitter;
 import ij.plugin.Filters3D;
 import ij.process.*;
 import ij.measure.*;
 import ij.process.AutoThresholder.Method;
 import inra.ijpb.binary.ConnectedComponents;
+import loci.plugins.BF;
 
 /**
  * Object segmentation method for 3D images. This segmentation used as initial threshold
@@ -34,7 +42,26 @@ public class NucleusSegmentation {
 	/** Check if the segmentation is not in border */
     private boolean _badCrop =false;
 
-	/**
+
+    File m_currentFile;
+    private String m_outputFilesPrefix;
+    private String m_imageFilePath;
+    private ImagePlus m_imageSeg;
+    private SegmentationParameters m_semgemtationParameters;
+/**
+    File m_currentFile;
+    private ImagePlus m_rawImg;
+    private ImagePlus m_imageSeg;
+    private ImagePlus m_imageSeg_labelled;
+    private String m_imageFilePath;
+    private String m_outputFilesPrefix;
+    private ArrayList<String> m_outputFile =  new ArrayList <String>();
+    private ArrayList <String> m_boxCoordinates = new ArrayList<String>();
+    private int m_channelNumbers=1;
+    private String m_infoImageAnalyse = "";
+    private AutocropParameters m_autocropParameters;
+    private int OTSUthreshold;
+    private String sliceUsedForOTSU;
 	 *
 	 */
 	public NucleusSegmentation (int vMin, int vMax){
@@ -42,7 +69,22 @@ public class NucleusSegmentation {
         this._vMax = vMax;
 	}
 
+    public NucleusSegmentation (File imageFile, String outputFilesPrefix, SegmentationParameters semgemtationParameters)throws Exception{
+        this.m_semgemtationParameters=semgemtationParameters;
+        this.m_outputFilesPrefix=outputFilesPrefix;
+        this.m_currentFile=imageFile;
+        this.m_imageFilePath = imageFile.getAbsolutePath();
+        Thresholding thresholding = new Thresholding();
+        this.m_imageSeg=thresholding.contrastAnd8bits(getImageChannel(0));
 
+    }
+
+    public ImagePlus getImageChannel(int channelNumber)throws Exception{
+        ImagePlus[] currentImage = BF.openImagePlus(this.m_imageFilePath);
+        ChannelSplitter splitter = new ChannelSplitter();
+        currentImage = splitter.split(currentImage[0]);
+        return currentImage[channelNumber];
+    }
 
 	/**
 	 * Compute of the first threshold of input image with the method of Otsu.
@@ -62,6 +104,16 @@ public class NucleusSegmentation {
 	 * @param imagePlusInput ImagePlus raw image
 	 * @return ImagePlus Segmented image
 	 */
+
+    public void applySegmentation () {
+        double sphericityMax = -1.0;
+        double sphericity;
+        double volume;
+       // getVoxelVolume()
+
+    }
+
+
 	public ImagePlus applySegmentation (ImagePlus imagePlusInput) {
 		double sphericityMax = -1.0;
 		double sphericity;
@@ -358,4 +410,17 @@ public class NucleusSegmentation {
 		}
 		return labelMax;
 	}
+
+    public double getVoxelVolume(){
+        double calibration=0;
+        if(this.m_semgemtationParameters.m_manualParameter==true){
+            calibration=m_semgemtationParameters.getVoxelVolume();
+        }
+        else{
+            Calibration cal = this.m_imageSeg.getCalibration();
+            calibration= cal.pixelDepth*cal.pixelWidth*cal.pixelHeight;
+        }
+
+        return calibration ;
+    }
 }
