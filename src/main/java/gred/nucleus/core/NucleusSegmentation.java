@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Map.Entry;
 
 import gred.nucleus.autocrop.AutocropParameters;
-import gred.nucleus.imageProcess.ConvertTo8bits;
 import gred.nucleus.imageProcess.Thresholding;
 import gred.nucleus.segmentation.SegmentationParameters;
 import gred.nucleus.utils.FillingHoles;
@@ -48,22 +47,7 @@ public class NucleusSegmentation {
     private String m_imageFilePath;
     private ImagePlus m_imageSeg;
     private SegmentationParameters m_semgemtationParameters;
-/**
-    File m_currentFile;
-    private ImagePlus m_rawImg;
-    private ImagePlus m_imageSeg;
-    private ImagePlus m_imageSeg_labelled;
-    private String m_imageFilePath;
-    private String m_outputFilesPrefix;
-    private ArrayList<String> m_outputFile =  new ArrayList <String>();
-    private ArrayList <String> m_boxCoordinates = new ArrayList<String>();
-    private int m_channelNumbers=1;
-    private String m_infoImageAnalyse = "";
-    private AutocropParameters m_autocropParameters;
-    private int OTSUthreshold;
-    private String sliceUsedForOTSU;
-	 *
-	 */
+
 	public NucleusSegmentation (int vMin, int vMax){
         this._vMin = vMin;
         this._vMax = vMax;
@@ -172,18 +156,8 @@ public class NucleusSegmentation {
 	}
 
 
-	/**
-	 * Compute the beginig threshold value
-	 *
-	 * @param imagePlusInput raw image
-	 * @return
-	 */
-	private int computeThreshold (ImagePlus imagePlusInput) {
-		AutoThresholder autoThresholder = new AutoThresholder();
-		ImageStatistics imageStatistics = new StackStatistics(imagePlusInput);
-		int [] tHisto = imageStatistics.histogram;
-		return autoThresholder.getThreshold(Method.Otsu,tHisto);
-	}
+
+
 
 	/**
 	 * Creation of the nucleus segmented image
@@ -268,7 +242,8 @@ public class NucleusSegmentation {
 	 */
 	private ArrayList<Integer> computeMinMaxThreshold(ImagePlus imagePlusInput) {
 		ArrayList<Integer> arrayListMinMaxThreshold = new ArrayList<Integer>();
-		int threshold = computeThreshold (imagePlusInput);
+        Thresholding thresholding = new Thresholding();
+        int threshold = thresholding.computeOtsuThreshold(this.m_imageSeg);
 		StackStatistics stackStatistics = new StackStatistics(imagePlusInput);
 		double stdDev =stackStatistics.stdDev ;
 		double min = threshold - stdDev*2;

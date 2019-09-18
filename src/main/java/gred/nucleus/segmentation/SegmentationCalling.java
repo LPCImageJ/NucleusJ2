@@ -4,7 +4,6 @@ package gred.nucleus.segmentation;
 import gred.nucleus.FilesInputOutput.FilesNames;
 import gred.nucleus.core.ConvexHullSegmentation;
 import gred.nucleus.core.NucleusSegmentation;
-import gred.nucleus.imageProcess.ConvertTo8bits;
 import gred.nucleus.nucleusCaracterisations.NucleusAnalysis;
 import ij.IJ;
 import ij.ImagePlus;
