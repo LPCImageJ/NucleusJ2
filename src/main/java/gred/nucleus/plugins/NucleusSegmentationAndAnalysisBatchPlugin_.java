@@ -30,9 +30,9 @@ public class NucleusSegmentationAndAnalysisBatchPlugin_ implements PlugIn {
             SegmentationCalling otsuModif = new SegmentationCalling(_nucleusPipelineBatchDialog.getRawDataDirectory(), _nucleusPipelineBatchDialog.getWorkDirectory(),
                     (short)_nucleusPipelineBatchDialog.getMinVolume(), (short)_nucleusPipelineBatchDialog.getMaxVolume());
             try {
-                String log = otsuModif.runSeveralImages(true);
-            } catch (IOException e) {     e.printStackTrace();
-            } catch (FormatException e) { e.printStackTrace(); }
+                String log = otsuModif.runSeveralImages();
+            } catch (Exception e) {     e.printStackTrace();
+             }
 
             IJ.log("End of the segmentation the nuclei, the results are in "+_nucleusPipelineBatchDialog.getWorkDirectory());
 		}

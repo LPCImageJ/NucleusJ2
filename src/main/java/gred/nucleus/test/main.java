@@ -59,7 +59,7 @@ public class main {
         autoCrop.run();
     }
 
-    public static void segmentation(String input, String output, short vMin, int vMax, boolean gift ) throws FormatException {
+    public static void segmentation(String input, String output, short vMin, int vMax, boolean gift ) throws Exception {
         SegmentationParameters segmentationParameters = new SegmentationParameters(input,output,vMin, vMax,gift);
         SegmentationCalling otsuModif = new SegmentationCalling();
         try {

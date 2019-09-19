@@ -124,6 +124,15 @@ public class PluginParameters {
         this.m_yCal=nanualZcal;
         this.m_manualParameter=true;
     }
+    public double  getXCal( ){
+        return this.m_xCal;
+    }
+    public double  getYCal( ){
+        return this.m_xCal;
+    }
+    public double  getZCal( ){
+        return this.m_xCal;
+    }
     public boolean getManualParameter(){
         return this.m_manualParameter;
     }

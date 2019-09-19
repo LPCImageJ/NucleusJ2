@@ -43,13 +43,15 @@ public class NucleusSegmentationAndAnalysisPlugin_ implements PlugIn{
 
 			IJ.log("Begin image processing "+img.getTitle());
             SegmentationCalling segMethod = new SegmentationCalling(img,volumeMin,volumeMax);
-
-			int thresh = segMethod.runOneImage(false);
-			if (thresh  != -1){
-				NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(img,segMethod.getImageSegmented());
-				IJ.log(nucleusAnalysis.nucleusParameter3D());
-                segMethod.getImageSegmented().show();
+			try {
+				int thresh = segMethod.runOneImage();
+				if (thresh != -1) {
+					NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(img, segMethod.getImageSegmented());
+					IJ.log(nucleusAnalysis.nucleusParameter3D());
+					segMethod.getImageSegmented().show();
+				}
 			}
+			catch (Exception e){}
 		}
 	}
 }

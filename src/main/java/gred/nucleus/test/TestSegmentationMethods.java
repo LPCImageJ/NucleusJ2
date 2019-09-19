@@ -1,6 +1,7 @@
 package gred.nucleus.test;
 
 import gred.nucleus.segmentation.SegmentationCalling;
+import gred.nucleus.segmentation.SegmentationParameters;
 import ij.ImagePlus;
 import loci.formats.FormatException;
 
@@ -18,9 +19,9 @@ public class TestSegmentationMethods {
      * @param outputImgString
      */
 
-    public static void testStupid(ImagePlus img, short vMin, int vMax, String outputImgString, boolean gift ) {
+    public static void testStupid(ImagePlus img, short vMin, int vMax, String outputImgString, boolean gift )throws Exception {
         SegmentationCalling otsuModif = new SegmentationCalling(img, vMin, vMax, outputImgString);
-        otsuModif.runOneImage(gift);
+        otsuModif.runOneImage();
     }
 
     /**
@@ -31,21 +32,30 @@ public class TestSegmentationMethods {
      * @param vMax
 
      */
-    public static void testStupidSeveralImages(String input, String output, short vMin, int vMax, boolean gift ) throws FormatException {
-        SegmentationCalling otsuModif = new SegmentationCalling(input, output, vMin, vMax);
+    public static void segmentation(String input, String output, short vMin, int vMax, boolean gift ) throws Exception {
+        SegmentationParameters segmentationParameters = new SegmentationParameters(input,output,vMin, vMax,gift);
+        SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
         try {
-            String log = otsuModif.runSeveralImages(gift);
+            String log = otsuModif.runSeveralImages();
             if(!(log.equals("")))
                 System.out.println("Nuclei which didn't pass the segmentation\n"+log);
         }catch (IOException e) { e.printStackTrace();}
     }
-
+    public static void segmentation2(String input, String output, short vMin, int vMax, boolean gift ) throws Exception {
+        SegmentationParameters segmentationParameters = new SegmentationParameters(input,output,vMin, vMax,gift);
+        SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
+        try {
+            String log = otsuModif.runSeveralImages2();
+            if(!(log.equals("")))
+                System.out.println("Nuclei which didn't pass the segmentation\n"+log);
+        }catch (Exception e) { e.printStackTrace();}
+    }
     /**
      *
      * Main function of the package's tests.
      * @param args
      */
-    public static void main(String[] args) throws FormatException {
+    public static void main(String[] args) throws Exception {
         //testComponentsLabeling(wrapImaJ.test.TestCoreMethods.testImages_8bits[1]);
         String imgPathAxel = "/home/plop/Bureau/image/wideField/test/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s4_46_1655_34_8.tif";
         String imgSegPathAxel = "/home/plop/Bureau/image/";
@@ -95,15 +105,21 @@ public class TestSegmentationMethods {
         String ExpectedResult = "/home/tridubos/Bureau/TEST_SEG/Results_checked/Z_Col_cot21&17&22__w11 DAPI SIM_s3/";
         String ExpectedResultOutOTSU = "/home/tridubos/Bureau/TEST_SEG/Results_checked/Z_Col_cot21&17&22__w11 DAPI SIM_s3/OTSU/";
 
-        String inputTristan= "/media/tridubos/DATA1/SPERMATO/Manipe_1_57_images_input/Segmentation/Analyse_Segmentation/NucleusPB";
-        String outputTristanGift = "/home/tridubos/Bureau/TEST_SEG/Test_analysis/Z_Col_cot21&17&22__w11 DAPI SIM_s3/GIFT/";
-        String outputTristanOtsu = "/media/tridubos/DATA1/SPERMATO/Manipe_1_57_images_input/Segmentation/Analyse_Segmentation/Segmented";
+       // String inputTristan= "/media/tridubos/DATA1/SPERMATO/Manipe_1_57_images_input/Segmentation/Analyse_Segmentation/NucleusPB";
+       //String outputTristanGift = "/home/tridubos/Bureau/TEST_SEG/Test_analysis/Z_Col_cot21&17&22__w11 DAPI SIM_s3/GIFT/";
+        //String outputTristanOtsu = "/media/tridubos/DATA1/SPERMATO/Manipe_1_57_images_input/Segmentation/Analyse_Segmentation/Segmented";
         /*
         OuputFileVerification fw = new OuputFileVerification(ExpectedResult,inputTristan);
         fw.GetFileResultExpeted(ExpectedResult);
         fw.GetFilesOutputFolder(inputTristan);
         */
-        testStupidSeveralImages(inputTristan, outputTristanOtsu , (short)1.0, 300000000,true);
+        String inputTristan= "/home/tridubos/Bureau/TEST_SEGMENTATION/RawData/";
+        String outputTristanOtsu = "/home/tridubos/Bureau/TEST_SEGMENTATION/OldWay";
+                 String outputTristanOtsu2 = "/home/tridubos/Bureau/TEST_SEGMENTATION/NewWay";
+
+        segmentation(inputTristan, outputTristanOtsu , (short)1.0, 300000000,true);
+        segmentation2(inputTristan, outputTristanOtsu2 , (short)1.0, 300000000,true);
+
 
        // testStupidSeveralImages(ExpectedResult, ExpectedResult, (short)6.0, 300000000,true);
  /*

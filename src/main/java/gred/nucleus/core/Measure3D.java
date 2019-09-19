@@ -20,7 +20,21 @@ import Jama.Matrix;
  */
 
 public class Measure3D {
+
+	ImagePlus _image;
+
+	double _xCal;
+	double _ycal;
+	double _zcal;
+
 	public Measure3D (){ }
+
+	public Measure3D (ImagePlus img, double xCal,double ycal,double zCal){
+		this._image=img;
+		this._xCal=xCal;
+		this._ycal=ycal;
+		this._zcal=zCal;
+	}
 
 	/**
 	 * Scan of image and if the voxel belong to theobject of interest, looking,
@@ -90,9 +104,21 @@ public class Measure3D {
 			tObjectVolume[i] = nbVoxel*xCalibration*yCalibration*zCalibration;
 	    }
 		return tObjectVolume;
-	} 
+	}
 
+	/**
+	 * Compute the volume of one object with this label
+	 * @param imagePlusInput ImagePLus of the segmented image
+	 * @param label double label of the object of interest
+	 * @return double: the volume of the label of interest
+	 */
+	public double computeVolumeObject2 ( double label){
+		Histogram histogram = new Histogram ();
+		histogram.run(this._image);
+		HashMap<Double , Integer> hashMapHisto = histogram.getHistogram();
+		return  hashMapHisto.get(label) *_xCal*_ycal*_zcal;
 
+	}
 	/**
 	 * Compute the volume of one object with this label
 	 * @param imagePlusInput ImagePLus of the segmented image
@@ -342,7 +368,54 @@ public class Measure3D {
 		histogram.run(imagePlusInput);
 		return histogram.getNbLabels();
 	}
-	 
+
+	public double computeComplexSurface2(ImagePlus imagePlusInput) {
+		Gradient gradient = new Gradient(imagePlusInput);
+		ArrayList <Double> tableUnitaire [][][] = gradient.getUnitaire();
+		ImageStack imageStackSegmented = this._image.getStack();
+		double surfaceArea = 0,voxelValue, neighborVoxelValue;
+		VoxelRecord voxelRecordIn = new VoxelRecord();
+		VoxelRecord voxelRecordOut= new VoxelRecord();
+
+		for (int k = 2; k < this._image.getNSlices()-2; ++k) {
+			for (int i = 2; i < this._image.getWidth() - 2; ++i) {
+				for (int j = 2; j < this._image.getHeight() - 2; ++j) {
+					voxelValue = imageStackSegmented.getVoxel(i, j, k);
+					if (voxelValue > 0) {
+						for (int kk = k - 1; kk <= k + 1; kk += 2) {
+							neighborVoxelValue = imageStackSegmented.getVoxel(i, j, kk);
+							if (voxelValue != neighborVoxelValue) {
+								voxelRecordIn.setLocation((double) i, (double) j, (double) k);
+								voxelRecordOut.setLocation((double) i, (double) j, (double) kk);
+								surfaceArea = surfaceArea + computeSurfelContribution(tableUnitaire[i][j][k],
+										tableUnitaire[i][j][kk], voxelRecordIn, voxelRecordOut,
+										((this._xCal) * (this._ycal)));
+							}
+						}
+						for (int ii = i - 1; ii <= i + 1; ii += 2) {
+							neighborVoxelValue = imageStackSegmented.getVoxel(ii, j, k);
+							if (voxelValue != neighborVoxelValue) {
+								voxelRecordIn.setLocation((double) i, (double) j, (double) k);
+								voxelRecordOut.setLocation((double) ii, (double) j, (double) k);
+								surfaceArea = surfaceArea + computeSurfelContribution(tableUnitaire[i][j][k], tableUnitaire[ii][j][k],
+										voxelRecordIn, voxelRecordOut, ((this._ycal) * (this._zcal)));
+							}
+						}
+						for (int jj = j - 1; jj <= j + 1; jj += 2) {
+							neighborVoxelValue = imageStackSegmented.getVoxel(i, jj, k);
+							if (voxelValue != neighborVoxelValue) {
+								voxelRecordIn.setLocation((double) i, (double) j, (double) k);
+								voxelRecordOut.setLocation((double) i, (double) jj, (double) k);
+								surfaceArea = surfaceArea + computeSurfelContribution(tableUnitaire[i][j][k], tableUnitaire[i][jj][k],
+										voxelRecordIn, voxelRecordOut, ((this._xCal) * (this._zcal)));
+							}
+						}
+					}
+				}
+			}
+		}
+		return surfaceArea;
+	}
 
 	/**
 	 * //TODO garder qu'une seul methode poure calcuer la surface complexe

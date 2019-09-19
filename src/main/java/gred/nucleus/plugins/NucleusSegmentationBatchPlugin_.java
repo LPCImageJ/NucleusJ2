@@ -37,7 +37,7 @@ public class NucleusSegmentationBatchPlugin_ implements PlugIn {
 			    }
 				SegmentationCalling otsuModif = new SegmentationCalling(_nucleusSegmentationBatchDialog.getRawDataDirectory(), _nucleusSegmentationBatchDialog.getWorkDirectory(),
 						(short)_nucleusSegmentationBatchDialog.getMinVolume(), (short)_nucleusSegmentationBatchDialog.getMaxVolume());
-                otsuModif.runOneImage(true);
+                otsuModif.runOneImage();
 			}
 		}
 	}

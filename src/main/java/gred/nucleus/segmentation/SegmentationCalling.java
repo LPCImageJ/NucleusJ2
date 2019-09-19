@@ -54,11 +54,18 @@ public class SegmentationCalling {
     /**
      *  Constructor for ImagePlus input
      *
-     * @param inputDir String path of the input containing the tif/TIF file
-     * @param outputDir String of of the path to save results img of the segmented nucleus.
+
      * @param semgemtationParameters : list of parameters in config file.
      *
      */
+
+    public SegmentationCalling(SegmentationParameters semgemtationParameters) {
+
+        this.m_semgemtationParameters=semgemtationParameters;
+
+    }
+
+
     public SegmentationCalling(String inputDir, String outputDir,SegmentationParameters semgemtationParameters) {
         this._inputDir = inputDir;
         this._output = outputDir;
@@ -108,6 +115,8 @@ public class SegmentationCalling {
         this.m_semgemtationParameters.setMinVolumeNucleus(vMin);
         this.m_semgemtationParameters.setMaxVolumeNucleus(vMax);
         this._inputDir = inputDir;
+        System.out.println("eu"+this._inputDir);
+
         this._output = outputDir;
         Directory dirOutput =new Directory(this._output );
         dirOutput.CheckAndCreateDir();
@@ -122,9 +131,9 @@ public class SegmentationCalling {
      *
      * @return ImagePlus the segmented nucleus
      */
-    public int runOneImage() {
+    public int runOneImage() throws Exception{
         ImagePlus imgSeg= this._imgInput;
-        NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(this.m_semgemtationParameters.getM_minVolumeNucleus(), this.m_semgemtationParameters.getM_maxVolumeNucleus());
+        NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(this.m_semgemtationParameters.getM_minVolumeNucleus(), this.m_semgemtationParameters.getM_maxVolumeNucleus(),this.m_semgemtationParameters);
 
         Calibration cal = imgSeg.getCalibration();
         System.out.println(imgSeg.getTitle()+"\t"+cal.pixelWidth+"\t"+cal.pixelHeight+"\t"+cal.pixelDepth);
@@ -177,7 +186,9 @@ public class SegmentationCalling {
      * @throws FormatException Bioformat exception
      */
 
-    public void runSeveralImages2() throws IOException, FormatException , Exception{
+    public String runSeveralImages2() throws IOException, FormatException , Exception{
+        String log = "";
+        String resu = "";
         Directory directoryInput = new Directory(this.m_semgemtationParameters.getInputFolder());
         directoryInput.listFiles(this.m_semgemtationParameters.getInputFolder());
         directoryInput.checkIfEmpty();
@@ -186,47 +197,57 @@ public class SegmentationCalling {
             String fileImg = currentFile.toString();
             FilesNames outPutFilesNames = new FilesNames(fileImg);
             this._prefix = outPutFilesNames.PrefixeNameFile();
+
             NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(currentFile ,this._prefix,this.m_semgemtationParameters);
-            nucleusSegmentation.applySegmentation();
+            nucleusSegmentation.findOTSUmaximisingSephericity();
+            this._imgSeg= nucleusSegmentation.applySegmentation2();
 
-
-
-
-
-            /**
-            public void run() throws IOException, FormatException,fileInOut,Exception {
-
-                Directory directoryInput=new Directory(this.m_autocropParameters.getInputFolder());
-                directoryInput.listFiles(this.m_autocropParameters.getInputFolder());
-                directoryInput.checkIfEmpty();
-                directoryInput.checkAndActualiseNDFiles();
-                for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
-                    File currentFile = directoryInput.getFile(i);
-                    String fileImg = currentFile.toString();
-                    FilesNames outPutFilesNames = new FilesNames(fileImg);
-                    this._prefix = outPutFilesNames.PrefixeNameFile();
-                    AutoCrop autoCrop = new AutoCrop(currentFile, this._prefix,this.m_autocropParameters);
-                    autoCrop.thresholdKernels();
-                    autoCrop.computeConnectcomponent();
-                    autoCrop.componentBorderFilter();
-                    autoCrop.componentSizeFilter();
-                    autoCrop.computeBoxes2();
-                    autoCrop.cropKernels2();
-                    autoCrop.writeAnalyseInfo();
-                    annotAutoCrop test = new annotAutoCrop(autoCrop.getFileCoordinates(), currentFile, this.m_autocropParameters.getOutputFolder() + this._prefix);
-                    test.run();
-                    this.m_outputCropGeneralInfo=this.m_outputCropGeneralInfo+autoCrop.getImageCropInfo();
-
+            if (nucleusSegmentation.getBadCrop()==true || nucleusSegmentation.getBestThreshold() == -1) {
+                IJ.log("Bad crop " +fileImg+ "  "+nucleusSegmentation.getBestThreshold());
+                File file = new File(this._inputDir+"/BadCrop");
+                if (!file.exists()){
+                    file.mkdir();
                 }
-             */
+                File fileToMove = new File(fileImg);
+                fileToMove.renameTo(new File(this._inputDir+fileToMove.separator+"BadCrop"+fileToMove.separator+this._imgSeg.getTitle()));
+                IJ.log("test "+this._inputDir+fileToMove.separator+"BadCrop"+fileToMove.separator+this._imgSeg.getTitle()+"\n");
+
+                //FileUtils.moveFileToDirectory(fileImg, this._inputDir+"/BadCrop"/, REPLACE_EXISTING);
+
+            }
+            else {
+                if (nucleusSegmentation.getBestThreshold() == -1) {
+                    log = log + fileImg + "\n";
+                } else {
+                    System.out.println(fileImg + "\totsu modif threshold " + nucleusSegmentation.getBestThreshold() + "\n");
+                    if (this.m_semgemtationParameters.getGiftWrapping()) {
+                        ConvexHullSegmentation nuc = new ConvexHullSegmentation();
+                        this._imgSeg = nuc.run(this._imgSeg);
+                    }
+                    String pathSeg = this._output + this._imgSeg.getTitle();
+                    this._imgSeg.setTitle(pathSeg);
+                    saveFile(this._imgSeg, pathSeg);
+                    NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(this._imgSeg, this._imgSeg);
+                    nucleusAnalysis.setResu(resu);
+                    resu = nucleusAnalysis.nucleusParameter3D();
+                }
+            }
+
+
 
         }
+        BufferedWriter writer;
+        writer = new BufferedWriter(new FileWriter(new File(this._output+File.separator+"ParametersResults.txt")));
+        writer.write(resu);
+        writer.close();
+        return log;
 
     }
-        public String runSeveralImages() throws IOException, FormatException {
+        public String runSeveralImages() throws IOException, FormatException , Exception{
         String log = "";
         String resu = "";
-        File [] fileList = new File(this._inputDir).listFiles();
+            System.out.println("eu"+this.m_semgemtationParameters.getInputFolder());
+            File [] fileList = new File(this.m_semgemtationParameters.getInputFolder()).listFiles();
         for(int i = 0; i < fileList.length; ++i) {
             String fileImg = fileList[i].toString();
             if (fileImg.contains(".tif")) {
@@ -235,20 +256,20 @@ public class SegmentationCalling {
                 ImagePlus imgSeg = img;
                 if (imgSeg.getType() == ImagePlus.GRAY16)
                     this.preProcessImage(imgSeg);
-                NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(this.m_semgemtationParameters.getM_minVolumeNucleus(), this.m_semgemtationParameters.getM_maxVolumeNucleus());
+                NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(this.m_semgemtationParameters.getM_minVolumeNucleus(), this.m_semgemtationParameters.getM_maxVolumeNucleus(),this.m_semgemtationParameters);
 
                 imgSeg = nucleusSegmentation.applySegmentation(imgSeg);
                 // TODO A Nettoyer les else !!!
 
                 if (nucleusSegmentation.getBadCrop()==true || nucleusSegmentation.getBestThreshold() == -1) {
                     IJ.log("Bad crop " +fileImg+ "  "+nucleusSegmentation.getBestThreshold());
-                    File file = new File(this._inputDir+"/BadCrop");
+                    File file = new File(this.m_semgemtationParameters.getInputFolder()+"/BadCrop");
                     if (!file.exists()){
                         file.mkdir();
                     }
                     File fileToMove = new File(fileImg);
-                    fileToMove.renameTo(new File(this._inputDir+fileToMove.separator+"BadCrop"+fileToMove.separator+img.getTitle()));
-                    IJ.log("test "+this._inputDir+fileToMove.separator+"BadCrop"+fileToMove.separator+img.getTitle()+"\n");
+                    fileToMove.renameTo(new File(this.m_semgemtationParameters.getInputFolder()+fileToMove.separator+"BadCrop"+fileToMove.separator+img.getTitle()));
+                    IJ.log("test "+this.m_semgemtationParameters.getInputFolder()+fileToMove.separator+"BadCrop"+fileToMove.separator+img.getTitle()+"\n");
 
                     //FileUtils.moveFileToDirectory(fileImg, this._inputDir+"/BadCrop"/, REPLACE_EXISTING);
 
@@ -274,7 +295,7 @@ public class SegmentationCalling {
             }
         }
         BufferedWriter writer;
-        writer = new BufferedWriter(new FileWriter(new File(this._output+File.separator+"ParametersResults.txt")));
+        writer = new BufferedWriter(new FileWriter(new File(this.m_semgemtationParameters.getOutputFolder()+File.separator+"ParametersResults.txt")));
         writer.write(resu);
         writer.close();
         return log;
