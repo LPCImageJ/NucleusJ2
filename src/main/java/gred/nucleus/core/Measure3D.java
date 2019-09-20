@@ -34,6 +34,8 @@ public class Measure3D {
 		this._xCal=xCal;
 		this._ycal=ycal;
 		this._zcal=zCal;
+		System.out.println("Dans la  : "+this._xCal*this._ycal*this._zcal+ "et lui  "+this._image.getTitle());
+
 	}
 
 	/**
@@ -108,7 +110,6 @@ public class Measure3D {
 
 	/**
 	 * Compute the volume of one object with this label
-	 * @param imagePlusInput ImagePLus of the segmented image
 	 * @param label double label of the object of interest
 	 * @return double: the volume of the label of interest
 	 */
@@ -116,7 +117,8 @@ public class Measure3D {
 		Histogram histogram = new Histogram ();
 		histogram.run(this._image);
 		HashMap<Double , Integer> hashMapHisto = histogram.getHistogram();
-		return  hashMapHisto.get(label) *_xCal*_ycal*_zcal;
+		System.out.println("Y sont pas initialisé ? : "+this._xCal*this._ycal*this._zcal+ "et lui  "+label+" "+hashMapHisto.get(label));
+		return  hashMapHisto.get(label)*this._xCal*this._ycal*this._zcal;
 
 	}
 	/**

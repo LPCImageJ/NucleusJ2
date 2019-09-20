@@ -50,10 +50,11 @@ public class NucleusSegmentation {
     private int bestOTSU;
 
 
-	public NucleusSegmentation (int vMin, int vMax,SegmentationParameters semgemtationParameters)throws Exception{
+	public NucleusSegmentation (ImagePlus imgSeg, int vMin, int vMax,SegmentationParameters semgemtationParameters)throws Exception{
         this._vMin = vMin;
         this._vMax = vMax;
         this.m_semgemtationParameters=semgemtationParameters;
+		this._imgRaw=imgSeg;
 		this._imgRaw=getImageChannel(0);
 
 	}
@@ -69,6 +70,7 @@ public class NucleusSegmentation {
     }
 
     public ImagePlus getImageChannel(int channelNumber)throws Exception{
+		System.out.println("hum :"+ this.m_imageFilePath);
         ImagePlus[] currentImage = BF.openImagePlus(this.m_imageFilePath);
         ChannelSplitter splitter = new ChannelSplitter();
         currentImage = splitter.split(currentImage[0]);
@@ -99,10 +101,15 @@ public class NucleusSegmentation {
 		double bestSphericity=-1;
 		ArrayList<Integer> arrayListThreshold = computeMinMaxThreshold(this._imgRaw);  // methode OTSU
 		for (int t = arrayListThreshold.get(0) ; t <= arrayListThreshold.get(1); ++t) {
+			this._imgRaw.show();
 			this.m_imageSeg= generateSegmentedImage(this._imgRaw,t);
+			this.m_imageSeg.show();
+
 			this.m_imageSeg = ConnectedComponents.computeLabels(this.m_imageSeg, 26, 32);
+			this.m_imageSeg.show();
+
 			Measure3D measure3D = new Measure3D(this.m_imageSeg,getXcalibration(),getYcalibration(),getZcalibration());
-			double volume = measure3D.computeVolumeObject2(255);
+			double volume = measure3D.computeVolumeObject(this.m_imageSeg,255);
 			boolean firstStack = isVoxelThresholded(this.m_imageSeg,255, 0);
 			boolean lastStack = isVoxelThresholded(this.m_imageSeg,255, this.m_imageSeg.getStackSize()-1);
 			if (testRelativeObjectVolume(volume,imageVolume) &&
@@ -275,7 +282,7 @@ public class NucleusSegmentation {
 	private ArrayList<Integer> computeMinMaxThreshold(ImagePlus imagePlusInput) {
 		ArrayList<Integer> arrayListMinMaxThreshold = new ArrayList<Integer>();
         Thresholding thresholding = new Thresholding();
-        int threshold = thresholding.computeOtsuThreshold(this.m_imageSeg);
+        int threshold = thresholding.computeOtsuThreshold(imagePlusInput);
 		StackStatistics stackStatistics = new StackStatistics(imagePlusInput);
 		double stdDev =stackStatistics.stdDev ;
 		double min = threshold - stdDev*2;

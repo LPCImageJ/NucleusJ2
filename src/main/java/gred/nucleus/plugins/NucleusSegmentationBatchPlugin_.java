@@ -35,9 +35,13 @@ public class NucleusSegmentationBatchPlugin_ implements PlugIn {
 			    	IJ.error("image format", "No images in gray scale 8bits or 16 bits in 3D");
 			        return;
 			    }
-				SegmentationCalling otsuModif = new SegmentationCalling(_nucleusSegmentationBatchDialog.getRawDataDirectory(), _nucleusSegmentationBatchDialog.getWorkDirectory(),
-						(short)_nucleusSegmentationBatchDialog.getMinVolume(), (short)_nucleusSegmentationBatchDialog.getMaxVolume());
-                otsuModif.runOneImage();
+				try {
+					SegmentationCalling otsuModif = new SegmentationCalling(_nucleusSegmentationBatchDialog.getRawDataDirectory(), _nucleusSegmentationBatchDialog.getWorkDirectory(),
+							(short) _nucleusSegmentationBatchDialog.getMinVolume(), (short) _nucleusSegmentationBatchDialog.getMaxVolume());
+					otsuModif.runOneImage();
+				}
+			 catch (Exception e) {     e.printStackTrace();
+			}
 			}
 		}
 	}

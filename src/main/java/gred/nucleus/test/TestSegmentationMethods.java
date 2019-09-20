@@ -117,7 +117,7 @@ public class TestSegmentationMethods {
         String outputTristanOtsu = "/home/tridubos/Bureau/TEST_SEGMENTATION/OldWay";
                  String outputTristanOtsu2 = "/home/tridubos/Bureau/TEST_SEGMENTATION/NewWay";
 
-        segmentation(inputTristan, outputTristanOtsu , (short)1.0, 300000000,true);
+        //segmentation(inputTristan, outputTristanOtsu , (short)1.0, 300000000,true);
         segmentation2(inputTristan, outputTristanOtsu2 , (short)1.0, 300000000,true);
 
 

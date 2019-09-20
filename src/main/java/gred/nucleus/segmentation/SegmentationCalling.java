@@ -133,7 +133,7 @@ public class SegmentationCalling {
      */
     public int runOneImage() throws Exception{
         ImagePlus imgSeg= this._imgInput;
-        NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(this.m_semgemtationParameters.getM_minVolumeNucleus(), this.m_semgemtationParameters.getM_maxVolumeNucleus(),this.m_semgemtationParameters);
+        NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(imgSeg,this.m_semgemtationParameters.getM_minVolumeNucleus(), this.m_semgemtationParameters.getM_maxVolumeNucleus(),this.m_semgemtationParameters);
 
         Calibration cal = imgSeg.getCalibration();
         System.out.println(imgSeg.getTitle()+"\t"+cal.pixelWidth+"\t"+cal.pixelHeight+"\t"+cal.pixelDepth);
@@ -256,7 +256,7 @@ public class SegmentationCalling {
                 ImagePlus imgSeg = img;
                 if (imgSeg.getType() == ImagePlus.GRAY16)
                     this.preProcessImage(imgSeg);
-                NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(this.m_semgemtationParameters.getM_minVolumeNucleus(), this.m_semgemtationParameters.getM_maxVolumeNucleus(),this.m_semgemtationParameters);
+                NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(imgSeg,this.m_semgemtationParameters.getM_minVolumeNucleus(), this.m_semgemtationParameters.getM_maxVolumeNucleus(),this.m_semgemtationParameters);
 
                 imgSeg = nucleusSegmentation.applySegmentation(imgSeg);
                 // TODO A Nettoyer les else !!!
