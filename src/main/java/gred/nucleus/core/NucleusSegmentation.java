@@ -12,7 +12,9 @@ import gred.nucleus.utils.Gradient;
 import gred.nucleus.utils.Histogram;
 import ij.*;
 import ij.plugin.ChannelSplitter;
+import ij.plugin.ContrastEnhancer;
 import ij.plugin.Filters3D;
+import ij.plugin.GaussianBlur3D;
 import ij.process.*;
 import ij.measure.*;
 import ij.process.AutoThresholder.Method;
@@ -98,22 +100,29 @@ public class NucleusSegmentation {
 	public void findOTSUmaximisingSephericity(){
 		double imageVolume=getVoxelVolume()*this._imgRaw.getWidth()*this._imgRaw.getHeight()*this._imgRaw.getStackSize();
 		Gradient gradient = new Gradient(this._imgRaw);
+		preProcessImage(this._imgRaw);
 		double bestSphericity=-1;
 		ArrayList<Integer> arrayListThreshold = computeMinMaxThreshold(this._imgRaw);  // methode OTSU
 		System.out.println(arrayListThreshold);
+		this._imgRaw.show();
+
 		for (int t = arrayListThreshold.get(0) ; t <= arrayListThreshold.get(1); ++t) {
-			this._imgRaw.show();
+			//this._imgRaw.show();
 			System.out.println("Le threshols : "+t);
 			this.m_imageSeg= generateSegmentedImage(this._imgRaw,t);
-			this.m_imageSeg.show();
+			//this.m_imageSeg.show();
 
 			this.m_imageSeg = ConnectedComponents.computeLabels(this.m_imageSeg, 26, 32);
-			this.m_imageSeg.show();
+			//this.m_imageSeg.show();
 
 			Measure3D measure3D = new Measure3D(this.m_imageSeg,getXcalibration(),getYcalibration(),getZcalibration());
-			double volume = measure3D.computeVolumeObject(this.m_imageSeg,255);
+			this.m_imageSeg.show();
+
+			double volume = measure3D.computeVolumeObject2(255);
 			boolean firstStack = isVoxelThresholded(this.m_imageSeg,255, 0);
 			boolean lastStack = isVoxelThresholded(this.m_imageSeg,255, this.m_imageSeg.getStackSize()-1);
+			this.m_imageSeg.close();
+
 			if (testRelativeObjectVolume(volume,imageVolume) &&
 					volume >= this.m_semgemtationParameters.getM_minVolumeNucleus() &&
 					volume <= this.m_semgemtationParameters.getM_maxVolumeNucleus() && firstStack == false && lastStack == false) {
@@ -127,7 +136,16 @@ public class NucleusSegmentation {
 			}
 		}
 	}
-
+	private  void preProcessImage(ImagePlus img){
+		ContrastEnhancer enh = new ContrastEnhancer();
+		enh.setNormalize(true);
+		enh.setUseStackHistogram(true);
+		enh.setProcessStack(true);
+		enh.stretchHistogram(img.getProcessor(), 0.05);
+		GaussianBlur3D.blur(img, 0.5,0.5,1);
+		StackConverter stackConverter = new StackConverter( img );
+		stackConverter.convertToGray8();
+	}
 
 	public ImagePlus applySegmentation2(){
 		this.m_imageSeg= generateSegmentedImage(this._imgRaw,this._bestThreshold);
