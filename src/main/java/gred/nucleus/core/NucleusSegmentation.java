@@ -117,7 +117,7 @@ public class NucleusSegmentation {
 
 			Measure3D measure3D = new Measure3D(this.m_imageSeg,getXcalibration(),getYcalibration(),getZcalibration());
 			this.m_imageSeg.show();
-
+			deleteArtefact(this.m_imageSeg);
 			double volume = measure3D.computeVolumeObject2(255);
 			boolean firstStack = isVoxelThresholded(this.m_imageSeg,255, 0);
 			boolean lastStack = isVoxelThresholded(this.m_imageSeg,255, this.m_imageSeg.getStackSize()-1);
