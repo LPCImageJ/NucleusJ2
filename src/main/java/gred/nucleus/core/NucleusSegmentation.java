@@ -100,6 +100,7 @@ public class NucleusSegmentation {
 		Gradient gradient = new Gradient(this._imgRaw);
 		double bestSphericity=-1;
 		ArrayList<Integer> arrayListThreshold = computeMinMaxThreshold(this._imgRaw);  // methode OTSU
+		System.out.println(arrayListThreshold);
 		for (int t = arrayListThreshold.get(0) ; t <= arrayListThreshold.get(1); ++t) {
 			this._imgRaw.show();
 			System.out.println("Le threshols : "+t);
