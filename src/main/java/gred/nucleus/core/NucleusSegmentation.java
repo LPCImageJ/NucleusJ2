@@ -102,6 +102,7 @@ public class NucleusSegmentation {
 		ArrayList<Integer> arrayListThreshold = computeMinMaxThreshold(this._imgRaw);  // methode OTSU
 		for (int t = arrayListThreshold.get(0) ; t <= arrayListThreshold.get(1); ++t) {
 			this._imgRaw.show();
+			System.out.println("Le threshols : "+t);
 			this.m_imageSeg= generateSegmentedImage(this._imgRaw,t);
 			this.m_imageSeg.show();
 
