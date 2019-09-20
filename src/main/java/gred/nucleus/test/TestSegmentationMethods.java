@@ -98,7 +98,7 @@ public class TestSegmentationMethods {
         cal.pixelWidth = 0.103;
  */
 
-
+   /*
 
         String ExpectedResult = "/home/tridubos/Bureau/TEST_SEG/Results_checked/Z_Col_cot21&17&22__w11 DAPI SIM_s3/";
         String ExpectedResultOutOTSU = "/home/tridubos/Bureau/TEST_SEG/Results_checked/Z_Col_cot21&17&22__w11 DAPI SIM_s3/OTSU/";
@@ -106,11 +106,14 @@ public class TestSegmentationMethods {
         String inputTristan= "/media/tridubos/DATA1/SPERMATO/Manipe_1_57_images_input/Segmentation/Analyse_Segmentation/NucleusPB";
         String outputTristanGift = "/home/tridubos/Bureau/TEST_SEG/Test_analysis/Z_Col_cot21&17&22__w11 DAPI SIM_s3/GIFT/";
         String outputTristanOtsu = "/media/tridubos/DATA1/SPERMATO/Manipe_1_57_images_input/Segmentation/Analyse_Segmentation/Segmented";
-        /*
+
         OuputFileVerification fw = new OuputFileVerification(ExpectedResult,inputTristan);
         fw.GetFileResultExpeted(ExpectedResult);
         fw.GetFilesOutputFolder(inputTristan);
         */
+        String inputTristan= "/home/tridubos/Bureau/TEST_SEGMENTATION/RawData/";
+        String outputTristanOtsu = "/home/tridubos/Bureau/TEST_SEGMENTATION/OldWay";
+        String outputTristanOtsu2 = "/home/tridubos/Bureau/TEST_SEGMENTATION/NewWay";
         testStupidSeveralImages(inputTristan, outputTristanOtsu , (short)1.0, 300000000,true);
 
        // testStupidSeveralImages(ExpectedResult, ExpectedResult, (short)6.0, 300000000,true);
