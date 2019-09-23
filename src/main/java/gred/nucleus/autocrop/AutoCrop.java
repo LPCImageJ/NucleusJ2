@@ -168,7 +168,7 @@ public class AutoCrop {
 	 * and volume maximum (default 2147483647 )
 	 */
 
-	public void componentSizeFilter(){
+	public void  componentSizeFilter(){
         Histogram histogram = new Histogram ();
         histogram.run(this.m_imageSeg_labelled);
         histogram.getHistogram();

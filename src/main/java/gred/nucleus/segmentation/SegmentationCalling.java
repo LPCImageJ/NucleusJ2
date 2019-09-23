@@ -197,11 +197,9 @@ public class SegmentationCalling {
             String fileImg = currentFile.toString();
             FilesNames outPutFilesNames = new FilesNames(fileImg);
             this._prefix = outPutFilesNames.PrefixeNameFile();
-
             NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(currentFile ,this._prefix,this.m_semgemtationParameters);
             nucleusSegmentation.findOTSUmaximisingSephericity();
             this._imgSeg= nucleusSegmentation.applySegmentation2();
-
             if (nucleusSegmentation.getBadCrop()==true || nucleusSegmentation.getBestThreshold() == -1) {
                 IJ.log("Bad crop " +fileImg+ "  "+nucleusSegmentation.getBestThreshold());
                 File file = new File(this._inputDir+"/BadCrop");
@@ -224,7 +222,8 @@ public class SegmentationCalling {
                         ConvexHullSegmentation nuc = new ConvexHullSegmentation();
                         this._imgSeg = nuc.run(this._imgSeg);
                     }
-                    String pathSeg = this._output + this._imgSeg.getTitle();
+
+                    String pathSeg = this.m_semgemtationParameters.getOutputFolder() + currentFile.getName();
                     this._imgSeg.setTitle(pathSeg);
                     saveFile(this._imgSeg, pathSeg);
                     NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(this._imgSeg, this._imgSeg);
@@ -237,7 +236,7 @@ public class SegmentationCalling {
 
         }
         BufferedWriter writer;
-        writer = new BufferedWriter(new FileWriter(new File(this._output+File.separator+"ParametersResults.txt")));
+        writer = new BufferedWriter(new FileWriter(new File(this.m_semgemtationParameters.getOutputFolder()+File.separator+"ParametersResults.txt")));
         writer.write(resu);
         writer.close();
         return log;

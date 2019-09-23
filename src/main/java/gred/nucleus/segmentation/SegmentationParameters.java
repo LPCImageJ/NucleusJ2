@@ -35,7 +35,6 @@ public class SegmentationParameters extends PluginParameters {
         this.m_minVolumeNucleus=minVolume;
         this.m_maxVolumeNucleus=maxVolume;
         this.m_giftVrapping=gift;
-        System.out.println("et la "+this.m_manualParameter);
 
     }
     public SegmentationParameters (String inputFolder, String outputFolder, String pathToConfigFile){

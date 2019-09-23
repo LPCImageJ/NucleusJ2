@@ -72,7 +72,6 @@ public class NucleusSegmentation {
     }
 
     public ImagePlus getImageChannel(int channelNumber)throws Exception{
-		System.out.println("hum :"+ this.m_imageFilePath);
         ImagePlus[] currentImage = BF.openImagePlus(this.m_imageFilePath);
         ChannelSplitter splitter = new ChannelSplitter();
         currentImage = splitter.split(currentImage[0]);
@@ -103,20 +102,13 @@ public class NucleusSegmentation {
 		preProcessImage(this._imgRaw);
 		double bestSphericity=-1;
 		ArrayList<Integer> arrayListThreshold = computeMinMaxThreshold(this._imgRaw);  // methode OTSU
-		System.out.println(arrayListThreshold);
-		this._imgRaw.show();
 
 		for (int t = arrayListThreshold.get(0) ; t <= arrayListThreshold.get(1); ++t) {
-			//this._imgRaw.show();
-			System.out.println("Le threshols : "+t);
 			this.m_imageSeg= generateSegmentedImage(this._imgRaw,t);
-			//this.m_imageSeg.show();
 
 			this.m_imageSeg = ConnectedComponents.computeLabels(this.m_imageSeg, 26, 32);
-			//this.m_imageSeg.show();
 
 			Measure3D measure3D = new Measure3D(this.m_imageSeg,getXcalibration(),getYcalibration(),getZcalibration());
-			this.m_imageSeg.show();
 			deleteArtefact(this.m_imageSeg);
 			double volume = measure3D.computeVolumeObject2(255);
 			boolean firstStack = isVoxelThresholded(this.m_imageSeg,255, 0);
@@ -447,7 +439,6 @@ public class NucleusSegmentation {
 
 	public double getXcalibration() {
 		double xCal;
-		System.out.println("burp"+this.m_semgemtationParameters.m_manualParameter);
 		if (this.m_semgemtationParameters.m_manualParameter == true) {
 			xCal = this.m_semgemtationParameters.getXCal();
 		} else {
