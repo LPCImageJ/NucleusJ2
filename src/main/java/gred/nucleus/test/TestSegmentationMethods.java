@@ -1,7 +1,8 @@
 package gred.nucleus.test;
 
 import gred.nucleus.AnalyseTest.OuputFileVerification;
-import gred.nucleus.mainsNucelusJ.SegmentationMethods;
+import gred.nucleus.segmentation.SegmentationCalling;
+import gred.nucleus.segmentation.SegmentationParameters;
 import gred.nucleus.utils.Histogram;
 import ij.IJ;
 import ij.ImagePlus;
@@ -25,35 +26,44 @@ public class TestSegmentationMethods {
      * @param vMax
      * @param outputImgString
      */
-
-    public static void testStupid(ImagePlus img, short vMin, int vMax, String outputImgString, boolean gift ) {
-        SegmentationMethods otsuModif = new SegmentationMethods(img, vMin, vMax, outputImgString);
-        otsuModif.runOneImage(gift);
+/**
+    public static void testStupid(ImagePlus img, short vMin, int vMax, String outputImgString ) throws FormatException {
+        SegmentationParameters segmentationParameters = new SegmentationParameters();
+        SegmentationCalling otsuModif = new SegmentationCalling(img, vMin, vMax, outputImgString);
+        otsuModif.runSeveralImages2();
     }
-
+*/
     /**
      *
      * @param input
      * @param output
-     * @param vMin
-     * @param vMax
+
 
      */
-    public static void testStupidSeveralImages(String input, String output, short vMin, int vMax, boolean gift ) throws FormatException {
-        SegmentationMethods otsuModif = new SegmentationMethods(input, output, vMin, vMax);
+    public static void testStupidSeveralImages(String input, String output ) throws Exception {
+        SegmentationParameters segmentationParameters = new SegmentationParameters(input,output);
+        SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
         try {
-            String log = otsuModif.runSeveralImages(gift);
+            String log = otsuModif.runSeveralImages2();
             if(!(log.equals("")))
                 System.out.println("Nuclei which didn't pass the segmentation\n"+log);
         }catch (IOException e) { e.printStackTrace();}
     }
-
+    public static void testStupidSeveralImages(String input, String output ,String config) throws Exception {
+        SegmentationParameters segmentationParameters = new SegmentationParameters(input,output,config);
+        SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
+        try {
+            String log = otsuModif.runSeveralImages2();
+            if(!(log.equals("")))
+                System.out.println("Nuclei which didn't pass the segmentation\n"+log);
+        }catch (IOException e) { e.printStackTrace();}
+    }
     /**
      *
      * Main function of the package's tests.
      * @param args
      */
-    public static void main(String[] args) throws FormatException {
+    public static void main(String[] args) throws Exception {
         //testComponentsLabeling(wrapImaJ.test.TestCoreMethods.testImages_8bits[1]);
         String imgPathAxel = "/home/plop/Bureau/image/wideField/test/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s4_46_1655_34_8.tif";
         String imgSegPathAxel = "/home/plop/Bureau/image/";
@@ -111,7 +121,7 @@ public class TestSegmentationMethods {
         fw.GetFileResultExpeted(ExpectedResult);
         fw.GetFilesOutputFolder(inputTristan);
         */
-        testStupidSeveralImages(inputTristan, outputTristanOtsu , (short)1.0, 300000000,true);
+        testStupidSeveralImages("/home/tridubos/Bureau/TEST_SEGMENTATION/RawData", "/home/tridubos/Bureau/TEST_SEGMENTATION/NewWay","/home/tridubos/Bureau/TEST_SEGMENTATION/config_test_calibration_SEG" );
 
        // testStupidSeveralImages(ExpectedResult, ExpectedResult, (short)6.0, 300000000,true);
  /*

@@ -73,6 +73,7 @@ public class NucleusSegmentation {
 
     public ImagePlus getImageChannel(int channelNumber)throws Exception{
         ImagePlus[] currentImage = BF.openImagePlus(this.m_imageFilePath);
+
         ChannelSplitter splitter = new ChannelSplitter();
         currentImage = splitter.split(currentImage[0]);
         return currentImage[channelNumber];

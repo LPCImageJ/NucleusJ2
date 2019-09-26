@@ -119,6 +119,16 @@ public class Measure3D {
 		return  hashMapHisto.get(label)*this._xCal*this._ycal*this._zcal;
 
 	}
+
+	public double computeVolumeObject3 ( double label,ImagePlus imagePlusInput){
+		Histogram histogram = new Histogram ();
+		histogram.run(imagePlusInput);
+		HashMap<Double , Integer> hashMapHisto = histogram.getHistogram();
+		return  hashMapHisto.get(label)*this._xCal*this._ycal*this._zcal;
+
+
+	}
+
 	/**
 	 * Compute the volume of one object with this label
 	 * @param imagePlusInput ImagePLus of the segmented image

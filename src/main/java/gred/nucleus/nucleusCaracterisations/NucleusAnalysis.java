@@ -12,9 +12,9 @@ import ij.ImagePlus;
  */
 public class NucleusAnalysis {
     /**ImagePlus raw image*/
-    private ImagePlus _imgRaw = new ImagePlus();
+    private ImagePlus _imgRaw ;
     /**ImagePlus segmented image*/
-    private ImagePlus _imgSeg = new ImagePlus();
+    private ImagePlus _imgSeg ;
     /** String stocking the the parameters 3D results*/
     private String _resu = "";
 
@@ -43,7 +43,8 @@ public class NucleusAnalysis {
      */
 	public String nucleusParameter3D (){
         Measure3D measure3D = new Measure3D();
-        double volume = measure3D.computeVolumeObject(this._imgSeg,255);
+        this._imgSeg.show();
+        double volume = measure3D.computeVolumeObject3(255,this._imgSeg);
         double surfaceArea = measure3D.computeSurfaceObject(this._imgSeg,255);
         double bis = measure3D.computeComplexSurface(this._imgRaw, this._imgSeg);
         double [] tEigenValues = measure3D.computeEigenValue3D (this._imgSeg,255);
@@ -51,7 +52,7 @@ public class NucleusAnalysis {
         if(this._resu.equals(""))
             this._resu = "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected";
         this._resu = this._resu+"\n"+this._imgSeg.getTitle()+"\t"
-                +measure3D.computeVolumeObject(this._imgSeg,255)+"\t"
+                +measure3D.computeVolumeObject3(255,this._imgSeg)+"\t"
                 +measure3D.computeFlatnessAndElongation(this._imgSeg,255)[0]+"\t"
                 +measure3D.computeFlatnessAndElongation(this._imgSeg,255)[1]+"\t"
                 +measure3D.computeSphericity(volume, surfaceArea)+"\t"
