@@ -12,9 +12,7 @@ import ij.measure.Calibration;
 import ij.plugin.ChannelSplitter;
 import ij.plugin.Duplicator;
 import ij.plugin.GaussianBlur3D;
-import ij.process.AutoThresholder;
-import ij.process.ImageStatistics;
-import ij.process.StackStatistics;
+
 
 import loci.formats.FormatException;
 import loci.plugins.BF;
@@ -109,7 +107,6 @@ public class AutoCrop {
 	 */
 
 	public void setChannelNumbers() throws Exception{
-		System.out.println("le path ? "+this.m_imageFilePath);
 		ImagePlus[] currentImage = BF.openImagePlus(this.m_imageFilePath);
 		ChannelSplitter channelSplitter = new ChannelSplitter();
 		currentImage = channelSplitter.split(currentImage[0]);
