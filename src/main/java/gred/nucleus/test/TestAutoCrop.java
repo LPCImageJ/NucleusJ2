@@ -44,7 +44,7 @@ public class TestAutoCrop {
 
 	public static void ruAutoCrop(String imageSourceFile, String output) throws IOException, FormatException , fileInOut,Exception{
 		//AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
-		AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,40,40,20,40,40,20,0,20,0,1,1000000000);
+		AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,40,40,20,0,20,0,1,1000000000);
 		AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
 		autoCrop.run();
 	}
@@ -79,7 +79,7 @@ public class TestAutoCrop {
 		//fw.GetFileResultExpeted(ExpectedResult);
 		//fw.GetFilesOutputFolder(outputTristan);
 		//testStupid(inputOneImageTristan, outputTristan);
-		ruAutoCrop("/home/titus/Bureau/TestUnitAutocrop/Raw", "/home/titus/Bureau/TestUnitAutocrop/Output/");
+		ruAutoCrop("/media/tridubos/DATA1/Image-FrancescaMASTROPASQUA/Raw", "/media/tridubos/DATA1/Image-FrancescaMASTROPASQUA/autocrop/");
 		//fw.GetFilesResultingOfAnalysis(outputTristan);
 		//fw.CompareAnalysisResult();
 		/*
