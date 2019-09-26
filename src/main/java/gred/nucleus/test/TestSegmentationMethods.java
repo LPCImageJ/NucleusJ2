@@ -1,21 +1,9 @@
 package gred.nucleus.test;
 
-import gred.nucleus.AnalyseTest.OuputFileVerification;
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
-import gred.nucleus.utils.Histogram;
-import ij.IJ;
-import ij.ImagePlus;
-import ij.measure.Calibration;
-import ij.process.ImageProcessor;
-import loci.formats.FormatException;
 
 import java.io.IOException;
-import java.util.HashMap;
-
-import static ij.IJ.open;
-
-import ij.plugin.filter.GaussianBlur;
 
 
 public class TestSegmentationMethods {
@@ -121,7 +109,7 @@ public class TestSegmentationMethods {
         fw.GetFileResultExpeted(ExpectedResult);
         fw.GetFilesOutputFolder(inputTristan);
         */
-        testStupidSeveralImages("/home/tridubos/Bureau/TEST_SEGMENTATION/RawData", "/home/tridubos/Bureau/TEST_SEGMENTATION/NewWay","/home/tridubos/Bureau/TEST_SEGMENTATION/config_test_calibration_SEG" );
+        testStupidSeveralImages("/home/tridubos/Bureau/TEST_SEGMENTATION/RawData", "/home/tridubos/Bureau/TEST_SEGMENTATION/NewWay" );
 
        // testStupidSeveralImages(ExpectedResult, ExpectedResult, (short)6.0, 300000000,true);
  /*

@@ -188,7 +188,7 @@ public class SegmentationCalling {
 
     public String runSeveralImages2() throws IOException, FormatException , Exception{
         String log = "";
-        String resu = "";
+        String resu = "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\n";
         Directory directoryInput = new Directory(this.m_semgemtationParameters.getInputFolder());
         directoryInput.listFiles(this.m_semgemtationParameters.getInputFolder());
         directoryInput.checkIfEmpty();
@@ -226,9 +226,13 @@ public class SegmentationCalling {
                     String pathSeg = this.m_semgemtationParameters.getOutputFolder() + currentFile.getName();
                     this._imgSeg.setTitle(pathSeg);
                     saveFile(this._imgSeg, pathSeg);
+                    resu+=nucleusSegmentation.saveImageResult();
+                    /**
                     NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(this._imgSeg, this._imgSeg);
                     nucleusAnalysis.setResu(resu);
                     resu = nucleusAnalysis.nucleusParameter3D();
+                     */
+
                 }
             }
 
@@ -292,11 +296,12 @@ public class SegmentationCalling {
                     }
                 }
             }
+            BufferedWriter writer;
+            writer = new BufferedWriter(new FileWriter(new File(this.m_semgemtationParameters.getOutputFolder()+File.separator+"ParametersResults.txt")));
+            writer.write(resu);
+            writer.close();
         }
-        BufferedWriter writer;
-        writer = new BufferedWriter(new FileWriter(new File(this.m_semgemtationParameters.getOutputFolder()+File.separator+"ParametersResults.txt")));
-        writer.write(resu);
-        writer.close();
+
         return log;
     }
 

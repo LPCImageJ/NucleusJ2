@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.imageProcess.Thresholding;
+import gred.nucleus.nucleusCaracterisations.NucleusAnalysis;
 import gred.nucleus.segmentation.SegmentationParameters;
 import gred.nucleus.utils.FillingHoles;
 import gred.nucleus.utils.Gradient;
@@ -79,6 +80,13 @@ public class NucleusSegmentation {
         return currentImage[channelNumber];
     }
 
+    public String saveImageResult(){
+		String resu = "";
+		NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(this._imgRaw, this.m_imageSeg);
+		nucleusAnalysis.setResu(resu);
+		return nucleusAnalysis.nucleusParameter3D();
+
+	}
 	/**
 	 * Compute of the first threshold of input image with the method of Otsu.
 	 * From this initial value we will seek the better segmentation possible:

@@ -43,23 +43,20 @@ public class NucleusAnalysis {
      */
 	public String nucleusParameter3D (){
         Measure3D measure3D = new Measure3D();
-        this._imgSeg.show();
-        double volume = measure3D.computeVolumeObject3(255,this._imgSeg);
+        double volume = measure3D.computeVolumeObject(this._imgSeg,255);
         double surfaceArea = measure3D.computeSurfaceObject(this._imgSeg,255);
         double bis = measure3D.computeComplexSurface(this._imgRaw, this._imgSeg);
         double [] tEigenValues = measure3D.computeEigenValue3D (this._imgSeg,255);
         IJ.log(" "+tEigenValues[0]            + " " +tEigenValues[1]  + " "              +tEigenValues[2]);
-        if(this._resu.equals(""))
-            this._resu = "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected";
-        this._resu = this._resu+"\n"+this._imgSeg.getTitle()+"\t"
-                +measure3D.computeVolumeObject3(255,this._imgSeg)+"\t"
+        this._resu = this._imgRaw.getTitle()+"\t"
+                +measure3D.computeVolumeObject(this._imgSeg,255)+"\t"
                 +measure3D.computeFlatnessAndElongation(this._imgSeg,255)[0]+"\t"
                 +measure3D.computeFlatnessAndElongation(this._imgSeg,255)[1]+"\t"
                 +measure3D.computeSphericity(volume, surfaceArea)+"\t"
                 +measure3D.equivalentSphericalRadius(volume)+"\t"
                 +surfaceArea+"\t"
                 +bis+"\t"
-                +measure3D.computeSphericity(volume, bis)
+                +measure3D.computeSphericity(volume, bis)+"\n"
                 ;
         return this._resu;
     }
