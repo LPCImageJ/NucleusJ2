@@ -43,6 +43,8 @@ public class AutoCrop {
 	private ImagePlus m_imageSeg_labelled;
 	/** The path of the image to be processed */
 	private String m_imageFilePath;
+	/** the path of the directory where are saved the crop of the object */
+	private String m_outputDirPath;
 	/** The prefix of the names of the output cropped images, which are automatically numbered */
 	private String m_outputFilesPrefix;
 	/** List of the path of the output files created by the cropKernels method */
@@ -77,6 +79,7 @@ public class AutoCrop {
         this.m_autocropParameters=autocropParametersAnalyse;
 	    this.m_currentFile=imageFile;
         this.m_imageFilePath = imageFile.getAbsolutePath();
+        this.m_outputDirPath = this.m_autocropParameters.getOutputFolder();
         Thresholding thresholding = new Thresholding();
         this.m_outputFilesPrefix = outputFilesPrefix;
         setChannelNumbers();
@@ -132,7 +135,7 @@ public class AutoCrop {
 		GaussianBlur3D.blur(this.m_imageSeg, 0.5,0.5,1);
 		Thresholding thresholding = new Thresholding();
 			int thresh = thresholding.computeOtsuThreshold(this.m_imageSeg);
-			if (thresh < this.m_autocropParameters.getThresholdOTSUcomputing()) {
+			if (thresh < 20) {
 				ImagePlus imp2;
 				if(m_autocropParameters.getSlicesOTSUcomputing()==0) {
 					this.sliceUsedForOTSU="Start:"+this.m_imageSeg.getStackSize() / 2+"-"+this.m_imageSeg.getStackSize();
@@ -144,8 +147,8 @@ public class AutoCrop {
 					imp2 = new Duplicator().run(this.m_imageSeg, this.m_autocropParameters.getSlicesOTSUcomputing(), this.m_imageSeg.getStackSize());
 				}
 				int thresh2 = thresholding.computeOtsuThreshold(imp2);
-				if (thresh2 < this.m_autocropParameters.getSlicesOTSUcomputing())
-					thresh = this.m_autocropParameters.getSlicesOTSUcomputing();
+				if (thresh2 < 20)
+					thresh = 20;
 				else
 					thresh = thresh2;
 			}
@@ -168,7 +171,7 @@ public class AutoCrop {
 	 * and volume maximum (default 2147483647 )
 	 */
 
-	public void  componentSizeFilter(){
+	public void componentSizeFilter(){
         Histogram histogram = new Histogram ();
         histogram.run(this.m_imageSeg_labelled);
         histogram.getHistogram();
@@ -201,7 +204,7 @@ public class AutoCrop {
 	 * your own binarisation method.
 	 */
     public void computeBoxes2() {
-		Directory dirOutput= new Directory(this.m_autocropParameters.getOutputFolder()+File.separator+this.m_outputFilesPrefix);
+		Directory dirOutput= new Directory(this.m_outputDirPath+File.separator+this.m_outputFilesPrefix);
 		dirOutput.CheckAndCreateDir();
 
         try {
@@ -243,7 +246,7 @@ public class AutoCrop {
 	 *
 	 */
 	public void cropKernels2()throws IOException, FormatException, Exception {
-		Directory dirOutput= new Directory(this.m_autocropParameters.getOutputFolder()+File.separator+this.m_outputFilesPrefix);
+		Directory dirOutput= new Directory(this.m_outputDirPath+File.separator+this.m_outputFilesPrefix);
 		dirOutput.CheckAndCreateDir();
 		this.m_infoImageAnalyse += getSpecificImageInfo() + getColoneName();
 		for (int y =0 ;y<this.m_channelNumbers;y++) {
@@ -256,7 +259,7 @@ public class AutoCrop {
 				int zmin = box.getZMin() - this.m_autocropParameters.getzCropBoxSize();
 				String coord = box.getXMin() + "_" + box.getYMin() + "_" + box.getZMin();
 				if(y==0) {
-					this.m_boxCoordinates.add(this.m_autocropParameters.getOutputFolder() + File.separator + this.m_outputFilesPrefix + "_" + coord + i + "\t" + box.getXMin() + "\t" + box.getXMax() + "\t" + box.getYMin() + "\t" + box.getYMax() + "\t" + box.getZMin() + "\t" + box.getZMax());
+					this.m_boxCoordinates.add(this.m_outputDirPath + File.separator + this.m_outputFilesPrefix + "_" + coord + i + "\t" + box.getXMin() + "\t" + box.getXMax() + "\t" + box.getYMin() + "\t" + box.getYMax() + "\t" + box.getZMin() + "\t" + box.getZMax());
 				}
 				if (xmin <= 0)
 					xmin = 1;
@@ -286,8 +289,8 @@ public class AutoCrop {
 
 				Calibration cal = this.m_rawImg.getCalibration();
 				imgResu.setCalibration(cal);
-				OutputTiff fileOutput = new OutputTiff(this.m_autocropParameters.getOutputFolder() + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i +"_C"+y+".tif");
-				this.m_infoImageAnalyse=this.m_infoImageAnalyse+this.m_autocropParameters.getOutputFolder() + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i +"_C"+y+".tif\t"
+				OutputTiff fileOutput = new OutputTiff(this.m_outputDirPath + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i +"_C"+y+".tif");
+				this.m_infoImageAnalyse=this.m_infoImageAnalyse+m_outputDirPath + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i +"_C"+y+".tif\t"
 						+y+"\t"
 						+i+"\t"
 						+xmin+"\t"
@@ -300,7 +303,7 @@ public class AutoCrop {
 
 
 
-				this.m_outputFile.add(this.m_autocropParameters.getOutputFolder() + File.separator + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i + ".tif");
+				this.m_outputFile.add(this.m_outputDirPath + File.separator + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i + ".tif");
 				i++;
 			}
 		}
@@ -432,7 +435,7 @@ public class AutoCrop {
      * @throws IOException
      */
     public void writeAnalyseInfo() throws IOException {
-        OutputTexteFile resultFileOutput=new OutputTexteFile(this.m_autocropParameters.getOutputFolder() + File.separator+ this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix);
+        OutputTexteFile resultFileOutput=new OutputTexteFile(this.m_outputDirPath + File.separator+ this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix);
         resultFileOutput.SaveTexteFile(this.m_infoImageAnalyse);
 
     }

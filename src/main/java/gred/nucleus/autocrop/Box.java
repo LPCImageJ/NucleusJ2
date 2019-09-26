@@ -9,17 +9,17 @@ package gred.nucleus.autocrop;
 */
 public class Box {
 	/** The coordinate x min of the Box */
-	private short m_xMin;
+	private short m_xMin=0;
 	/** The coordinate x max of the Box*/
-	private short m_xMax;
+	private short m_xMax=0;
 	/** The coordinate y min of the Box*/
-	private short m_yMin;
+	private short m_yMin=0;
 	/** The coordinate y max of the Box*/
-	private short m_yMax;
+	private short m_yMax=0;
 	/** The coordinate z min of the Box*/
-	private short m_zMin;
+	private short m_zMin=0;
 	/** The coordinate z max of the Box*/
-	private short m_zMax;
+	private short m_zMax=0;
 	
 	/**
 	 *   Constructor
@@ -32,12 +32,12 @@ public class Box {
 	 * @param zMax: coordinate z max of the Box
 	 */
 	public Box(short xMin,short xMax,short yMin,short yMax,short zMin,short zMax) {
-		m_xMin = xMin;
-		m_xMax = xMax;
-		m_yMin = yMin;
-		m_yMax = yMax;
-		m_zMin = zMin;
-		m_zMax = zMax;
+		this.m_xMin = xMin;
+		this.m_xMax = xMax;
+		this.m_yMin = yMin;
+		this.m_yMax = yMax;
+		this.m_zMin = zMin;
+		this.m_zMax = zMax;
 	}
 	
 	/**
@@ -45,7 +45,7 @@ public class Box {
 	 * @return the m_xMin
 	 */
 	public short getXMin(){
-		return m_xMin;
+		return this.m_xMin;
 	}
 	
 	/** @param xMin the m_xMin to set*/
@@ -58,7 +58,7 @@ public class Box {
 	 * @return the m_xMax
 	 */
 	public short getXMax(){
-		return m_xMax;
+		return this.m_xMax;
 	}
 
 	/** @param xMax the m_xMax to set */
@@ -69,7 +69,7 @@ public class Box {
 	 * @return the m_yMin
 	 */
 	public short getYMin(){
-		return m_yMin;
+		return this.m_yMin;
 	}
 
 	/** @param yMin the m_yMin to set*/
@@ -82,7 +82,7 @@ public class Box {
 	 * @return the m_yMax
 	 */
 	public short getYMax(){
-		return m_yMax;
+		return this.m_yMax;
 	}
 
 	/** @param yMax the m_yMax to set*/
@@ -95,7 +95,7 @@ public class Box {
 	 * @return the m_zMin
 	 */
 	public short getZMin() {
-		return m_zMin;
+		return this.m_zMin;
 	}
 
 	/** @param zMin the m_zMin to set */	
@@ -108,7 +108,7 @@ public class Box {
 	 * @return the m_zMax
 	 */
 	public short getZMax() {
-		return m_zMax;
+		return this.m_zMax;
 	}
 
 	/** @param zMax the m_zMax to set*/

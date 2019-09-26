@@ -163,7 +163,8 @@ public class NucleusSegmentation {
 		final double imageVolume = xCalibration*imagePlusInput.getWidth()*yCalibration*imagePlusInput.getHeight()*zCalibration*imagePlusInput.getStackSize();
 		ImagePlus imagePlusSegmented = new ImagePlus();
 		ArrayList<Integer> arrayListThreshold = computeMinMaxThreshold(imagePlusInput);  // methode OTSU
-
+		System.out.println(arrayListThreshold);
+		imagePlusInput.show();
 		for (int t = arrayListThreshold.get(0) ; t <= arrayListThreshold.get(1); ++t) {
 
 			ImagePlus imagePlusSegmentedTemp = generateSegmentedImage(imagePlusInput,t);

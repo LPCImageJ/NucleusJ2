@@ -9,21 +9,39 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class AutocropParameters extends PluginParameters {
-    /** Number of pixels take plus object size in x */
+    /**
+     * Number of pixels take plus object size in x
+     */
     private int m_xCropBoxSize = 40;
-    /** Number of pixels take plus object size in y */
+    /**
+     * Number of pixels take plus object size in y
+     */
     private int m_yCropBoxSize = 40;
-    /** Number of slice take plus object in y */
+    /**
+     * Number of slice take plus object in y
+     */
     private int m_zCropBoxSize = 20;
-    /** Minimal object volume to crop */
+
+    /**
+     * Minimal object volume to crop
+     */
     int m_minVolumeNucleus=1;
-    /** Maximal object volume to crop */
+    /**
+     * Maximal object volume to crop
+     */
     int m_maxVolumeNucleus=2147483647;
-    /** Minimal default OTSU threshold */
+
+    /**
+     * Minimal default OTSU threshold
+     */
     private int m_thresholdOTSUcomputing = 20;
-    /** Channel to compute OTSU threshold */
+    /**
+     * Channel to compute OTSU threshold
+     */
     private int m_channelToComputeThreshold=0;
-    /** Slice start to compute OTSU threshold */
+    /**
+     * Slice start to compute OTSU threshold
+     */
     private int m_slicesOTSUcomputing=0;
 
 
