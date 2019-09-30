@@ -33,6 +33,8 @@ public class ConvexeHullImageMaker{
 	private Calibration _calibration;
 	/**    */
 	ArrayList<Double> _listLabel;  // _listLabel : initialisé avec la méthode giveTable
+
+
 	/**
      * Constructor
      * @see VoxelRecord

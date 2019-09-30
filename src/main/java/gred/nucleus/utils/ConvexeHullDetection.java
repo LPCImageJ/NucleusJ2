@@ -81,9 +81,9 @@ public class ConvexeHullDetection {
 		VoxelRecord voxelTest = new VoxelRecord();
         voxelTest = _p0;
 		VoxelRecord voxelPrecedent = new VoxelRecord();
-		double xcal = calibration.pixelWidth;
-		double ycal = calibration.pixelHeight;
-		double zcal = calibration.pixelDepth;
+		double xcal =0.1032;// calibration.pixelWidth;
+		double ycal =0.1032;// calibration.pixelHeight;
+		double zcal =0.2000135;// calibration.pixelDepth;
 		while(anglesSum < 2*_pi+1) {
 			double angleMin = 0;
 			double maxLength = 0;
@@ -93,7 +93,7 @@ public class ConvexeHullDetection {
 			int iMin=0;
 			if (compteur != 0)
 			    vectorTest.setLocation(voxelTest._i-voxelPrecedent._i,voxelTest._j-voxelPrecedent._j, voxelTest._k-voxelPrecedent._k);
-						
+
 			for(int i=0; i<lVoxelBoundary.size(); i++) {
                 //IJ.log("anglesSum " +lVoxelBoundary.get(i)._i + " "+lVoxelBoundary.get(i)._j + " "+lVoxelBoundary.get(i)._k + " ");
                 // IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" size "+lVoxelBoundary.size()+ " le i "+i);
@@ -134,6 +134,7 @@ public class ConvexeHullDetection {
 			++compteur;
 			voxelPrecedent = voxelTest;
 			voxelTest = voxelMin;
+			System.out.println("le imin ? "+iMin);
 			lVoxelBoundary.remove(iMin);
 			anglesSum += angleMin;
 			if (voxelMin.compareCooridnatesTo(_p0) == 0)
