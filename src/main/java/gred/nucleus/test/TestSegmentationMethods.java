@@ -109,7 +109,7 @@ public class TestSegmentationMethods {
         fw.GetFileResultExpeted(ExpectedResult);
         fw.GetFilesOutputFolder(inputTristan);
         */
-        testStupidSeveralImages("/home/tridubos/Bureau/TEST_SEGMENTATION/RawData", "/home/tridubos/Bureau/TEST_SEGMENTATION/NewWay" );
+        testStupidSeveralImages("/home/tridubos/Bureau/TEST_SEGMENTATION/RawData", "/home/tridubos/Bureau/TEST_SEGMENTATION/NewWay", "/home/tridubos/Bureau/TEST_SEGMENTATION/config_test_calibration_SEG");
 
        // testStupidSeveralImages(ExpectedResult, ExpectedResult, (short)6.0, 300000000,true);
  /*
