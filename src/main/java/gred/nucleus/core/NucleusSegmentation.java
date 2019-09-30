@@ -84,7 +84,10 @@ public class NucleusSegmentation {
 
 			imagePlusSegmentedTemp = ConnectedComponents.computeLabels(imagePlusSegmentedTemp, 26, 32);
 
-
+			if(t==28){
+				imagePlusSegmentedTemp.setTitle("Vaaaaaaa");
+				imagePlusSegmentedTemp.show();
+			}
 			deleteArtefact(imagePlusSegmentedTemp);
 
 			imagePlusSegmentedTemp.setCalibration(calibration);
