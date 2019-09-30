@@ -114,7 +114,7 @@ public class TestSegmentationMethods {
         String inputTristan= "/home/tridubos/Bureau/TEST_SEGMENTATION/RawData/";
         String outputTristanOtsu = "/home/tridubos/Bureau/TEST_SEGMENTATION/OldWay";
         String outputTristanOtsu2 = "/home/tridubos/Bureau/TEST_SEGMENTATION/NewWay";
-        testStupidSeveralImages(inputTristan, outputTristanOtsu , (short)1.0, 300000000,true);
+        testStupidSeveralImages("/home/tridubos/Bureau/TEST_SEGMENTATION/RawData","/home/tridubos/Bureau/TEST_SEGMENTATION/NewWay", (short)1.0, 300000000,true);
 
        // testStupidSeveralImages(ExpectedResult, ExpectedResult, (short)6.0, 300000000,true);
  /*
