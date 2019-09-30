@@ -12,6 +12,7 @@ import gred.nucleus.utils.FillingHoles;
 import gred.nucleus.utils.Gradient;
 import gred.nucleus.utils.Histogram;
 import ij.*;
+import ij.io.FileSaver;
 import ij.plugin.ChannelSplitter;
 import ij.plugin.ContrastEnhancer;
 import ij.plugin.Filters3D;
@@ -105,10 +106,20 @@ public class NucleusSegmentation {
 	 * @return ImagePlus Segmented image
 	 */
 
+
+	private void saveFile ( ImagePlus imagePlusInput, String pathFile) {
+		FileSaver fileSaver = new FileSaver(imagePlusInput);
+		fileSaver.saveAsTiffStack(pathFile);
+	}
+
+
 	public void findOTSUmaximisingSephericity()throws Exception{
+		saveFile(this._imgRaw,"/home/tridubos/Bureau/TEST_SEGMENTATION/TEMP/avant_pre_process_new.tiff");
+
 		double imageVolume=getVoxelVolume()*this._imgRaw.getWidth()*this._imgRaw.getHeight()*this._imgRaw.getStackSize();
 		Gradient gradient = new Gradient(this._imgRaw); // ON UTILISE PLUS LE GRADIENT A REGARDER !!!!!!
 		preProcessImage(this._imgRaw);
+		saveFile(this._imgRaw,"/home/tridubos/Bureau/TEST_SEGMENTATION/TEMP/apres_pre_process_new.tiff");
 		double bestSphericity=-1;
 		ArrayList<Integer> arrayListThreshold = computeMinMaxThreshold(this._imgRaw);  // methode OTSU
 		System.out.println("les T "+arrayListThreshold);
@@ -171,8 +182,6 @@ public class NucleusSegmentation {
 		final double imageVolume = xCalibration*imagePlusInput.getWidth()*yCalibration*imagePlusInput.getHeight()*zCalibration*imagePlusInput.getStackSize();
 		ImagePlus imagePlusSegmented = new ImagePlus();
 		ArrayList<Integer> arrayListThreshold = computeMinMaxThreshold(imagePlusInput);  // methode OTSU
-		System.out.println(arrayListThreshold);
-		imagePlusInput.show();
 		for (int t = arrayListThreshold.get(0) ; t <= arrayListThreshold.get(1); ++t) {
 			ImagePlus imagePlusSegmentedTemp = generateSegmentedImage(imagePlusInput,t);
 			imagePlusSegmentedTemp = ConnectedComponents.computeLabels(imagePlusSegmentedTemp, 26, 32);
