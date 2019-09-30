@@ -111,7 +111,7 @@ public class NucleusSegmentation {
 		preProcessImage(this._imgRaw);
 		double bestSphericity=-1;
 		ArrayList<Integer> arrayListThreshold = computeMinMaxThreshold(this._imgRaw);  // methode OTSU
-
+		System.out.println("les T "+arrayListThreshold);
 		for (int t = arrayListThreshold.get(0) ; t <= arrayListThreshold.get(1); ++t) {
 			this.m_imageSeg= generateSegmentedImage(this._imgRaw,t);
 			this.m_imageSeg = ConnectedComponents.computeLabels(this.m_imageSeg, 26, 32);

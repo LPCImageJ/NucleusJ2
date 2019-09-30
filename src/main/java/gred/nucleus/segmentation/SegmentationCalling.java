@@ -199,7 +199,8 @@ public class SegmentationCalling {
             this._prefix = outPutFilesNames.PrefixeNameFile();
             NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(currentFile ,this._prefix,this.m_semgemtationParameters);
             nucleusSegmentation.findOTSUmaximisingSephericity();
-            this._imgSeg= nucleusSegmentation.applySegmentation2();
+             this._imgSeg= nucleusSegmentation.applySegmentation2();
+            //this._imgSeg= nucleusSegmentation.applySegmentation(this._imgSeg);
             if (nucleusSegmentation.getBadCrop()==true || nucleusSegmentation.getBestThreshold() == -1) {
                 IJ.log("Bad crop " +fileImg+ "  "+nucleusSegmentation.getBestThreshold());
                 File file = new File(this._inputDir+"/BadCrop");
