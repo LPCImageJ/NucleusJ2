@@ -1,5 +1,6 @@
 package gred.nucleus.core;
 
+import gred.nucleus.segmentation.SegmentationParameters;
 import gred.nucleus.utils.ConvexeHullImageMaker;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -17,7 +18,10 @@ import ij.ImageStack;
  */
 
 public class ConvexHullSegmentation {
-	
+
+
+	private SegmentationParameters m_semgemtationParameters;
+
 	/**
 	 *Run the gift wrapping analysis on 3D segmented image imputed for the different axis combined :
 	 *   XY
@@ -29,20 +33,12 @@ public class ConvexHullSegmentation {
 	 * @return segmented image
 	 */
 	public ImagePlus run(ImagePlus imagePlusInput){
-		//IJ.log(imagePlusInput.getTitle()+" xy ");
 		ConvexeHullImageMaker nuc = new ConvexeHullImageMaker();
 		nuc.setAxes("xy");
 	   	ImagePlus imagePlusXY = nuc.giftWrapping(imagePlusInput);
-	   	//IJ.log(imagePlusInput.getTitle()+" xz ");
-		imagePlusXY.setTitle("XY ConvexHullSegmentation");
-		//imagePlusXY.show();
-		//imagePlusXY.show();
 	   	nuc.setAxes("xz");
 	   	ImagePlus imagePlusXZ = nuc.giftWrapping(imagePlusInput);
-	   	//IJ.log(imagePlusInput.getTitle()+" yz ");
 	   	nuc.setAxes("yz");
-        //imagePlusXZ.show();
-        //imagePlusXZ.show();
 		ImagePlus imagePlusYZ = nuc.giftWrapping(imagePlusInput);
 		return imageMakingUnion(imagePlusInput, imagePlusXY, imagePlusXZ, imagePlusYZ);
 	}

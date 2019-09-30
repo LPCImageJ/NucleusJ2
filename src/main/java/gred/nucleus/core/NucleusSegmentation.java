@@ -43,6 +43,8 @@ public class NucleusSegmentation {
     private ImagePlus _imgRaw;
 	/** Check if the segmentation is not in border */
     private boolean _badCrop =false;
+    private String _pathToRaw="";
+    public  Measure3D _mesure3D;
 
 
     File m_currentFile;
@@ -74,7 +76,6 @@ public class NucleusSegmentation {
 
     public ImagePlus getImageChannel(int channelNumber)throws Exception{
         ImagePlus[] currentImage = BF.openImagePlus(this.m_imageFilePath);
-
         ChannelSplitter splitter = new ChannelSplitter();
         currentImage = splitter.split(currentImage[0]);
         return currentImage[channelNumber];
@@ -82,9 +83,8 @@ public class NucleusSegmentation {
 
     public String saveImageResult(){
 		String resu = "";
-		NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(this._imgRaw, this.m_imageSeg);
-		nucleusAnalysis.setResu(resu);
-		return nucleusAnalysis.nucleusParameter3D();
+        this._mesure3D = new Measure3D(this.m_imageSeg,this._imgRaw,getXcalibration(),getYcalibration(),getZcalibration());
+		return this._mesure3D.nucleusParameter3D();
 
 	}
 	/**
@@ -105,9 +105,9 @@ public class NucleusSegmentation {
 	 * @return ImagePlus Segmented image
 	 */
 
-	public void findOTSUmaximisingSephericity(){
+	public void findOTSUmaximisingSephericity()throws Exception{
 		double imageVolume=getVoxelVolume()*this._imgRaw.getWidth()*this._imgRaw.getHeight()*this._imgRaw.getStackSize();
-		Gradient gradient = new Gradient(this._imgRaw);
+		Gradient gradient = new Gradient(this._imgRaw); // ON UTILISE PLUS LE GRADIENT A REGARDER !!!!!!
 		preProcessImage(this._imgRaw);
 		double bestSphericity=-1;
 		ArrayList<Integer> arrayListThreshold = computeMinMaxThreshold(this._imgRaw);  // methode OTSU
@@ -116,8 +116,8 @@ public class NucleusSegmentation {
 			this.m_imageSeg= generateSegmentedImage(this._imgRaw,t);
 
 			this.m_imageSeg = ConnectedComponents.computeLabels(this.m_imageSeg, 26, 32);
-
-			Measure3D measure3D = new Measure3D(this.m_imageSeg,getXcalibration(),getYcalibration(),getZcalibration());
+            System.out.println("la calib "+getXcalibration()+" "+getYcalibration()+" "+getZcalibration());
+			Measure3D measure3D = new Measure3D(this.m_imageSeg,this._imgRaw,getXcalibration(),getYcalibration(),getZcalibration());
 			deleteArtefact(this.m_imageSeg);
 			double volume = measure3D.computeVolumeObject2(255);
 			boolean firstStack = isVoxelThresholded(this.m_imageSeg,255, 0);
@@ -136,7 +136,8 @@ public class NucleusSegmentation {
 				}
 			}
 		}
-	}
+
+    }
 	private  void preProcessImage(ImagePlus img){
 		ContrastEnhancer enh = new ContrastEnhancer();
 		enh.setNormalize(true);
@@ -148,7 +149,7 @@ public class NucleusSegmentation {
 		stackConverter.convertToGray8();
 	}
 
-	public ImagePlus applySegmentation2(){
+	public ImagePlus applySegmentation2() throws Exception {
 		this.m_imageSeg= generateSegmentedImage(this._imgRaw,this._bestThreshold);
 		if(_bestThreshold != -1 ) {
 			morphologicalCorrection(this.m_imageSeg);
@@ -159,7 +160,7 @@ public class NucleusSegmentation {
 		return this.m_imageSeg;
 	}
 
-	public ImagePlus applySegmentation (ImagePlus imagePlusInput) {
+	public ImagePlus applySegmentation (ImagePlus imagePlusInput) throws Exception {
 		double sphericityMax = -1.0;
 		double sphericity;
 		double volume;
@@ -227,11 +228,15 @@ public class NucleusSegmentation {
 	 * @param threshold threshold value for the segmentation
 	 * @return segmented image of the nucleus
 	 */
-	private ImagePlus generateSegmentedImage (ImagePlus imagePlusInput, int threshold) {
+	private ImagePlus generateSegmentedImage (ImagePlus imagePlusInput, int threshold) throws Exception {
 		ImageStack imageStackInput = imagePlusInput.getStack();
-		ImagePlus imagePlusSegmented = imagePlusInput.duplicate();
+		ImagePlus[] imagePlusSegmentedtemp = BF.openImagePlus(this.m_imageFilePath);
+        Calibration cal =imagePlusSegmentedtemp[0].getCalibration();
+//.getCalibration().pixelWidth
+        ImagePlus imagePlusSegmented =imagePlusSegmentedtemp[0];
 		ImageStack imageStackSegmented = imagePlusSegmented.getStack();
-		for(int k = 0; k < imagePlusInput.getStackSize(); ++k) {
+
+        for(int k = 0; k < imagePlusInput.getStackSize(); ++k) {
 			for (int i = 0; i < imagePlusInput.getWidth(); ++i) {
 				for (int j = 0; j < imagePlusInput.getHeight(); ++j) {
 					double voxelValue = imageStackInput.getVoxel(i, j, k);
@@ -242,7 +247,9 @@ public class NucleusSegmentation {
 				}
 			}
 		}
-		return imagePlusSegmented;
+        imagePlusSegmented.setCalibration(cal);
+
+        return imagePlusSegmented;
 	}
 
 	/**
@@ -461,7 +468,7 @@ public class NucleusSegmentation {
 	public double getYcalibration(){
 		double yCal;
 		if(this.m_semgemtationParameters.m_manualParameter==true){
-			yCal=this.m_semgemtationParameters.getXCal();
+			yCal=this.m_semgemtationParameters.getYCal();
 		}
 		else{
 			yCal=this._imgRaw.getCalibration().pixelHeight;
@@ -471,7 +478,7 @@ public class NucleusSegmentation {
 	public double getZcalibration(){
 		double zCal;
 		if(this.m_semgemtationParameters.getManualParameter()==true){
-			zCal=this.m_semgemtationParameters.getXCal();
+			zCal=this.m_semgemtationParameters.getZCal();
 		}
 		else{
 			zCal=this._imgRaw.getCalibration().pixelWidth;

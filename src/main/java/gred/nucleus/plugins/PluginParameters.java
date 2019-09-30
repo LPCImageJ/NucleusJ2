@@ -121,17 +121,17 @@ public class PluginParameters {
         this.m_manualParameter=true;
     }
     public void  setZCal(double nanualZcal){
-        this.m_yCal=nanualZcal;
+        this.m_zCal=nanualZcal;
         this.m_manualParameter=true;
     }
     public double  getXCal( ){
         return this.m_xCal;
     }
     public double  getYCal( ){
-        return this.m_xCal;
+        return this.m_yCal;
     }
     public double  getZCal( ){
-        return this.m_xCal;
+        return this.m_zCal;
     }
     public boolean getManualParameter(){
         return this.m_manualParameter;

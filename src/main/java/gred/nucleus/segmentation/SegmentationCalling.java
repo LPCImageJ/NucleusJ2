@@ -152,7 +152,7 @@ public class SegmentationCalling {
             imgSeg.setTitle(this._output);
             if(!this._output.equals(""))
                 saveFile(imgSeg, this._output);
-            NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(this._imgInput,imgSeg);
+            NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(this._imgInput,imgSeg,this.m_semgemtationParameters);
             System.out.println(nucleusAnalysis.nucleusParameter3D());
         }
         this._imgSeg = imgSeg;
@@ -220,6 +220,7 @@ public class SegmentationCalling {
                     System.out.println(fileImg + "\totsu modif threshold " + nucleusSegmentation.getBestThreshold() + "\n");
                     if (this.m_semgemtationParameters.getGiftWrapping()) {
                         ConvexHullSegmentation nuc = new ConvexHullSegmentation();
+                        this._imgSeg.show();
                         this._imgSeg = nuc.run(this._imgSeg);
                     }
 
@@ -290,7 +291,7 @@ public class SegmentationCalling {
                         String pathSeg = this._output + img.getTitle();
                         imgSeg.setTitle(pathSeg);
                         saveFile(imgSeg, pathSeg);
-                        NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(img, imgSeg);
+                        NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(img, imgSeg,this.m_semgemtationParameters);
                         nucleusAnalysis.setResu(resu);
                         resu = nucleusAnalysis.nucleusParameter3D();
                     }

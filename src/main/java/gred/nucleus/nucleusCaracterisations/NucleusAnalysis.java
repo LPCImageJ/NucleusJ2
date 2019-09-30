@@ -1,6 +1,7 @@
 package gred.nucleus.nucleusCaracterisations;
 
 import gred.nucleus.core.Measure3D;
+import gred.nucleus.segmentation.SegmentationParameters;
 import ij.IJ;
 import ij.ImagePlus;
 
@@ -17,15 +18,21 @@ public class NucleusAnalysis {
     private ImagePlus _imgSeg ;
     /** String stocking the the parameters 3D results*/
     private String _resu = "";
-
+    private SegmentationParameters m_semgemtationParameters;
     /**
      * Constructor
      * @param raw ImagePlus raw
      * @param seg ImagePlus segmented
      */
-	public NucleusAnalysis (ImagePlus raw, ImagePlus seg) {
+
+    public NucleusAnalysis (ImagePlus raw, ImagePlus seg) {
         this._imgRaw = raw;
         this._imgSeg = seg;
+    }
+	public NucleusAnalysis (ImagePlus raw, ImagePlus seg,SegmentationParameters semgemtationParameters) {
+        this._imgRaw = raw;
+        this._imgSeg = seg;
+        this.m_semgemtationParameters=semgemtationParameters;
     }
 
     /**
