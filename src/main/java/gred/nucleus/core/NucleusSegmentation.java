@@ -114,9 +114,7 @@ public class NucleusSegmentation {
 
 		for (int t = arrayListThreshold.get(0) ; t <= arrayListThreshold.get(1); ++t) {
 			this.m_imageSeg= generateSegmentedImage(this._imgRaw,t);
-
 			this.m_imageSeg = ConnectedComponents.computeLabels(this.m_imageSeg, 26, 32);
-            System.out.println("la calib "+getXcalibration()+" "+getYcalibration()+" "+getZcalibration());
 			Measure3D measure3D = new Measure3D(this.m_imageSeg,this._imgRaw,getXcalibration(),getYcalibration(),getZcalibration());
 			deleteArtefact(this.m_imageSeg);
 			double volume = measure3D.computeVolumeObject2(255);
@@ -128,7 +126,7 @@ public class NucleusSegmentation {
 					volume >= this.m_semgemtationParameters.getM_minVolumeNucleus() &&
 					volume <= this.m_semgemtationParameters.getM_maxVolumeNucleus() && firstStack == false && lastStack == false) {
 
-				double sphericity = measure3D.computeSphericity(volume,measure3D.computeComplexSurface2(this._imgRaw));
+				double sphericity = measure3D.computeSphericity(volume,measure3D.computeComplexSurface(this.m_imageSeg,gradient));
 				if (sphericity > bestSphericity ) {
 					this._bestThreshold = t;
 					bestSphericity = sphericity;
@@ -176,14 +174,9 @@ public class NucleusSegmentation {
 		System.out.println(arrayListThreshold);
 		imagePlusInput.show();
 		for (int t = arrayListThreshold.get(0) ; t <= arrayListThreshold.get(1); ++t) {
-
 			ImagePlus imagePlusSegmentedTemp = generateSegmentedImage(imagePlusInput,t);
-
 			imagePlusSegmentedTemp = ConnectedComponents.computeLabels(imagePlusSegmentedTemp, 26, 32);
-
-
 			deleteArtefact(imagePlusSegmentedTemp);
-
 			imagePlusSegmentedTemp.setCalibration(calibration);
 			volume = measure3D.computeVolumeObject(imagePlusSegmentedTemp,255);
 			imagePlusSegmentedTemp.setCalibration(calibration);

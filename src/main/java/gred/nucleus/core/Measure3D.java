@@ -378,14 +378,14 @@ public class Measure3D {
 	public double computeComplexSurface2(ImagePlus imagePlusInput) {
 		Gradient gradient = new Gradient(imagePlusInput);
 		ArrayList <Double> tableUnitaire [][][] = gradient.getUnitaire();
-		ImageStack imageStackSegmented = this._imageSeg.getStack();
+		ImageStack imageStackSegmented = this._rawImage.getStack();
 		double surfaceArea = 0,voxelValue, neighborVoxelValue;
 		VoxelRecord voxelRecordIn = new VoxelRecord();
 		VoxelRecord voxelRecordOut= new VoxelRecord();
 
-		for (int k = 2; k < this._imageSeg.getNSlices()-2; ++k) {
-			for (int i = 2; i < this._imageSeg.getWidth() - 2; ++i) {
-				for (int j = 2; j < this._imageSeg.getHeight() - 2; ++j) {
+		for (int k = 2; k < this._rawImage.getNSlices()-2; ++k) {
+			for (int i = 2; i < this._rawImage.getWidth() - 2; ++i) {
+				for (int j = 2; j < this._rawImage.getHeight() - 2; ++j) {
 					voxelValue = imageStackSegmented.getVoxel(i, j, k);
 					if (voxelValue > 0) {
 						for (int kk = k - 1; kk <= k + 1; kk += 2) {
