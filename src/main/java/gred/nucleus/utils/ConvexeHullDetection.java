@@ -81,9 +81,9 @@ public class ConvexeHullDetection {
 		VoxelRecord voxelTest = new VoxelRecord();
         voxelTest = _p0;
 		VoxelRecord voxelPrecedent = new VoxelRecord();
-		double xcal =0.1032;// calibration.pixelWidth;
-		double ycal =0.1032;// calibration.pixelHeight;
-		double zcal =0.2000135;// calibration.pixelDepth;
+		double xcal = calibration.pixelWidth;
+		double ycal = calibration.pixelHeight;
+		double zcal = calibration.pixelDepth;
 		while(anglesSum < 2*_pi+1) {
 			double angleMin = 0;
 			double maxLength = 0;
@@ -134,7 +134,6 @@ public class ConvexeHullDetection {
 			++compteur;
 			voxelPrecedent = voxelTest;
 			voxelTest = voxelMin;
-			System.out.println("le imin ? "+iMin);
 			lVoxelBoundary.remove(iMin);
 			anglesSum += angleMin;
 			if (voxelMin.compareCooridnatesTo(_p0) == 0)

@@ -230,13 +230,9 @@ public class NucleusSegmentation {
 	 */
 	private ImagePlus generateSegmentedImage (ImagePlus imagePlusInput, int threshold) throws Exception {
 		ImageStack imageStackInput = imagePlusInput.getStack();
-		ImagePlus[] imagePlusSegmentedtemp = BF.openImagePlus(this.m_imageFilePath);
-        Calibration cal =imagePlusSegmentedtemp[0].getCalibration();
-//.getCalibration().pixelWidth
-        ImagePlus imagePlusSegmented =imagePlusSegmentedtemp[0];
+		ImagePlus imagePlusSegmented = imagePlusInput.duplicate();
 		ImageStack imageStackSegmented = imagePlusSegmented.getStack();
-
-        for(int k = 0; k < imagePlusInput.getStackSize(); ++k) {
+		for(int k = 0; k < imagePlusInput.getStackSize(); ++k) {
 			for (int i = 0; i < imagePlusInput.getWidth(); ++i) {
 				for (int j = 0; j < imagePlusInput.getHeight(); ++j) {
 					double voxelValue = imageStackInput.getVoxel(i, j, k);
@@ -247,8 +243,7 @@ public class NucleusSegmentation {
 				}
 			}
 		}
-        imagePlusSegmented.setCalibration(cal);
-
+		IJ.run(imagePlusSegmented, "Properties...", " unit=µm pixel_width="+this.m_semgemtationParameters.getXCal()+ " pixel_height="+this.m_semgemtationParameters.getYCal()+ " voxel_depth="+this.m_semgemtationParameters.getZCal());
         return imagePlusSegmented;
 	}
 

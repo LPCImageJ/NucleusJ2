@@ -32,20 +32,20 @@ public class ConvexHullSegmentation {
 	 * Current image segmented analysed
 	 * @return segmented image
 	 */
-	public ImagePlus run(ImagePlus imagePlusInput){
+	public ImagePlus run(ImagePlus imagePlusInput,SegmentationParameters semgemtationParameters){
 		ConvexeHullImageMaker nuc = new ConvexeHullImageMaker();
 		nuc.setAxes("xy");
-	   	ImagePlus imagePlusXY = nuc.giftWrapping(imagePlusInput);
+	   	ImagePlus imagePlusXY = nuc.giftWrapping(imagePlusInput,semgemtationParameters);
 	   	nuc.setAxes("xz");
-	   	ImagePlus imagePlusXZ = nuc.giftWrapping(imagePlusInput);
+	   	ImagePlus imagePlusXZ = nuc.giftWrapping(imagePlusInput,semgemtationParameters);
 	   	nuc.setAxes("yz");
-		ImagePlus imagePlusYZ = nuc.giftWrapping(imagePlusInput);
+		ImagePlus imagePlusYZ = nuc.giftWrapping(imagePlusInput,semgemtationParameters);
 		return imageMakingUnion(imagePlusInput, imagePlusXY, imagePlusXZ, imagePlusYZ);
 	}
 
 	/**
 	 * Make an union of segmented images from the different plans
-	 * @see ConvexHullSegmentation#run(ImagePlus)
+	 * @see ConvexHullSegmentation#
 	 * @param imagePlusXY
 	 * Segmented image in XY dimension
 	 * @param imagePlusXZ

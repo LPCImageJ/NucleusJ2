@@ -31,7 +31,14 @@ public class Measure3D {
 
 	public Measure3D (){ }
 
-	public Measure3D (ImagePlus imageSeg,ImagePlus rawImage, double xCal,double ycal,double zCal){
+
+
+	public Measure3D ( double xCal,double ycal,double zCal){
+		this._xCal=xCal;
+		this._yCal=ycal;
+		this._zCal=zCal;
+
+	}public Measure3D (ImagePlus imageSeg,ImagePlus rawImage, double xCal,double ycal,double zCal){
 		this._rawImage=rawImage;
 		this._imageSeg=imageSeg;
 		this._xCal=xCal;

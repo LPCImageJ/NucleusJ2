@@ -147,7 +147,7 @@ public class SegmentationCalling {
             System.out.println("otsu modif threshold: "+nucleusSegmentation.getBestThreshold()+"\n");
             if (this.m_semgemtationParameters.getGiftWrapping()){
                 ConvexHullSegmentation nuc = new ConvexHullSegmentation();
-                imgSeg = nuc.run(imgSeg);
+                imgSeg = nuc.run(imgSeg,this.m_semgemtationParameters);
             }
             imgSeg.setTitle(this._output);
             if(!this._output.equals(""))
@@ -220,8 +220,7 @@ public class SegmentationCalling {
                     System.out.println(fileImg + "\totsu modif threshold " + nucleusSegmentation.getBestThreshold() + "\n");
                     if (this.m_semgemtationParameters.getGiftWrapping()) {
                         ConvexHullSegmentation nuc = new ConvexHullSegmentation();
-                        this._imgSeg.show();
-                        this._imgSeg = nuc.run(this._imgSeg);
+                        this._imgSeg = nuc.run(this._imgSeg,this.m_semgemtationParameters);
                     }
 
                     String pathSeg = this.m_semgemtationParameters.getOutputFolder() + currentFile.getName();
@@ -286,7 +285,7 @@ public class SegmentationCalling {
                         System.out.println(fileImg + "\totsu modif threshold " + nucleusSegmentation.getBestThreshold() + "\n");
                         if (this.m_semgemtationParameters.getGiftWrapping()) {
                             ConvexHullSegmentation nuc = new ConvexHullSegmentation();
-                            imgSeg = nuc.run(imgSeg);
+                            imgSeg = nuc.run(imgSeg,this.m_semgemtationParameters);
                         }
                         String pathSeg = this._output + img.getTitle();
                         imgSeg.setTitle(pathSeg);

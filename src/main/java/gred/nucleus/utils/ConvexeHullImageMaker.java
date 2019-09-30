@@ -2,6 +2,7 @@
 package gred.nucleus.utils;
 
 import gred.nucleus.core.Measure3D;
+import gred.nucleus.segmentation.SegmentationParameters;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -34,6 +35,7 @@ public class ConvexeHullImageMaker{
 	/**    */
 	ArrayList<Double> _listLabel;  // _listLabel : initialisé avec la méthode giveTable
 
+	private SegmentationParameters m_semgemtationParameters;
 
 	/**
      * Constructor
@@ -52,14 +54,15 @@ public class ConvexeHullImageMaker{
 
 	/**
 	 * running gift wrapping on the image imput
-	 * @see gred.nucleus.core.ConvexHullSegmentation#run(ImagePlus)
+	 * @see gred.nucleus.core.ConvexHullSegmentation
 
 	 * @return segmented image in axes concerned corrected by gift wrapping
 	 */
-	public  ImagePlus giftWrapping (ImagePlus imagePlusBinary){
+	public  ImagePlus giftWrapping (ImagePlus imagePlusBinary,SegmentationParameters semgemtationParameters){
+		this.m_semgemtationParameters=semgemtationParameters;
 		_calibration = imagePlusBinary.getCalibration();
 		ImageStack imageStackInput = imagePlusBinary.getStack();
-		Measure3D mesure3d = new Measure3D();
+		Measure3D mesure3d = new Measure3D(this.m_semgemtationParameters.getXCal(),this.m_semgemtationParameters.getYCal(),this.m_semgemtationParameters.getZCal());
 
 		// Calcul du rayon : PQ 1/2 du rayon
 		double equivalentSphericalRadius = (mesure3d.equivalentSphericalRadius(imagePlusBinary));
