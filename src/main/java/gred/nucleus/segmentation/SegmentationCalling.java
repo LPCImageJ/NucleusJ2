@@ -3,6 +3,7 @@ package gred.nucleus.segmentation;
 
 import gred.nucleus.FilesInputOutput.FilesNames;
 import gred.nucleus.core.ConvexHullSegmentation;
+import gred.nucleus.core.Measure3D;
 import gred.nucleus.core.NucleusSegmentation;
 import gred.nucleus.nucleusCaracterisations.NucleusAnalysis;
 import ij.IJ;

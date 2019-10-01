@@ -84,6 +84,7 @@ public class NucleusSegmentation {
 
     public String saveImageResult(){
 		String resu = "";
+		System.out.println("lacalibe L87 Measure3D "+getXcalibration()+" "+getYcalibration()+ " "+getZcalibration());
         this._mesure3D = new Measure3D(this.m_imageSeg,this._imgRaw,getXcalibration(),getYcalibration(),getZcalibration());
 		return this._mesure3D.nucleusParameter3D();
 
@@ -118,7 +119,9 @@ public class NucleusSegmentation {
 
 		double imageVolume=getVoxelVolume()*this._imgRaw.getWidth()*this._imgRaw.getHeight()*this._imgRaw.getStackSize();
 		Gradient gradient = new Gradient(this._imgRaw); // ON UTILISE PLUS LE GRADIENT A REGARDER !!!!!!
-		preProcessImage(this._imgRaw);
+		if (this._imgRaw.getType() == ImagePlus.GRAY16)
+			preProcessImage(this._imgRaw);
+
 		saveFile(this._imgRaw,"/home/tridubos/Bureau/TEST_SEGMENTATION/TEMP/apres_pre_process_new.tiff");
 		double bestSphericity=-1;
 		ArrayList<Integer> arrayListThreshold = computeMinMaxThreshold(this._imgRaw);  // methode OTSU
@@ -147,6 +150,8 @@ public class NucleusSegmentation {
 		}
 
     }
+
+
 	private  void preProcessImage(ImagePlus img){
 		ContrastEnhancer enh = new ContrastEnhancer();
 		enh.setNormalize(true);

@@ -44,8 +44,7 @@ public class Measure3D {
 		this._xCal=xCal;
 		this._yCal=ycal;
 		this._zCal=zCal;
-
-	}
+    }
 
 	/**
 	 * Scan of image and if the voxel belong to theobject of interest, looking,
@@ -117,9 +116,10 @@ public class Measure3D {
 	 */
 	public double computeVolumeObject2 ( double label){
 		Histogram histogram = new Histogram ();
-		histogram.run(this._imageSeg);
+		System.out.println("Compute2 "+this._xCal*this._yCal*this._zCal);
+        histogram.run(this._imageSeg);
 		HashMap<Double , Integer> hashMapHisto = histogram.getHistogram();
-		return  hashMapHisto.get(label)*this._xCal*this._yCal*this._zCal;
+        return  hashMapHisto.get(label)*this._xCal*this._yCal*this._zCal;
 
 	}
 
@@ -143,7 +143,6 @@ public class Measure3D {
 		histogram.run(imagePlusInput);
 		HashMap<Double , Integer> hashMapHisto = histogram.getHistogram();
 		return  hashMapHisto.get(label) *this._xCal*this._yCal*this._zCal;
-
 	}
 
     /**
@@ -559,7 +558,9 @@ public class Measure3D {
 	public String nucleusParameter3D (){
 		String resu="";
 		Measure3D measure3D = new Measure3D();
-		double volume = measure3D.computeVolumeObject(this._imageSeg,255);
+        System.out.println("LALAL Dans le compute volume"+this._xCal+" "+this._yCal+" "+this._zCal+" "+this._imageSeg.getTitle());
+        double volume = measure3D.computeVolumeObject2(255);
+		//double volume = measure3D.computeVolumeObject(this._imageSeg,255);
 		double surfaceArea = measure3D.computeSurfaceObject(this._imageSeg,255);
 		double bis = measure3D.computeComplexSurface(this._rawImage, this._imageSeg);
 		double [] tEigenValues = measure3D.computeEigenValue3D (this._imageSeg,255);
