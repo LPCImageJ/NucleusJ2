@@ -174,7 +174,7 @@ public class SegmentationMethods {
                 saveFile(imgSeg,"/home/tridubos/Bureau/TEST_SEGMENTATION/TEMP/avant_pre_process_old.tiff");
                 if (imgSeg.getType() == ImagePlus.GRAY16)
                     this.preProcessImage(imgSeg);
-//TODO A ENLEVER
+                //TODO A ENLEVER
                 saveFile(imgSeg,"/home/tridubos/Bureau/TEST_SEGMENTATION/TEMP/apres_pre_process_old.tiff");
 
                 NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(this._vMin, this._vMax);
