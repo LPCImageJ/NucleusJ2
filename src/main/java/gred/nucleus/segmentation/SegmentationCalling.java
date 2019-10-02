@@ -201,8 +201,10 @@ public class SegmentationCalling {
             NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(currentFile ,this._prefix,this.m_semgemtationParameters);
             nucleusSegmentation.findOTSUmaximisingSephericity();
              this._imgSeg= nucleusSegmentation.applySegmentation2();
+             System.out.println("avant le bad crop "+nucleusSegmentation.getBestThreshold()+ " "+nucleusSegmentation.getBadCrop());
             //this._imgSeg= nucleusSegmentation.applySegmentation(this._imgSeg);
             if (nucleusSegmentation.getBadCrop()==true || nucleusSegmentation.getBestThreshold() == -1) {
+                System.out.println("dans le bad crop");
                 IJ.log("Bad crop " +fileImg+ "  "+nucleusSegmentation.getBestThreshold());
                 File file = new File(this._inputDir+"/BadCrop");
                 if (!file.exists()){
@@ -211,11 +213,11 @@ public class SegmentationCalling {
                 File fileToMove = new File(fileImg);
                 fileToMove.renameTo(new File(this._inputDir+fileToMove.separator+"BadCrop"+fileToMove.separator+this._imgSeg.getTitle()));
                 IJ.log("test "+this._inputDir+fileToMove.separator+"BadCrop"+fileToMove.separator+this._imgSeg.getTitle()+"\n");
-
                 //FileUtils.moveFileToDirectory(fileImg, this._inputDir+"/BadCrop"/, REPLACE_EXISTING);
 
             }
             else {
+                System.out.println(" dans le else");
                 if (nucleusSegmentation.getBestThreshold() == -1) {
                     log = log + fileImg + "\n";
                 } else {

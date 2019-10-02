@@ -85,7 +85,7 @@ public class NucleusSegmentation {
     public String saveImageResult(){
 		String resu = "";
 		System.out.println("lacalibe L87 Measure3D "+getXcalibration()+" "+getYcalibration()+ " "+getZcalibration());
-        this._mesure3D = new Measure3D(this.m_imageSeg,this._imgRaw,getXcalibration(),getYcalibration(),getZcalibration());
+		this._mesure3D = new Measure3D(this.m_imageSeg,this._imgRaw,getXcalibration(),getYcalibration(),getZcalibration());
 		return this._mesure3D.nucleusParameter3D();
 
 	}
@@ -134,7 +134,6 @@ public class NucleusSegmentation {
 			double volume = measure3D.computeVolumeObject2(255);
 			boolean firstStack = isVoxelThresholded(this.m_imageSeg,255, 0);
 			boolean lastStack = isVoxelThresholded(this.m_imageSeg,255, this.m_imageSeg.getStackSize()-1);
-			this.m_imageSeg.close();
 
 			if (testRelativeObjectVolume(volume,imageVolume) &&
 					volume >= this.m_semgemtationParameters.getM_minVolumeNucleus() &&
@@ -142,6 +141,8 @@ public class NucleusSegmentation {
 
 				double sphericity = measure3D.computeSphericity(volume,measure3D.computeComplexSurface(this.m_imageSeg,gradient));
 				if (sphericity > bestSphericity ) {
+					//System.out.println("t\tvolume :"+t +" "+volume);
+
 					this._bestThreshold = t;
 					bestSphericity = sphericity;
 					this._bestThreshold=t;
@@ -207,20 +208,14 @@ public class NucleusSegmentation {
 					StackConverter stackConverter = new StackConverter( imagePlusSegmentedTemp );
 					stackConverter.convertToGray8();
 					imagePlusSegmented= imagePlusSegmentedTemp.duplicate();
-
 				}
 			}
-
-
 		}
-
 		ImageStack imageStackInput = imagePlusSegmented.getImageStack();
-
 		if(_bestThreshold != -1 ) {
 			morphologicalCorrection(imagePlusSegmented);
 		}
 		checkBorder(imagePlusSegmented);
-
 		return imagePlusSegmented;
 	}
 
