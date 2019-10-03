@@ -85,7 +85,7 @@ public class NucleusSegmentation {
     public String saveImageResult(ImagePlus imageseg){
 		String resu = "";
 		System.out.println("lacalibe L87 Measure3D "+getXcalibration()+" "+getYcalibration()+ " "+getZcalibration());
-		this._mesure3D = new Measure3D(this.m_imageSeg,this._imgRaw,getXcalibration(),getYcalibration(),getZcalibration());
+		this._mesure3D = new Measure3D(imageseg,this._imgRaw,getXcalibration(),getYcalibration(),getZcalibration());
 		return this._mesure3D.nucleusParameter3D();
 
 	}

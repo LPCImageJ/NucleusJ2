@@ -224,6 +224,8 @@ public class SegmentationCalling {
                 else {
                     System.out.println(fileImg + "\totsu modif threshold " + nucleusSegmentation.getBestThreshold() + "\n");
                     if (this.m_semgemtationParameters.getGiftWrapping()) {
+                        System.out.println(fileImg + "\tLa on fait du gift ?  " + this.m_semgemtationParameters.getGiftWrapping());
+
                         ConvexHullSegmentation nuc = new ConvexHullSegmentation();
                         this._imgSeg = nuc.run(this._imgSeg,this.m_semgemtationParameters);
                     }
