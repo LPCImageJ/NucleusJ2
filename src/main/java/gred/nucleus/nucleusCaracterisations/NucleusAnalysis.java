@@ -48,10 +48,12 @@ public class NucleusAnalysis {
      * SphericityCorrected => compute sphericty with SurfaceAreaCorrected
      * @return String results of the 3D parameter
      */
+
+    /**
 	public String nucleusParameter3D (){
         Measure3D measure3D = new Measure3D();
         double volume = measure3D.computeVolumeObject(this._imgSeg,255);
-        double surfaceArea = measure3D.computeSurfaceObject(this._imgSeg,255);
+        double surfaceArea = measure3D.computeSurfaceObject(255);
         double bis = measure3D.computeComplexSurface(this._imgRaw, this._imgSeg);
         double [] tEigenValues = measure3D.computeEigenValue3D (this._imgSeg,255);
         IJ.log(" "+tEigenValues[0]            + " " +tEigenValues[1]  + " "              +tEigenValues[2]);

@@ -154,7 +154,7 @@ public class SegmentationCalling {
             if(!this._output.equals(""))
                 saveFile(imgSeg, this._output);
             NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(this._imgInput,imgSeg,this.m_semgemtationParameters);
-            System.out.println(nucleusAnalysis.nucleusParameter3D());
+           // System.out.println(nucleusAnalysis.nucleusParameter3D());
         }
         this._imgSeg = imgSeg;
         return nucleusSegmentation.getBestThreshold() ;
@@ -220,7 +220,8 @@ public class SegmentationCalling {
                 System.out.println(" dans le else");
                 if (nucleusSegmentation.getBestThreshold() == -1) {
                     log = log + fileImg + "\n";
-                } else {
+                }
+                else {
                     System.out.println(fileImg + "\totsu modif threshold " + nucleusSegmentation.getBestThreshold() + "\n");
                     if (this.m_semgemtationParameters.getGiftWrapping()) {
                         ConvexHullSegmentation nuc = new ConvexHullSegmentation();
@@ -230,7 +231,7 @@ public class SegmentationCalling {
                     String pathSeg = this.m_semgemtationParameters.getOutputFolder() + currentFile.getName();
                     this._imgSeg.setTitle(pathSeg);
                     saveFile(this._imgSeg, pathSeg);
-                    resu+=nucleusSegmentation.saveImageResult();
+                    resu+=nucleusSegmentation.saveImageResult(this._imgSeg);
                     /**
                     NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(this._imgSeg, this._imgSeg);
                     nucleusAnalysis.setResu(resu);
@@ -296,7 +297,7 @@ public class SegmentationCalling {
                         saveFile(imgSeg, pathSeg);
                         NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(img, imgSeg,this.m_semgemtationParameters);
                         nucleusAnalysis.setResu(resu);
-                        resu = nucleusAnalysis.nucleusParameter3D();
+                       // resu = nucleusAnalysis.nucleusParameter3D();
                     }
                 }
             }

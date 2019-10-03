@@ -47,7 +47,7 @@ public class NucleusSegmentationAndAnalysisPlugin_ implements PlugIn{
 				int thresh = segMethod.runOneImage();
 				if (thresh != -1) {
 					NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(img, segMethod.getImageSegmented());
-					IJ.log(nucleusAnalysis.nucleusParameter3D());
+				//	IJ.log(nucleusAnalysis.nucleusParameter3D());
 					segMethod.getImageSegmented().show();
 				}
 			}

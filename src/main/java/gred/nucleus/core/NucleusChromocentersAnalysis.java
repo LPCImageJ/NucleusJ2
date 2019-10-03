@@ -39,12 +39,12 @@ public class NucleusChromocentersAnalysis{
 		double voxelVolume = calibration.pixelDepth*calibration.pixelHeight*calibration.pixelWidth;
 		Measure3D measure3D = new Measure3D();
 		double volume = measure3D.computeVolumeObject(imagePlusSegmented,255);
-		double surfaceArea = measure3D.computeSurfaceObject(imagePlusSegmented,255);
+		double surfaceArea = measure3D.computeSurfaceObject(255);
 		String text = imagePlusSegmented.getTitle()+" "+volume+" "
 				+measure3D.equivalentSphericalRadius(volume)+" "
 				+surfaceArea +" "
-				+measure3D.computeFlatnessAndElongation(imagePlusSegmented,255)[0]+" "
-	    		+measure3D.computeFlatnessAndElongation(imagePlusSegmented,255)[1]+" "
+				+measure3D.computeFlatnessAndElongation(255)[0]+" "
+	    		+measure3D.computeFlatnessAndElongation(255)[1]+" "
 				+measure3D.computeSphericity(volume,surfaceArea);
 		if (rhfChoice.equals("Volume and intensity")){
 			IJ.log("ImageTitle Volume ESR SurfaceArea Flatness Elongation Sphericity IntensityRHF VolumeRHF NbCc VCcMean VCcTotal DistanceBorderToBorderMean DistanceBarycenterToBorderMean VoxelVolume");
@@ -99,7 +99,7 @@ public class NucleusChromocentersAnalysis{
 		double voxelVolume = calibration.pixelDepth*calibration.pixelHeight*calibration.pixelWidth;
 		Measure3D measure3D = new Measure3D();
 		double volume = measure3D.computeVolumeObject(imagePlusSegmented,255);
-		double surfaceArea = measure3D.computeSurfaceObject(imagePlusSegmented,255);
+		double surfaceArea = measure3D.computeSurfaceObject(255);
 		File fileResults = new File(pathResultsFile);
 		boolean exist = fileResults.exists();
 		BufferedWriter bufferedWriterOutput;	
@@ -119,8 +119,8 @@ public class NucleusChromocentersAnalysis{
 			 +volume+"\t"
 			 +measure3D.equivalentSphericalRadius(volume)+"\t"
 			 +surfaceArea+"\t"
-			 +measure3D.computeFlatnessAndElongation(imagePlusSegmented,255)[0]+"\t"
-			 +measure3D.computeFlatnessAndElongation(imagePlusSegmented,255)[1]+"\t"
+			 +measure3D.computeFlatnessAndElongation(255)[0]+"\t"
+			 +measure3D.computeFlatnessAndElongation(255)[1]+"\t"
 			 +measure3D.computeSphericity(volume,surfaceArea)+"\t";	
 		if (rhfChoice.equals("Volume and intensity")) {
 			text +=  measure3D.computeIntensityRHF(imagePlusInput,imagePlusSegmented, imagePlusChromocenter)+"\t";

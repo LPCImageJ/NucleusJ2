@@ -82,7 +82,7 @@ public class NucleusSegmentation {
         return currentImage[channelNumber];
     }
 
-    public String saveImageResult(){
+    public String saveImageResult(ImagePlus imageseg){
 		String resu = "";
 		System.out.println("lacalibe L87 Measure3D "+getXcalibration()+" "+getYcalibration()+ " "+getZcalibration());
 		this._mesure3D = new Measure3D(this.m_imageSeg,this._imgRaw,getXcalibration(),getYcalibration(),getZcalibration());
@@ -127,27 +127,31 @@ public class NucleusSegmentation {
 		ArrayList<Integer> arrayListThreshold = computeMinMaxThreshold(this._imgRaw);  // methode OTSU
 		System.out.println("les T "+arrayListThreshold);
 		for (int t = arrayListThreshold.get(0) ; t <= arrayListThreshold.get(1); ++t) {
-			this.m_imageSeg= generateSegmentedImage(this._imgRaw,t);
-			this.m_imageSeg = ConnectedComponents.computeLabels(this.m_imageSeg, 26, 32);
-			Measure3D measure3D = new Measure3D(this.m_imageSeg,this._imgRaw,getXcalibration(),getYcalibration(),getZcalibration());
-			deleteArtefact(this.m_imageSeg);
+			ImagePlus tempSeg=new ImagePlus();
+			tempSeg= generateSegmentedImage(this._imgRaw,t);
+			tempSeg = ConnectedComponents.computeLabels(tempSeg, 26, 32);
+			Measure3D measure3D = new Measure3D(tempSeg,this._imgRaw,getXcalibration(),getYcalibration(),getZcalibration());
+			deleteArtefact(tempSeg);
 			double volume = measure3D.computeVolumeObject2(255);
-			boolean firstStack = isVoxelThresholded(this.m_imageSeg,255, 0);
-			boolean lastStack = isVoxelThresholded(this.m_imageSeg,255, this.m_imageSeg.getStackSize()-1);
+			boolean firstStack = isVoxelThresholded(tempSeg,255, 0);
+			boolean lastStack = isVoxelThresholded(tempSeg,255, tempSeg.getStackSize()-1);
 
 			if (testRelativeObjectVolume(volume,imageVolume) &&
 					volume >= this.m_semgemtationParameters.getM_minVolumeNucleus() &&
 					volume <= this.m_semgemtationParameters.getM_maxVolumeNucleus() && firstStack == false && lastStack == false) {
 
-				double sphericity = measure3D.computeSphericity(volume,measure3D.computeComplexSurface(this.m_imageSeg,gradient));
+				double sphericity = measure3D.computeSphericity(volume,measure3D.computeComplexSurface(tempSeg,gradient));
 				if (sphericity > bestSphericity ) {
 					//System.out.println("t\tvolume :"+t +" "+volume);
 
 					this._bestThreshold = t;
 					bestSphericity = sphericity;
 					this._bestThreshold=t;
+					this.m_imageSeg=tempSeg;
 				}
+
 			}
+			measure3D=null;
 		}
 
     }
