@@ -482,7 +482,7 @@ public class NucleusSegmentation {
 			zCal=this.m_semgemtationParameters.getZCal();
 		}
 		else{
-			zCal=this._imgRaw.getCalibration().pixelWidth;
+			zCal=this._imgRaw.getCalibration().pixelDepth;
 		}
 		return zCal;
 	}
