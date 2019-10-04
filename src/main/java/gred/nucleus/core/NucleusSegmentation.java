@@ -144,18 +144,14 @@ public class NucleusSegmentation {
 
 				double sphericity = measure3D.computeSphericity(volume,measure3D.computeComplexSurface(tempSeg,gradient));
 				if (sphericity > bestSphericity ) {
-					//System.out.println("t\tvolume :"+t +" "+volume);
-
 					this._bestThreshold = t;
 					bestSphericity = sphericity;
 					this._bestThreshold=t;
 					this.m_imageSeg=tempSeg;
 				}
-
 			}
 			measure3D=null;
 		}
-
     }
 
 
