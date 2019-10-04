@@ -82,9 +82,12 @@ public class NucleusSegmentation {
         return currentImage[channelNumber];
     }
 
-    public String saveImageResult(ImagePlus imageseg){
-		String resu = "";
-		System.out.println("lacalibe L87 Measure3D "+getXcalibration()+" "+getYcalibration()+ " "+getZcalibration());
+
+
+    public String saveImageResult(){
+		return this._mesure3D.nucleusParameter3D();
+
+	}public String saveImageResult(ImagePlus imageseg){
 		this._mesure3D = new Measure3D(imageseg,this._imgRaw,getXcalibration(),getYcalibration(),getZcalibration());
 		return this._mesure3D.nucleusParameter3D();
 
@@ -116,7 +119,6 @@ public class NucleusSegmentation {
 
 	public void findOTSUmaximisingSephericity()throws Exception{
 		saveFile(this._imgRaw,"/home/tridubos/Bureau/TEST_SEGMENTATION/TEMP/avant_pre_process_new.tiff");
-
 		double imageVolume=getVoxelVolume()*this._imgRaw.getWidth()*this._imgRaw.getHeight()*this._imgRaw.getStackSize();
 		Gradient gradient = new Gradient(this._imgRaw); // ON UTILISE PLUS LE GRADIENT A REGARDER !!!!!!
 		if (this._imgRaw.getType() == ImagePlus.GRAY16)
