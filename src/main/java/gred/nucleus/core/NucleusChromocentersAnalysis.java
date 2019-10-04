@@ -23,6 +23,8 @@ public class NucleusChromocentersAnalysis{
 	public NucleusChromocentersAnalysis(){
 	}
 
+	//TODO INTEGRATION CLASS NEW MEASURE 3D
+
 	/**
 	 * Analysis for one nucleus, the results are stock on the IJ log windows
 	 *
