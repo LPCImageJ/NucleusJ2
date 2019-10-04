@@ -25,7 +25,7 @@ public class AutocropParameters extends PluginParameters {
     /**
      * Minimal object volume to crop
      */
-    int m_minVolumeNucleus=6;
+    int m_minVolumeNucleus=1;
     /**
      * Maximal object volume to crop
      */

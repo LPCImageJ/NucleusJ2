@@ -1,9 +1,8 @@
 package gred.nucleus.plugins;
-import java.io.File;
 import java.io.IOException;
 
 import gred.nucleus.dialogs.NucleusSegmentationAndAnalysisBatchDialog;
-import gred.nucleus.mainsNucelusJ.SegmentationMethods;
+import gred.nucleus.segmentation.SegmentationCalling;
 import ij.IJ;
 import ij.plugin.PlugIn;
 import loci.formats.FormatException;
@@ -28,12 +27,12 @@ public class NucleusSegmentationAndAnalysisBatchPlugin_ implements PlugIn {
 	    }	
 		if (_nucleusPipelineBatchDialog.isStart()) {
 			IJ.log("Begining of the segmentation of nuclei, the data are in "+_nucleusPipelineBatchDialog.getRawDataDirectory());
-            SegmentationMethods otsuModif = new SegmentationMethods(_nucleusPipelineBatchDialog.getRawDataDirectory(), _nucleusPipelineBatchDialog.getWorkDirectory(),
+            SegmentationCalling otsuModif = new SegmentationCalling(_nucleusPipelineBatchDialog.getRawDataDirectory(), _nucleusPipelineBatchDialog.getWorkDirectory(),
                     (short)_nucleusPipelineBatchDialog.getMinVolume(), (short)_nucleusPipelineBatchDialog.getMaxVolume());
             try {
-                String log = otsuModif.runSeveralImages(true);
-            } catch (IOException e) {     e.printStackTrace();
-            } catch (FormatException e) { e.printStackTrace(); }
+                String log = otsuModif.runSeveralImages();
+            } catch (Exception e) {     e.printStackTrace();
+             }
 
             IJ.log("End of the segmentation the nuclei, the results are in "+_nucleusPipelineBatchDialog.getWorkDirectory());
 		}

@@ -1,5 +1,6 @@
 package gred.nucleus.core;
 
+import gred.nucleus.segmentation.SegmentationParameters;
 import gred.nucleus.utils.ConvexeHullImageMaker;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -17,7 +18,10 @@ import ij.ImageStack;
  */
 
 public class ConvexHullSegmentation {
-	
+
+
+	private SegmentationParameters m_semgemtationParameters;
+
 	/**
 	 *Run the gift wrapping analysis on 3D segmented image imputed for the different axis combined :
 	 *   XY
@@ -28,28 +32,20 @@ public class ConvexHullSegmentation {
 	 * Current image segmented analysed
 	 * @return segmented image
 	 */
-	public ImagePlus run(ImagePlus imagePlusInput){
-		//IJ.log(imagePlusInput.getTitle()+" xy ");
+	public ImagePlus run(ImagePlus imagePlusInput,SegmentationParameters semgemtationParameters){
 		ConvexeHullImageMaker nuc = new ConvexeHullImageMaker();
 		nuc.setAxes("xy");
-	   	ImagePlus imagePlusXY = nuc.giftWrapping(imagePlusInput);
-	   	//IJ.log(imagePlusInput.getTitle()+" xz ");
-		imagePlusXY.setTitle("XY ConvexHullSegmentation");
-		//imagePlusXY.show();
-		//imagePlusXY.show();
+	   	ImagePlus imagePlusXY = nuc.giftWrapping(imagePlusInput,semgemtationParameters);
 	   	nuc.setAxes("xz");
-	   	ImagePlus imagePlusXZ = nuc.giftWrapping(imagePlusInput);
-	   	//IJ.log(imagePlusInput.getTitle()+" yz ");
+	   	ImagePlus imagePlusXZ = nuc.giftWrapping(imagePlusInput,semgemtationParameters);
 	   	nuc.setAxes("yz");
-        //imagePlusXZ.show();
-        //imagePlusXZ.show();
-		ImagePlus imagePlusYZ = nuc.giftWrapping(imagePlusInput);
+		ImagePlus imagePlusYZ = nuc.giftWrapping(imagePlusInput,semgemtationParameters);
 		return imageMakingUnion(imagePlusInput, imagePlusXY, imagePlusXZ, imagePlusYZ);
 	}
 
 	/**
 	 * Make an union of segmented images from the different plans
-	 * @see ConvexHullSegmentation#run(ImagePlus)
+	 * @see ConvexHullSegmentation#
 	 * @param imagePlusXY
 	 * Segmented image in XY dimension
 	 * @param imagePlusXZ

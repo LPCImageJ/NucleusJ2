@@ -1,7 +1,7 @@
 package gred.nucleus.plugins;
 import gred.nucleus.dialogs.NucleusSegmentationAndAnalysisDialog;
-import gred.nucleus.mainsNucelusJ.NucleusAnalysis;
-import gred.nucleus.mainsNucelusJ.SegmentationMethods;
+import gred.nucleus.nucleusCaracterisations.NucleusAnalysis;
+import gred.nucleus.segmentation.SegmentationCalling;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.WindowManager;
@@ -42,14 +42,16 @@ public class NucleusSegmentationAndAnalysisPlugin_ implements PlugIn{
 			short volumeMax = (short)nucleusSegmentationAndAnalysisDialog.getMaxVolume();
 
 			IJ.log("Begin image processing "+img.getTitle());
-            SegmentationMethods segMethod = new SegmentationMethods(img,volumeMin,volumeMax);
-
-			int thresh = segMethod.runOneImage(false);
-			if (thresh  != -1){
-				NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(img,segMethod.getImageSegmented());
-				IJ.log(nucleusAnalysis.nucleusParameter3D());
-                segMethod.getImageSegmented().show();
+            SegmentationCalling segMethod = new SegmentationCalling(img,volumeMin,volumeMax);
+			try {
+				int thresh = segMethod.runOneImage();
+				if (thresh != -1) {
+					NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(img, segMethod.getImageSegmented());
+				//	IJ.log(nucleusAnalysis.nucleusParameter3D());
+					segMethod.getImageSegmented().show();
+				}
 			}
+			catch (Exception e){}
 		}
 	}
 }

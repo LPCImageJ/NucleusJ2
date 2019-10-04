@@ -93,7 +93,7 @@ public class ConvexeHullDetection {
 			int iMin=0;
 			if (compteur != 0)
 			    vectorTest.setLocation(voxelTest._i-voxelPrecedent._i,voxelTest._j-voxelPrecedent._j, voxelTest._k-voxelPrecedent._k);
-						
+
 			for(int i=0; i<lVoxelBoundary.size(); i++) {
                 //IJ.log("anglesSum " +lVoxelBoundary.get(i)._i + " "+lVoxelBoundary.get(i)._j + " "+lVoxelBoundary.get(i)._k + " ");
                 // IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" size "+lVoxelBoundary.size()+ " le i "+i);

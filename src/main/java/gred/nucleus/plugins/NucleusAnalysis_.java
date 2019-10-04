@@ -1,6 +1,6 @@
 package gred.nucleus.plugins;
 
-import gred.nucleus.mainsNucelusJ.NucleusAnalysis;
+import gred.nucleus.nucleusCaracterisations.NucleusAnalysis;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.WindowManager;
@@ -16,7 +16,7 @@ public class NucleusAnalysis_ implements PlugIn  {
 	ImagePlus _imagePlusInput;
 
     /**
-     *
+     *	// TODO INTEGRATION CLASS NEW MEASURE 3D
      * @param arg
      */
 	public void run(String arg) {
@@ -69,6 +69,6 @@ public class NucleusAnalysis_ implements PlugIn  {
 		calibration.setUnit(unit);
 		imagePlusInput.setCalibration(calibration);
 		NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(imagePlusInput, imagePlusSegmented);
-		nucleusAnalysis.nucleusParameter3D();
+		//nucleusAnalysis.nucleusParameter3D();
 	}
 }

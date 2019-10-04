@@ -12,7 +12,9 @@ import ij.measure.Calibration;
 import ij.plugin.ChannelSplitter;
 import ij.plugin.Duplicator;
 import ij.plugin.GaussianBlur3D;
-
+import ij.process.AutoThresholder;
+import ij.process.ImageStatistics;
+import ij.process.StackStatistics;
 
 import loci.formats.FormatException;
 import loci.plugins.BF;
@@ -178,7 +180,6 @@ public class AutoCrop {
         for(Map.Entry<Double , Integer> entry : parcour.entrySet()) {
             Double cle = entry.getKey();
             Integer valeur = entry.getValue();
-            System.out.println("le volume "+getVoxelVolume());
             if(!((valeur*getVoxelVolume()<this.m_autocropParameters.getM_minVolumeNucleus()) ||
                     (valeur*getVoxelVolume()>this.m_autocropParameters.getM_maxVolumeNucleus()))){
 				Box initializeBox =new Box(Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE, Short.MIN_VALUE);
@@ -217,25 +218,19 @@ public class AutoCrop {
                         if ((imageStackInput.getVoxel(i, j, k) > 0) &&
 								(this.m_boxes.containsKey(imageStackInput.getVoxel(i, j, k)))) {
                             box = this.m_boxes.get(imageStackInput.getVoxel(i, j, k));
+							if (i < box.getXMin())
+                                box.setXMin(i);
+                            else if (i > box.getXMax())
+                                box.setXMax(i);
+                            if (j < box.getYMin())
+                                box.setYMin(j);
+                            else if(j > box.getYMax())
+                                box.setYMax(j);
 
-							if (i < box.getXMin()) {
-								box.setXMin(i);
-							}
-                            else if (i > box.getXMax()) {
-								box.setXMax(i);
-							}
-                            if (j < box.getYMin()) {
-								box.setYMin(j);
-							}
-                            else if(j > box.getYMax()) {
-								box.setYMax(j);
-							}
-                            if (k < box.getZMin()) {
-								box.setZMin(k);
-							}
-                            else if (k > box.getZMax()) {
-								box.setZMax(k);
-							}
+                            if (k < box.getZMin())
+                                box.setZMin(k);
+                            else if (k > box.getZMax())
+                                box.setZMax(k);
                         }
                     }
                 }
@@ -259,60 +254,57 @@ public class AutoCrop {
 			int i=0;
 			for(Map.Entry<Double , Box> entry : this.m_boxes.entrySet()) {
 				Box box =  entry.getValue();
-				if(box.getXMin()>0 && box.getXMax()>0 && box.getYMin()>0 && box.getYMax()>0 && box.getZMin()>0 && box.getZMax()>0) {
-					System.out.println(" box : " + box.getXMin() + " " + box.getXMax() + "   " + entry.getValue());
-					int xmin = box.getXMin() - this.m_autocropParameters.getxCropBoxSize();
-					int ymin = box.getYMin() - this.m_autocropParameters.getxCropBoxSize();
-					int zmin = box.getZMin() - this.m_autocropParameters.getzCropBoxSize();
-					String coord = box.getXMin() + "_" + box.getYMin() + "_" + box.getZMin();
-					if (y == 0) {
-						this.m_boxCoordinates.add(this.m_outputDirPath + File.separator + this.m_outputFilesPrefix + "_" + coord + i + "\t" + box.getXMin() + "\t" + box.getXMax() + "\t" + box.getYMin() + "\t" + box.getYMax() + "\t" + box.getZMin() + "\t" + box.getZMax());
-					}
-					if (xmin <= 0)
-						xmin = 1;
-					if (ymin <= 0)
-						ymin = 1;
-					if (zmin <= 0)
-						zmin = 1;
+				int xmin = box.getXMin() - this.m_autocropParameters.getxCropBoxSize();
+				int ymin = box.getYMin() - this.m_autocropParameters.getxCropBoxSize();
+				int zmin = box.getZMin() - this.m_autocropParameters.getzCropBoxSize();
+				String coord = box.getXMin() + "_" + box.getYMin() + "_" + box.getZMin();
+				if(y==0) {
+					this.m_boxCoordinates.add(this.m_outputDirPath + File.separator + this.m_outputFilesPrefix + "_" + coord + i + "\t" + box.getXMin() + "\t" + box.getXMax() + "\t" + box.getYMin() + "\t" + box.getYMax() + "\t" + box.getZMin() + "\t" + box.getZMax());
+				}
+				if (xmin <= 0)
+					xmin = 1;
+				if (ymin <= 0)
+					ymin = 1;
+				if (zmin <= 0)
+					zmin = 1;
 
-					int width = box.getXMax() + (2 * this.m_autocropParameters.getxCropBoxSize()) - box.getXMin();
-					int height = box.getYMax() + (2 * this.m_autocropParameters.getxCropBoxSize()) - box.getYMin();
-					int depth = box.getZMax() + (2 * this.m_autocropParameters.getzCropBoxSize()) - box.getZMin();
+				int width = box.getXMax() + (2*this.m_autocropParameters.getxCropBoxSize()) - box.getXMin();
+				int height = box.getYMax() + (2*this.m_autocropParameters.getxCropBoxSize()) - box.getYMin();
+				int depth = box.getZMax() + (2*this.m_autocropParameters.getzCropBoxSize()) - box.getZMin();
+				if (width + xmin >= this.m_imageSeg.getWidth())
+					width -= (width + xmin) - this.m_imageSeg.getWidth();
 
-					if (width + xmin >= this.m_imageSeg.getWidth())
-						width -= (width + xmin) - this.m_imageSeg.getWidth();
+				if (height + ymin >= this.m_imageSeg.getHeight())
+					height -= (height + ymin) - this.m_imageSeg.getHeight();
 
-					if (height + ymin >= this.m_imageSeg.getHeight())
-						height -= (height + ymin) - this.m_imageSeg.getHeight();
-
-					if (depth + zmin >= this.m_imageSeg.getNSlices())
-						depth -= (depth + zmin) - this.m_imageSeg.getNSlices();
-					ImagePlus imgResu;
-					if (this.m_rawImg.getNSlices() > 1) {
-						imgResu = cropImage(xmin, ymin, zmin, width, height, depth, y);
-					} else {
-						imgResu = cropImage2D(xmin, ymin, width, height, y);
-					}
-
-					Calibration cal = this.m_rawImg.getCalibration();
-					imgResu.setCalibration(cal);
-					OutputTiff fileOutput = new OutputTiff(this.m_outputDirPath + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i + "_C" + y + ".tif");
-					this.m_infoImageAnalyse = this.m_infoImageAnalyse + m_outputDirPath + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i + "_C" + y + ".tif\t"
-							+ y + "\t"
-							+ i + "\t"
-							+ xmin + "\t"
-							+ ymin + "\t"
-							+ zmin + "\t"
-							+ width + "\t"
-							+ height + "\t"
-							+ depth + "\n";
-					fileOutput.SaveImage(imgResu);
-					this.m_outputFile.add(this.m_outputDirPath + File.separator + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i + ".tif");
-					i++;
+				if (depth + zmin >= this.m_imageSeg.getNSlices())
+					depth -= (depth + zmin) - this.m_imageSeg.getNSlices();
+				ImagePlus imgResu;
+				if(this.m_rawImg.getNSlices()>1) {
+					imgResu = cropImage(xmin, ymin, zmin, width, height, depth, y);
 				}
 				else{
-
+					imgResu = cropImage2D(xmin, ymin, width, height,  y);
 				}
+
+				Calibration cal = this.m_rawImg.getCalibration();
+				imgResu.setCalibration(cal);
+				OutputTiff fileOutput = new OutputTiff(this.m_outputDirPath + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i +"_C"+y+".tif");
+				this.m_infoImageAnalyse=this.m_infoImageAnalyse+m_outputDirPath + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i +"_C"+y+".tif\t"
+						+y+"\t"
+						+i+"\t"
+						+xmin+"\t"
+						+ymin+"\t"
+						+zmin+"\t"
+						+width+"\t"
+						+height+"\t"
+						+depth+"\n";
+					fileOutput.SaveImage(imgResu);
+
+
+
+				this.m_outputFile.add(this.m_outputDirPath + File.separator + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i + ".tif");
+				i++;
 			}
 		}
 	}
@@ -378,7 +370,6 @@ public class AutoCrop {
 		ImagePlus sort = new ImagePlus();
 		ChannelSplitter channelSplitter = new ChannelSplitter();
 		imps = channelSplitter.split(imps[0]);
-		System.out.println("Dans le crop "+channelNumber+" " +xmin+" " +ymin +" " +zmin+" " +width+" " +height+" " +depth);
 		sort.setStack(imps[channelNumber].getStack().crop(xmin, ymin ,zmin,width, height,depth));
 		return sort;
 
@@ -467,7 +458,7 @@ public class AutoCrop {
 	public double getVoxelVolume(){
 		double calibration=0;
     	if(this.m_autocropParameters.m_manualParameter==true){
-    		calibration=this.m_autocropParameters.getVoxelVolume();
+    		calibration=m_autocropParameters.getVoxelVolume();
 		}
 		else{
 			Calibration cal = this.m_rawImg.getCalibration();
