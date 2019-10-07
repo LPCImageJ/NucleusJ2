@@ -21,7 +21,11 @@ import ij.process.*;
 import ij.measure.*;
 import ij.process.AutoThresholder.Method;
 import inra.ijpb.binary.ConnectedComponents;
+import loci.common.DebugTools;
 import loci.plugins.BF;
+import org.slf4j.*;
+
+import static java.util.logging.Level.INFO;
 
 /**
  * Object segmentation method for 3D images. This segmentation used as initial threshold
@@ -76,8 +80,12 @@ public class NucleusSegmentation {
     }
 
     public ImagePlus getImageChannel(int channelNumber)throws Exception{
-        ImagePlus[] currentImage = BF.openImagePlus(this.m_imageFilePath);
-        ChannelSplitter splitter = new ChannelSplitter();
+		//Logger logger = LoggerFactory.getLogger(NucleusSegmentation.class);
+		//DebugTools.enableLogging ("OFF");
+		ImagePlus[] currentImage = BF.openImagePlus(this.m_imageFilePath);
+		//DebugTools.enableLogging ("ON");
+
+		ChannelSplitter splitter = new ChannelSplitter();
         currentImage = splitter.split(currentImage[0]);
         return currentImage[channelNumber];
     }
@@ -88,8 +96,11 @@ public class NucleusSegmentation {
 		return this._mesure3D.nucleusParameter3D();
 
 	}public String saveImageResult(ImagePlus imageseg){
+
 		this._mesure3D = new Measure3D(imageseg,this._imgRaw,getXcalibration(),getYcalibration(),getZcalibration());
+
 		return this._mesure3D.nucleusParameter3D();
+
 
 	}
 	/**
@@ -127,7 +138,6 @@ public class NucleusSegmentation {
 		saveFile(this._imgRaw,"/home/tridubos/Bureau/TEST_SEGMENTATION/TEMP/apres_pre_process_new.tiff");
 		double bestSphericity=-1;
 		ArrayList<Integer> arrayListThreshold = computeMinMaxThreshold(this._imgRaw);  // methode OTSU
-		System.out.println("les T "+arrayListThreshold);
 		for (int t = arrayListThreshold.get(0) ; t <= arrayListThreshold.get(1); ++t) {
 			ImagePlus tempSeg=new ImagePlus();
 			tempSeg= generateSegmentedImage(this._imgRaw,t);

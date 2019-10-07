@@ -119,11 +119,7 @@ public class Measure3D {
      * @return double: the volume of the label of interest
      */
     public double computeVolumeObject2(double label) {
-        System.out.println("LALAL Dans le compute volume" + this._xCal + " " + this._yCal + " " + this._zCal + " ");
-
         Histogram histogram = new Histogram();
-        //this._imageSeg.show();
-      //  this._imageSeg.close();
         histogram.run(this._imageSeg);
         HashMap<Double, Integer> hashMapHisto = histogram.getHistogram();
         return hashMapHisto.get(label) * this._xCal * this._yCal * this._zCal;
@@ -199,7 +195,6 @@ public class Measure3D {
      * xz yz zz
      * Compute the eigen value with the pakage JAMA
      *
-     * @param imagePlusInput ImagePlus labelled
      * @param label          double label of interest
      * @return double table containing the 3 eigen values
      */
@@ -247,7 +242,6 @@ public class Measure3D {
     /**
      * Compute the flatness and the elongation of the object of interest
      *
-     * @param imagePlusInput ImagePlus of labelled image
      * @param label          double label of interest
      * @return double table containing in [0] flatness and in [1] elongation
      */
@@ -562,14 +556,11 @@ public class Measure3D {
 
     public String nucleusParameter3D() {
         String resu = "";
-        Measure3D measure3D = new Measure3D();
-        System.out.println("LALAL Dans le compute volume" + this._xCal + " " + this._yCal + " " + this._zCal + " " + this._imageSeg.getTitle());
         double volume = computeVolumeObject2(255);
-        //double volume = measure3D.computeVolumeObject(this._imageSeg,255);
         double surfaceArea = computeSurfaceObject( 255);
         double bis = computeComplexSurface();
         double[] tEigenValues = computeEigenValue3D(255);
-        IJ.log(" " + tEigenValues[0] + " " + tEigenValues[1] + " " + tEigenValues[2]);
+//        IJ.log(" " + tEigenValues[0] + " " + tEigenValues[1] + " " + tEigenValues[2]);
         resu = this._rawImage.getTitle() + "\t"
                 + computeVolumeObject2(255) + "\t"
                 + computeFlatnessAndElongation( 255)[0] + "\t"
@@ -580,6 +571,7 @@ public class Measure3D {
                 + bis + "\t"
                 + computeSphericity(volume, bis) + "\n"
         ;
+
         return resu;
     }
 }

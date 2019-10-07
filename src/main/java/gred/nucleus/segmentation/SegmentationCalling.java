@@ -116,8 +116,6 @@ public class SegmentationCalling {
         this.m_semgemtationParameters.setMinVolumeNucleus(vMin);
         this.m_semgemtationParameters.setMaxVolumeNucleus(vMax);
         this._inputDir = inputDir;
-        System.out.println("eu"+this._inputDir);
-
         this._output = outputDir;
         Directory dirOutput =new Directory(this._output );
         dirOutput.CheckAndCreateDir();
@@ -137,7 +135,6 @@ public class SegmentationCalling {
         NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(imgSeg,this.m_semgemtationParameters.getM_minVolumeNucleus(), this.m_semgemtationParameters.getM_maxVolumeNucleus(),this.m_semgemtationParameters);
 
         Calibration cal = imgSeg.getCalibration();
-        System.out.println(imgSeg.getTitle()+"\t"+cal.pixelWidth+"\t"+cal.pixelHeight+"\t"+cal.pixelDepth);
         if(imgSeg.getType() == ImagePlus.GRAY16)
             this.preProcessImage(imgSeg);
 
@@ -201,10 +198,8 @@ public class SegmentationCalling {
             NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(currentFile ,this._prefix,this.m_semgemtationParameters);
             nucleusSegmentation.findOTSUmaximisingSephericity();
              this._imgSeg= nucleusSegmentation.applySegmentation2();
-             System.out.println("avant le bad crop "+nucleusSegmentation.getBestThreshold()+ " "+nucleusSegmentation.getBadCrop());
-            //this._imgSeg= nucleusSegmentation.applySegmentation(this._imgSeg);
+
             if (nucleusSegmentation.getBadCrop()==true || nucleusSegmentation.getBestThreshold() == -1) {
-                System.out.println("dans le bad crop");
                 IJ.log("Bad crop " +fileImg+ "  "+nucleusSegmentation.getBestThreshold());
                 File file = new File(this._inputDir+"/BadCrop");
                 if (!file.exists()){
@@ -217,23 +212,22 @@ public class SegmentationCalling {
 
             }
             else {
-                System.out.println(" dans le else");
                 if (nucleusSegmentation.getBestThreshold() == -1) {
                     log = log + fileImg + "\n";
                 }
                 else {
-                    System.out.println(fileImg + "\totsu modif threshold " + nucleusSegmentation.getBestThreshold() + "\n");
                     if (this.m_semgemtationParameters.getGiftWrapping()) {
-                        System.out.println(fileImg + "\tLa on fait du gift ?  " + this.m_semgemtationParameters.getGiftWrapping());
-
                         ConvexHullSegmentation nuc = new ConvexHullSegmentation();
                         this._imgSeg = nuc.run(this._imgSeg,this.m_semgemtationParameters);
                     }
 
                     String pathSeg = this.m_semgemtationParameters.getOutputFolder() + currentFile.getName();
+
                     this._imgSeg.setTitle(pathSeg);
+
                     saveFile(this._imgSeg, pathSeg);
                     resu+=nucleusSegmentation.saveImageResult(this._imgSeg);
+
                     /**
                     NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(this._imgSeg, this._imgSeg);
                     nucleusAnalysis.setResu(resu);
@@ -256,7 +250,6 @@ public class SegmentationCalling {
         public String runSeveralImages() throws IOException, FormatException , Exception{
         String log = "";
         String resu = "";
-            System.out.println("eu"+this.m_semgemtationParameters.getInputFolder());
             File [] fileList = new File(this.m_semgemtationParameters.getInputFolder()).listFiles();
         for(int i = 0; i < fileList.length; ++i) {
             String fileImg = fileList[i].toString();
@@ -267,7 +260,6 @@ public class SegmentationCalling {
                 if (imgSeg.getType() == ImagePlus.GRAY16)
                     this.preProcessImage(imgSeg);
                 NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(imgSeg,this.m_semgemtationParameters.getM_minVolumeNucleus(), this.m_semgemtationParameters.getM_maxVolumeNucleus(),this.m_semgemtationParameters);
-
                 imgSeg = nucleusSegmentation.applySegmentation(imgSeg);
                 // TODO A Nettoyer les else !!!
 
