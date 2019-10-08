@@ -3,10 +3,7 @@ package gred.nucleus.core;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map.Entry;
-
-import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.imageProcess.Thresholding;
-import gred.nucleus.nucleusCaracterisations.NucleusAnalysis;
 import gred.nucleus.segmentation.SegmentationParameters;
 import gred.nucleus.utils.FillingHoles;
 import gred.nucleus.utils.Gradient;
@@ -19,13 +16,10 @@ import ij.plugin.Filters3D;
 import ij.plugin.GaussianBlur3D;
 import ij.process.*;
 import ij.measure.*;
-import ij.process.AutoThresholder.Method;
 import inra.ijpb.binary.ConnectedComponents;
 import loci.common.DebugTools;
 import loci.plugins.BF;
-import org.slf4j.*;
 
-import static java.util.logging.Level.INFO;
 
 /**
  * Object segmentation method for 3D images. This segmentation used as initial threshold
@@ -80,11 +74,9 @@ public class NucleusSegmentation {
     }
 
     public ImagePlus getImageChannel(int channelNumber)throws Exception{
-		//Logger logger = LoggerFactory.getLogger(NucleusSegmentation.class);
-		//DebugTools.enableLogging ("OFF");
-		ImagePlus[] currentImage = BF.openImagePlus(this.m_imageFilePath);
-		//DebugTools.enableLogging ("ON");
 
+		DebugTools.enableLogging ("OFF"); // DEBUG INFO BIOFORMAT OFF
+		ImagePlus[] currentImage = BF.openImagePlus(this.m_imageFilePath);
 		ChannelSplitter splitter = new ChannelSplitter();
         currentImage = splitter.split(currentImage[0]);
         return currentImage[channelNumber];
