@@ -184,9 +184,11 @@ public class SegmentationCalling {
      * @throws FormatException Bioformat exception
      */
 
-    public String runSeveralImages2() throws IOException, FormatException , Exception{
+    public String runSeveralImages2() throws  Exception{
         String log = "";
-        String resu = "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\n";
+        String resuOTSU = "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\n";
+        String resuGIFT = "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\n";
+
         Directory directoryInput = new Directory(this.m_semgemtationParameters.getInputFolder());
         directoryInput.listFiles(this.m_semgemtationParameters.getInputFolder());
         directoryInput.checkIfEmpty();
@@ -216,17 +218,18 @@ public class SegmentationCalling {
                     log = log + fileImg + "\n";
                 }
                 else {
+                    String pathSegOTSU = this.m_semgemtationParameters.getOutputFolder()+"OTSU" +currentFile.separator+ currentFile.getName();
+                    saveFile(this._imgSeg, pathSegOTSU);
+                    resuOTSU+=nucleusSegmentation.saveImageResult(this._imgSeg);
+
                     if (this.m_semgemtationParameters.getGiftWrapping()) {
                         ConvexHullSegmentation nuc = new ConvexHullSegmentation();
                         this._imgSeg = nuc.run(this._imgSeg,this.m_semgemtationParameters);
+                        String pathSegGIFT = this.m_semgemtationParameters.getOutputFolder()+"GIFT" +currentFile.separator+ currentFile.getName();
+                        this._imgSeg.setTitle(pathSegGIFT);
+                        saveFile(this._imgSeg, pathSegGIFT);
+                        resuGIFT+=nucleusSegmentation.saveImageResult(this._imgSeg);
                     }
-
-                    String pathSeg = this.m_semgemtationParameters.getOutputFolder() + currentFile.getName();
-
-                    this._imgSeg.setTitle(pathSeg);
-
-                    saveFile(this._imgSeg, pathSeg);
-                    resu+=nucleusSegmentation.saveImageResult(this._imgSeg);
 
                     /**
                     NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(this._imgSeg, this._imgSeg);
@@ -240,10 +243,14 @@ public class SegmentationCalling {
 
 
         }
-        BufferedWriter writer;
-        writer = new BufferedWriter(new FileWriter(new File(this.m_semgemtationParameters.getOutputFolder()+File.separator+"ParametersResults.txt")));
-        writer.write(resu);
-        writer.close();
+        BufferedWriter writerOTSU;
+        writerOTSU = new BufferedWriter(new FileWriter(new File(this.m_semgemtationParameters.getOutputFolder()+File.separator+"OTSU"+File.separator+"ParametersResultsOTSU.txt")));
+        writerOTSU.write(resuOTSU);
+        writerOTSU.close();
+        BufferedWriter writerGIFT;
+        writerGIFT = new BufferedWriter(new FileWriter(new File(this.m_semgemtationParameters.getOutputFolder()+File.separator+"GIFT"+File.separator+"ParametersResultsGIF.txt")));
+        writerGIFT.write(resuGIFT);
+        writerGIFT.close();
         return log;
 
     }
