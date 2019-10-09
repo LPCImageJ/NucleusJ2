@@ -239,18 +239,18 @@ public class SegmentationCalling {
 
                 }
             }
-
-
-
         }
-        BufferedWriter writerOTSU;
-        writerOTSU = new BufferedWriter(new FileWriter(new File(this.m_semgemtationParameters.getOutputFolder()+File.separator+"OTSU"+File.separator+"ParametersResultsOTSU.txt")));
-        writerOTSU.write(resuOTSU);
-        writerOTSU.close();
-        BufferedWriter writerGIFT;
-        writerGIFT = new BufferedWriter(new FileWriter(new File(this.m_semgemtationParameters.getOutputFolder()+File.separator+"GIFT"+File.separator+"ParametersResultsGIF.txt")));
-        writerGIFT.write(resuGIFT);
-        writerGIFT.close();
+
+            BufferedWriter writerOTSU;
+            writerOTSU = new BufferedWriter(new FileWriter(new File(this.m_semgemtationParameters.getOutputFolder()+File.separator+"OTSU"+File.separator+"ParametersResultsOTSU.txt")));
+            writerOTSU.write(resuOTSU);
+            writerOTSU.close();
+            BufferedWriter writerGIFT;
+            writerGIFT = new BufferedWriter(new FileWriter(new File(this.m_semgemtationParameters.getOutputFolder()+File.separator+"GIFT"+File.separator+"ParametersResultsGIF.txt")));
+            writerGIFT.write(resuGIFT);
+            writerGIFT.close();
+
+
         return log;
 
     }
