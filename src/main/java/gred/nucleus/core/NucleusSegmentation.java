@@ -121,13 +121,11 @@ public class NucleusSegmentation {
 
 
 	public void findOTSUmaximisingSephericity()throws Exception{
-		saveFile(this._imgRaw,"/home/tridubos/Bureau/TEST_SEGMENTATION/TEMP/avant_pre_process_new.tiff");
 		double imageVolume=getVoxelVolume()*this._imgRaw.getWidth()*this._imgRaw.getHeight()*this._imgRaw.getStackSize();
 		Gradient gradient = new Gradient(this._imgRaw); // ON UTILISE PLUS LE GRADIENT A REGARDER !!!!!!
 		if (this._imgRaw.getType() == ImagePlus.GRAY16)
 			preProcessImage(this._imgRaw);
-
-		saveFile(this._imgRaw,"/home/tridubos/Bureau/TEST_SEGMENTATION/TEMP/apres_pre_process_new.tiff");
+		
 		double bestSphericity=-1;
 		ArrayList<Integer> arrayListThreshold = computeMinMaxThreshold(this._imgRaw);  // methode OTSU
 		for (int t = arrayListThreshold.get(0) ; t <= arrayListThreshold.get(1); ++t) {
