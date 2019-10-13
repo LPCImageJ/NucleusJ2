@@ -69,7 +69,7 @@ public class AutoCrop {
 
 
 
-    /** TODO GESTION OF log4J WARN !!!!! (BF.openImagePlus)
+    /** 
      *  Autocrop constructor : initialisation of analyse parameter
      * @param imageFile : current image analyse
      * @param outputFilesPrefix : prefix use for output file name
