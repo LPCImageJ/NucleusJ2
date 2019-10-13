@@ -189,6 +189,10 @@ public class SegmentationCalling {
         String resuOTSU = "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\n";
         String resuGIFT = "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\n";
 
+        //TODO ADD OTSU AND GIFT OUTPUT CREATION
+
+
+
         Directory directoryInput = new Directory(this.m_semgemtationParameters.getInputFolder());
         directoryInput.listFiles(this.m_semgemtationParameters.getInputFolder());
         directoryInput.checkIfEmpty();
@@ -199,10 +203,11 @@ public class SegmentationCalling {
             this._prefix = outPutFilesNames.PrefixeNameFile();
             NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(currentFile ,this._prefix,this.m_semgemtationParameters);
             nucleusSegmentation.findOTSUmaximisingSephericity();
-             this._imgSeg= nucleusSegmentation.applySegmentation2();
 
+            this._imgSeg= nucleusSegmentation.applySegmentation2();
             if (nucleusSegmentation.getBadCrop()==true || nucleusSegmentation.getBestThreshold() == -1) {
                 IJ.log("Bad crop " +fileImg+ "  "+nucleusSegmentation.getBestThreshold());
+
                 File file = new File(this._inputDir+"/BadCrop");
                 if (!file.exists()){
                     file.mkdir();
