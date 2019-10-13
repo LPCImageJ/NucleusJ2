@@ -19,6 +19,7 @@ import ij.measure.*;
 import inra.ijpb.binary.ConnectedComponents;
 import loci.common.DebugTools;
 import loci.plugins.BF;
+import loci.plugins.in.ImporterOptions;
 
 
 /**
@@ -74,12 +75,14 @@ public class NucleusSegmentation {
     }
 
     public ImagePlus getImageChannel(int channelNumber)throws Exception{
-
 		DebugTools.enableLogging ("OFF");           // DEBUG INFO BIOFORMAT OFF
-		ImagePlus[] currentImage = BF.openImagePlus(this.m_imageFilePath);
+		ImporterOptions options = new ImporterOptions();
+		options.setId(this.m_imageFilePath);
+		ImagePlus[] currentImage = BF.openImagePlus(options);
 		ChannelSplitter splitter = new ChannelSplitter();
         currentImage = splitter.split(currentImage[0]);
-        return currentImage[channelNumber];
+		ImagePlus toReturn = currentImage[channelNumber].duplicate();
+		return toReturn;
     }
 
 
