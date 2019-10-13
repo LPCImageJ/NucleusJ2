@@ -16,6 +16,7 @@ import ij.process.AutoThresholder;
 import ij.process.ImageStatistics;
 import ij.process.StackStatistics;
 
+import loci.common.DebugTools;
 import loci.formats.FormatException;
 import loci.plugins.BF;
 import loci.plugins.in.ImporterOptions;
@@ -94,6 +95,7 @@ public class AutoCrop {
 	 */
 
 	public ImagePlus getImageChannel(int channelNumber)throws Exception{
+		DebugTools.enableLogging ("OFF");           // DEBUG INFO BIOFORMAT OFF
 		ImagePlus[] currentImage = BF.openImagePlus(this.m_imageFilePath);
 		ChannelSplitter splitter = new ChannelSplitter();
 		currentImage = splitter.split(currentImage[0]);
@@ -109,6 +111,7 @@ public class AutoCrop {
 	 */
 
 	public void setChannelNumbers() throws Exception{
+		DebugTools.enableLogging ("OFF");           // DEBUG INFO BIOFORMAT OFF
 		ImagePlus[] currentImage = BF.openImagePlus(this.m_imageFilePath);
 		ChannelSplitter channelSplitter = new ChannelSplitter();
 		currentImage = channelSplitter.split(currentImage[0]);
@@ -371,6 +374,7 @@ public class AutoCrop {
 		ChannelSplitter channelSplitter = new ChannelSplitter();
 		imps = channelSplitter.split(imps[0]);
 		sort.setStack(imps[channelNumber].getStack().crop(xmin, ymin ,zmin,width, height,depth));
+
 		return sort;
 
 	}
