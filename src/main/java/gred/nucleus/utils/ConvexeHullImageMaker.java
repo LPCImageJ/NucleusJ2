@@ -142,7 +142,8 @@ public class ConvexeHullImageMaker{
 				for (int i = 0; i < _listLabel.size();++i){
 					ArrayList<VoxelRecord> lVoxelBoundary = detectVoxelBoudary(image,_listLabel.get(i),k);
 					if (lVoxelBoundary.size() > 5){
-						ImageStack imageTempStack = imageMaker(image,lVoxelBoundary , width, height, equivalentSphericalRadius).getStack();
+						//TODO THINKING ON AN OTHER WAY TO DEFINE equivalentSphericalRadius PARAMETER
+						ImageStack imageTempStack = imageMaker(image,lVoxelBoundary , width, height, equivalentSphericalRadius*2).getStack();
 						for (int l = 0; l < width; ++l){
                             for (int m = 0; m < height; ++m){
                                 if (imageTempStack.getVoxel(l, m, 0) > 0)
