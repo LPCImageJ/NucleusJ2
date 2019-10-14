@@ -63,7 +63,7 @@ public class Directory  {
         File dir = new File(this.m_dirPath);
         if (!dir.exists()) {
             dir.mkdir();
-            System.out.println("on créé le dir "+ this.m_dirPath);
+            System.out.println("New directory "+ this.m_dirPath);
         }
     }
 
