@@ -1,8 +1,12 @@
 package gred.nucleus.core;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.Map.Entry;
+
+import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.imageProcess.Thresholding;
 import gred.nucleus.segmentation.SegmentationParameters;
 import gred.nucleus.utils.FillingHoles;
@@ -31,7 +35,10 @@ import loci.plugins.in.ImporterOptions;
  */
 public class NucleusSegmentation {
 
-    /** Threshold detected by the Otsu modified method*/
+	private static String resultsOTSU="NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\n";
+    private static String resultsGIFT="NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\n";
+
+	/** Threshold detected by the Otsu modified method*/
 	private int _bestThreshold = -1;
     /** volume min of the detected object*/
 	private int _vMin;
@@ -71,18 +78,22 @@ public class NucleusSegmentation {
         this.m_imageFilePath = imageFile.getAbsolutePath();
         Thresholding thresholding = new Thresholding();
         this._imgRaw=getImageChannel(0);
+        this._imgRaw.setTitle(imageFile.getName());
+        Directory dirOutputOTSU= new Directory(this.m_semgemtationParameters.getOutputFolder() + "OTSU");
+        dirOutputOTSU.CheckAndCreateDir();
+        if(this.m_semgemtationParameters.getGiftWrapping()) {
+            Directory dirOutputGIFT = new Directory(this.m_semgemtationParameters.getOutputFolder() + "GIFT");
+            dirOutputGIFT.CheckAndCreateDir();
+        }
 
     }
 
     public ImagePlus getImageChannel(int channelNumber)throws Exception{
 		DebugTools.enableLogging ("OFF");           // DEBUG INFO BIOFORMAT OFF
-		ImporterOptions options = new ImporterOptions();
-		options.setId(this.m_imageFilePath);
-		ImagePlus[] currentImage = BF.openImagePlus(options);
+		ImagePlus[] currentImage = BF.openImagePlus(this.m_imageFilePath);
 		ChannelSplitter splitter = new ChannelSplitter();
         currentImage = splitter.split(currentImage[0]);
-		ImagePlus toReturn = currentImage[channelNumber].duplicate();
-		return toReturn;
+		return currentImage[0];
     }
 
 
@@ -90,7 +101,9 @@ public class NucleusSegmentation {
     public String saveImageResult(){
 		return this._mesure3D.nucleusParameter3D();
 
-	}public String saveImageResult(ImagePlus imageseg){
+	}
+
+	public String saveImageResult(ImagePlus imageseg){
 
 		this._mesure3D = new Measure3D(imageseg,this._imgRaw,getXcalibration(),getYcalibration(),getZcalibration());
 
@@ -501,4 +514,43 @@ public class NucleusSegmentation {
 
         return calibration ;
     }
+
+    public void checkBadCrop(String pathDir,String pathImage){
+    	if(this._badCrop){
+			File file = new File(pathDir+"/BadCrop");
+			if (!file.exists()){
+				file.mkdir();
+			}
+			File fileToMove = new File(pathImage);
+			fileToMove.renameTo(new File(pathImage));
+		}
+	}
+	public void saveOTSUSegmented(){
+    	if(getBadCrop()==false && getBestThreshold() != -1) {
+			String pathSegOTSU = this.m_semgemtationParameters.getOutputFolder() + "OTSU" + this.m_currentFile.separator + this.m_currentFile.getName();
+			saveFile(this.m_imageSeg, pathSegOTSU);
+			resultsOTSU+=saveImageResult(this.m_imageSeg);
+		}
+	}
+	public void giftWrappingSeg(){
+		if(getBadCrop()==false && getBestThreshold() != -1) {
+
+			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
+			this.m_imageSeg = nuc.run(this.m_imageSeg, this.m_semgemtationParameters);
+			String pathSegGIFT = this.m_semgemtationParameters.getOutputFolder() + "GIFT" + this.m_currentFile.separator + this.m_currentFile.getName();
+			this.m_imageSeg.setTitle(pathSegGIFT);
+			saveFile(this.m_imageSeg, pathSegGIFT);
+			resultsGIFT += saveImageResult(this.m_imageSeg);
+		}
+	}
+	public void saveResultsAnalyse() throws Exception{
+		BufferedWriter writerOTSU;
+		writerOTSU = new BufferedWriter(new FileWriter(new File(this.m_semgemtationParameters.getOutputFolder()+File.separator+"OTSU"+File.separator+"ParametersResultsOTSU.txt")));
+		writerOTSU.write(resultsOTSU);
+		writerOTSU.close();
+		BufferedWriter writerGIFT;
+		writerGIFT = new BufferedWriter(new FileWriter(new File(this.m_semgemtationParameters.getOutputFolder()+File.separator+"GIFT"+File.separator+"ParametersResultsGIF.txt")));
+		writerGIFT.write(resultsGIFT);
+		writerGIFT.close();
+	}
 }
