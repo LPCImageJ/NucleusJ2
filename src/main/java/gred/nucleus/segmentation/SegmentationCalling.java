@@ -188,11 +188,7 @@ public class SegmentationCalling {
         String log = "";
         String resuOTSU = "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\n";
         String resuGIFT = "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\n";
-
         //TODO ADD OTSU AND GIFT OUTPUT CREATION
-
-
-
         Directory directoryInput = new Directory(this.m_semgemtationParameters.getInputFolder());
         directoryInput.listFiles(this.m_semgemtationParameters.getInputFolder());
         directoryInput.checkIfEmpty();
@@ -203,62 +199,17 @@ public class SegmentationCalling {
             this._prefix = outPutFilesNames.PrefixeNameFile();
             NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(currentFile ,this._prefix,this.m_semgemtationParameters);
             nucleusSegmentation.findOTSUmaximisingSephericity();
-
+            System.out.println("Current image in process "+currentFile);
             this._imgSeg= nucleusSegmentation.applySegmentation2();
-            if (nucleusSegmentation.getBadCrop()==true || nucleusSegmentation.getBestThreshold() == -1) {
-                IJ.log("Bad crop " +fileImg+ "  "+nucleusSegmentation.getBestThreshold());
-
-                File file = new File(this._inputDir+"/BadCrop");
-                if (!file.exists()){
-                    file.mkdir();
-                }
-                File fileToMove = new File(fileImg);
-                fileToMove.renameTo(new File(this._inputDir+fileToMove.separator+"BadCrop"+fileToMove.separator+this._imgSeg.getTitle()));
-                IJ.log("test "+this._inputDir+fileToMove.separator+"BadCrop"+fileToMove.separator+this._imgSeg.getTitle()+"\n");
-                //FileUtils.moveFileToDirectory(fileImg, this._inputDir+"/BadCrop"/, REPLACE_EXISTING);
-
-            }
-            else {
-                if (nucleusSegmentation.getBestThreshold() == -1) {
-                    log = log + fileImg + "\n";
-                }
-                else {
-                    String pathSegOTSU = this.m_semgemtationParameters.getOutputFolder()+"OTSU" +currentFile.separator+ currentFile.getName();
-                    saveFile(this._imgSeg, pathSegOTSU);
-                    resuOTSU+=nucleusSegmentation.saveImageResult(this._imgSeg);
-
-                    if (this.m_semgemtationParameters.getGiftWrapping()) {
-                        ConvexHullSegmentation nuc = new ConvexHullSegmentation();
-                        this._imgSeg = nuc.run(this._imgSeg,this.m_semgemtationParameters);
-                        String pathSegGIFT = this.m_semgemtationParameters.getOutputFolder()+"GIFT" +currentFile.separator+ currentFile.getName();
-                        this._imgSeg.setTitle(pathSegGIFT);
-                        saveFile(this._imgSeg, pathSegGIFT);
-                        resuGIFT+=nucleusSegmentation.saveImageResult(this._imgSeg);
-                    }
-
-                    /**
-                    NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(this._imgSeg, this._imgSeg);
-                    nucleusAnalysis.setResu(resu);
-                    resu = nucleusAnalysis.nucleusParameter3D();
-                     */
-
-                }
-            }
+            nucleusSegmentation.checkBadCrop(this._inputDir+"/BadCrop",this._inputDir+currentFile.separator+"BadCrop"+currentFile.separator+this._imgSeg.getTitle());
+            nucleusSegmentation.saveOTSUSegmented();
+            nucleusSegmentation.giftWrappingSeg();
+            nucleusSegmentation.saveResultsAnalyse();
         }
-
-            BufferedWriter writerOTSU;
-            writerOTSU = new BufferedWriter(new FileWriter(new File(this.m_semgemtationParameters.getOutputFolder()+File.separator+"OTSU"+File.separator+"ParametersResultsOTSU.txt")));
-            writerOTSU.write(resuOTSU);
-            writerOTSU.close();
-            BufferedWriter writerGIFT;
-            writerGIFT = new BufferedWriter(new FileWriter(new File(this.m_semgemtationParameters.getOutputFolder()+File.separator+"GIFT"+File.separator+"ParametersResultsGIF.txt")));
-            writerGIFT.write(resuGIFT);
-            writerGIFT.close();
-
-
         return log;
 
     }
+
         public String runSeveralImages() throws IOException, FormatException , Exception{
         String log = "";
         String resu = "";
