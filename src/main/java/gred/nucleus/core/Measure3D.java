@@ -560,7 +560,6 @@ public class Measure3D {
         double surfaceArea = computeSurfaceObject( 255);
         double bis = computeComplexSurface();
         double[] tEigenValues = computeEigenValue3D(255);
-//        IJ.log(" " + tEigenValues[0] + " " + tEigenValues[1] + " " + tEigenValues[2]);
         resu = this._rawImage.getTitle() + "\t"
                 + computeVolumeObject2(255) + "\t"
                 + computeFlatnessAndElongation( 255)[0] + "\t"
