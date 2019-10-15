@@ -186,9 +186,6 @@ public class SegmentationCalling {
 
     public String runSeveralImages2() throws  Exception{
         String log = "";
-        String resuOTSU = "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\n";
-        String resuGIFT = "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\n";
-        //TODO ADD OTSU AND GIFT OUTPUT CREATION
         Directory directoryInput = new Directory(this.m_semgemtationParameters.getInputFolder());
         directoryInput.listFiles(this.m_semgemtationParameters.getInputFolder());
         directoryInput.checkIfEmpty();
@@ -207,7 +204,6 @@ public class SegmentationCalling {
             nucleusSegmentation.saveResultsAnalyse();
         }
         return log;
-
     }
 
         public String runSeveralImages() throws IOException, FormatException , Exception{
