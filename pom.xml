@@ -69,7 +69,6 @@
 			<groupId>ome</groupId>
 			<artifactId>bioformats_package</artifactId>
 			<version>6.2.1</version>
-			<type>pom</type>
 		</dependency>
 
 
