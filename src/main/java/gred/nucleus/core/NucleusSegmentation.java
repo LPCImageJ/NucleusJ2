@@ -251,6 +251,7 @@ public class NucleusSegmentation {
 	private ImagePlus generateSegmentedImage (ImagePlus imagePlusInput, int threshold) throws Exception {
 		ImageStack imageStackInput = imagePlusInput.getStack();
 		ImagePlus imagePlusSegmented = imagePlusInput.duplicate();
+        imagePlusSegmented.setTitle(imagePlusInput.getTitle());
 		ImageStack imageStackSegmented = imagePlusSegmented.getStack();
 		for(int k = 0; k < imagePlusInput.getStackSize(); ++k) {
 			for (int i = 0; i < imagePlusInput.getWidth(); ++i) {
@@ -515,14 +516,15 @@ public class NucleusSegmentation {
         return calibration ;
     }
 
-    public void checkBadCrop(String pathDir,String pathImage){
+    public void checkBadCrop(String inputPathDir,String fileName){
     	if(this._badCrop){
-			File file = new File(pathDir+"/BadCrop");
-			if (!file.exists()){
-				file.mkdir();
+			File file = new File(inputPathDir);
+            File BadCropFolder= new File(inputPathDir+file.separator+"BadCrop");
+			if (!BadCropFolder.exists()){
+                BadCropFolder.mkdir();
 			}
-			File fileToMove = new File(pathImage);
-			fileToMove.renameTo(new File(pathImage));
+			File fileToMove = new File(inputPathDir+file.separator+fileName);
+			fileToMove.renameTo(new File(BadCropFolder+file.separator+fileName));
 		}
 	}
 	public void saveOTSUSegmented(){

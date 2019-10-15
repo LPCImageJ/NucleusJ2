@@ -201,7 +201,7 @@ public class SegmentationCalling {
             nucleusSegmentation.findOTSUmaximisingSephericity();
             System.out.println("Current image in process "+currentFile);
             this._imgSeg= nucleusSegmentation.applySegmentation2();
-            nucleusSegmentation.checkBadCrop(this._inputDir+"/BadCrop",this._inputDir+currentFile.separator+"BadCrop"+currentFile.separator+this._imgSeg.getTitle());
+            nucleusSegmentation.checkBadCrop(this.m_semgemtationParameters.m_inputFolder,this._imgSeg.getTitle());
             nucleusSegmentation.saveOTSUSegmented();
             nucleusSegmentation.giftWrappingSeg();
             nucleusSegmentation.saveResultsAnalyse();
