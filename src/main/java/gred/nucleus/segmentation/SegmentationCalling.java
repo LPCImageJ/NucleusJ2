@@ -281,7 +281,7 @@ public class SegmentationCalling {
      * convert the image in 8bits
      * @param img 16bits ImagePlus
      */
-    //TODO A ENLEVER APRES RESTRUCTURATION !!!!!
+    //TODO A ENLEVER APRES RESTRUCTURATION ATTENTION INTEGRATION DANS LES FENETRES GRAPHIQUES PAS ENCORE UPDATE DC CA CRASH!!!!!
     private void preProcessImage(ImagePlus img){
         ContrastEnhancer enh = new ContrastEnhancer();
         enh.setNormalize(true);
