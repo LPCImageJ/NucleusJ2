@@ -535,8 +535,7 @@ public class NucleusSegmentation {
 		}
 	}
 	public void giftWrappingSeg(){
-		if(getBadCrop()==false && getBestThreshold() != -1) {
-
+		if(getBadCrop()==false && getBestThreshold() != -1 && this.m_semgemtationParameters.getGiftWrapping()) {
 			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
 			this.m_imageSeg = nuc.run(this.m_imageSeg, this.m_semgemtationParameters);
 			String pathSegGIFT = this.m_semgemtationParameters.getOutputFolder() + "GIFT" + this.m_currentFile.separator + this.m_currentFile.getName();
@@ -550,9 +549,11 @@ public class NucleusSegmentation {
 		writerOTSU = new BufferedWriter(new FileWriter(new File(this.m_semgemtationParameters.getOutputFolder()+File.separator+"OTSU"+File.separator+"ParametersResultsOTSU.txt")));
 		writerOTSU.write(resultsOTSU);
 		writerOTSU.close();
-		BufferedWriter writerGIFT;
-		writerGIFT = new BufferedWriter(new FileWriter(new File(this.m_semgemtationParameters.getOutputFolder()+File.separator+"GIFT"+File.separator+"ParametersResultsGIF.txt")));
-		writerGIFT.write(resultsGIFT);
-		writerGIFT.close();
+        if (this.m_semgemtationParameters.getGiftWrapping()) {
+            BufferedWriter writerGIFT;
+            writerGIFT = new BufferedWriter(new FileWriter(new File(this.m_semgemtationParameters.getOutputFolder() + File.separator + "GIFT" + File.separator + "ParametersResultsGIF.txt")));
+            writerGIFT.write(resultsGIFT);
+            writerGIFT.close();
+        }
 	}
 }
