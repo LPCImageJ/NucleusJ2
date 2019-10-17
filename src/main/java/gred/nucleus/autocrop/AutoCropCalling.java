@@ -81,7 +81,7 @@ public class AutoCropCalling {
     }
 
     public String getColnameResult(){
-        return "Filename\tNumber_of_Crop\n";
+        return "Filename\tNumber_of_Crop\tOTSU Threshold\tDefault OTSU threshold\n";
     }
     }
 
