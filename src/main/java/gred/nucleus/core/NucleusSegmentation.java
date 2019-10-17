@@ -35,8 +35,6 @@ import loci.plugins.in.ImporterOptions;
  */
 public class NucleusSegmentation {
 
-	private static String resultsOTSU="NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\n";
-    private static String resultsGIFT="NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\n";
 
 	/** Threshold detected by the Otsu modified method*/
 	private int _bestThreshold = -1;
@@ -45,12 +43,10 @@ public class NucleusSegmentation {
     /** volume max of the detected object*/
     private  int _vMax;
 	/** String stocking the file name if any nucleus is detected*/
-	private String _logErrorSeg = "";
     /** ImagePlus input to process*/
     private ImagePlus _imgRaw;
 	/** Check if the segmentation is not in border */
     private boolean _badCrop =false;
-    private String _pathToRaw="";
     public  Measure3D _mesure3D;
 
 
@@ -59,7 +55,6 @@ public class NucleusSegmentation {
     private String m_imageFilePath;
     private ImagePlus m_imageSeg;
     private SegmentationParameters m_semgemtationParameters;
-    private int bestOTSU;
 
 
 	public NucleusSegmentation (ImagePlus imgSeg, int vMin, int vMax,SegmentationParameters semgemtationParameters)throws Exception{
@@ -531,7 +526,7 @@ public class NucleusSegmentation {
     	if(getBadCrop()==false && getBestThreshold() != -1) {
 			String pathSegOTSU = this.m_semgemtationParameters.getOutputFolder() + "OTSU" + this.m_currentFile.separator + this.m_currentFile.getName();
 			saveFile(this.m_imageSeg, pathSegOTSU);
-			resultsOTSU+=saveImageResult(this.m_imageSeg);
+
 		}
 	}
 	public void giftWrappingSeg(){
@@ -541,19 +536,25 @@ public class NucleusSegmentation {
 			String pathSegGIFT = this.m_semgemtationParameters.getOutputFolder() + "GIFT" + this.m_currentFile.separator + this.m_currentFile.getName();
 			this.m_imageSeg.setTitle(pathSegGIFT);
 			saveFile(this.m_imageSeg, pathSegGIFT);
-			resultsGIFT += saveImageResult(this.m_imageSeg);
-		}
-	}
-	public void saveResultsAnalyse() throws Exception{
-		BufferedWriter writerOTSU;
-		writerOTSU = new BufferedWriter(new FileWriter(new File(this.m_semgemtationParameters.getOutputFolder()+File.separator+"OTSU"+File.separator+"ParametersResultsOTSU.txt")));
-		writerOTSU.write(resultsOTSU);
-		writerOTSU.close();
-        if (this.m_semgemtationParameters.getGiftWrapping()) {
-            BufferedWriter writerGIFT;
-            writerGIFT = new BufferedWriter(new FileWriter(new File(this.m_semgemtationParameters.getOutputFolder() + File.separator + "GIFT" + File.separator + "ParametersResultsGIF.txt")));
-            writerGIFT.write(resultsGIFT);
-            writerGIFT.close();
+
+
         }
 	}
+    public String getImageCropInfoOTSU(){
+        if(getBadCrop()==false && getBestThreshold() != -1) {
+            return saveImageResult(this.m_imageSeg) + "\t" + this._bestThreshold + "\n";
+        }
+        else {
+            return this.m_imageSeg.getTitle() + "\tBAD CROP" + "\n";
+        }
+    }
+    public String getImageCropInfoGIFT(){
+        if(getBadCrop()==false && getBestThreshold() != -1) {
+
+            return saveImageResult(this.m_imageSeg) + "\t" + this._bestThreshold + "\n";
+        }
+        else {
+            return this.m_imageSeg.getTitle() + "\tBAD CROP" + "\n";
+        }
+    }
 }

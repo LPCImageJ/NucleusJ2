@@ -568,7 +568,7 @@ public class Measure3D {
                 + equivalentSphericalRadius(volume) + "\t"
                 + surfaceArea + "\t"
                 + bis + "\t"
-                + computeSphericity(volume, bis) + "\n"
+                + computeSphericity(volume, bis)
         ;
 
         return resu;

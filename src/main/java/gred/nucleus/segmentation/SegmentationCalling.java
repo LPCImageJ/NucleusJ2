@@ -2,6 +2,7 @@ package gred.nucleus.segmentation;
 
 
 import gred.nucleus.FilesInputOutput.FilesNames;
+import gred.nucleus.FilesInputOutput.OutputTexteFile;
 import gred.nucleus.core.ConvexHullSegmentation;
 import gred.nucleus.core.Measure3D;
 import gred.nucleus.core.NucleusSegmentation;
@@ -50,6 +51,9 @@ public class SegmentationCalling {
 
     private SegmentationParameters m_semgemtationParameters;
 
+    private String m_outputCropGeneralInfoOTSU;
+    private String m_outputCropGeneralInfoGIFT;
+
 
     public SegmentationCalling(){}
     /**
@@ -63,6 +67,9 @@ public class SegmentationCalling {
     public SegmentationCalling(SegmentationParameters semgemtationParameters) {
 
         this.m_semgemtationParameters=semgemtationParameters;
+        this.m_outputCropGeneralInfoOTSU=this.m_semgemtationParameters.getAnalyseParameters()+getColnameResult();
+        this.m_outputCropGeneralInfoGIFT=this.m_semgemtationParameters.getAnalyseParameters()+getColnameResult();
+
 
     }
 
@@ -70,7 +77,9 @@ public class SegmentationCalling {
     public SegmentationCalling(String inputDir, String outputDir,SegmentationParameters semgemtationParameters) {
         this._inputDir = inputDir;
         this._output = outputDir;
-        this.m_semgemtationParameters=semgemtationParameters;
+        this.m_outputCropGeneralInfoOTSU=this.m_semgemtationParameters.getAnalyseParameters()+getColnameResult();
+        this.m_outputCropGeneralInfoGIFT=this.m_semgemtationParameters.getAnalyseParameters()+getColnameResult();
+
 
     }
 
@@ -200,9 +209,26 @@ public class SegmentationCalling {
             this._imgSeg= nucleusSegmentation.applySegmentation2();
             nucleusSegmentation.checkBadCrop(this.m_semgemtationParameters.m_inputFolder,this._imgSeg.getTitle());
             nucleusSegmentation.saveOTSUSegmented();
+            this.m_outputCropGeneralInfoOTSU= this.m_outputCropGeneralInfoOTSU+nucleusSegmentation.getImageCropInfoOTSU();
             nucleusSegmentation.giftWrappingSeg();
-            nucleusSegmentation.saveResultsAnalyse();
+            this.m_outputCropGeneralInfoGIFT= this.m_outputCropGeneralInfoGIFT+nucleusSegmentation.getImageCropInfoGIFT();
+
+
         }
+        OutputTexteFile resultFileOutputOTSU=new OutputTexteFile(this.m_semgemtationParameters.getOutputFolder()
+                +directoryInput.getSeparator()
+                +"OTSU"
+                +directoryInput.getSeparator()
+                +"result_Segmentation_Analyse");
+        resultFileOutputOTSU.SaveTexteFile( this.m_outputCropGeneralInfoOTSU);
+        OutputTexteFile resultFileOutputGIFT=new OutputTexteFile(this.m_semgemtationParameters.getOutputFolder()
+                +directoryInput.getSeparator()
+                +"GIFT"
+                +directoryInput.getSeparator()
+                +"result_Segmentation_Analyse");
+        resultFileOutputGIFT.SaveTexteFile( this.m_outputCropGeneralInfoGIFT);
+
+
         return log;
     }
 
@@ -291,5 +317,10 @@ public class SegmentationCalling {
         GaussianBlur3D.blur(img, 0.5,0.5,1);
         StackConverter stackConverter = new StackConverter( img );
         stackConverter.convertToGray8();
+    }
+
+
+    public String getColnameResult(){
+        return "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\tOTSUThreshold\n";
     }
 }
