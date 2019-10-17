@@ -88,11 +88,14 @@ public class Directory  {
         for (File f : list) {
             if (f.isDirectory()) {
                listFiles(f.getAbsolutePath());
-            } else {
-                this.m_listeOfFiles.add(f);
-                if(FilenameUtils.getExtension(f.getName()).equals("nd")) {
-                    this.m_containNdFile=true;
-                    this.m_listeOfFilesND.add(f);
+            }
+            else {
+                if(!(FilenameUtils.getExtension(f.getName()).equals("txt"))){
+                    this.m_listeOfFiles.add(f);
+                    if (FilenameUtils.getExtension(f.getName()).equals("nd")) {
+                        this.m_containNdFile = true;
+                        this.m_listeOfFilesND.add(f);
+                    }
                 }
             }
         }
