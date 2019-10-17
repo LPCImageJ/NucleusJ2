@@ -25,6 +25,8 @@ public class Directory  {
     public Boolean m_containNdFile=false;
     /** List of nd files */
     public ArrayList<File> m_listeOfFilesND = new ArrayList<File>();
+    /** */
+    public String m_separator;
 
     /** Constructor
      * @param Path of directory
@@ -32,6 +34,7 @@ public class Directory  {
     public Directory(String Path) {
         this.m_dirPath = Path;
         this.m_directory=new File(this.m_dirPath);
+        this.m_separator=this.m_directory.separator;
     }
 
     /**
@@ -139,5 +142,5 @@ public class Directory  {
         return this.m_directory.getPath()+File.separator;
     }
 
-
+    public String getSeparator(){return this.m_separator;}
 }
