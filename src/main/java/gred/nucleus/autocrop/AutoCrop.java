@@ -6,6 +6,7 @@ import gred.nucleus.FilesInputOutput.OutputTiff;
 import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.imageProcess.Thresholding;
 import gred.nucleus.utils.Histogram;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.measure.Calibration;
@@ -62,7 +63,8 @@ public class AutoCrop {
     private int OTSUthreshold;
     /** Slice start to compute OTSU */
 	private String sliceUsedForOTSU;
-
+	/** Default threshold */
+	private boolean m_defaultTreshold=false;
 
     /**List of boxes  to crop link to label value */
     private HashMap <Double,Box> m_boxes = new HashMap <Double,Box>();
@@ -137,28 +139,29 @@ public class AutoCrop {
 		this.sliceUsedForOTSU="default";
 		GaussianBlur3D.blur(this.m_imageSeg, 0.5,0.5,1);
 		Thresholding thresholding = new Thresholding();
-			int thresh = thresholding.computeOtsuThreshold(this.m_imageSeg);
-			if (thresh < 20) {
-				ImagePlus imp2;
-				if(m_autocropParameters.getSlicesOTSUcomputing()==0) {
-					this.sliceUsedForOTSU="Start:"+this.m_imageSeg.getStackSize() / 2+"-"+this.m_imageSeg.getStackSize();
-
-					imp2 = new Duplicator().run(this.m_imageSeg, this.m_imageSeg.getStackSize() / 2, this.m_imageSeg.getStackSize());
-				}
-				else {
-					this.sliceUsedForOTSU="Start:"+this.m_autocropParameters.getSlicesOTSUcomputing()+"-"+this.m_imageSeg.getStackSize();
-					imp2 = new Duplicator().run(this.m_imageSeg, this.m_autocropParameters.getSlicesOTSUcomputing(), this.m_imageSeg.getStackSize());
-				}
-				int thresh2 = thresholding.computeOtsuThreshold(imp2);
-				if (thresh2 < 20)
-					thresh = 20;
-				else
-					thresh = thresh2;
+		int thresh = thresholding.computeOtsuThreshold(this.m_imageSeg);
+		if (thresh < this.m_autocropParameters.getThresholdOTSUcomputing()) {
+			ImagePlus imp2;
+			if(m_autocropParameters.getSlicesOTSUcomputing()==0) {
+				this.sliceUsedForOTSU="Start:"+this.m_imageSeg.getStackSize() / 2+"-"+this.m_imageSeg.getStackSize();
+				imp2 = new Duplicator().run(this.m_imageSeg, this.m_imageSeg.getStackSize() / 2, this.m_imageSeg.getStackSize());
 			}
-
-			this.OTSUthreshold = thresh;
-			this.m_imageSeg = this.generateSegmentedImage(this.m_imageSeg, thresh);
+			else {
+				this.sliceUsedForOTSU="Start:"+this.m_autocropParameters.getSlicesOTSUcomputing()+"-"+this.m_imageSeg.getStackSize();
+				imp2 = new Duplicator().run(this.m_imageSeg, this.m_autocropParameters.getSlicesOTSUcomputing(), this.m_imageSeg.getStackSize());
+			}
+			int thresh2 = thresholding.computeOtsuThreshold(imp2);
+			if (thresh2 < this.m_autocropParameters.getThresholdOTSUcomputing()) {
+				thresh = this.m_autocropParameters.getThresholdOTSUcomputing();
+				this.m_defaultTreshold=true;
+			}
+			else {
+				thresh = thresh2;
+			}
 		}
+		this.OTSUthreshold = thresh;
+		this.m_imageSeg = this.generateSegmentedImage(this.m_imageSeg, thresh);
+	}
 
 	/**
  	* MorpholibJ Method computing connect component from OTSU segmented image
@@ -373,6 +376,7 @@ public class AutoCrop {
 		ImagePlus sort = new ImagePlus();
 		ChannelSplitter channelSplitter = new ChannelSplitter();
 		imps = channelSplitter.split(imps[0]);
+		//IJ.log("le print de ces morts "+channelNumber+" "+xmin+" "+ ymin +" "+zmin+" "+width+" "+ height+" "+depth);
 		sort.setStack(imps[channelNumber].getStack().crop(xmin, ymin ,zmin,width, height,depth));
 
 		return sort;
@@ -448,7 +452,7 @@ public class AutoCrop {
 	 * @return number of object detected
 	 */
 	public String getImageCropInfo(){
-		return this.m_imageFilePath+"\t"+getNbOfNuc()+"\n";
+		return this.m_imageFilePath+"\t"+getNbOfNuc()+"\t"+this.OTSUthreshold +"\t"+this.m_defaultTreshold+"\n";
 	}
 
 	public void getNumberOfBox(){
