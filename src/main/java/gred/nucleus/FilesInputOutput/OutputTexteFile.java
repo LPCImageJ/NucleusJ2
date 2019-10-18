@@ -12,7 +12,7 @@ public class OutputTexteFile extends FilesNames {
     }
     /** Method to save file
      * with verification if file already exists
-     * TODO ADD ERROR IN LOG FILE*/
+     * TODO(@DesTristus) ADD ERROR IN LOG FILE*/
     public void SaveTexteFile(String text) throws IOException {
         try {
             if (!is_fileExist()) {
