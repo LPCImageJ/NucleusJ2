@@ -77,7 +77,7 @@ public class TestAutoCrop {
 		//fw.GetFileResultExpeted(ExpectedResult);
 		//fw.GetFilesOutputFolder(outputTristan);
 		//testStupid(inputOneImageTristan, outputTristan);
-		ruAutoCrop("/media/tridubos/DATA1/Image-FrancescaMASTROPASQUA/Raw", "/media/tridubos/DATA1/Image-FrancescaMASTROPASQUA/autocrop/");
+		ruAutoCrop("/home/titus/Bureau/data/ChampLarge/raw", "/home/titus/Bureau/data/ChampLarge/autocrop");
 		//fw.GetFilesResultingOfAnalysis(outputTristan);
 		//fw.CompareAnalysisResult();
 		/*
