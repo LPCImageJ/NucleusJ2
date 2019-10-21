@@ -109,9 +109,15 @@ public class TestSegmentationMethods {
         fw.GetFileResultExpeted(ExpectedResult);
         fw.GetFilesOutputFolder(inputTristan);
         */
-        testStupidSeveralImages("/media/tridubos/DATA1/Raw_KAKU_GIFT/RawDataNucleus", "/media/tridubos/DATA1/Raw_KAKU_GIFT/SEGMENTATION", "/home/tridubos/Bureau/TEST_SEGMENTATION/config_test_calibration_SEG");
 
-       // testStupidSeveralImages(ExpectedResult, ExpectedResult, (short)6.0, 300000000,true);
+
+        testStupidSeveralImages("/home/tridubos/Bureau/TEST_SEGMENTATION/RawData", "/home/tridubos/Bureau/TEST_SEGMENTATION/SEGMENTATION", "/home/tridubos/Bureau/TEST_SEGMENTATION/config_test_calibration_SEG");
+        //ANALYSE KAKU !!!!!!!
+        //testStupidSeveralImages("/media/tridubos/DATA1/Raw_KAKU_GIFT/RawDataNucleus", "/media/tridubos/DATA1/Raw_KAKU_GIFT/SEGMENTATION", "/home/tridubos/Bureau/TEST_SEGMENTATION/config_test_calibration_SEG");
+        //ANALYSE KAKU !!!!!!!
+
+
+        // testStupidSeveralImages(ExpectedResult, ExpectedResult, (short)6.0, 300000000,true);
  /*
         fw.GetFilesResultingOfAnalysis(inputTristan);
         fw.CompareAnalysisResult();
