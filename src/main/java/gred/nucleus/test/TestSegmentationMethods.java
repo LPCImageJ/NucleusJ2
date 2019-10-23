@@ -78,7 +78,13 @@ public class TestSegmentationMethods {
         fw.GetFileResultExpeted(ExpectedResult);
         fw.GetFilesOutputFolder(inputTristan);
         */
-        testStupidSeveralImages("/home/titus/Bureau/data/Noyaux/Raw", "/home/titus/Bureau/data/Noyaux/output");
+        String pathToTest ="/home/tridubos/Bureau/IMAGES_TEST/AUTOCROP";
+        long maxMemory = Runtime.getRuntime().maxMemory();
+        System.out.println("Maximum memory (bytes) /RAW_CZI : " +
+                (maxMemory == Long.MAX_VALUE ? "no limit" : maxMemory*1e-9)+" "+Runtime.getRuntime().freeMemory()*1e-9);
+        testStupidSeveralImages(pathToTest+"/RAW_CZI",
+                pathToTest+"/AUTOCROP_RESULTS/RAW_CZI");
+       // testStupidSeveralImages("/home/titus/Bureau/data/Noyaux/Raw", "/home/titus/Bureau/data/Noyaux/output");
         // testStupidSeveralImages(ExpectedResult, ExpectedResult, (short)6.0, 300000000,true);
         /*fw.GetFilesResultingOfAnalysis(inputTristan);
         fw.CompareAnalysisResult();
