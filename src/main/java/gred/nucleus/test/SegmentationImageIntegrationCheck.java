@@ -1,13 +1,15 @@
 package gred.nucleus.test;
 
+import gred.nucleus.AnalyseTest.OuputFileVerification;
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
 
 import java.io.IOException;
 
-public class SegmentationImagesIntegration {
+public class SegmentationImageIntegrationCheck {
 
-        /**
+
+           /**
          *
          * @param img
          * @param vMin
@@ -52,28 +54,32 @@ public class SegmentationImagesIntegration {
          * @param args
          */
         public static void main(String[] args) throws Exception {
-            String pathToTest ="/home/tridubos/Bureau/IMAGES_TEST/";
-            String pathToOutput ="/home/tridubos/Bureau/IMAGES_TEST/AUTOCROP";
+            String pathToTest ="/home/tridubos/Bureau/IMAGES_TEST/SEGMENTATION_VERIF";
+            String pathToExpected ="/home/tridubos/Bureau/IMAGES_TEST/SEGMENTATION";
+            testStupidSeveralImages(pathToTest+"/Gros_Nucleols",
+                    pathToTest+"/SEGMENTATION_RESULTS/Gros_Nucleols");
+            testStupidSeveralImages(pathToTest+"/Noyaux_Calib_1_1_1",
+                    pathToTest+"/SEGMENTATION_RESULTS/Noyaux_Calib_1_1_1",
+                    pathToTest+"/Noyaux_Calib_1_1_1/config_calibration.txt");
+            testStupidSeveralImages(pathToTest+"/PB_RADIUS_CONVEXHULL",
+                    pathToTest+"/SEGMENTATION_RESULTS/PB_RADIUS_CONVEXHULL");
 
-            testStupidSeveralImages(pathToTest+"/SEGMENTATION/Gros_Nucleols",
-                    pathToTest+"/SEGMENTATION/SEGMENTATION_RESULTS/Gros_Nucleols");
-            testStupidSeveralImages(pathToTest+"/SEGMENTATION/Noyaux_Calib_1_1_1",
-                    pathToTest+"/SEGMENTATION/SEGMENTATION_RESULTS/Noyaux_Calib_1_1_1",
-                    pathToTest+"/SEGMENTATION/Noyaux_Calib_1_1_1/config_calibration.txt");
-            testStupidSeveralImages(pathToTest+"/SEGMENTATION/PB_RADIUS_CONVEXHULL",
-                    pathToTest+"/SEGMENTATION/SEGMENTATION_RESULTS/PB_RADIUS_CONVEXHULL");
-
-            // testStupidSeveralImages(ExpectedResult, ExpectedResult, (short)6.0, 300000000,true);
-        /*fw.GetFilesResultingOfAnalysis(inputTristan);
-        fw.CompareAnalysisResult();
-        OuputFileVerification fw = new OuputFileVerification();
-        fw.GetFileResultExpeted(ExpectedResult);
-        fw.GetFilesOutputFolder(outputTristan);
-        fw.GetFilesResultingOfAnalysis(outputTristan);
-        fw.CompareAnalysisResult();
-        */
+            OuputFileVerification fw = new OuputFileVerification(pathToExpected,pathToTest);
+            fw.GetFileResultExpeted(pathToExpected);
+            //fw.GetFilesOutputFolder(pathToTest);
+            fw.GetFilesResultingOfAnalysis(pathToTest);
+            fw.CompareAnalysisResult();
+            /*
+            OuputFileVerification fw = new OuputFileVerification();
+            fw.GetFileResultExpeted(ExpectedResult);
+            fw.GetFilesOutputFolder(outputTristan);
+            fw.GetFilesResultingOfAnalysis(outputTristan);
+             fw.CompareAnalysisResult();
+             */
             System.err.println("The program ended normally.");
         }
+
+
 
 
 
