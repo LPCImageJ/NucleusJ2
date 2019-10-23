@@ -203,9 +203,9 @@ public class SegmentationCalling {
             String fileImg = currentFile.toString();
             FilesNames outPutFilesNames = new FilesNames(fileImg);
             this._prefix = outPutFilesNames.PrefixeNameFile();
+            System.out.println("Current image in process "+currentFile);
             NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(currentFile ,this._prefix,this.m_semgemtationParameters);
             nucleusSegmentation.findOTSUmaximisingSephericity();
-            System.out.println("Current image in process "+currentFile);
             this._imgSeg= nucleusSegmentation.applySegmentation2();
             nucleusSegmentation.checkBadCrop(this.m_semgemtationParameters.m_inputFolder,this._imgSeg.getTitle());
             nucleusSegmentation.saveOTSUSegmented();
