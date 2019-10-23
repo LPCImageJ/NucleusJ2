@@ -434,7 +434,7 @@ public class AutoCrop {
      * @return columns name for output text file
      */
     public String getColoneName() {
-        String colonneName = "FileName\tChannel\tCrop_number\tX_start\tY_start\tZ_start\twidth\theight\tdepth\n";
+        String colonneName = "FileName\tChannelNumber\tCropNumber\tXStart\tYStart\tZStart\twidth\theight\tdepth\n";
         return colonneName;
     }
 
