@@ -35,8 +35,8 @@ public class OuputFileVerification {
     //public void OuputFileVerification(){}
 
     public OuputFileVerification(String PathExpectedResult,String PathOutPut) {
-        _rawPathExpectedResult=PathExpectedResult;
-        _rawPathOutPut=PathOutPut;
+        this._rawPathExpectedResult=PathExpectedResult;
+        this._rawPathOutPut=PathOutPut;
     }
 
     /**
@@ -54,8 +54,8 @@ public class OuputFileVerification {
             }
             else {
                 try {
-                    String temps= f.getPath().replace(_rawPathExpectedResult,"");
-                    _myMapInitialFilesInputFolder.put(temps, md5(f.getPath()));
+                    String temps= f.getPath().replace(this._rawPathExpectedResult,"");
+                    this._myMapInitialFilesInputFolder.put(temps, md5(f.getPath()));
                     }
                 catch (IOException e){
 
@@ -79,8 +79,8 @@ public class OuputFileVerification {
             }
             else {
                 try {
-                    String temps= f.getPath().replace(_rawPathOutPut,"");
-                    _myMapInitialFileOutputFolder.put(temps, md5(f.getPath()));
+                    String temps= f.getPath().replace(this._rawPathOutPut,"");
+                    this._myMapInitialFileOutputFolder.put(temps, md5(f.getPath()));
                 }
                 catch (IOException e){
 
@@ -103,9 +103,9 @@ public class OuputFileVerification {
             }
             else {
                try {
-                   String temps= f.getPath().replace(_rawPathOutPut,"");
+                   String temps= f.getPath().replace(this._rawPathOutPut,"");
                    System.out.println(temps);
-                   _myMapFilesProduceByAnlaysis.put(temps, md5(f.getPath()));
+                   this._myMapFilesProduceByAnlaysis.put(temps, md5(f.getPath()));
                }
                catch (IOException e){
 
@@ -120,16 +120,16 @@ public class OuputFileVerification {
      *
      */
     public void CompareAnalysisResult() {
-        for(Map.Entry<String, String> entry : _myMapInitialFilesInputFolder.entrySet()) {
+        for(Map.Entry<String, String> entry : this._myMapInitialFilesInputFolder.entrySet()) {
             String fileName = entry.getKey();
             String hashCode = entry.getValue();
-            if ( hashCode.equals( _myMapFilesProduceByAnlaysis.get(fileName))){
+            if ( hashCode.equals( this._myMapFilesProduceByAnlaysis.get(fileName))){
                 System.out.println("Terrible du cul "+fileName);
             }
             else {
                 System.out.println("le fichier n'existe pas ou diff hash "+fileName+"\n"
                         +hashCode+"\n"
-                +_myMapFilesProduceByAnlaysis.get(fileName)+"\n");
+                +this._myMapFilesProduceByAnlaysis.get(fileName)+"\n");
             }
 
         }
