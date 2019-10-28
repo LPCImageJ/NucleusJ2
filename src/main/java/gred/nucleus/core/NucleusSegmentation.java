@@ -158,11 +158,22 @@ public class NucleusSegmentation {
 					this._bestThreshold = t;
 					bestSphericity = sphericity;
 					this._bestThreshold=t;
+					checkBorder(tempSeg);
+					StackConverter stackConverter = new StackConverter( tempSeg );
+					stackConverter.convertToGray8();
+					morphologicalCorrection(tempSeg);
 					this.m_imageSeg=tempSeg;
+					this.m_imageSeg.setTitle(this._imgRaw.getTitle());
+
 				}
 			}
 			measure3D=null;
 		}
+		if(this._bestThreshold != -1 ) {
+			morphologicalCorrection(this.m_imageSeg);
+		}
+		checkBorder(this.m_imageSeg);
+
     }
 
 
@@ -445,7 +456,7 @@ public class NucleusSegmentation {
 	}
 
 	/**
-	 * Detection of the bigger object segmented in the image
+	 * Detection of the label of the biggest object segmented in the image
 	 * @param imgSeg ImagePlus segmented img
 	 * @return double the label of the bigger object
 	 */
@@ -511,20 +522,20 @@ public class NucleusSegmentation {
         return calibration ;
     }
 
-    public void checkBadCrop(String inputPathDir,String fileName){
+    public void checkBadCrop(String inputPathDir){
     	if(this._badCrop){
 			File file = new File(inputPathDir);
             File BadCropFolder= new File(inputPathDir+file.separator+"BadCrop");
 			if (!BadCropFolder.exists()){
                 BadCropFolder.mkdir();
 			}
-			File fileToMove = new File(inputPathDir+file.separator+fileName);
-			fileToMove.renameTo(new File(BadCropFolder+file.separator+fileName));
+			File fileToMove = new File(inputPathDir+file.separator+this._imgRaw.getTitle());
+			fileToMove.renameTo(new File(BadCropFolder+file.separator+this._imgRaw.getTitle()));
 		}
 	}
 	public void saveOTSUSegmented(){
     	if(getBadCrop()==false && getBestThreshold() != -1) {
-			String pathSegOTSU = this.m_semgemtationParameters.getOutputFolder() + "OTSU" + this.m_currentFile.separator + this.m_currentFile.getName();
+			String pathSegOTSU = this.m_semgemtationParameters.getOutputFolder() + "OTSU" + this.m_currentFile.separator + this.m_imageSeg.getTitle();
 			saveFile(this.m_imageSeg, pathSegOTSU);
 
 		}
@@ -533,7 +544,7 @@ public class NucleusSegmentation {
 		if(getBadCrop()==false && getBestThreshold() != -1 && this.m_semgemtationParameters.getGiftWrapping()) {
 			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
 			this.m_imageSeg = nuc.run(this.m_imageSeg, this.m_semgemtationParameters);
-			String pathSegGIFT = this.m_semgemtationParameters.getOutputFolder() + "GIFT" + this.m_currentFile.separator + this.m_currentFile.getName();
+			String pathSegGIFT = this.m_semgemtationParameters.getOutputFolder() + "GIFT" + this.m_currentFile.separator + this.m_imageSeg.getTitle();
 			this.m_imageSeg.setTitle(pathSegGIFT);
 			saveFile(this.m_imageSeg, pathSegGIFT);
 
