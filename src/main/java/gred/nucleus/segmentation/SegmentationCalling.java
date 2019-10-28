@@ -206,8 +206,8 @@ public class SegmentationCalling {
             System.out.println("Current image in process "+currentFile);
             NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(currentFile ,this._prefix,this.m_semgemtationParameters);
             nucleusSegmentation.findOTSUmaximisingSephericity();
-            this._imgSeg= nucleusSegmentation.applySegmentation2();
-            nucleusSegmentation.checkBadCrop(this.m_semgemtationParameters.m_inputFolder,this._imgSeg.getTitle());
+           // this._imgSeg= nucleusSegmentation.applySegmentation2();
+            nucleusSegmentation.checkBadCrop(this.m_semgemtationParameters.m_inputFolder);
             nucleusSegmentation.saveOTSUSegmented();
             this.m_outputCropGeneralInfoOTSU= this.m_outputCropGeneralInfoOTSU+nucleusSegmentation.getImageCropInfoOTSU();
             nucleusSegmentation.giftWrappingSeg();
