@@ -295,8 +295,8 @@ public class AutoCrop {
 
 				Calibration cal = this.m_rawImg.getCalibration();
 				imgResu.setCalibration(cal);
-				OutputTiff fileOutput = new OutputTiff(this.m_outputDirPath + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i +"_C"+y+".tif");
-				this.m_infoImageAnalyse=this.m_infoImageAnalyse+m_outputDirPath + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i +"_C"+y+".tif\t"
+				OutputTiff fileOutput = new OutputTiff(this.m_outputDirPath + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_"  + i +"_C"+y+".tif");
+				this.m_infoImageAnalyse=this.m_infoImageAnalyse+m_outputDirPath + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_"  + i +"_C"+y+".tif\t"
 						+y+"\t"
 						+i+"\t"
 						+xmin+"\t"
@@ -309,7 +309,7 @@ public class AutoCrop {
 
 
 
-				this.m_outputFile.add(this.m_outputDirPath + File.separator + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix + "_" + coord + "_" + i + ".tif");
+				this.m_outputFile.add(this.m_outputDirPath + File.separator + this.m_outputFilesPrefix + File.separator + this.m_outputFilesPrefix +  "_" + i + ".tif");
 				i++;
 			}
 		}
