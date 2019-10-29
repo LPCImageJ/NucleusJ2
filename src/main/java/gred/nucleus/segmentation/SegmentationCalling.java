@@ -74,7 +74,7 @@ public class SegmentationCalling {
     }
 
 
-    public SegmentationCalling(String inputDir, String outputDir,SegmentationParameters semgemtationParameters) {
+    public SegmentationCalling(String inputDir, String outputDir) {
         this._inputDir = inputDir;
         this._output = outputDir;
         this.m_outputCropGeneralInfoOTSU=this.m_semgemtationParameters.getAnalyseParameters()+getColnameResult();
