@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map.Entry;
 
 import gred.nucleus.FilesInputOutput.Directory;
@@ -24,8 +25,9 @@ import inra.ijpb.binary.ConnectedComponents;
 import loci.common.DebugTools;
 import loci.plugins.BF;
 import loci.plugins.in.ImporterOptions;
+import java.lang.Object;
 
-
+import javax.media.jai.Histogram;
 /**
  * Object segmentation method for 3D images. This segmentation used as initial threshold
  * the method of Otsu, and then maximize he sphericity of the object detected .
@@ -476,6 +478,35 @@ public class NucleusSegmentation {
 		return labelMax;
 	}
 
+    private void infoComputing() {
+        ImageStack imageStackRaw = this._imgRaw.getStack();
+
+        ImageStack imageStackSeg = this.m_imageSeg.getStack();
+
+        // imagePlusSegmented.setTitle(imagePlusInput.getTitle());
+
+        Histogram histogram = new Histogram();
+        histogram.run(this._imgRaw);
+        //histogram.
+
+        HashMap< Double, Integer> entry = histogram.getHistogram();
+        for(int k = 0; k < this._imgRaw.getStackSize(); ++k) {
+            for (int i = 0; i < this._imgRaw.getWidth(); ++i) {
+                for (int j = 0; j < this._imgRaw.getHeight(); ++j) {
+                    double voxelValue = imageStackSeg.getVoxel(i, j, k);
+                    if (voxelValue ==0)
+                        entry.keySet(imageStackRaw.getVoxel(i, j, k).)Double imageStackSegmented.setVoxel(i, j, k, imageStackRaw.getVoxel(i, j, k));
+                    else
+                        imageStackSegmented.setVoxel(i, j, k, 0);
+                }
+            }
+        }
+        IJ.run(imagePlusSegmented, "Properties...", " unit=µm pixel_width="+this.m_semgemtationParameters.getXCal()+ " pixel_height="+this.m_semgemtationParameters.getYCal()+ " voxel_depth="+this.m_semgemtationParameters.getZCal());
+
+    }
+
+
+
 	public double getXcalibration() {
 		double xCal;
 		if (this.m_semgemtationParameters.m_manualParameter == true) {
@@ -559,6 +590,8 @@ public class NucleusSegmentation {
             return this.m_imageSeg.getTitle() + "\tBAD CROP" + "\n";
         }
     }
+
+
     public String getImageCropInfoGIFT(){
         if(getBadCrop()==false && getBestThreshold() != -1) {
 
