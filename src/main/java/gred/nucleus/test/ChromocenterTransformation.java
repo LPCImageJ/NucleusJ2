@@ -17,8 +17,8 @@ import java.io.IOException;
 public class ChromocenterTransformation {
 
     public static void main(String[] args) throws IOException, FormatException, fileInOut,Exception {
-        String input="/home/titus/Bureau/data/CCsegmented/raw";
-        String output="/home/titus/Bureau/data/CCsegmented/transformed";
+        String input="/home/tridubos/Bureau/IMAGES_TEST/TEST_CC/SegmentedDataCc";
+        String output="/home/tridubos/Bureau/IMAGES_TEST/TEST_CC/out";
 
 
         SegmentationParameters segmentationParameters = new SegmentationParameters(input,output);
@@ -38,7 +38,7 @@ public class ChromocenterTransformation {
             currentImage = splitter.split(currentImage[0]);
             ImagePlus toto=currentImage[0];
            ImagePlus out= nucleusSegmentation.generateSegmentedImage(toto,0);
-            saveFile( out,output+prefix);
+            saveFile( out,output+currentFile.separator+prefix);
 
 
 
