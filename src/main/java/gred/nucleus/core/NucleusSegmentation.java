@@ -254,7 +254,7 @@ public class NucleusSegmentation {
 	 * @param threshold threshold value for the segmentation
 	 * @return segmented image of the nucleus
 	 */
-	private ImagePlus generateSegmentedImage (ImagePlus imagePlusInput, int threshold) throws Exception {
+	public ImagePlus generateSegmentedImage (ImagePlus imagePlusInput, int threshold) throws Exception {
 		ImageStack imageStackInput = imagePlusInput.getStack();
 		ImagePlus imagePlusSegmented = imagePlusInput.duplicate();
         imagePlusSegmented.setTitle(imagePlusInput.getTitle());
