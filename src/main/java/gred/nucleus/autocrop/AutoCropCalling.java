@@ -76,7 +76,7 @@ public class AutoCropCalling {
 
         }
         System.out.println(this.m_autocropParameters.getInputFolder()+"result_Autocrop_Analyse");
-        OutputTexteFile resultFileOutput=new OutputTexteFile(this.m_autocropParameters.getOutputFolder()+"result_Autocrop_Analyse");
+        OutputTexteFile resultFileOutput=new OutputTexteFile(this.m_autocropParameters.getOutputFolder()+"result_Autocrop_Analyse.csv");
         resultFileOutput.SaveTexteFile( this.m_outputCropGeneralInfo);
     }
 
