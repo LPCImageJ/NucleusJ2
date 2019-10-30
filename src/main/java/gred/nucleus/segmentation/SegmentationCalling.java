@@ -205,8 +205,8 @@ public class SegmentationCalling {
             this._prefix = outPutFilesNames.PrefixeNameFile();
             System.out.println("Current image in process "+currentFile);
             NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(currentFile ,this._prefix,this.m_semgemtationParameters);
+            nucleusSegmentation.preProcessImage();
             nucleusSegmentation.findOTSUmaximisingSephericity();
-           // this._imgSeg= nucleusSegmentation.applySegmentation2();
             nucleusSegmentation.checkBadCrop(this.m_semgemtationParameters.m_inputFolder);
             nucleusSegmentation.saveOTSUSegmented();
             this.m_outputCropGeneralInfoOTSU= this.m_outputCropGeneralInfoOTSU+nucleusSegmentation.getImageCropInfoOTSU();
@@ -231,6 +231,8 @@ public class SegmentationCalling {
 
         return log;
     }
+
+
 
         public String runSeveralImages() throws IOException, FormatException , Exception{
         String log = "";
