@@ -1,5 +1,6 @@
 package gred.nucleus.core;
 
+import gred.nucleus.autocrop.Box;
 import gred.nucleus.utils.Gradient;
 import gred.nucleus.utils.Histogram;
 import gred.nucleus.utils.VoxelRecord;
@@ -8,6 +9,7 @@ import ij.measure.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import Jama.EigenvalueDecomposition;
 import Jama.Matrix;
@@ -30,6 +32,9 @@ public class Measure3D {
     double _xCal;
     double _yCal;
     double _zCal;
+
+    HashMap< Double, Integer> _segmentedNucleusHisto =new HashMap <Double, Integer>();
+
 
     public Measure3D() {
     }
@@ -535,6 +540,7 @@ public class Measure3D {
         return surfaceArea;
     }
 
+
     /**
      * @param listUnitaireIn
      * @param listUnitaireOut
@@ -554,8 +560,122 @@ public class Measure3D {
         return Math.abs((dx * nx + dy * ny + dz * nz) * as);
     }
 
+    /**
+     * Compute an Hashmap describing the segmented object (from raw data).
+     * Key = Voxels intensity
+     * value = Number of voxels
+     *
+     * If voxels ==255 in seg image
+     *      add Hashmap (Voxels intensity ,+1)
+     *
+     */
+
+    private void histogramSegmentedNucleus() {
+        ImageStack imageStackRaw = this._rawImage.getStack();
+        ImageStack imageStackSeg = this._imageSeg.getStack();
+        Histogram histogram = new Histogram();
+        histogram.run(this._rawImage);
+        for(int k = 0; k < this._rawImage.getStackSize(); ++k) {
+            for (int i = 0; i < this._rawImage.getWidth(); ++i) {
+                for (int j = 0; j < this._rawImage.getHeight(); ++j) {
+                    double voxelValue = imageStackSeg.getVoxel(i, j, k);
+                    if (voxelValue ==255) {
+                        if(!this._segmentedNucleusHisto.containsKey(imageStackRaw.getVoxel(i, j, k)) ){
+                            this._segmentedNucleusHisto.put(imageStackRaw.getVoxel(i, j, k),  1);
+                        }
+                        else{
+                            this._segmentedNucleusHisto.put(imageStackRaw.getVoxel(i, j, k), this._segmentedNucleusHisto.get(imageStackRaw.getVoxel(i, j, k)) + 1);
+
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+
+    /**
+     * Compute the mean intensity of the segmented object
+     * by comparing voxels intensity in the raw image and
+     * white/segmented voxels the segmented image.
+     *
+     * @return mean intensity of segmented object
+     */
+
+    private double meanIntensity (){
+        int numberOfVoxel=0;
+        double mean=0;
+        for(Map.Entry<Double , Integer> histo2 :  this._segmentedNucleusHisto.entrySet()) {
+            numberOfVoxel+=histo2.getValue();
+            mean+=histo2.getKey()*histo2.getValue();
+
+        }
+        return mean/numberOfVoxel;
+    }
+
+    /**
+     * Compute the standard deviation of the mean intensity
+     * @see Measure3D#meanIntensity()
+     * @return the standard deviation of the mean intensity of segmented object
+     */
+
+    private double standardDeviationIntensity (Double mean){
+        int numberOfVoxel=0;
+        double std=0;
+        for(Map.Entry<Double , Integer> histo2 :  this._segmentedNucleusHisto.entrySet()) {
+            numberOfVoxel+=histo2.getValue();
+            std=Math.abs((histo2.getKey()*histo2.getValue())-(histo2.getValue()*mean));
+
+        }
+        return std/(numberOfVoxel-1);
+
+
+    }
+
+    /**
+     * Find the maximum intensity voxel of segmented object
+     * @return the maximum intensity voxel of segmented object
+     */
+
+    private double maxIntensity(){
+        double maxIntensity=0;
+        for (Map.Entry<Double , Integer> entry : this._segmentedNucleusHisto.entrySet())
+        {
+            if (maxIntensity ==0 || entry.getKey().compareTo(maxIntensity) > 0)
+            {
+                maxIntensity = entry.getKey();
+            }
+        }
+        return maxIntensity;
+
+    }
+
+    /**
+     * Find the minimum intensity voxel of segmented object
+     * @return the minimum intensity voxel of segmented object
+     */
+
+    private double minIntensity(){
+        double minIntensity=0;
+        for (Map.Entry<Double , Integer> entry : this._segmentedNucleusHisto.entrySet())
+        {
+            if (minIntensity ==0 || entry.getKey().compareTo(minIntensity) < 0)
+            {
+                minIntensity = entry.getKey();
+            }
+        }
+        return minIntensity;
+
+    }
+
+    /**
+     * list of parameters compute in this method returned in tabulated format
+     * @return list of parameters compute in this method returned in tabulated format
+     */
+
     public String nucleusParameter3D() {
         String resu = "";
+        histogramSegmentedNucleus();
         double volume = computeVolumeObject2(255);
         double surfaceArea = computeSurfaceObject( 255);
         double bis = computeComplexSurface();
@@ -568,8 +688,11 @@ public class Measure3D {
                 + equivalentSphericalRadius(volume) + "\t"
                 + surfaceArea + "\t"
                 + bis + "\t"
-                + computeSphericity(volume, bis)
-        ;
+                + computeSphericity(volume, bis)+ "\t"
+                +meanIntensity()+ "\t"
+                +standardDeviationIntensity(meanIntensity())+ "\t"
+                +minIntensity()+ "\t"
+                +maxIntensity();
 
         return resu;
     }
