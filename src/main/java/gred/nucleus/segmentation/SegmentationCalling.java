@@ -219,13 +219,13 @@ public class SegmentationCalling {
                 +directoryInput.getSeparator()
                 +"OTSU"
                 +directoryInput.getSeparator()
-                +"result_Segmentation_Analyse");
+                +"result_Segmentation_Analyse.csv");
         resultFileOutputOTSU.SaveTexteFile( this.m_outputCropGeneralInfoOTSU);
         OutputTexteFile resultFileOutputGIFT=new OutputTexteFile(this.m_semgemtationParameters.getOutputFolder()
                 +directoryInput.getSeparator()
                 +"GIFT"
                 +directoryInput.getSeparator()
-                +"result_Segmentation_Analyse");
+                +"result_Segmentation_Analyse.csv");
         resultFileOutputGIFT.SaveTexteFile( this.m_outputCropGeneralInfoGIFT);
 
 
@@ -321,6 +321,6 @@ public class SegmentationCalling {
 
 
     public String getColnameResult(){
-        return "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\tOTSUThreshold\n";
+        return "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\tMeanIntensity\tStandardDeviation\tMinIntensity\tMaxIntensity\tOTSUThreshold\n";
     }
 }

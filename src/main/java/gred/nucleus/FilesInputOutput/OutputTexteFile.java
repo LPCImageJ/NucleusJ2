@@ -17,12 +17,12 @@ public class OutputTexteFile extends FilesNames {
         try {
             if (!is_fileExist()) {
                 BufferedWriter writer;
-                writer = new BufferedWriter(new FileWriter(new File(this._fullPathFile+".txt")));
+                writer = new BufferedWriter(new FileWriter(new File(this._fullPathFile)));
                 writer.write(text);
                 writer.close();
             }
             else{
-                throw new fileInOut(this._fullPathFile+".txt");
+                throw new fileInOut(this._fullPathFile);
             }
         }
         catch (fileInOut e){
