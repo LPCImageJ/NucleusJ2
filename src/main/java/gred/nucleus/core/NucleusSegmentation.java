@@ -160,7 +160,6 @@ public class NucleusSegmentation {
 			double volume = measure3D.computeVolumeObject2(255);
 			boolean firstStack = isVoxelThresholded(tempSeg, 255, 0);
 			boolean lastStack = isVoxelThresholded(tempSeg, 255, tempSeg.getStackSize() - 1);
-
 			if (testRelativeObjectVolume(volume, imageVolume) &&
 					volume >= this.m_semgemtationParameters.getM_minVolumeNucleus() &&
 					volume <= this.m_semgemtationParameters.getM_maxVolumeNucleus() && firstStack == false && lastStack == false) {
@@ -183,8 +182,9 @@ public class NucleusSegmentation {
 		}
 		if (this._bestThreshold != -1) {
 			morphologicalCorrection(this.m_imageSeg);
+			checkBorder(this.m_imageSeg);
+
 		}
-		checkBorder(this.m_imageSeg);
 
 	}
 
@@ -583,7 +583,7 @@ public class NucleusSegmentation {
             return saveImageResult(this.m_imageSeg) + "\t" + this._bestThreshold + "\n";
         }
         else {
-            return this.m_imageSeg.getTitle() + "\tBAD CROP" + "\n";
+            return this._imgRaw.getTitle() + "\tBAD CROP" + "\n";
         }
     }
 
@@ -594,7 +594,7 @@ public class NucleusSegmentation {
             return saveImageResult(this.m_imageSeg) + "\t" + this._bestThreshold + "\n";
         }
         else {
-            return this.m_imageSeg.getTitle() + "\tBAD CROP" + "\n";
+            return this._imgRaw.getTitle() + "\tBAD CROP" + "\n";
         }
     }
 }
