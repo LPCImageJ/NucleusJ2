@@ -376,7 +376,7 @@ public class AutoCrop {
 		ImagePlus sort = new ImagePlus();
 		ChannelSplitter channelSplitter = new ChannelSplitter();
 		imps = channelSplitter.split(imps[0]);
-		//IJ.log("le print de ces morts "+channelNumber+" "+xmin+" "+ ymin +" "+zmin+" "+width+" "+ height+" "+depth);
+		IJ.log("le print de ces morts "+channelNumber+" "+xmin+" "+ ymin +" "+zmin+" "+width+" "+ height+" "+depth);
 		sort.setStack(imps[channelNumber].getStack().crop(xmin, ymin ,zmin,width, height,depth));
 
 		return sort;

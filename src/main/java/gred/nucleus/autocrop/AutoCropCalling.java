@@ -59,6 +59,7 @@ public class AutoCropCalling {
         directoryInput.checkAndActualiseNDFiles();
         for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
                 File currentFile = directoryInput.getFile(i);
+                System.out.println("Current file "+currentFile.getAbsolutePath());
                 String fileImg = currentFile.toString();
                 FilesNames outPutFilesNames = new FilesNames(fileImg);
                 this._prefix = outPutFilesNames.PrefixeNameFile();
