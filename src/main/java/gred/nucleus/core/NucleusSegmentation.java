@@ -148,7 +148,6 @@ public class NucleusSegmentation {
 	public void findOTSUmaximisingSephericity() throws Exception {
 		double imageVolume = getVoxelVolume() * this._imgRaw.getWidth() * this._imgRaw.getHeight() * this._imgRaw.getStackSize();
 		Gradient gradient = new Gradient(this._imgRaw); // ON UTILISE PLUS LE GRADIENT A REGARDER !!!!!!
-
 		double bestSphericity = -1;
 		ArrayList<Integer> arrayListThreshold = computeMinMaxThreshold(this._imgRawTransformed);  // methode OTSU
 		for (int t = arrayListThreshold.get(0); t <= arrayListThreshold.get(1); ++t) {
@@ -169,10 +168,6 @@ public class NucleusSegmentation {
 					this._bestThreshold = t;
 					bestSphericity = sphericity;
 					this._bestThreshold = t;
-					checkBorder(tempSeg);
-					StackConverter stackConverter = new StackConverter(tempSeg);
-					stackConverter.convertToGray8();
-					morphologicalCorrection(tempSeg);
 					this.m_imageSeg = tempSeg;
 					this.m_imageSeg.setTitle(this._imgRawTransformed.getTitle());
 
@@ -183,7 +178,6 @@ public class NucleusSegmentation {
 		if (this._bestThreshold != -1) {
 			morphologicalCorrection(this.m_imageSeg);
 			checkBorder(this.m_imageSeg);
-
 		}
 
 	}
@@ -571,7 +565,7 @@ public class NucleusSegmentation {
 		if(getBadCrop()==false && getBestThreshold() != -1 && this.m_semgemtationParameters.getGiftWrapping()) {
 			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
 			this.m_imageSeg = nuc.run(this.m_imageSeg, this.m_semgemtationParameters);
-			String pathSegGIFT = this.m_semgemtationParameters.getOutputFolder() + "GIFT" + this.m_currentFile.separator + this.m_imageSeg.getTitle();
+			String pathSegGIFT = this.m_semgemtationParameters.getOutputFolder() + "GIFT" + this.m_currentFile.separator + this._imgRaw.getTitle();
 			this.m_imageSeg.setTitle(pathSegGIFT);
 			saveFile(this.m_imageSeg, pathSegGIFT);
 
@@ -583,7 +577,7 @@ public class NucleusSegmentation {
             return saveImageResult(this.m_imageSeg) + "\t" + this._bestThreshold + "\n";
         }
         else {
-            return this._imgRaw.getTitle() + "\tBAD CROP" + "\n";
+            return this._imgRaw.getTitle() + "\tBAD_CROP\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA" + "\n";
         }
     }
 

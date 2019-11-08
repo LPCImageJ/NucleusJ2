@@ -2,6 +2,7 @@ package gred.nucleus.test;
 
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
+import ij.ImagePlus;
 
 import java.io.IOException;
 
@@ -52,18 +53,6 @@ public class TestSegmentationMethods {
      * @param args
      */
     public static void main(String[] args) throws Exception {
-        //testComponentsLabeling(wrapImaJ.test.TestCoreMethods.testImages_8bits[1]);
-        String imgPathAxel = "/home/plop/Bureau/image/wideField/test/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s4_46_1655_34_8.tif";
-        String imgSegPathAxel = "/home/plop/Bureau/image/";
-        String inputAxel = "/home/plop/Bureau/image/wideField/test/";
-        String outputAxel = "/home/plop/Bureau/image/wideField/testSeg/";
-        String outputAxelGift = "/home/plop/Bureau/image/wideField/testSegGift/";
-
-        String imgPathTristan = "/home/titus/Bureau/AA_DEBUG/Raw/";
-        String imgSegPathTristan = "";
-
-
-
         ///home/titus/Bureau/data/Test_Image_Reproductibilite/IMAGE_TEST_NJ/AUTOCROP_RAW/RAW_BIOFORMATS
 
 
@@ -82,9 +71,17 @@ public class TestSegmentationMethods {
         long maxMemory = Runtime.getRuntime().maxMemory();
         System.out.println("Maximum memory (bytes) /RAW_CZI : " +
                 (maxMemory == Long.MAX_VALUE ? "no limit" : maxMemory*1e-9)+" "+Runtime.getRuntime().freeMemory()*1e-9);
-        testStupidSeveralImages(pathToTest+"/RAW_CZI",
-                pathToTest+"/AUTOCROP_RESULTS/RAW_CZI");
-       // testStupidSeveralImages("/home/titus/Bureau/data/Noyaux/Raw", "/home/titus/Bureau/data/Noyaux/output");
+
+          /**
+
+        testStupidSeveralImages("/media/tridubos/DATA1/SPERMATO/Manipe_3_30_images/test_Noyaux_manquant",
+                "/media/tridubos/DATA1/SPERMATO/Manipe_3_30_images/SEG_NOYAUX_MANQUANT");
+        */
+        testStupidSeveralImages("/home/tridubos/Bureau/IMAGES_TEST/Segmentation/Raw/Gros_Nucleols",
+                "/home/tridubos/Bureau/IMAGES_TEST/Segmentation/Out");
+
+
+        // testStupidSeveralImages("/home/titus/Bureau/data/Noyaux/Raw", "/home/titus/Bureau/data/Noyaux/output");
         // testStupidSeveralImages(ExpectedResult, ExpectedResult, (short)6.0, 300000000,true);
         /*fw.GetFilesResultingOfAnalysis(inputTristan);
         fw.CompareAnalysisResult();
@@ -95,6 +92,7 @@ public class TestSegmentationMethods {
         fw.CompareAnalysisResult();
         */
         System.err.println("The program ended normally.");
+
     }
 
 
