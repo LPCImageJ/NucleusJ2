@@ -568,8 +568,6 @@ public class NucleusSegmentation {
 			String pathSegGIFT = this.m_semgemtationParameters.getOutputFolder() + "GIFT" + this.m_currentFile.separator + this._imgRaw.getTitle();
 			this.m_imageSeg.setTitle(pathSegGIFT);
 			saveFile(this.m_imageSeg, pathSegGIFT);
-
-
         }
 	}
     public String getImageCropInfoOTSU(){
