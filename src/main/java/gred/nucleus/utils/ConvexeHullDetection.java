@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.measure.Calibration;
+import loci.poi.util.NullLogger;
 
 /**
  * @author Tristan Dubos and Axel Poulet
@@ -134,15 +135,29 @@ public class ConvexeHullDetection {
 			++compteur;
 			voxelPrecedent = voxelTest;
 			voxelTest = voxelMin;
-			lVoxelBoundary.remove(iMin);
-			anglesSum += angleMin;
-			if (voxelMin.compareCooridnatesTo(_p0) == 0)
-			    break;
-		
-			if (anglesSum <= 2*_pi) {
-				convexHull.add(voxelMin);
-				//IJ.log("point num: "+compteur+" "+_p0._i+" "+_p0._j+" "+_p0._k+" angle: "+angleMinPiSurDeux+" distance: "+maxLength+" angle sum"+anglesSum);
+
+			//System.out.println("le voxel min "+voxelMin._i+" "+voxelMin._k+" "+voxelMin._j+" ");
+			//if(voxelMin._i > 0 &&voxelMin._k> 0 &&voxelMin._j> 0 ){
+				lVoxelBoundary.remove(iMin);
+
+				anglesSum += angleMin;
+				if (voxelMin.compareCooridnatesTo(_p0) == 0)
+					break;
+
+				if (anglesSum <= 2 * _pi) {
+					convexHull.add(voxelMin);
+					//IJ.log("point num: "+compteur+" "+_p0._i+" "+_p0._j+" "+_p0._k+" angle: "+angleMinPiSurDeux+" distance: "+maxLength+" angle sum"+anglesSum);
+				}
+/**
 			}
+		  ICI ISSUE 13 a regarder !!!!! l'image qui pose probleme se trouve ici :
+		  /media/tridubos/DATA1/DATA_ANALYSE/MANIP_MANU_KAKU/ANALYSE_OCTOBRE_2019/images_PROBLEMS
+			else{
+				return null;
+			}
+
+		 */
+
 		}
 		return convexHull;
 	}
