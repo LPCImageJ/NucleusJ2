@@ -245,7 +245,6 @@ public class ConvexeHullImageMaker{
 	public ImagePlus imageMaker (double[][] image,ArrayList<VoxelRecord> lVoxelBoundary ,int width, int height,double equivalentSphericalRadius){
 		ArrayList<VoxelRecord> convexHull = new ArrayList<VoxelRecord> ();
 		convexHull.add(_p0);
-		//IJ.log(" BUUUUUUUUUUUUUURP "+_p0._k+ " "+_p0._j );
 		VoxelRecord vectorTest = new VoxelRecord();
 		if(_axesName == "xy" || _axesName == "xz")	
 			vectorTest.setLocation (-10, 0, 0);
@@ -257,7 +256,7 @@ public class ConvexeHullImageMaker{
 		convexHullDetection.setAxes(_axesName);
 
 		//IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" "+ image+" \n"+ convexHull+" \n"+lVoxelBoundary+" \n"+ vectorTest+" \n"+_calibration+" \n"+equivalentSphericalRadius);
-		convexHull = convexHullDetection.findConvexeHull (image, convexHull,lVoxelBoundary, vectorTest, _calibration,equivalentSphericalRadius);
+		convexHull = convexHullDetection.findConvexeHull (image, convexHull,lVoxelBoundary, vectorTest, _calibration,equivalentSphericalRadius*2);
 		ImagePlus ip =  makerPolygon ( convexHull , width, height);
 		return ip;
 	}

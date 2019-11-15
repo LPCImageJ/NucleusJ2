@@ -566,6 +566,7 @@ public class NucleusSegmentation {
 		}
 	}
 	public void giftWrappingSeg(){
+
 		if(getBadCrop()==false && getBestThreshold() != -1 && this.m_semgemtationParameters.getGiftWrapping()) {
 			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
 			this.m_imageSeg = nuc.run(this.m_imageSeg, this.m_semgemtationParameters);

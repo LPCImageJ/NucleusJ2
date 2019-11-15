@@ -138,7 +138,7 @@ public class ConvexeHullDetection {
 
 			//System.out.println("le voxel min "+voxelMin._i+" "+voxelMin._k+" "+voxelMin._j+" ");
 			//if(voxelMin._i > 0 &&voxelMin._k> 0 &&voxelMin._j> 0 ){
-				lVoxelBoundary.remove(iMin);
+			lVoxelBoundary.remove(iMin);
 
 				anglesSum += angleMin;
 				if (voxelMin.compareCooridnatesTo(_p0) == 0)
