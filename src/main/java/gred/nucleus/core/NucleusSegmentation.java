@@ -179,10 +179,6 @@ public class NucleusSegmentation {
 			morphologicalCorrection(this.m_imageSeg);
 			checkBorder(this.m_imageSeg);
 		}
-		System.out.println("le best T : "+this._bestThreshold+ " "+this._badCrop);
-		if(this._badCrop==true){
-            this.m_imageSeg.show();
-        }
 
 	}
 
