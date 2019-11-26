@@ -576,7 +576,7 @@ public class NucleusSegmentation {
             return saveImageResult(this.m_imageSeg) + "\t" + this._bestThreshold + "\n";
         }
         else {
-            return this._imgRaw.getTitle() + "\tBAD_CROP\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA\tNA" + "\n";
+            return this._imgRaw.getTitle() + "\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1" + "\n";
         }
     }
 
@@ -587,7 +587,7 @@ public class NucleusSegmentation {
             return saveImageResult(this.m_imageSeg) + "\t" + this._bestThreshold + "\n";
         }
         else {
-            return this._imgRaw.getTitle() + "\tBAD CROP" + "\n";
+            return this._imgRaw.getTitle() + "\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1" + "\n";
         }
     }
 }
