@@ -133,7 +133,7 @@ public class AutocropParameters extends PluginParameters {
      * @param pathToConfigFile : path to the config file
      */
     public AutocropParameters (String inputFolder, String outputFolder, String pathToConfigFile){
-        super(inputFolder, outputFolder);
+        super(inputFolder, outputFolder,pathToConfigFile);
         Properties prop = new Properties();
         String fileName = pathToConfigFile;
         InputStream is = null;
@@ -156,9 +156,6 @@ public class AutocropParameters extends PluginParameters {
             if(idProp.equals("channelToComputeThreshold")){this.m_channelToComputeThreshold = Integer.valueOf(prop.getProperty("channelToComputeThreshold"));}
             if(idProp.equals("maxVolumeNucleus")){this.m_maxVolumeNucleus = Integer.valueOf(prop.getProperty("maxVolumeNucleus"));}
             if(idProp.equals("minVolumeNucleus")){this.m_minVolumeNucleus = Integer.valueOf(prop.getProperty("minVolumeNucleus"));}
-            if(idProp.equals("xcal")){ setXCal(Double.valueOf(prop.getProperty("xcal")));}
-            if(idProp.equals("ycal")){ setYCal(Double.valueOf(prop.getProperty("ycal")));}
-            if(idProp.equals("zcal")){ setZCal(Double.valueOf(prop.getProperty("zcal")));}
         }
     }
 

@@ -1,9 +1,15 @@
 package gred.nucleus.plugins;
 
 import gred.nucleus.FilesInputOutput.Directory;
+import ij.ImagePlus;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Properties;
 
 public class PluginParameters {
 
@@ -54,6 +60,42 @@ public class PluginParameters {
         this.m_zCal=xCal;
 
     }
+
+    /**
+     * Constructor using input , output folders and config file (for command line execution)
+     * @param inputFolder : path folder containing Images
+     * @param outputFolder : path folder output analyse
+     * @param pathToConfigFile : path to the config file
+     */
+
+    public PluginParameters (String inputFolder, String outputFolder, String pathToConfigFile){
+        this.m_inputFolder=inputFolder;
+        Directory dirOutput =new Directory(outputFolder);
+        dirOutput.CheckAndCreateDir();
+        this.m_outputFolder=dirOutput.get_dirPath();
+        Properties prop = new Properties();
+        String fileName = pathToConfigFile;
+        InputStream is = null;
+        try {
+            is = new FileInputStream(fileName);
+        } catch (FileNotFoundException ex) {
+
+        }
+        try {
+            prop.load(is);
+        } catch (IOException ex) {
+
+        }
+        for (String idProp :prop.stringPropertyNames()){
+            if(idProp.equals("xcal")){ setXCal(Double.valueOf(prop.getProperty("xcal")));}
+            if(idProp.equals("ycal")){ setYCal(Double.valueOf(prop.getProperty("ycal")));}
+            if(idProp.equals("zcal")){ setZCal(Double.valueOf(prop.getProperty("zcal")));}
+        }
+    }
+
+
+
+
 
     /**
      * Getter : input path
@@ -133,8 +175,41 @@ public class PluginParameters {
     public double  getZCal( ){
         return this.m_zCal;
     }
+
+
     public boolean getManualParameter(){
         return this.m_manualParameter;
+    }
+    public double getXcalibration(ImagePlus raw) {
+        double xCal;
+        if (this.m_manualParameter == true) {
+            xCal = this.getXCal();
+        } else {
+
+            xCal = raw.getCalibration().pixelWidth;
+        }
+        return xCal;
+    }
+
+    public double getYcalibration(ImagePlus raw){
+        double yCal;
+        if(this.m_manualParameter==true){
+            yCal=this.getYCal();
+        }
+        else{
+            yCal=raw.getCalibration().pixelHeight;
+        }
+        return yCal;
+    }
+    public double getZcalibration(ImagePlus raw){
+        double zCal;
+        if(this.getManualParameter()==true){
+            zCal=this.getZCal();
+        }
+        else{
+            zCal=raw.getCalibration().pixelDepth;
+        }
+        return zCal;
     }
 
 }
