@@ -33,6 +33,8 @@ public class computeSegmentationParameters {
 
 
     }
+
+
     public static void computeNucleusParameters(String RawImageSourceFile, String SegmentedImagesSourceFile) throws IOException, FormatException ,fileInOut,Exception{
         PluginParameters pluginParameters= new PluginParameters(RawImageSourceFile,SegmentedImagesSourceFile);
         Directory directoryInput = new Directory(pluginParameters.getInputFolder());
@@ -47,7 +49,7 @@ public class computeSegmentationParameters {
             ImagePlus Segmented = new ImagePlus(pluginParameters.getOutputFolder()+currentFile.getName());
 
             Measure3D mesure3D = new Measure3D(Segmented, Raw, pluginParameters.getXcalibration(Raw), pluginParameters.getYcalibration(Raw),pluginParameters.getZcalibration(Raw));
-            outputCropGeneralInfoOTSU+=mesure3D.nucleusParameter3D();
+            outputCropGeneralInfoOTSU+=mesure3D.nucleusParameter3D()+"\n";
         }
 
         OutputTexteFile resultFileOutputOTSU=new OutputTexteFile(pluginParameters.getOutputFolder()
@@ -59,11 +61,15 @@ public class computeSegmentationParameters {
 
 
     public static void main(String[] args) throws IOException, FormatException, fileInOut,Exception {
-
+    /*
         computeNucleusParameters("/media/tridubos/DATA1/DATA_ANALYSE/MANIP_MANU_KAKU/ANALYSE_OCTOBRE_2019/TEST_CALCULPARAMETERS/RAW",
                 "/media/tridubos/DATA1/DATA_ANALYSE/MANIP_MANU_KAKU/ANALYSE_OCTOBRE_2019/TEST_CALCULPARAMETERS/SEGED");
                 //,"");
+
+                */
+
     }
+
 
 
     public static String getColnameResult(){
