@@ -45,12 +45,17 @@ public class annotAutoCrop {
     private String m_imageFilePath;
     /** the path of the directory where image with boxes is saved  */
     private String m_outputDirPath;
+    /** Parameters crop analyse */
+    private AutocropParameters m_autocropParameters;
 
-    public annotAutoCrop(ArrayList<String> ListBox, File imageFile,String outputDirPath) throws IOException, FormatException {
+
+    public annotAutoCrop(ArrayList<String> ListBox, File imageFile,String outputDirPath,AutocropParameters autocropParameters) throws IOException, FormatException {
+        this.m_autocropParameters=autocropParameters;
         this.m_currentFile=imageFile;
-        this.m_zProjection = BF.openImagePlus(imageFile.getAbsolutePath())[0];
+        this.m_zProjection = BF.openImagePlus(imageFile.getAbsolutePath())[this.m_autocropParameters.getSlicesOTSUcomputing()];
         this.m_boxCoordinates = ListBox;
         this.m_outputDirPath=outputDirPath;
+
 
 
     }
@@ -58,8 +63,6 @@ public class annotAutoCrop {
     public void run(){
         ZProjector zProjectionTmp = new ZProjector(this.m_zProjection);
         this.m_zProjection= projectionMax(zProjectionTmp);
-
-
         ajustContrast(0.3);
         for(int i = 0; i < this.m_boxCoordinates.size(); ++i) {
             String fileImg = this.m_boxCoordinates.get(i).toString();
