@@ -68,7 +68,7 @@ public class TestAutoCrop {
         String inputDirAxel = "/home/plop/Bureau/image/wideField/";
         String outputAxel = "/home/plop/Bureau/image/wideField/test";
 
-		// TODO AJOUTER WARNING QUAND LE THRESHOLD EST TROP BAS (VERIFIER LES NOYAUX )
+		
         //String inputOneImageTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/raw/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s9.TIF";
         //String inputDirTristan = "/home/tridubos/Bureau/Demo_Autocrop/Out/";
 
