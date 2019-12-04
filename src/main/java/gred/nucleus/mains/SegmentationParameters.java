@@ -1,4 +1,4 @@
-package gred.nucleus.segmentation;
+package gred.nucleus.mains;
 
 
 import gred.nucleus.plugins.PluginParameters;

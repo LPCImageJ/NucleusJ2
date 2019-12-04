@@ -1,10 +1,9 @@
-package gred.nucleus.test;
+package gred.nucleus.mains;
 import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.autocrop.AutoCropCalling;
 import gred.nucleus.segmentation.SegmentationCalling;
 
-import gred.nucleus.segmentation.SegmentationParameters;
 import loci.formats.FormatException;
 //import org.apache.commons.cli.Options;
 
@@ -72,17 +71,8 @@ public class main {
 
 
     public static void main(String[] args) throws IOException, FormatException, fileInOut,Exception {
-      //  Options options = new Options();
         if(args[0].equals("autocrop")) {
             System.out.println("start "+args[0]);
-            String inputOneImageAxel = "/home/plop/Bureau/image/wideField/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s4.TIF";
-            String inputDirAxel = "/home/plop/Bureau/image/wideField/";
-            String outputAxel = "/home/plop/Bureau/image/wideField/test";
-
-            String inputOneImageTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/test_outpout/Z_Col_cot15&19&23__w11_DAPI_SIM_s5.tif";
-            //String inputOneImageTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/raw/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s9.TIF";
-            String inputDirTristan = "/home/tridubos/Bureau/Bille_4Micro_02-2019/AutocropDuSchnaps/";
-            String outputTristan = "/home/tridubos/Bureau/Bille_4Micro_02-2019/OutputDuSchnaps/";
             if((args.length==2)&& (args[3].equals("ConfigFile"))){
                 runAutoCrop(args[1], args[2], args[4]);
 

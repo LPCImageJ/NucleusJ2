@@ -2,19 +2,17 @@ package gred.nucleus.core;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map.Entry;
 
 import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.imageProcess.Thresholding;
-import gred.nucleus.segmentation.SegmentationParameters;
+import gred.nucleus.mains.SegmentationParameters;
 import gred.nucleus.utils.FillingHoles;
 import gred.nucleus.utils.Gradient;
 import gred.nucleus.utils.Histogram;
 import ij.*;
 import ij.io.FileSaver;
 import ij.plugin.ChannelSplitter;
-import ij.plugin.ContrastEnhancer;
 import ij.plugin.Filters3D;
 import ij.plugin.GaussianBlur3D;
 import ij.process.*;

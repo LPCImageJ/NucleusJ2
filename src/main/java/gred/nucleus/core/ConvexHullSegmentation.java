@@ -1,6 +1,6 @@
 package gred.nucleus.core;
 
-import gred.nucleus.segmentation.SegmentationParameters;
+import gred.nucleus.mains.SegmentationParameters;
 import gred.nucleus.utils.ConvexeHullImageMaker;
 import ij.ImagePlus;
 import ij.ImageStack;

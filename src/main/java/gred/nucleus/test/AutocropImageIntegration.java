@@ -38,8 +38,8 @@ public class AutocropImageIntegration {
      * @param args
      */
     public static void main(String[] args) throws IOException, FormatException ,Exception{
-        String pathToTest ="/home/tridubos/Bureau/IMAGES_TEST/AUTOCROP_IMAGES/AUTOCROP_RAW";
-        String pathToOutput ="/home/tridubos/Bureau/IMAGES_TEST/AUTOCROP";
+        String pathToTest ="/home/tridubos/Bureau/IMAGES_TEST_CICD/AUTOCROP_IMAGES/AUTOCROP_RAW";
+        String pathToOutput ="/home/tridubos/Bureau/IMAGES_TEST_CICD/AUTOCROP";
 
 
 

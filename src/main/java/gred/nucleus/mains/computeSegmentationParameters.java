@@ -1,4 +1,4 @@
-package gred.nucleus.test;
+package gred.nucleus.mains;
 
 import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.FilesInputOutput.FilesNames;
@@ -61,12 +61,10 @@ public class computeSegmentationParameters {
 
 
     public static void main(String[] args) throws IOException, FormatException, fileInOut,Exception {
-    /*
+
         computeNucleusParameters("/media/tridubos/DATA1/DATA_ANALYSE/MANIP_MANU_KAKU/ANALYSE_OCTOBRE_2019/TEST_CALCULPARAMETERS/RAW",
                 "/media/tridubos/DATA1/DATA_ANALYSE/MANIP_MANU_KAKU/ANALYSE_OCTOBRE_2019/TEST_CALCULPARAMETERS/SEGED");
                 //,"");
-
-                */
 
     }
 

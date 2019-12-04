@@ -1,4 +1,4 @@
-package gred.nucleus.test;
+package gred.nucleus.mains;
 
 import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.exceptions.fileInOut;
@@ -33,14 +33,20 @@ public class TestAutoCrop {
 	 */
 	
 	static ArrayList <String> m_test;
-	
+
+    public static void runAutoCrop(String imageSourceFile, String output, String pathToConfig) throws IOException, FormatException ,fileInOut,Exception{
+        AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,pathToConfig);
+        AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
+        autoCrop.run();
+    }
+
 	public static void testStupid(String imageSourceFile, String output) throws IOException, FormatException ,Exception{
 		AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
 		AutoCropCalling autoCrop = new AutoCropCalling();
         autoCrop.run();
 	}
 
-	public static void ruAutoCrop(String imageSourceFile, String output) throws IOException, FormatException , fileInOut,Exception{
+	public static void runAutoCrop(String imageSourceFile, String output) throws IOException, FormatException , fileInOut,Exception{
 		//AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
 		AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,40,40,20,0,20,0,1,1000000000);
 		AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
@@ -78,7 +84,21 @@ public class TestAutoCrop {
 		//fw.GetFilesOutputFolder(outputTristan);
 		//testStupid(inputOneImageTristan, outputTristan);
 
-		//ruAutoCrop("/home/titus/Bureau/data/ChampLarge/raw", "/home/titus/Bureau/data/ChampLarge/autocrop");
+		//runAutoCrop("/home/tridubos/Bureau/IMAGES_TEST/Nouveau dossier/Autocrop_name/Raw",
+		//		"/home/tridubos/Bureau/IMAGES_TEST/Nouveau dossier/Autocrop_name/Crop");
+
+
+		//runAutoCrop("/media/tridubos/DATA1/DATA_ANALYSE/SPERMATO/Manipe_3_30_images/test_projetction/Raw",
+		//        		"/media/tridubos/DATA1/DATA_ANALYSE/SPERMATO/Manipe_3_30_images/test_projetction/Autocrop"
+		//,"/media/tridubos/DATA1/DATA_ANALYSE/SPERMATO/Manipe_3_30_images/test_projetction/config_file_test");
+
+
+		runAutoCrop("/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/Raw/TwoChannels",
+				"/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/Output_Autocrop/TwoChannels",
+				"/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/Raw/config_file_TwoChannel");
+		//runAutoCrop("/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/Raw/OneChannel",
+		//		"/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/Output_Autocrop/OneChannel");
+
 		//fw.GetFilesResultingOfAnalysis(outputTristan);
 		//fw.CompareAnalysisResult();
 		/*

@@ -2,7 +2,7 @@ package gred.nucleus.test;
 
 import gred.nucleus.AnalyseTest.OuputFileVerification;
 import gred.nucleus.segmentation.SegmentationCalling;
-import gred.nucleus.segmentation.SegmentationParameters;
+import gred.nucleus.mains.SegmentationParameters;
 
 import java.io.IOException;
 
@@ -54,8 +54,10 @@ public class SegmentationImageIntegrationCheck {
          * @param args
          */
         public static void main(String[] args) throws Exception {
-            String pathToTest ="/home/tridubos/Bureau/IMAGES_TEST/SEGMENTATION_VERIF";
-            String pathToExpected ="/home/tridubos/Bureau/IMAGES_TEST/SEGMENTATION";
+            String pathToTest ="/home/tridubos/Bureau/IMAGES_TEST/SEGMENTATION_IMAGES/SEGMENTATION_VERIF";
+            String pathToExpected ="/home/tridubos/Bureau/IMAGES_TEST/SEGMENTATION_IMAGES/SEGMENTATION";
+
+          /**
             testStupidSeveralImages(pathToTest+"/Gros_Nucleols",
                     pathToTest+"/SEGMENTATION_RESULTS/Gros_Nucleols");
             testStupidSeveralImages(pathToTest+"/Noyaux_Calib_1_1_1",
@@ -64,6 +66,7 @@ public class SegmentationImageIntegrationCheck {
             testStupidSeveralImages(pathToTest+"/PB_RADIUS_CONVEXHULL",
                     pathToTest+"/SEGMENTATION_RESULTS/PB_RADIUS_CONVEXHULL");
 
+           */
             OuputFileVerification fw = new OuputFileVerification(pathToExpected,pathToTest);
             fw.GetFileResultExpeted(pathToExpected);
             //fw.GetFilesOutputFolder(pathToTest);

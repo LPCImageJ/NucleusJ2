@@ -2,21 +2,16 @@
 package gred.nucleus.utils;
 
 import gred.nucleus.core.Measure3D;
-import gred.nucleus.segmentation.SegmentationParameters;
-import ij.IJ;
+import gred.nucleus.mains.SegmentationParameters;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.measure.Calibration;
-import ij.io.FileSaver;
-import ij.process.ShortProcessor;
-import ij.process.ImageProcessor;
 
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.util.ArrayList;
 
 /**

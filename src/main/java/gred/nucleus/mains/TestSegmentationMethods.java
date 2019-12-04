@@ -1,8 +1,7 @@
-package gred.nucleus.test;
+package gred.nucleus.mains;
 
 import gred.nucleus.segmentation.SegmentationCalling;
-import gred.nucleus.segmentation.SegmentationParameters;
-import ij.ImagePlus;
+import gred.nucleus.mains.SegmentationParameters;
 
 import java.io.IOException;
 
@@ -71,14 +70,28 @@ public class TestSegmentationMethods {
         long maxMemory = Runtime.getRuntime().maxMemory();
         System.out.println("Maximum memory (bytes) /RAW_CZI : " +
                 (maxMemory == Long.MAX_VALUE ? "no limit" : maxMemory*1e-9)+" "+Runtime.getRuntime().freeMemory()*1e-9);
+        /**
+        testStupidSeveralImages("/media/tridubos/DATA1/DATA_ANALYSE/MANIP_MANU_KAKU/ANALYSE_OCTOBRE_2019/images_PROBLEMS",
+                "/media/tridubos/DATA1/DATA_ANALYSE/MANIP_MANU_KAKU/ANALYSE_OCTOBRE_2019/SEG_IMAGE_PB");
 
-          /**
+
 
         testStupidSeveralImages("/media/tridubos/DATA1/SPERMATO/Manipe_3_30_images/test_Noyaux_manquant",
                 "/media/tridubos/DATA1/SPERMATO/Manipe_3_30_images/SEG_NOYAUX_MANQUANT");
+
+        testStupidSeveralImages("/media/tridubos/DATA1/DATA_ANALYSE/SPERMATO/Manipe_3_30_images/Autocrop",
+                "/media/tridubos/DATA1/DATA_ANALYSE/SPERMATO/Manipe_3_30_images/Segmentation");
+
+
+        testStupidSeveralImages("/media/tridubos/DATA1/DATA_ANALYSE/MANIP_MANU_KAKU/ANALYSE_OCTOBRE_2019/New_autocrop",
+                "/media/tridubos/DATA1/DATA_ANALYSE/MANIP_MANU_KAKU/ANALYSE_OCTOBRE_2019/New_Segmentation");
+
+
+        testStupidSeveralImages("/media/tridubos/DATA1/DATA_ANALYSE/SPERMATO/Manipe_3_30_images/IMAGE_PB/RAW_STRANGE_BAD_CROP",
+                "/media/tridubos/DATA1/DATA_ANALYSE/SPERMATO/Manipe_3_30_images/IMAGE_PB/Segmentation");
         */
-        testStupidSeveralImages("/home/tridubos/Bureau/IMAGES_TEST/Segmentation/Raw/Gros_Nucleols",
-                "/home/tridubos/Bureau/IMAGES_TEST/Segmentation/Out");
+        testStupidSeveralImages("/media/tridubos/DATA1/DATA/Axel_Bioinformatics/RawDataNucleus",
+                "/media/tridubos/DATA1/DATA/Axel_Bioinformatics/New_Segmentation");
 
 
         // testStupidSeveralImages("/home/titus/Bureau/data/Noyaux/Raw", "/home/titus/Bureau/data/Noyaux/output");

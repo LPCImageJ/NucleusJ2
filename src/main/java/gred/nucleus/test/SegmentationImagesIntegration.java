@@ -1,7 +1,7 @@
 package gred.nucleus.test;
 
 import gred.nucleus.segmentation.SegmentationCalling;
-import gred.nucleus.segmentation.SegmentationParameters;
+import gred.nucleus.mains.SegmentationParameters;
 
 import java.io.IOException;
 

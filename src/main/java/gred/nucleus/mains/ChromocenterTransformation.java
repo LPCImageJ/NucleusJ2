@@ -1,10 +1,10 @@
-package gred.nucleus.test;
+package gred.nucleus.mains;
 
 import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.FilesInputOutput.FilesNames;
 import gred.nucleus.core.NucleusSegmentation;
 import gred.nucleus.exceptions.fileInOut;
-import gred.nucleus.segmentation.SegmentationParameters;
+import gred.nucleus.mains.SegmentationParameters;
 import ij.ImagePlus;
 import ij.io.FileSaver;
 import ij.plugin.ChannelSplitter;
@@ -17,8 +17,8 @@ import java.io.IOException;
 public class ChromocenterTransformation {
 
     public static void main(String[] args) throws IOException, FormatException, fileInOut,Exception {
-        String input="/home/tridubos/Bureau/IMAGES_TEST/TEST_CC/SegmentedDataCc";
-        String output="/home/tridubos/Bureau/IMAGES_TEST/TEST_CC/out";
+        String input="/home/tridubos/Bureau/IMAGES_TEST_CICD/TEST_CC/SegmentedDataCc";
+        String output="/home/tridubos/Bureau/IMAGES_TEST_CICD/TEST_CC/out";
 
 
         SegmentationParameters segmentationParameters = new SegmentationParameters(input,output);

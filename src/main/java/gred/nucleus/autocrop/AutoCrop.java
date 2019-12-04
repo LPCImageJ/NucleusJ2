@@ -131,9 +131,6 @@ public class AutoCrop {
 	 * If OTSU threshold is still under 20 threshold threshold value is 20.
 	 *
 	 *
-	 *
-	 * //TODO AJOUTER MESSAGE POUR UTILISATEUR SI THRESHOLD INFERIEUR A 20
-	 *
 	 */
 	public void thresholdKernels(){
 		this.sliceUsedForOTSU="default";
