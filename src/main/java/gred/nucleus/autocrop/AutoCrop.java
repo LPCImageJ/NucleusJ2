@@ -65,10 +65,8 @@ public class AutoCrop {
 	private String sliceUsedForOTSU;
 	/** Default threshold */
 	private boolean m_defaultTreshold=false;
-
     /**List of boxes  to crop link to label value */
     private HashMap <Double,Box> m_boxes = new HashMap <Double,Box>();
-
 
 
     /** 

@@ -251,7 +251,7 @@ public class ConvexeHullImageMaker{
 		convexHullDetection.setAxes(_axesName);
 
 		//IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" "+ image+" \n"+ convexHull+" \n"+lVoxelBoundary+" \n"+ vectorTest+" \n"+_calibration+" \n"+equivalentSphericalRadius);
-		convexHull = convexHullDetection.findConvexeHull (image, convexHull,lVoxelBoundary, vectorTest, _calibration,equivalentSphericalRadius*2);
+		convexHull = convexHullDetection.findConvexeHull (image, convexHull,lVoxelBoundary, vectorTest, _calibration,equivalentSphericalRadius);
 		ImagePlus ip =  makerPolygon ( convexHull , width, height);
 		return ip;
 	}
