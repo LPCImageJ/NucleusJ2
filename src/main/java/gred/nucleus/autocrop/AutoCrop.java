@@ -545,7 +545,7 @@ public class AutoCrop {
 
     }
 
-    
+
 	/**
 	 *  Getter number of crop
 	 * @return number of object detected
