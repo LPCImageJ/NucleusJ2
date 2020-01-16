@@ -84,7 +84,7 @@ public class NucleusSegmentation {
 		this.m_imageFilePath = imageFile.getAbsolutePath();
 		this._imgRaw = getImageChannel(0); // TODO ADD CHANNEL PARAMETERS (CASE OF CHANNELS UN SPLITED
 		this._imgRaw.setTitle(imageFile.getName());
-		 this._imgRawTransformed = this._imgRaw.duplicate();
+		this._imgRawTransformed = this._imgRaw.duplicate();
 		this._imgRawTransformed.setTitle(imageFile.getName());
 		Directory dirOutputOTSU = new Directory(this.m_semgemtationParameters.getOutputFolder() + "OTSU");
 		dirOutputOTSU.CheckAndCreateDir();
@@ -151,7 +151,14 @@ public class NucleusSegmentation {
 		for (int t = arrayListThreshold.get(0); t <= arrayListThreshold.get(1); ++t) {
 			ImagePlus tempSeg = new ImagePlus();
 			tempSeg = generateSegmentedImage(this._imgRawTransformed, t);
+
 			tempSeg = ConnectedComponents.computeLabels(tempSeg, 26, 32);
+			if(this.m_semgemtationParameters.getManualParameter()) {
+				IJ.run(tempSeg, "Properties...", " unit=µm pixel_width=" + this.m_semgemtationParameters.getXCal() + " pixel_height=" + this.m_semgemtationParameters.getYCal() + " voxel_depth=" + this.m_semgemtationParameters.getZCal());
+			}
+			else{
+				IJ.run(tempSeg, "Properties...", " unit=µm pixel_width=" + this._imgRaw.getCalibration().pixelWidth + " pixel_height=" + this._imgRaw.getCalibration().pixelHeight + " voxel_depth=" + this._imgRaw.getCalibration().pixelDepth);
+			}
 			Measure3D measure3D = new Measure3D(tempSeg, this._imgRawTransformed, getXcalibration(), getYcalibration(), getZcalibration());
 			deleteArtefact(tempSeg);
 			double volume = measure3D.computeVolumeObject2(255);
@@ -168,7 +175,6 @@ public class NucleusSegmentation {
 					this._bestThreshold = t;
 					this.m_imageSeg = tempSeg;
 					this.m_imageSeg.setTitle(this._imgRawTransformed.getTitle());
-
 				}
 			}
 			measure3D = null;
@@ -201,6 +207,7 @@ public class NucleusSegmentation {
 			StackConverter stackConverter = new StackConverter(this._imgRawTransformed);
 			stackConverter.convertToGray8();
 		}
+
 	}
 
 	public ImagePlus applySegmentation2() throws Exception {
@@ -285,8 +292,8 @@ public class NucleusSegmentation {
 				}
 			}
 		}
-		IJ.run(imagePlusSegmented, "Properties...", " unit=µm pixel_width="+this.m_semgemtationParameters.getXCal()+ " pixel_height="+this.m_semgemtationParameters.getYCal()+ " voxel_depth="+this.m_semgemtationParameters.getZCal());
-        return imagePlusSegmented;
+
+		return imagePlusSegmented;
 	}
 
 	/**
