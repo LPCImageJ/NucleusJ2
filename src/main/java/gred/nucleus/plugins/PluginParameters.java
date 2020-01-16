@@ -39,6 +39,7 @@ public class PluginParameters {
         dirOutput.CheckAndCreateDir();
         this.m_outputFolder=dirOutput.get_dirPath();
 
+
     }
     /** Constructor with specific calibration in x y and z
      *

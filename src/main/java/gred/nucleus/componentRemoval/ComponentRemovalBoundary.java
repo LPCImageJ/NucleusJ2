@@ -13,7 +13,8 @@ import gred.nucleus.connectedComponent.ComponentInfo;
 import gred.nucleus.utils.Voxel;
 
 /**
- * This class is intended to implement the predicate on voxels and connected components
+ * This class is intended to implement the predicate on voxels and connected
+ * components.
  * to filter out components of a binary image which touch the border.
  *
  * @author Remy Malgouyres, Tristan Dubos and Axel Poulet

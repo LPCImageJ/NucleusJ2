@@ -9,7 +9,8 @@ import ij.IJ;
 import ij.ImagePlus;
 
 /**
- * Several method to realise and create the outfile for the chromocenter Analysis
+ * Several method to realise and create the outfile for the chromocenter
+ * Analysis
  * 
  * @author Tristan Dubos and Axel Poulet
  *
@@ -20,7 +21,8 @@ public class ChromocenterAnalysis
 	}
 
 	/**
-	 *  Compute the several parameters to characterize the chromocenter of one image, and return the results on the IJ log windows
+	 *  Compute the several parameters to characterize the chromocenter of one
+	 *  image, and return the results on the IJ log windows
 	 *  
 	 * @param imagePlusSegmented image of the segmented nucleus
 	 * @param imagePlusChromocenter image of the segmented chromocenter
