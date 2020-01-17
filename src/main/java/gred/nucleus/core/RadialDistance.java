@@ -62,7 +62,7 @@ public class RadialDistance {
 			voxelValueMin = Double.MAX_VALUE;
 			for (int k = 0; k < imagePlusChromocenter.getNSlices(); ++k) {
                 for (int i = 0; i < imagePlusChromocenter.getWidth(); ++i) {
-                    for (int j = 0; j < imagePlusChromocenter.getHeight(); ++j) {
+                    for (int j = 0; j < imagePlusChromocenter.getHeight(); ++j){
                         voxelValue = imageStackDistanceMap.getVoxel(i, j, k);
                         if (voxelValue < voxelValueMin &&
 								tLabel[l] ==
