@@ -707,7 +707,6 @@ public class NucleusSegmentation {
 			fileToMove.renameTo(new File(BadCropFolder+file.separator+this._imgRawTransformed.getTitle()));
 		}
 	}
-
     /**
      * Method to save the OTSU segmented image.
      * TODO verifier cette methode si elle est à ca place
@@ -737,7 +736,6 @@ public class NucleusSegmentation {
 			saveFile(this.m_imageSeg, pathSegGIFT);
         }
 	}
-
     /**
      * Method to get the parameter of the 3D parameters for OTSU segmented image
      * if the object can't be segmented return -1 for
@@ -758,18 +756,22 @@ public class NucleusSegmentation {
                     + "\n";
         }
     }
-
     /**
      * Method to get the parameter of the 3D parameters for Gift wrapping
      * segmented image if the object can't be segmented return -1 for
      * parameters.
-     * TODO verifier cette methode si elle est à ca place
+     * TODO verifier DUPLICATION DE getImageCropInfoOTSU
+     * TODO a ca place ?
+     *
      * @return
      */
     public String getImageCropInfoGIFT(){
         if(getBadCrop()==false && getBestThreshold() != -1) {
 
-            return saveImageResult(this.m_imageSeg) + "\t" + this._bestThreshold + "\n";
+            return saveImageResult(this.m_imageSeg)
+                    + "\t"
+                    + this._bestThreshold
+                    + "\n";
         }
         else {
             return this._imgRaw.getTitle()
