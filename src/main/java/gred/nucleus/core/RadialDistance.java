@@ -10,7 +10,8 @@ import ij.plugin.Resizer;
 
 
 /**
- * this class allows the determination of the radial distance of chromocenters, using the binary nucleus
+ * this class allows the determination of the radial distance of chromocenters,
+ * using the binary nucleus
  * and the image of segmented chromocenters.
  * 
  * @author Tristan Dubos and Axel Poulet
@@ -43,7 +44,8 @@ public class RadialDistance {
 	 * @param imagePlusChromocenter
 	 * @return
 	 */
-	public double[] computeBorderToBorderDistances (ImagePlus imagePlusSegmented,ImagePlus imagePlusChromocenter) {
+	public double[] computeBorderToBorderDistances(ImagePlus imagePlusSegmented,
+											ImagePlus imagePlusChromocenter) {
 		Histogram histogram = new Histogram ();
 		histogram.run(imagePlusChromocenter);
 		double [] tLabel = histogram.getLabels();
@@ -52,7 +54,7 @@ public class RadialDistance {
 		imagePlusChromocenter = resizeImage(imagePlusChromocenter);
 		ImageStack imageStackChromocenter = imagePlusChromocenter.getStack();
 		imagePlusSegmented = resizeImage(imagePlusSegmented);
-		ImagePlus imagePlusDistanceMap =  computeDistanceMap(imagePlusSegmented);
+		ImagePlus imagePlusDistanceMap = computeDistanceMap(imagePlusSegmented);
 		ImageStack imageStackDistanceMap = imagePlusDistanceMap.getStack();
 		double voxelValueMin, voxelValue;
 		double [] tDistanceRadial = new double [tLabel.length];
@@ -62,7 +64,9 @@ public class RadialDistance {
                 for (int i = 0; i < imagePlusChromocenter.getWidth(); ++i) {
                     for (int j = 0; j < imagePlusChromocenter.getHeight(); ++j) {
                         voxelValue = imageStackDistanceMap.getVoxel(i, j, k);
-                        if (voxelValue < voxelValueMin && tLabel[l] == imageStackChromocenter.getVoxel(i, j, k))
+                        if (voxelValue < voxelValueMin &&
+								tLabel[l] ==
+									imageStackChromocenter.getVoxel(i, j, k))
                             voxelValueMin = voxelValue;
                     }
                 }
@@ -73,29 +77,38 @@ public class RadialDistance {
 	}
 	
 	/**
-	 * Determine the radial distance of all chromocenter in the image of nucleus. We realise
-	 * the distance map on the bianary nucleus. This method measure the radial distance
-	 * between the barycenter of chromocenter and the nuclear envelope. 
+	 * Determine the radial distance of all chromocenter in the image of nucleus
+	 * We realise the distance map on the bianary nucleus. This method measure
+	 * the radial distance between the barycenter of chromocenter and the
+	 * nuclear envelope.
 	 * 
 	 * @param imagePlusSegmented
 	 * @param imagePlusChromocenter
 	 * @return
 	 */
 	
-	public double[] computeBarycenterToBorderDistances (ImagePlus imagePlusSegmented,ImagePlus imagePlusChromocenter) {
+	public double[] computeBarycenterToBorderDistances (
+			ImagePlus imagePlusSegmented,
+			ImagePlus imagePlusChromocenter) {
 		Calibration calibration = imagePlusSegmented.getCalibration();
 		double xCalibration = calibration.pixelWidth;
-		ImagePlus imagePlusChromocenterRescale = resizeImage(imagePlusChromocenter);
+		ImagePlus imagePlusChromocenterRescale =
+				resizeImage(imagePlusChromocenter);
 		imagePlusSegmented = resizeImage (imagePlusSegmented);
-	    ImagePlus imagePlusDistanceMap =  computeDistanceMap(imagePlusSegmented);
+	    ImagePlus imagePlusDistanceMap =
+				computeDistanceMap(imagePlusSegmented);
 	    ImageStack imageStackDistanceMap = imagePlusDistanceMap.getStack();
 	    Measure3D measure3D = new Measure3D();
-	    VoxelRecord [] tVoxelRecord = measure3D.computeObjectBarycenter(imagePlusChromocenterRescale,false);
+	    VoxelRecord [] tVoxelRecord = measure3D.computeObjectBarycenter(
+	    		imagePlusChromocenterRescale,false);
 	    double [] tRadialDistance = new double[tVoxelRecord.length];
 	    double distance =-50;
 	    for (int i = 0; i < tVoxelRecord.length; ++i) {
 	    	VoxelRecord voxelRecord = tVoxelRecord[i];
-	    	distance = imageStackDistanceMap.getVoxel((int)voxelRecord._i,(int)voxelRecord._j,(int)voxelRecord._k);
+	    	distance = imageStackDistanceMap.getVoxel(
+	    			(int)voxelRecord._i,
+					(int)voxelRecord._j,
+					(int)voxelRecord._k);
 	    	tRadialDistance[i] = xCalibration * distance;
 	    }
 	    return tRadialDistance;
@@ -112,7 +125,9 @@ public class RadialDistance {
 		double xCalibration = calibration.pixelWidth;
 		double zCalibration = calibration.pixelDepth;
 		double rescaleZFactor = zCalibration/xCalibration;
-		ImagePlus imagePlusRescale = resizer.zScale(imagePlus,(int)(imagePlus.getNSlices()*rescaleZFactor), 0);
+		ImagePlus imagePlusRescale = resizer.zScale(imagePlus,
+				(int)(imagePlus.getNSlices()*rescaleZFactor),
+				0);
 		return imagePlusRescale;
 	}
 }	 
