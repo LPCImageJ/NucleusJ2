@@ -27,10 +27,14 @@ public class computeSegmentationParameters {
             ImagePlus Raw = new ImagePlus(currentFile.getAbsolutePath());
             ImagePlus Segmented = new ImagePlus(pluginParameters.getOutputFolder()+currentFile.getName());
 
-            Measure3D mesure3D = new Measure3D(Segmented, Raw, pluginParameters.getXCal(), pluginParameters.getYCal(),pluginParameters.getZCal());
-            outputCropGeneralInfoOTSU=mesure3D.nucleusParameter3D();
-        }
 
+            Measure3D mesure3D = new Measure3D(Segmented, Raw, pluginParameters.getXcalibration(Raw), pluginParameters.getYcalibration(Raw),pluginParameters.getZcalibration(Raw));
+            outputCropGeneralInfoOTSU+=mesure3D.nucleusParameter3D()+"\n";
+        }
+        OutputTexteFile resultFileOutputOTSU=new OutputTexteFile(pluginParameters.getOutputFolder()
+                +directoryInput.getSeparator()
+                +"result_Segmentation_Analyse.csv");
+        resultFileOutputOTSU.SaveTexteFile( outputCropGeneralInfoOTSU);
 
     }
 
@@ -62,9 +66,9 @@ public class computeSegmentationParameters {
 
     public static void main(String[] args) throws IOException, FormatException, fileInOut,Exception {
 
-        computeNucleusParameters("/media/tridubos/DATA1/DATA_ANALYSE/MANIP_MANU_KAKU/ANALYSE_OCTOBRE_2019/TEST_CALCULPARAMETERS/RAW",
-                "/media/tridubos/DATA1/DATA_ANALYSE/MANIP_MANU_KAKU/ANALYSE_OCTOBRE_2019/TEST_CALCULPARAMETERS/SEGED");
-                //,"");
+        computeNucleusParameters("/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/test_calib_segmentation/Raw",
+                "/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/test_calib_segmentation/Segmented/GIFT"
+                ,"/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/test_calib_segmentation/Segmented/config_1_1_1");
 
     }
 
