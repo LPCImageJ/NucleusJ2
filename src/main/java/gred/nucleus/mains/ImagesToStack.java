@@ -1,37 +1,60 @@
 package gred.nucleus.mains;
 
 import gred.nucleus.FilesInputOutput.Directory;
-import gred.nucleus.exceptions.fileInOut;
 import ij.IJ;
 import ij.ImagePlus;
-import ij.ImageStack;
 import ij.io.FileSaver;
 import ij.plugin.Concatenator;
-import loci.formats.FormatException;
-
-import java.awt.*;
-import java.io.IOException;
-import java.lang.reflect.Array;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ImagesToStack {
     public static void main(String[] args) {
-        ImagePlus[] image =new ImagePlus[5];
-        Directory directoryInput=new Directory("/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/test_sliceToStack");
-        directoryInput.listFiles("/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/test_sliceToStack");
-        System.out.println(directoryInput.getFile(0).getAbsolutePath());
+        HashMap<String,Integer > test=new HashMap();
+        Directory directoryInput=new Directory("/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/test");
+        directoryInput.listFiles("/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/test");
         for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
-            image[i]=IJ.openImage((directoryInput.getFile(i).getAbsolutePath()));
+            String tm = directoryInput.getFile(i).getName();
+            tm=tm.substring(0, tm.lastIndexOf("_"));
+            tm=tm.substring(0, tm.lastIndexOf("_"));
+            if(test.get(tm)!=null){
+                test.put(tm,test.get(tm)+1);
+            }
+            else{
+                test.put(tm,1);
+            }
         }
-        image[0].show();
-        //ImagePlus imp3 = Concatenator.concatenate(image,0);
-        ImagePlus imp3 = new Concatenator().concatenate(image, false);
 
-        ImagePlus image1 = IJ.openImage("" +
-                "/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/test/Col_Cot13-2_001_0_MLprediction.tif");
-        ImagePlus image2 = IJ.openImage("" +
-                "/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/test/Col_Cot13-2_001_0_MLprediction.tif");
+        for(Map.Entry<String , Integer> entry : test.entrySet()) {
+            ImagePlus[] image =new ImagePlus[entry.getValue()-1];
+            for (short i = 0; i < image.length; ++i) {
+                image[i]=IJ.openImage(("/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/test"
+                        +"/"
+                        +entry.getKey()
+                        +"_"
+                        +i+"_MLprediction.tif"));
+                //
+            }
 
-        saveFile(imp3,"/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/euuu.tiff");
+            ImagePlus imp3 = new Concatenator().concatenate(image, false);
+            saveFile(imp3,"/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/test_merged/"
+                    +entry.getKey()+"_MLprediction.tif");
+
+
+
+        }
+        /**
+            ImagePlus[] image =new ImagePlus[99];
+        Directory directoryInput2=new Directory("/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/test_sliceToStack");
+        directoryInput.listFiles("/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/test_sliceToStack");
+        for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
+          //
+            //System.out.println(directoryInput.getFile(i).getAbsolutePath());
+
+        }
+        //image[0].show();
+
+        */
     }
 
     public static void saveFile ( ImagePlus imagePlusInput, String pathFile) {
