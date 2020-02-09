@@ -11,8 +11,9 @@ import java.util.Map;
 public class ImagesToStack {
     public static void main(String[] args) {
         HashMap<String,Integer > test=new HashMap();
-        Directory directoryInput=new Directory("/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/test");
-        directoryInput.listFiles("/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/test");
+        Directory directoryInput=new Directory("/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/OUTPUT_ML");
+        directoryInput.listFiles("/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/OUTPUT_ML");
+        //Parcour de l'ensemble des images du dossier
         for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
             String tm = directoryInput.getFile(i).getName();
             tm=tm.substring(0, tm.lastIndexOf("_"));
@@ -26,19 +27,21 @@ public class ImagesToStack {
         }
 
         for(Map.Entry<String , Integer> entry : test.entrySet()) {
-            ImagePlus[] image =new ImagePlus[entry.getValue()-1];
+            ImagePlus[] image =new ImagePlus[entry.getValue()];
+
             for (short i = 0; i < image.length; ++i) {
-                image[i]=IJ.openImage(("/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/test"
+
+                image[i]=IJ.openImage(("/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/OUTPUT_ML"
                         +"/"
                         +entry.getKey()
                         +"_"
                         +i+"_MLprediction.tif"));
+                IJ.run(image[i], "8-bit", "");
                 //
             }
-
             ImagePlus imp3 = new Concatenator().concatenate(image, false);
-            saveFile(imp3,"/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/test_merged/"
-                    +entry.getKey()+"_MLprediction.tif");
+            saveFile(imp3,"/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/OUTPUT_ML_MERGED/"
+                    +entry.getKey()+".tif");
 
 
 
