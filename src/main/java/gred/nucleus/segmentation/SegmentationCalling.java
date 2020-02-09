@@ -210,7 +210,7 @@ public class SegmentationCalling {
             nucleusSegmentation.checkBadCrop(this.m_semgemtationParameters.m_inputFolder);
             nucleusSegmentation.saveOTSUSegmented();
             this.m_outputCropGeneralInfoOTSU= this.m_outputCropGeneralInfoOTSU+nucleusSegmentation.getImageCropInfoOTSU();
-            nucleusSegmentation.giftWrappingSeg();
+            nucleusSegmentation.saveGiftWrappingSeg();
             this.m_outputCropGeneralInfoGIFT= this.m_outputCropGeneralInfoGIFT+nucleusSegmentation.getImageCropInfoGIFT();
         }
         OutputTexteFile resultFileOutputOTSU=new OutputTexteFile(this.m_semgemtationParameters.getOutputFolder()
