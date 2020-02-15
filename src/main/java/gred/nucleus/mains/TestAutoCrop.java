@@ -68,7 +68,7 @@ public class TestAutoCrop {
         String inputDirAxel = "/home/plop/Bureau/image/wideField/";
         String outputAxel = "/home/plop/Bureau/image/wideField/test";
 
-		
+
         //String inputOneImageTristan = "/home/tridubos/Bureau/AUTOCROP_TEST/raw/Z_c1c4_cot11&12&13-_w11 DAPI SIM variable_s9.TIF";
         //String inputDirTristan = "/home/tridubos/Bureau/Demo_Autocrop/Out/";
 
@@ -92,13 +92,22 @@ public class TestAutoCrop {
 		//        		"/media/tridubos/DATA1/DATA_ANALYSE/SPERMATO/Manipe_3_30_images/test_projetction/Autocrop"
 		//,"/media/tridubos/DATA1/DATA_ANALYSE/SPERMATO/Manipe_3_30_images/test_projetction/config_file_test");
 
+		//
 
-		runAutoCrop("/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/Raw/TwoChannels",
-				"/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/Output_Autocrop/TwoChannels",
-				"/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/Raw/config_file_TwoChannel");
-		//runAutoCrop("/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/Raw/OneChannel",
-		//		"/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/Output_Autocrop/OneChannel");
+		//runAutoCrop("/media/tridubos/DATA1/DATA_ANALYSE/SPERMATO/Manipe_3_30_images/test_projetction/Raw",
+		//       "/media/tridubos/DATA1/DATA_ANALYSE/SPERMATO/Manipe_3_30_images/test_projetction/Autocrop",
+		//       "/media/tridubos/DATA1/DATA_ANALYSE/SPERMATO/Manipe_3_30_images/test_projetction/config_file_test");
+		//runAutoCrop("/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/Raw/TwoChannels",
+		//		"/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/Autocrop_2/TwoChannels",
+		//		"/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/Raw/config_file_TwoChannel");
+		runAutoCrop(
+				"/home/tridubos/Bureau/small_test_autocrop/Raw",
+				"/home/tridubos/Bureau/small_test_autocrop/Autocrop");
 
+
+
+		//runAutoCrop("/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/test_calib_Autocrop/Raw",
+		//				"/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/test_calib_Autocrop/Autocrop");
 		//fw.GetFilesResultingOfAnalysis(outputTristan);
 		//fw.CompareAnalysisResult();
 		/*
