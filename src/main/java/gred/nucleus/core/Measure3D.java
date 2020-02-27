@@ -142,8 +142,20 @@ public class Measure3D {
         Histogram histogram = new Histogram();
         histogram.run(this._imageSeg[0]);
         HashMap<Double, Integer> hashMapHisto = histogram.getHistogram();
+        System.out.println("le nombre de voxel "+hashMapHisto.containsKey(255));
+        System.out.println("et la calib : "+this._xCal * this._yCal * this._zCal);
+        System.out.println("et ca la "+hashMapHisto.get(label));
         return hashMapHisto.get(label) * this._xCal * this._yCal * this._zCal;
 
+    }
+    private double computeVolumeObjectML() {
+        Double volumeTMP=0.0;
+        for(Map.Entry<Double , Integer> toto : this._segmentedNucleusHisto.entrySet()) {
+            if(toto.getValue()>0){
+                volumeTMP+=toto.getValue();
+            }
+        }
+        return volumeTMP*this._xCal*this._yCal*this._zCal;
     }
 
     /**
@@ -605,6 +617,8 @@ public class Measure3D {
 
     }
 
+
+
     /**
      * Compute the mean intensity of the segmented object
      * by comparing voxels intensity in the raw image and
@@ -693,14 +707,16 @@ public class Measure3D {
     public String nucleusParameter3D() {
         String resu = "";
         histogramSegmentedNucleus();
-        double volume = computeVolumeObject2(255);
+      //  double volume = computeVolumeObject2(255);
+        double volume = computeVolumeObjectML();
         double surfaceArea = computeSurfaceObject( 255);
         double bis = computeComplexSurface();
         double[] tEigenValues = computeEigenValue3D(255);
-        System.out.println("le bis "+bis);
+        System.out.println("le bis "+volume);
         System.out.println("le bis normal "+surfaceArea);
         resu = this._rawImage.getTitle() + "\t"
-                + computeVolumeObject2(255) + "\t"
+              //  + computeVolumeObject2(255) + "\t"
+        +computeVolumeObjectML()+ "\t"
                 + computeFlatnessAndElongation( 255)[0] + "\t"
                 + computeFlatnessAndElongation( 255)[1] + "\t"
                 + computeSphericity(volume, surfaceArea) + "\t"
