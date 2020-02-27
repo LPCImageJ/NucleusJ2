@@ -94,11 +94,12 @@ public class TestSegmentationMethods {
 
         testStupidSeveralImages("/media/tridubos/DATA1/DATA_ANALYSE/TEST_SPEED_RADIUS/raw",
                 "/media/tridubos/DATA1/DATA_ANALYSE/TEST_SPEED_RADIUS/resu_seg_rayon");
-         */
+
         testStupidSeveralImages("/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/test_calib_segmentation/Raw",
         "/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/test_calib_segmentation/Segmented");
-
-
+         */
+        testStupidSeveralImages("/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_MICROSCOPE_02-2020/AutoCrop/Output/A_SEGMENTE",
+                "/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_MICROSCOPE_02-2020/AutoCrop/Output/Segmented");
 
 
         //media/tridubos/DATA1/DATA_ANALYSE/TEST_SPEED_RADIUS/raw

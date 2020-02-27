@@ -4,6 +4,7 @@ import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.autocrop.AutoCropCalling;
 
+import ij.IJ;
 import loci.formats.FormatException;
 
 
@@ -100,11 +101,13 @@ public class TestAutoCrop {
 		//runAutoCrop("/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/Raw/TwoChannels",
 		//		"/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/Autocrop_2/TwoChannels",
 		//		"/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/Raw/config_file_TwoChannel");
-		runAutoCrop(
-				"/home/tridubos/Bureau/small_test_autocrop/Raw",
-				"/home/tridubos/Bureau/small_test_autocrop/Autocrop");
-
-
+/**
+        runAutoCrop(
+				"/home/tridubos/Bureau/IMAGES_TEST/Segmentation/Raw",
+				"/home/tridubos/Bureau/IMAGES_TEST/Segmentation/auto_SUPPR");
+*/
+        runAutoCrop("/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_MICROSCOPE_02-2020/AutoCrop/Outocroped",
+		"/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_MICROSCOPE_02-2020/AutoCrop/Output2");
 
 		//runAutoCrop("/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/test_calib_Autocrop/Raw",
 		//				"/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/test_calib_Autocrop/Autocrop");

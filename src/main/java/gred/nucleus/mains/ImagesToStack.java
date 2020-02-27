@@ -5,14 +5,21 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
 import ij.plugin.Concatenator;
+
+import loci.plugins.BF;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class ImagesToStack {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
         HashMap<String,Integer > test=new HashMap();
-        Directory directoryInput=new Directory("/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/OUTPUT_ML");
-        directoryInput.listFiles("/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/OUTPUT_ML");
+
+
+
+        Directory directoryOutput=new Directory("/media/tridubos/DATA1/DATA_ANALYSE/verif/KAKU4_SEG/KAKU4_STACK/");
+        Directory directoryInput=new Directory("/media/tridubos/DATA1/DATA_ANALYSE/verif/KAKU4_SEG/KAKU4_SEG/");
+        directoryInput.listFiles("/media/tridubos/DATA1/DATA_ANALYSE/verif/KAKU4_SEG/KAKU4_SEG/");
         //Parcour de l'ensemble des images du dossier
         for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
             String tm = directoryInput.getFile(i).getName();
@@ -28,10 +35,10 @@ public class ImagesToStack {
 
         for(Map.Entry<String , Integer> entry : test.entrySet()) {
             ImagePlus[] image =new ImagePlus[entry.getValue()];
-
+            System.out.println("image :"+ entry.getKey());
             for (short i = 0; i < image.length; ++i) {
-
-                image[i]=IJ.openImage(("/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/OUTPUT_ML"
+                //image= BF.openImagePlus((directoryInput.m_dirPath
+                image[i]= IJ.openImage((directoryInput.m_dirPath
                         +"/"
                         +entry.getKey()
                         +"_"
@@ -40,7 +47,7 @@ public class ImagesToStack {
                 //
             }
             ImagePlus imp3 = new Concatenator().concatenate(image, false);
-            saveFile(imp3,"/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/OUTPUT_ML_MERGED/"
+            saveFile(imp3,directoryOutput.m_dirPath
                     +entry.getKey()+".tif");
 
 

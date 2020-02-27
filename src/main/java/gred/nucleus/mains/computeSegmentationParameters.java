@@ -65,10 +65,15 @@ public class computeSegmentationParameters {
 
     public static void main(String[] args) throws IOException, FormatException, fileInOut,Exception {
 
-        computeNucleusParameters("/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/Data/EXTRAIT/RAW",
-                "/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/OUTPUT_ML_MERGED/");
-               // ,"/media/tridubos/DATA1/DATA_ANALYSE/OTSUm_VS_GIFT-W/config_1_1_1");
+        computeNucleusParameters("/media/tridubos/DATA1/DATA_ANALYSE/verif/KAKU4_SEG/KAKU4_50_NUCLEI/",
+                "/media/tridubos/DATA1/DATA_ANALYSE/verif/KAKU4_SEG/KAKU4_STACK/"
+                ,"/media/tridubos/DATA1/DATA_ANALYSE/WARIO_SEG_TRAINING/config_1_1_1");
 
+/**
+computeNucleusParameters("/media/tridubos/DATA1/DATA_ANALYSE/WARIO_SEG_TRAINING/RAW",
+                "/media/tridubos/DATA1/DATA_ANALYSE/WARIO_SEG_TRAINING/STACK_RECONSTITUEES"
+                ,"/media/tridubos/DATA1/DATA_ANALYSE/WARIO_SEG_TRAINING/config_1_1_1");
+*/
     }
     /**
     public static void main(String[] args) throws IOException, FormatException, fileInOut,Exception {
