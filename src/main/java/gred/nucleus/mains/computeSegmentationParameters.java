@@ -65,8 +65,8 @@ public class computeSegmentationParameters {
 
     public static void main(String[] args) throws IOException, FormatException, fileInOut,Exception {
 
-        computeNucleusParameters("/media/tridubos/DATA1/DATA_ANALYSE/verif/KAKU4_SEG/KAKU4_50_NUCLEI/",
-                "/media/tridubos/DATA1/DATA_ANALYSE/verif/KAKU4_SEG/KAKU4_STACK/"
+        computeNucleusParameters("/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_MICROSCOPE_02-2020/AutoCrop/Output/Segmented/RAW/",
+                "/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_MICROSCOPE_02-2020/AutoCrop/Output/Segmented/GIFT/"
                 ,"/media/tridubos/DATA1/DATA_ANALYSE/WARIO_SEG_TRAINING/config_1_1_1");
 
 /**

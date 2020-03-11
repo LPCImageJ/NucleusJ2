@@ -142,9 +142,7 @@ public class Measure3D {
         Histogram histogram = new Histogram();
         histogram.run(this._imageSeg[0]);
         HashMap<Double, Integer> hashMapHisto = histogram.getHistogram();
-        System.out.println("le nombre de voxel "+hashMapHisto.containsKey(255));
-        System.out.println("et la calib : "+this._xCal * this._yCal * this._zCal);
-        System.out.println("et ca la "+hashMapHisto.get(label));
+
         return hashMapHisto.get(label) * this._xCal * this._yCal * this._zCal;
 
     }

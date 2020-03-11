@@ -17,9 +17,9 @@ public class ImagesToStack {
 
 
 
-        Directory directoryOutput=new Directory("/media/tridubos/DATA1/DATA_ANALYSE/verif/KAKU4_SEG/KAKU4_STACK/");
-        Directory directoryInput=new Directory("/media/tridubos/DATA1/DATA_ANALYSE/verif/KAKU4_SEG/KAKU4_SEG/");
-        directoryInput.listFiles("/media/tridubos/DATA1/DATA_ANALYSE/verif/KAKU4_SEG/KAKU4_SEG/");
+        Directory directoryOutput=new Directory("/media/tridubos/DATA1/DATA_ANALYSE/MACHINE_LEARNING_TRAIN/SPERMATO_DL_GIFT_2_MUTANTS/DL_SEG_STACK/");
+        Directory directoryInput=new Directory("/media/tridubos/DATA1/DATA_ANALYSE/MACHINE_LEARNING_TRAIN/SPERMATO_DL_GIFT_2_MUTANTS/DL_SEG_SLICE/");
+        directoryInput.listFiles("/media/tridubos/DATA1/DATA_ANALYSE/MACHINE_LEARNING_TRAIN/SPERMATO_DL_GIFT_2_MUTANTS/DL_SEG_SLICE/");
         //Parcour de l'ensemble des images du dossier
         for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
             String tm = directoryInput.getFile(i).getName();
