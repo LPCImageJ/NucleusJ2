@@ -403,7 +403,7 @@ public class AutoCrop {
 	 * files created.
 	 */
 	public ArrayList <String> getOutputFileArrayList(){
-		return m_outputFile;
+		return this.m_outputFile;
 	}
 
 	/**
