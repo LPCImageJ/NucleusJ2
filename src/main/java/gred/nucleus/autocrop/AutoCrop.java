@@ -547,7 +547,7 @@ public class AutoCrop {
         OutputTexteFile resultFileOutput=new OutputTexteFile(
         		this.m_outputDirPath + File.separator
 						+ this.m_outputFilesPrefix + File.separator
-						+ this.m_outputFilesPrefix);
+						+ this.m_outputFilesPrefix+".txt");
         resultFileOutput.SaveTexteFile(this.m_infoImageAnalyse);
 
     }
