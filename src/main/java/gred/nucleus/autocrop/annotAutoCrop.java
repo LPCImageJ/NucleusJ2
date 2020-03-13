@@ -114,22 +114,20 @@ public class annotAutoCrop {
     private void addBoxCropToZProjection(String coordinateList ,int boxNumber){
         String currentBox[] =coordinateList.split("\t");
         /** withBox calculation */
-        int withBox=Math.abs(Integer.parseInt(currentBox[1])
-                -Integer.parseInt(currentBox[2]))+
-                this.m_autocropParameters.getxCropBoxSize()*2;
+        //System.out.println("boxnumber "+boxNumber);
+        System.out.println("coordinateList "+coordinateList);
+        int withBox=Math.abs(Integer.parseInt(currentBox[2]))-Math.abs(Integer.parseInt(currentBox[1]));
         /** heigthBox calculation */
-        int heigthBox=Math.abs(Integer.parseInt(currentBox[3])
-                -Integer.parseInt(currentBox[4]))
-                +this.m_autocropParameters.getyCropBoxSize()*2;
+        int heigthBox=Math.abs(Integer.parseInt(currentBox[4]))-Math.abs(Integer.parseInt(currentBox[3]));
         /** Line size parameter */
         IJ.run("Line Width...", "line=4");
         /** Set draw current box*/
-        this.m_zProjection.setRoi(Integer.parseInt(currentBox[1])
-                        -this.m_autocropParameters.getzCropBoxSize(),
-                        Integer.parseInt(currentBox[3])
-                        -this.m_autocropParameters.getzCropBoxSize(),
+        this.m_zProjection.setRoi(Integer.parseInt(currentBox[1]),
+                        Integer.parseInt(currentBox[3]),
                         withBox,heigthBox);
         IJ.run(this.m_zProjection, "Draw", "stack");
+
+
         /** Calculation of the coordinate to add nuclei Number */
         int xBorder=Integer.parseInt(currentBox[1])-100;
         int yBorder=Integer.parseInt(currentBox[3])+((

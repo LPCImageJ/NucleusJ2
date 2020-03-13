@@ -308,19 +308,7 @@ public class AutoCrop {
 				String coord = box.getXMin()
 						+ "_" + box.getYMin()
 						+ "_" + box.getZMin();
-				if(y==0) {
-					this.m_boxCoordinates.add(
-							this.m_outputDirPath
-									+ File.separator
-									+ this.m_outputFilesPrefix + "_"
-									+ coord + i
-									+ "\t" + box.getXMin()
-									+ "\t" + box.getXMax()
-									+ "\t" + box.getYMin()
-									+ "\t" + box.getYMax()
-									+ "\t" + box.getZMin()
-									+ "\t" + box.getZMax());
-				}
+
 				if (xmin <= 0)
 					xmin = 1;
 				if (ymin <= 0)
@@ -348,6 +336,7 @@ public class AutoCrop {
 				ImagePlus imgResu;
 				if(this.m_rawImg.getNSlices()>1) {
 					imgResu = cropImage(xmin, ymin,zmin, width,height, depth,y);
+					System.out.println(xmin+" "+ ymin+" "+zmin+" "+ width+" "+height+" "+ depth+" "+y);
 				}
 				else{
 					imgResu = cropImage2D(xmin, ymin, width, height, y);
@@ -393,6 +382,24 @@ public class AutoCrop {
 						+  "_"
 						+ i
 						+ ".tif");
+
+				if(y==0) {
+					int xmax=xmin+width;
+					int ymax=ymin+height;
+					int zmax =zmin+depth;
+					this.m_boxCoordinates.add(
+							this.m_outputDirPath
+									+ File.separator
+									+ this.m_outputFilesPrefix + "_"
+									+ coord + i
+									+ "\t" + xmin
+									+ "\t" + xmax
+									+ "\t" + ymin
+									+ "\t" + ymax
+									+ "\t" + zmin
+									+ "\t" + zmax);
+					//xmin, ymin,zmin, width,height, depth,y
+				}
 				i++;
 			}
 		}
