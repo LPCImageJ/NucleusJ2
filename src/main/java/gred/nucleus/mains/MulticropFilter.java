@@ -14,7 +14,7 @@ public class MulticropFilter {
     public static void main(String[] args) throws IOException, FormatException,Exception {
         ArrayList<Rectangle> listRectangle = new ArrayList();
         //Scanner readFile =new Scanner("");
-        File file = new File("/media/tridubos/DATA1/IMAGE_PB/CropOverlap/20220122_1581344088063_Ath_Col0--HON4-wt_Cot_D13_STD_FIXE_H258_H4_w11 DAPI SIM variable.txt");
+        File file = new File("/media/tridubos/DATA1/IMAGE_PB/CropOverlap/AUTOCROP/20220122_1581344088063_Ath_Col0--HON4-wt_Cot_D13_STD_FIXE_H258_H4_w11 DAPI SIM variable.txt");
         try {
 
             Scanner scanner = new Scanner(file);

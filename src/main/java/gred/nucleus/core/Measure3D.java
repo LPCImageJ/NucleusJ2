@@ -205,7 +205,6 @@ public class Measure3D {
      * @return double sphercity
      */
     public double computeSphericity(double volume, double surface) {
-        System.out.println("volume "+ volume+"\n"+"Surface "+surface);
         return ((36 * Math.PI * (volume * volume))
                 / (surface * surface * surface));
     }
@@ -710,8 +709,6 @@ public class Measure3D {
         double surfaceArea = computeSurfaceObject( 255);
         double bis = computeComplexSurface();
         double[] tEigenValues = computeEigenValue3D(255);
-        System.out.println("le bis "+volume);
-        System.out.println("le bis normal "+surfaceArea);
         resu = this._rawImage.getTitle() + "\t"
               //  + computeVolumeObject2(255) + "\t"
         +computeVolumeObjectML()+ "\t"
