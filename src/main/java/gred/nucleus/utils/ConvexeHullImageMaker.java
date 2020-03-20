@@ -60,7 +60,7 @@ public class ConvexeHullImageMaker{
 		Measure3D mesure3d = new Measure3D(this.m_semgemtationParameters.getXCal(),this.m_semgemtationParameters.getYCal(),this.m_semgemtationParameters.getZCal());
 
 		// Calcul du rayon : PQ 1/2 du rayon
-		double equivalentSphericalRadius = (mesure3d.equivalentSphericalRadius(imagePlusBinary));
+		double equivalentSphericalRadius = (mesure3d.equivalentSphericalRadius(imagePlusBinary)/2);
         VoxelRecord  tVoxelRecord = mesure3d.computeBarycenter3D(false,imagePlusBinary,255.0);
 		ImagePlus imagePlusCorrected = new ImagePlus();
 		int indice = 0,width = 0,height = 0;
