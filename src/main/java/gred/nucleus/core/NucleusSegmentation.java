@@ -127,7 +127,6 @@ public class NucleusSegmentation {
 			    this.m_semgemtationParameters.getOutputFolder() + "GIFT");
 			dirOutputGIFT.CheckAndCreateDir();
 		}
-
 	}
 
     /**
@@ -295,7 +294,6 @@ public class NucleusSegmentation {
 			StackConverter stackConverter = new StackConverter(this._imgRawTransformed);
 			stackConverter.convertToGray8();
 		}
-
 	}
 
     /**@deprecated
