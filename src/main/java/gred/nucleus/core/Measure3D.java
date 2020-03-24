@@ -13,6 +13,7 @@ import java.util.Map;
 import Jama.EigenvalueDecomposition;
 import Jama.Matrix;
 
+
 /**
  * Class computing 3D parameters from raw and his segmented image associated :
  *
@@ -723,7 +724,7 @@ public class Measure3D {
                 +standardDeviationIntensity(meanIntensity())+ "\t"
                 +minIntensity()+ "\t"
                 +maxIntensity();
-
+        System.out.println(resu);
         return resu;
     }
 
