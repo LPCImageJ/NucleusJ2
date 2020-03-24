@@ -20,6 +20,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 
 import gred.nucleus.FilesInputOutput.Directory;
 
@@ -204,6 +206,10 @@ public class SegmentationCalling {
             FilesNames outPutFilesNames = new FilesNames(fileImg);
             this._prefix = outPutFilesNames.PrefixeNameFile();
             System.out.println("Current image in process "+currentFile);
+
+            String timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
+            System.out.println( "Start :"+ timeStampStart);
+
             NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(currentFile ,this._prefix,this.m_semgemtationParameters);
             nucleusSegmentation.preProcessImage();
             nucleusSegmentation.findOTSUmaximisingSephericity();
@@ -212,6 +218,10 @@ public class SegmentationCalling {
             this.m_outputCropGeneralInfoOTSU= this.m_outputCropGeneralInfoOTSU+nucleusSegmentation.getImageCropInfoOTSU();
             nucleusSegmentation.saveGiftWrappingSeg();
             this.m_outputCropGeneralInfoGIFT= this.m_outputCropGeneralInfoGIFT+nucleusSegmentation.getImageCropInfoGIFT();
+
+            timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
+            System.out.println( "Fin :"+ timeStampStart);
+
         }
         OutputTexteFile resultFileOutputOTSU=new OutputTexteFile(this.m_semgemtationParameters.getOutputFolder()
                 +directoryInput.getSeparator()
@@ -219,13 +229,14 @@ public class SegmentationCalling {
                 +directoryInput.getSeparator()
                 +"result_Segmentation_Analyse.csv");
         resultFileOutputOTSU.SaveTexteFile( this.m_outputCropGeneralInfoOTSU);
-        OutputTexteFile resultFileOutputGIFT=new OutputTexteFile(this.m_semgemtationParameters.getOutputFolder()
-                +directoryInput.getSeparator()
-                +"GIFT"
-                +directoryInput.getSeparator()
-                +"result_Segmentation_Analyse.csv");
-        resultFileOutputGIFT.SaveTexteFile( this.m_outputCropGeneralInfoGIFT);
-
+        if(this.m_semgemtationParameters.getGiftWrapping()) {
+            OutputTexteFile resultFileOutputGIFT = new OutputTexteFile(this.m_semgemtationParameters.getOutputFolder()
+                    + directoryInput.getSeparator()
+                    + "GIFT"
+                    + directoryInput.getSeparator()
+                    + "result_Segmentation_Analyse.csv");
+            resultFileOutputGIFT.SaveTexteFile(this.m_outputCropGeneralInfoGIFT);
+        }
 
         return log;
     }
