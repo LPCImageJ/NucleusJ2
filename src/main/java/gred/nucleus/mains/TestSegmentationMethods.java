@@ -98,9 +98,10 @@ public class TestSegmentationMethods {
         testStupidSeveralImages("/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/test_calib_segmentation/Raw",
         "/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/test_calib_segmentation/Segmented");
          */
-        testStupidSeveralImages("/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_MICROSCOPE_02-2020/AutoCrop/Output/A_SEGMENTE",
-                "/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_MICROSCOPE_02-2020/AutoCrop/Output/Segmented");
-
+        testStupidSeveralImages("/home/titus/Bureau/TEST_NJ/AUTOCROP/autocrop/test2",
+                "/home/titus/Bureau/TEST_NJ/AUTOCROP/autocrop/SEG");
+        //testStupidSeveralImages("/home/titus/Bureau/TEST_NJ/AUTOCROP/DEBUG/RAWBUG",
+        //"/home/titus/Bureau/TEST_NJ/AUTOCROP/DEBUG/SEGBUG");
 
         //media/tridubos/DATA1/DATA_ANALYSE/TEST_SPEED_RADIUS/raw
        // testStupidSeveralImages("/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/Output_Autocrop/RawOneChannel",

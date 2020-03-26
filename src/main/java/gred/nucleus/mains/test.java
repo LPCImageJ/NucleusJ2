@@ -8,17 +8,29 @@ import ij.ImageStack;
 import loci.formats.FormatException;
 import loci.plugins.BF;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class test {
 
     public static void main(String[] args)throws IOException, FormatException, fileInOut,Exception{
+        int test= 0-0;
+        /*
+        ImagePlus[] test = BF.openImagePlus("/home/titus/Bureau/TEST_NJ/AUTOCROP/DEBUG/RAWBUG/test_0_C1.tif");
+        test[0].show();
+        ImagePlus[] test2 =BF.openImagePlus("/home/titus/Bureau/TEST_NJ/AUTOCROP/DEBUG/RAWBUG/test_1_C1.tif");
+        test2[0].show();
 
-        ImagePlus[] test =BF.openImagePlus("/media/tridubos/DATA1/DATA_ANALYSE/WARIO_SEG_TRAINING/ML_EXTRAIT/Col_Cot13-2_001.tif");
-
+        ImagePlus[] test =BF.openImagePlus("/home/titus/Bureau/TEST_NJ/AUTOCROP/DEBUG/RAW/test_0_C1.tif");
+      //  File currentFile = .getFile(i);
+        test[0].show();
+        ImagePlus[] test2 =BF.openImagePlus("/home/titus/Bureau/TEST_NJ/AUTOCROP/DEBUG/RAW/2018051_1527078140.76_Ath_KAKU4-1--CRWN1-2--CRWN4-1_Cot_J13_STD_FIXE_H258_A1_0_C0.tif");
+        test2[0].show();
+        //currentFile.getName();
         ImageStack imageStackSeg = test[0].getStack();
         double voxelValue = imageStackSeg.getVoxel(46, 59, 13);
         System.out.println("et la ca marche : "+voxelValue);
@@ -30,5 +42,6 @@ public class test {
             System.out.println(" " + toto.getKey()+ " et la "+toto.getValue());
 
         }
+    */
     }
 }

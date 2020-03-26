@@ -14,7 +14,7 @@ import java.util.Properties;
 
 public class SegmentationParameters extends PluginParameters {
     /** GIFT wrapping option */
-    boolean m_giftVrapping=true;
+    boolean m_giftVrapping=false;
     /** Minimal object volume to segment */
     int m_minVolumeNucleus=1;
     /** Maximal object volume to segment */

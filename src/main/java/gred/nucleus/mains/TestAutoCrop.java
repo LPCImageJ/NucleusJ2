@@ -5,7 +5,7 @@ import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.autocrop.AutoCropCalling;
 
 import ij.IJ;
-import loci.formats.FormatException;
+
 
 
 import java.io.IOException;
@@ -35,21 +35,21 @@ public class TestAutoCrop {
 	
 	static ArrayList <String> m_test;
 
-    public static void runAutoCrop(String imageSourceFile, String output, String pathToConfig) throws IOException, FormatException ,fileInOut,Exception{
+    public static void runAutoCrop(String imageSourceFile, String output, String pathToConfig) throws IOException ,fileInOut,Exception{
         AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,pathToConfig);
         AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
         autoCrop.run();
     }
 
-	public static void testStupid(String imageSourceFile, String output) throws IOException, FormatException ,Exception{
+	public static void testStupid(String imageSourceFile, String output) throws IOException ,Exception{
 		AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
 		AutoCropCalling autoCrop = new AutoCropCalling();
         autoCrop.run();
 	}
 
-	public static void runAutoCrop(String imageSourceFile, String output) throws IOException, FormatException , fileInOut,Exception{
+	public static void runAutoCrop(String imageSourceFile, String output) throws IOException , fileInOut,Exception{
 		//AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
-		AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,40,40,20,0,20,0,1,1000000000);
+		AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,20,20,20,0,20,0,1,1000000000);
 		AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
 		autoCrop.run();
 	}
@@ -58,7 +58,7 @@ public class TestAutoCrop {
 	 * Main function of the package's tests.
 	 * @param args
 	 */
-	public static void main(String[] args) throws IOException, FormatException ,Exception{
+	public static void main(String[] args) throws IOException ,Exception{
 
 	    System.err.println("start prog");
 		long maxMemory = Runtime.getRuntime().maxMemory();
@@ -106,9 +106,9 @@ public class TestAutoCrop {
 				"/home/tridubos/Bureau/IMAGES_TEST/Segmentation/Raw",
 				"/home/tridubos/Bureau/IMAGES_TEST/Segmentation/auto_SUPPR");
 */
-        runAutoCrop("/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_MICROSCOPE_02-2020/AutoCrop/Outocroped",
-		"/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_MICROSCOPE_02-2020/AutoCrop/Output2");
 
+		runAutoCrop("/home/titus/Bureau/TEST_NJ/AUTOCROP/autocrop/raw_HON_TESTBOX",
+		"/home/titus/Bureau/TEST_NJ/AUTOCROP/autocrop/raw_HON_TESTBOX_AUTOCROP");
 		//runAutoCrop("/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/test_calib_Autocrop/Raw",
 		//				"/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/test_calib_Autocrop/Autocrop");
 		//fw.GetFilesResultingOfAnalysis(outputTristan);
