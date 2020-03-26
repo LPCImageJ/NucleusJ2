@@ -15,16 +15,13 @@
 	<description>Ensemble of ImageJ plugins for nuclear analysis</description>
 
 	<dependencies>
-		<dependency>
-		<groupId>net.imagej</groupId>
-		<artifactId>ij</artifactId>
-		<version>1.51g</version>
-		</dependency>
+
 		<dependency>
 			<groupId>fr.inra.ijpb</groupId>
 			<artifactId>MorphoLibJ_</artifactId>
 			<version>1.4.0</version>
 		</dependency>
+
 		<dependency>
 			<groupId>gov.nist.math</groupId>
 			<artifactId>jama</artifactId>
@@ -64,7 +61,11 @@
 			<artifactId>imagescience</artifactId>
 			<version>2.4.1</version>
 		</dependency>
-
+		<dependency>
+			<groupId>net.imagej</groupId>
+			<artifactId>ij</artifactId>
+			<version>1.51g</version>
+		</dependency>
 
 	</dependencies>
 
