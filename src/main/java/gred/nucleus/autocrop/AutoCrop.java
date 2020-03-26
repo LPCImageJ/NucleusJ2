@@ -299,6 +299,14 @@ public class AutoCrop {
 			int i=0;
 			for (Map.Entry<Double , Box> entry : this.m_boxes.entrySet()) {
 				Box box =  entry.getValue();
+				/*
+				System.out.println("Du coup :"+box.getXMin()+" "+
+						box.getXMax()+" "+
+						box.getYMin()+" "+
+						box.getYMax()+" "+
+						box.getZMin()+" "+
+						box.getZMax()+" ");
+						*/
 				int xmin = box.getXMin()
 						- this.m_autocropParameters.getxCropBoxSize();
 				int ymin = box.getYMin()
@@ -581,5 +589,12 @@ public class AutoCrop {
 		}
 
     	return calibration ;
+	}
+	public void boxIntesection(){
+		System.out.println("avant la recompilation de box on en a "+this.m_boxes.size());
+		rectangleIntersection recompute = new rectangleIntersection(this.m_boxes);
+		recompute.runRectangleRecompilation();
+		this.m_boxes=recompute.getNewBoxes();
+		System.out.println("Après la recompilation de box on en a "+this.m_boxes.size());
 	}
 }
