@@ -72,6 +72,7 @@ public class AutoCropCalling {
                 autoCrop.componentBorderFilter();
                 autoCrop.componentSizeFilter();
                 autoCrop.computeBoxes2();
+                autoCrop.addCROP_parameter();
                 autoCrop.boxIntesection();
                 autoCrop.cropKernels2();
                 autoCrop.writeAnalyseInfo();
