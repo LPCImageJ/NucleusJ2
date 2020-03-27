@@ -2,7 +2,7 @@
 package gred.nucleus.utils;
 
 import gred.nucleus.core.Measure3D;
-import gred.nucleus.mains.SegmentationParameters;
+import gred.nucleus.segmentation.SegmentationParameters;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.measure.Calibration;

@@ -1,4 +1,4 @@
-package gred.nucleus.mains;
+package gred.nucleus.segmentation;
 
 
 import gred.nucleus.plugins.PluginParameters;
@@ -14,7 +14,7 @@ import java.util.Properties;
 
 public class SegmentationParameters extends PluginParameters {
     /** GIFT wrapping option */
-    boolean m_giftVrapping=false;
+    boolean m_giftVrapping=true;
     /** Minimal object volume to segment */
     int m_minVolumeNucleus=1;
     /** Maximal object volume to segment */

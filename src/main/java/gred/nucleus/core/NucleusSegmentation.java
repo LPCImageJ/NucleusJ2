@@ -6,7 +6,7 @@ import java.util.Map.Entry;
 
 import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.imageProcess.Thresholding;
-import gred.nucleus.mains.SegmentationParameters;
+import gred.nucleus.segmentation.SegmentationParameters;
 import gred.nucleus.utils.FillingHoles;
 import gred.nucleus.utils.Gradient;
 import gred.nucleus.utils.Histogram;

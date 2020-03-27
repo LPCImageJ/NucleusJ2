@@ -1,6 +1,6 @@
 package gred.nucleus.nucleusCaracterisations;
 
-import gred.nucleus.mains.SegmentationParameters;
+import gred.nucleus.segmentation.SegmentationParameters;
 import ij.ImagePlus;
 
 

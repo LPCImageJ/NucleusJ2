@@ -5,7 +5,6 @@ import gred.nucleus.FilesInputOutput.FilesNames;
 import gred.nucleus.FilesInputOutput.OutputTexteFile;
 import gred.nucleus.core.ConvexHullSegmentation;
 import gred.nucleus.core.NucleusSegmentation;
-import gred.nucleus.mains.SegmentationParameters;
 import gred.nucleus.nucleusCaracterisations.NucleusAnalysis;
 import ij.IJ;
 import ij.ImagePlus;

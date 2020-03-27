@@ -1,6 +1,7 @@
 package gred.nucleus.mains;
 
 import gred.nucleus.segmentation.SegmentationCalling;
+import gred.nucleus.segmentation.SegmentationParameters;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -98,8 +99,8 @@ public class TestSegmentationMethods {
         testStupidSeveralImages("/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/test_calib_segmentation/Raw",
         "/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/test_calib_segmentation/Segmented");
          */
-        testStupidSeveralImages("/home/titus/Bureau/TEST_NJ/AUTOCROP/autocrop/test2",
-                "/home/titus/Bureau/TEST_NJ/AUTOCROP/autocrop/SEG");
+        testStupidSeveralImages("/home/titus/Bureau/TEST_NJ/SEG/TEST_SEG/test1",
+                "/home/titus/Bureau/TEST_NJ/SEG/TEST_SEG/SEG_DIVISER_DANS_PARENTHESE");
         //testStupidSeveralImages("/home/titus/Bureau/TEST_NJ/AUTOCROP/DEBUG/RAWBUG",
         //"/home/titus/Bureau/TEST_NJ/AUTOCROP/DEBUG/SEGBUG");
 
