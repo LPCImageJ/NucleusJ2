@@ -253,9 +253,7 @@ public class AutoCrop {
 						Short.MAX_VALUE, Short.MIN_VALUE, Short.MAX_VALUE,
 						Short.MIN_VALUE);
 				this.m_boxes.put(cle, initializeBox);
-				if (cle == 2.0) {
-					System.out.println("on a des voxels pour la 38.0 " + valeur + " eu le volume " + getVoxelVolume());
-				}
+
 			}
 		}
 		getNumberOfBox();
@@ -315,7 +313,15 @@ public class AutoCrop {
 			e.printStackTrace();
 		}
 	}
-
+    /**
+     * Method to add X voxels in x y z arround the connected component.
+     * X by default is 20 in x y z. Parameter can be modified in autocrop
+     * parameters :
+     *      -m_xCropBoxSize
+     *      -m_yCropBoxSize
+     *      -m_zCropBoxSize
+     *
+     */
 
 	public void addCROP_parameter()throws Exception{
 		for (int y =0 ;y<this.m_channelNumbers;y++) {
@@ -356,7 +362,6 @@ public class AutoCrop {
 
 				if (depth + zmin >= this.m_imageSeg.getNSlices())
 					depth -= (depth + zmin) - this.m_imageSeg.getNSlices();
-				System.out.println(xmin +" "+ box.getXMin());
 				box.setXMin((short)xmin);
 				box.setXMax((short)(xmin+width));
 				box.setYMin((short)ymin);
@@ -385,14 +390,6 @@ public class AutoCrop {
 			int i=0;
 			for (Map.Entry<Double , Box> entry : this.m_boxes.entrySet()) {
 				Box box =  entry.getValue();
-				/*
-				System.out.println("Du coup :"+box.getXMin()+" "+
-						box.getXMax()+" "+
-						box.getYMin()+" "+
-						box.getYMax()+" "+
-						box.getZMin()+" "+
-						box.getZMax()+" ");
-						*/
 				int xmin = box.getXMin();
 				int ymin = box.getYMin();
 				int zmin = box.getZMin();

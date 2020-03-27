@@ -114,8 +114,7 @@ public class annotAutoCrop {
     private void addBoxCropToZProjection(String coordinateList ,int boxNumber){
         String currentBox[] =coordinateList.split("\t");
         /** withBox calculation */
-        //System.out.println("boxnumber "+boxNumber);
-        System.out.println("coordinateList "+coordinateList);
+
         int withBox=Math.abs(Integer.parseInt(currentBox[2]))-Math.abs(Integer.parseInt(currentBox[1]));
         /** heigthBox calculation */
         int heigthBox=Math.abs(Integer.parseInt(currentBox[4]))-Math.abs(Integer.parseInt(currentBox[3]));
