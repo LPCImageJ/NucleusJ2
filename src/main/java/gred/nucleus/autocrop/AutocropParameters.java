@@ -17,11 +17,11 @@ public class AutocropParameters extends PluginParameters {
     /**
      * Number of pixels take plus object size in x
      */
-    private int m_xCropBoxSize = 20;
+    private int m_xCropBoxSize = 30;
     /**
      * Number of pixels take plus object size in y
      */
-    private int m_yCropBoxSize = 20;
+    private int m_yCropBoxSize = 30;
     /**
      * Number of slice take plus object in y
      */
@@ -48,7 +48,14 @@ public class AutocropParameters extends PluginParameters {
      * Slice start to compute OTSU threshold
      */
     private int m_slicesOTSUcomputing=0;
-
+    /**
+     * Surface percent of boxes to groups them
+     */
+    private int boxesPercentSurfaceToFilter=50;
+    /**
+     * Activation of boxes regroupement
+     */
+    private boolean boxesRegroupement=true;
 
     /** Constructor with default parameter
      * @param inputFolder : path folder containing Images
@@ -269,5 +276,16 @@ public class AutocropParameters extends PluginParameters {
     public int getSlicesOTSUcomputing(){
         return this.m_slicesOTSUcomputing;
     }
-
+    /**
+     * Getter boxes merging activation
+     * @return status
+     */
+    public boolean getboxesRegroupement(){
+        return this.boxesRegroupement;
+    }
+    /**
+     * Getter percent of surface intersection to merge 2 rectangles.
+     * @return percentage surface
+     */
+    public int getBoxesPercentSurfaceToFilter(){return this.boxesPercentSurfaceToFilter;}
 }

@@ -649,11 +649,15 @@ public class AutoCrop {
 
     	return calibration ;
 	}
+
+    /**
+     * Compute boxes merging if intersecting
+     */
 	public void boxIntesection(){
-		System.out.println("avant la recompilation de box on en a "+this.m_boxes.size());
-		rectangleIntersection recompute = new rectangleIntersection(this.m_boxes,this.m_autocropParameters);
-		recompute.runRectangleRecompilation();
-		this.m_boxes=recompute.getNewBoxes();
-		System.out.println("Après la recompilation de box on en a "+this.m_boxes.size());
+        if(this.m_autocropParameters.getboxesRegroupement()) {
+            rectangleIntersection recompute = new rectangleIntersection(this.m_boxes, this.m_autocropParameters);
+            recompute.runRectangleRecompilation();
+            this.m_boxes = recompute.getNewBoxes();
+        }
 	}
 }

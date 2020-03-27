@@ -52,7 +52,10 @@ public class rectangleIntersection {
      * Boolean to check if new rectangles are computed
      */
     boolean newBoxesAdded= false;
-
+    /**
+     * Autocrop parameter
+     */
+    AutocropParameters autocropParameters;
 
     /**
      * Constructor getting list of boxes computed in autocrop class.
@@ -64,6 +67,7 @@ public class rectangleIntersection {
      */
 
     public rectangleIntersection(HashMap <Double,Box> _boxes,AutocropParameters m_autocropParameters) {
+        autocropParameters =m_autocropParameters;
        for (Map.Entry<Double , Box> entry : _boxes.entrySet()) {
             Box box=entry.getValue();
             int boxWith=box.getXMax()-box.getXMin();
@@ -108,8 +112,8 @@ public class rectangleIntersection {
 
                     if (listRectangle.get(i).intersects(this.listRectangle.get(y))) {
 
-                        if (perceOf2Rect(this.listRectangle.get(i), this.listRectangle.get(y)) > 50 ||
-                                perceOf2Rect(this.listRectangle.get(y), this.listRectangle.get(i)) > 50) {
+                        if (perceOf2Rect(this.listRectangle.get(i), this.listRectangle.get(y)) >  autocropParameters.getBoxesPercentSurfaceToFilter() ||
+                                perceOf2Rect(this.listRectangle.get(y), this.listRectangle.get(i)) > autocropParameters.getBoxesPercentSurfaceToFilter()) {
 
                             this.rectangleIntersect.add(i + "-" + y);
                             this.rectangleIntersect.add(y + "-" + i);
