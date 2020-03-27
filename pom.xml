@@ -16,11 +16,7 @@
 
 	<dependencies>
 
-		<dependency>
-			<groupId>fr.inra.ijpb</groupId>
-			<artifactId>MorphoLibJ_</artifactId>
-			<version>1.4.0</version>
-		</dependency>
+
 
 		<dependency>
 			<groupId>gov.nist.math</groupId>
@@ -28,7 +24,11 @@
 			<version>1.0.3</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/loci/loci_plugins -->
-
+		<dependency>
+			<groupId>fr.inra.ijpb</groupId>
+			<artifactId>MorphoLibJ_</artifactId>
+			<version>1.4.0</version>
+		</dependency>
 
 		<dependency>
 			<groupId>commons-cli</groupId>
@@ -64,7 +64,7 @@
 		<dependency>
 			<groupId>net.imagej</groupId>
 			<artifactId>ij</artifactId>
-			<version>1.51g</version>
+			<version>1.51n</version>
 		</dependency>
 
 	</dependencies>
