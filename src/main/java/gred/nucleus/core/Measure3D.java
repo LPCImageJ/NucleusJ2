@@ -724,7 +724,6 @@ public class Measure3D {
                 +standardDeviationIntensity(meanIntensity())+ "\t"
                 +minIntensity()+ "\t"
                 +maxIntensity();
-        System.out.println(resu);
         return resu;
     }
 
