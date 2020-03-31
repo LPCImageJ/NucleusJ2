@@ -240,9 +240,34 @@ public class SegmentationCalling {
         return log;
     }
 
+    public String runOneImage(String filePath) throws  Exception{
+        String log = "";
+        File currentFile = new File(filePath);
+        String fileImg = currentFile.toString();
+        FilesNames outPutFilesNames = new FilesNames(fileImg);
+        this._prefix = outPutFilesNames.PrefixeNameFile();
+        System.out.println("Current image in process "+currentFile);
+
+        String timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
+        System.out.println( "Start :"+ timeStampStart);
+        System.out.println("TA MERE EN SHORT "+ currentFile+" "+this._prefix+" "+this.m_semgemtationParameters);
+        NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(currentFile ,this._prefix,this.m_semgemtationParameters);
+        nucleusSegmentation.preProcessImage();
+        nucleusSegmentation.findOTSUmaximisingSephericity();
+        nucleusSegmentation.checkBadCrop(this.m_semgemtationParameters.m_inputFolder);
+        nucleusSegmentation.saveOTSUSegmented();
+        this.m_outputCropGeneralInfoOTSU= this.m_outputCropGeneralInfoOTSU+nucleusSegmentation.getImageCropInfoOTSU();
+        nucleusSegmentation.saveGiftWrappingSeg();
+        this.m_outputCropGeneralInfoGIFT= this.m_outputCropGeneralInfoGIFT+nucleusSegmentation.getImageCropInfoGIFT();
+
+        timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
+        System.out.println( "Fin :"+ timeStampStart);
+        return log;
+    }
 
 
-        public String runSeveralImages() throws IOException, FormatException , Exception{
+    // TODO A SUPPR
+    public String runSeveralImages() throws IOException, FormatException , Exception{
         String log = "";
         String resu = "";
             File [] fileList = new File(this.m_semgemtationParameters.getInputFolder()).listFiles();
