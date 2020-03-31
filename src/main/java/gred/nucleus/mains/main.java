@@ -109,6 +109,7 @@ public class main {
         }catch (IOException e) { e.printStackTrace();}
     }
 
+    
 
     public static void computeNucleusParameters(String RawImageSourceFile, String SegmentedImagesSourceFile, String pathToConfig) throws IOException, FormatException ,fileInOut,Exception{
         PluginParameters pluginParameters= new PluginParameters(RawImageSourceFile,SegmentedImagesSourceFile,pathToConfig);
