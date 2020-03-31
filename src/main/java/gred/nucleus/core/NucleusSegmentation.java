@@ -197,6 +197,7 @@ public class NucleusSegmentation {
      */
 
 	public void findOTSUmaximisingSephericity() throws Exception {
+
 		double imageVolume = getVoxelVolume() * this._imgRaw.getWidth() *
                 this._imgRaw.getHeight() * this._imgRaw.getStackSize();
 		Gradient gradient = new Gradient(this._imgRaw);
@@ -261,8 +262,10 @@ public class NucleusSegmentation {
 			}
 			measure3D = null;
 		}
-		if (this._bestThreshold != -1) {
-			morphologicalCorrection(this.m_imageSeg[0]);
+        System.out.println("ON ENTRE LA DEDAND ALORS PUTAIN "+this._bestThreshold );
+
+        if (this._bestThreshold != -1) {
+            morphologicalCorrection(this.m_imageSeg[0]);
 			checkBorder(this.m_imageSeg[0]);
 		}
 
@@ -693,7 +696,7 @@ public class NucleusSegmentation {
      * TODO verifier cette methode si elle est à ca place
      */
     public void checkBadCrop(String inputPathDir){
-    	if(this._badCrop){
+    	if((this._badCrop) || (this.getBestThreshold()==-1)){
 			File file = new File(inputPathDir);
             File BadCropFolder= new File(inputPathDir
                     +file.separator
@@ -712,7 +715,10 @@ public class NucleusSegmentation {
      * TODO verifier cette methode si elle est à ca place
      */
 	public void saveOTSUSegmented(){
-    	if(getBadCrop()==false && getBestThreshold() != -1) {
+	    System.out.println("BAD CROP = "+getBadCrop());
+        System.out.println("BEST THRESHOLD = "+getBestThreshold());
+
+        if(getBadCrop()==false && getBestThreshold() != -1) {
 			String pathSegOTSU = this.m_semgemtationParameters.getOutputFolder() + "OTSU" + this.m_currentFile.separator + this.m_imageSeg[0].getTitle();
 			saveFile(this.m_imageSeg[0], pathSegOTSU);
 
