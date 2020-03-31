@@ -17,11 +17,11 @@ public class AutocropParameters extends PluginParameters {
     /**
      * Number of pixels take plus object size in x
      */
-    private int m_xCropBoxSize = 30;
+    private int m_xCropBoxSize = 40;
     /**
      * Number of pixels take plus object size in y
      */
-    private int m_yCropBoxSize = 30;
+    private int m_yCropBoxSize = 40;
     /**
      * Number of slice take plus object in y
      */
