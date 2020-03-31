@@ -51,7 +51,7 @@ public class AutoCropCalling {
      * @throws IOException if file problem
      * @throws FormatException Bioformat exception
      */
-    public void run() throws Exception {
+    public void runFolder() throws Exception {
 
         Directory directoryInput=new Directory(
                 this.m_autocropParameters.getInputFolder());
@@ -92,8 +92,34 @@ public class AutoCropCalling {
                         +"result_Autocrop_Analyse.csv");
         resultFileOutput.SaveTexteFile( this.m_outputCropGeneralInfo);
     }
+    public void runFile(String file) throws Exception {
+        File currentFile =  new File(file);
+        String fileImg = currentFile.toString();
+        FilesNames outPutFilesNames = new FilesNames(fileImg);
+        this._prefix = outPutFilesNames.PrefixeNameFile();
+        AutoCrop autoCrop = new AutoCrop(currentFile, this._prefix,
+                this.m_autocropParameters);
+        autoCrop.thresholdKernels();
+        autoCrop.computeConnectcomponent();
+        autoCrop.componentBorderFilter();
+        autoCrop.componentSizeFilter();
+        autoCrop.computeBoxes2();
+        autoCrop.addCROP_parameter();
+        autoCrop.boxIntesection();
+        autoCrop.cropKernels2();
+        autoCrop.writeAnalyseInfo();
+        annotAutoCrop test = new annotAutoCrop(
+                autoCrop.getFileCoordinates(), currentFile,
+                this.m_autocropParameters.getOutputFolder()
+                        + this._prefix,this.m_autocropParameters);
+        test.run();
+        this.m_outputCropGeneralInfo=this.m_outputCropGeneralInfo
+                +autoCrop.getImageCropInfo();
 
-    public String getColnameResult(){
+    }
+
+
+        public String getColnameResult(){
         return "FileName\tNumberOfCrop\tOTSUThreshold\tDefaultOTSUThreshold\n";
     }
 }

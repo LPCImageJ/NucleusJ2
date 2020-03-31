@@ -227,6 +227,8 @@ public class AutoCrop {
 				this.m_imageSeg,
 				26,
 				32);
+
+
 	}
 
 	/**
@@ -257,6 +259,7 @@ public class AutoCrop {
 			}
 		}
 		getNumberOfBox();
+
 	}
 
 	/**
@@ -264,6 +267,7 @@ public class AutoCrop {
 	 */
 	public void componentBorderFilter() {
 		LabelImages.removeBorderLabels(this.m_imageSeg_labelled);
+
 	}
 
 	/**
@@ -439,7 +443,7 @@ public class AutoCrop {
 						+ width + "\t"
 						+ height + "\t"
 						+ depth + "\n";
-					fileOutput.SaveImage(imgResu);
+				fileOutput.SaveImage(imgResu);
 				this.m_outputFile.add(
 						this.m_outputDirPath
 						+ File.separator
