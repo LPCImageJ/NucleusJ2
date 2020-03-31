@@ -4,7 +4,7 @@ import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.FilesInputOutput.FilesNames;
 import gred.nucleus.core.NucleusSegmentation;
 import gred.nucleus.exceptions.fileInOut;
-import gred.nucleus.mains.SegmentationParameters;
+import gred.nucleus.segmentation.SegmentationParameters;
 import ij.ImagePlus;
 import ij.io.FileSaver;
 import ij.plugin.ChannelSplitter;
