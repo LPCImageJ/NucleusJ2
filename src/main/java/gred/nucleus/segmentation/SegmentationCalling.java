@@ -250,7 +250,6 @@ public class SegmentationCalling {
 
         String timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
         System.out.println( "Start :"+ timeStampStart);
-        System.out.println("TA MERE EN SHORT "+ currentFile+" "+this._prefix+" "+this.m_semgemtationParameters);
         NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(currentFile ,this._prefix,this.m_semgemtationParameters);
         nucleusSegmentation.preProcessImage();
         nucleusSegmentation.findOTSUmaximisingSephericity();
