@@ -3,13 +3,11 @@ package gred.nucleus.plugins;
 import gred.nucleus.FilesInputOutput.Directory;
 import ij.ImagePlus;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Properties;
+import java.io.File;
 
 public class PluginParameters {
 
@@ -34,7 +32,14 @@ public class PluginParameters {
      *
      */
     public PluginParameters(String inputFolder,String outputFolder){
-        this.m_inputFolder=inputFolder;
+        File input =new File(inputFolder);
+        if(input.isDirectory()) {
+            this.m_inputFolder = inputFolder;
+        }
+        else if(input.isFile()) {
+            this.m_inputFolder = input.getParent();
+
+        }
         Directory dirOutput =new Directory(outputFolder);
         dirOutput.CheckAndCreateDir();
         this.m_outputFolder=dirOutput.get_dirPath();
@@ -51,7 +56,14 @@ public class PluginParameters {
      *
      */
     public PluginParameters(String inputFolder,String outputFolder,double xCal ,double yCal,double zCal){
-        this.m_inputFolder=inputFolder;
+        File input =new File(inputFolder);
+        if(input.isDirectory()) {
+            this.m_inputFolder = inputFolder;
+        }
+        else if(input.isFile()) {
+            this.m_inputFolder = input.getParent();
+
+        }
         Directory dirOutput =new Directory(outputFolder);
         dirOutput.CheckAndCreateDir();
         this.m_outputFolder=dirOutput.get_dirPath();
@@ -70,7 +82,14 @@ public class PluginParameters {
      */
 
     public PluginParameters (String inputFolder, String outputFolder, String pathToConfigFile){
-        this.m_inputFolder=inputFolder;
+        File input =new File(inputFolder);
+        if(input.isDirectory()) {
+            this.m_inputFolder = inputFolder;
+        }
+        else if(input.isFile()) {
+            this.m_inputFolder = input.getParent();
+
+        }
         Directory dirOutput =new Directory(outputFolder);
         dirOutput.CheckAndCreateDir();
         this.m_outputFolder=dirOutput.get_dirPath();
