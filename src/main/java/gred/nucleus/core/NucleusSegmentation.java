@@ -701,7 +701,10 @@ public class NucleusSegmentation {
             File BadCropFolder= new File(inputPathDir
                     +file.separator
                     +"BadCrop");
-			if (!BadCropFolder.exists()){
+            System.out.println("et du coup on est dedans ou quoi ...........\n"+BadCropFolder+
+".....................................");
+
+            if (!BadCropFolder.exists()){
                 BadCropFolder.mkdir();
 			}
 			File fileToMove = new File(inputPathDir
