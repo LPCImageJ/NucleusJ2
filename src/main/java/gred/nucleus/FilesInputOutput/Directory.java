@@ -82,12 +82,12 @@ public class Directory  {
      * Method to recursively list files contains in folder and sub folder. (Argument needed because of recursive way)
      * @param Path path of folder
      */
-    public void listFiles(String Path) {
+    public void listImageFiles(String Path) {
         File root = new File(Path);
         File[] list = root.listFiles();
         for (File f : list) {
             if (f.isDirectory()) {
-               listFiles(f.getAbsolutePath());
+                listImageFiles(f.getAbsolutePath());
             }
             else {
                 if(!(FilenameUtils.getExtension(f.getName()).equals("txt"))){
@@ -98,6 +98,20 @@ public class Directory  {
                     }
                 }
             }
+        }
+    }
+    public void listAllFiles(String Path) {
+        File root = new File(Path);
+        File[] list = root.listFiles();
+
+        for (File f : list) {
+            this.m_listeOfFiles.add(f);
+
+            if (f.isDirectory()) {
+                listAllFiles(f.getAbsolutePath());
+
+            }
+
         }
     }
 
@@ -146,4 +160,21 @@ public class Directory  {
     }
 
     public String getSeparator(){return this.m_separator;}
+
+    /*
+    * search a file in a list file without extension.
+    * Use to compare 2 lists of files
+     */
+    public File searchFileNameWithoutExention(String fileName){
+        File fileToReturn =null;
+        System.out.println("dedans");
+
+        for (File f : m_listeOfFiles) {
+            if(f.getName().split("\\.")[0].equals(fileName)){
+                fileToReturn=f;
+            }
+        }
+        return fileToReturn;
+    }
+
 }

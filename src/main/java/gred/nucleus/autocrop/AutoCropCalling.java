@@ -55,7 +55,7 @@ public class AutoCropCalling {
 
         Directory directoryInput=new Directory(
                 this.m_autocropParameters.getInputFolder());
-        directoryInput.listFiles(this.m_autocropParameters.getInputFolder());
+        directoryInput.listImageFiles(this.m_autocropParameters.getInputFolder());
         directoryInput.checkIfEmpty();
         directoryInput.checkAndActualiseNDFiles();
         for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
