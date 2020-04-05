@@ -262,7 +262,6 @@ public class NucleusSegmentation {
 			}
 			measure3D = null;
 		}
-        System.out.println("ON ENTRE LA DEDAND ALORS PUTAIN "+this._bestThreshold );
 
         if (this._bestThreshold != -1) {
             morphologicalCorrection(this.m_imageSeg[0]);
@@ -718,9 +717,6 @@ public class NucleusSegmentation {
      * TODO verifier cette methode si elle est à ca place
      */
 	public void saveOTSUSegmented(){
-	    System.out.println("BAD CROP = "+getBadCrop());
-        System.out.println("BEST THRESHOLD = "+getBestThreshold());
-
         if(getBadCrop()==false && getBestThreshold() != -1) {
 			String pathSegOTSU = this.m_semgemtationParameters.getOutputFolder() + "OTSU" + this.m_currentFile.separator + this.m_imageSeg[0].getTitle();
 			saveFile(this.m_imageSeg[0], pathSegOTSU);
