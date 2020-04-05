@@ -57,9 +57,10 @@ public class annotAutoCrop {
         this.m_boxCoordinates = ListBox;
         this.m_outputDirPath=outputDirPath;
 
-
-
     }
+
+
+
 
     /**
      * Main method to generate Z projection of wide fild 3D image.
@@ -119,6 +120,7 @@ public class annotAutoCrop {
         /** heigthBox calculation */
         int heigthBox=Math.abs(Integer.parseInt(currentBox[4]))-Math.abs(Integer.parseInt(currentBox[3]));
         /** Line size parameter */
+        IJ.setForegroundColor(0,0,0);
         IJ.run("Line Width...", "line=4");
         /** Set draw current box*/
         this.m_zProjection.setRoi(Integer.parseInt(currentBox[1]),

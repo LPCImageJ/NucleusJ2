@@ -197,7 +197,7 @@ public class SegmentationCalling {
     public String runSeveralImages2() throws  Exception{
         String log = "";
         Directory directoryInput = new Directory(this.m_semgemtationParameters.getInputFolder());
-        directoryInput.listFiles(this.m_semgemtationParameters.getInputFolder());
+        directoryInput.listImageFiles(this.m_semgemtationParameters.getInputFolder());
         directoryInput.checkIfEmpty();
         for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
             File currentFile = directoryInput.getFile(i);
@@ -264,64 +264,6 @@ public class SegmentationCalling {
         return log;
     }
 
-
-    // TODO A SUPPR
-    public String runSeveralImages() throws IOException, FormatException , Exception{
-        String log = "";
-        String resu = "";
-            File [] fileList = new File(this.m_semgemtationParameters.getInputFolder()).listFiles();
-        for(int i = 0; i < fileList.length; ++i) {
-            String fileImg = fileList[i].toString();
-            if (fileImg.contains(".tif")) {
-                ImagePlus[] imgTab = BF.openImagePlus(fileImg);
-                ImagePlus img = imgTab[0];
-                ImagePlus imgSeg = img;
-                if (imgSeg.getType() == ImagePlus.GRAY16)
-                    this.preProcessImage(imgSeg);
-                NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(imgSeg,this.m_semgemtationParameters.getM_minVolumeNucleus(), this.m_semgemtationParameters.getM_maxVolumeNucleus(),this.m_semgemtationParameters);
-                imgSeg = nucleusSegmentation.applySegmentation(imgSeg);
-                // TODO A Nettoyer les else !!!
-
-                if (nucleusSegmentation.getBadCrop()==true || nucleusSegmentation.getBestThreshold() == -1) {
-                    IJ.log("Bad crop " +fileImg+ "  "+nucleusSegmentation.getBestThreshold());
-                    File file = new File(this.m_semgemtationParameters.getInputFolder()+"/BadCrop");
-                    if (!file.exists()){
-                        file.mkdir();
-                    }
-                    File fileToMove = new File(fileImg);
-                    fileToMove.renameTo(new File(this.m_semgemtationParameters.getInputFolder()+fileToMove.separator+"BadCrop"+fileToMove.separator+img.getTitle()));
-                    IJ.log("test "+this.m_semgemtationParameters.getInputFolder()+fileToMove.separator+"BadCrop"+fileToMove.separator+img.getTitle()+"\n");
-
-                    //FileUtils.moveFileToDirectory(fileImg, this._inputDir+"/BadCrop"/, REPLACE_EXISTING);
-
-
-                }
-                else {
-                    if (nucleusSegmentation.getBestThreshold() == -1) {
-                        log = log + fileImg + "\n";
-                    } else {
-                        System.out.println(fileImg + "\totsu modif threshold " + nucleusSegmentation.getBestThreshold() + "\n");
-                        if (this.m_semgemtationParameters.getGiftWrapping()) {
-                            ConvexHullSegmentation nuc = new ConvexHullSegmentation();
-                            imgSeg = nuc.run(imgSeg,this.m_semgemtationParameters);
-                        }
-                        String pathSeg = this._output + img.getTitle();
-                        imgSeg.setTitle(pathSeg);
-                        saveFile(imgSeg, pathSeg);
-                        NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(img, imgSeg,this.m_semgemtationParameters);
-                        nucleusAnalysis.setResu(resu);
-                       // resu = nucleusAnalysis.nucleusParameter3D();
-                    }
-                }
-            }
-            BufferedWriter writer;
-            writer = new BufferedWriter(new FileWriter(new File(this.m_semgemtationParameters.getOutputFolder()+File.separator+"ParametersResults.txt")));
-            writer.write(resu);
-            writer.close();
-        }
-
-        return log;
-    }
 
     /**
      * Method which save the image in the directory.
