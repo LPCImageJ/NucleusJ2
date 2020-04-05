@@ -9,7 +9,12 @@ import gred.nucleus.plugins.PluginParameters;
 import gred.nucleus.segmentation.SegmentationCalling;
 
 import gred.nucleus.segmentation.SegmentationParameters;
+import gred.nucleus.utils.Histogram;
 import ij.ImagePlus;
+import ij.ImageStack;
+import inra.ijpb.binary.BinaryImages;
+import inra.ijpb.label.LabelImages;
+import loci.common.DebugTools;
 import loci.formats.FormatException;
 import loci.plugins.BF;
 //import org.apache.commons.cli.Options;
@@ -82,7 +87,7 @@ public class main {
         SegmentationParameters segmentationParameters = new SegmentationParameters(input,output);
         SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
         try {
-            String log = otsuModif.runSeveralImages();
+            String log = otsuModif.runSeveralImages2();
             if(!(log.equals("")))
                 System.out.println("Nuclei which didn't pass the segmentation\n"+log);
         }catch (IOException e) { e.printStackTrace();}
@@ -109,12 +114,12 @@ public class main {
         }catch (IOException e) { e.printStackTrace();}
     }
 
-    
+
 
     public static void computeNucleusParameters(String RawImageSourceFile, String SegmentedImagesSourceFile, String pathToConfig) throws IOException, FormatException ,fileInOut,Exception{
         PluginParameters pluginParameters= new PluginParameters(RawImageSourceFile,SegmentedImagesSourceFile,pathToConfig);
         Directory directoryInput = new Directory(pluginParameters.getInputFolder());
-        directoryInput.listFiles(pluginParameters.getInputFolder());
+        directoryInput.listImageFiles(pluginParameters.getInputFolder());
         directoryInput.checkIfEmpty();
         ArrayList<File> rawImages =directoryInput.m_listeOfFiles;
         String outputCropGeneralInfoOTSU=pluginParameters.getAnalyseParameters()+getColnameResult();
@@ -134,18 +139,20 @@ public class main {
 
     }
 
+    // TODO  configFILE FACTORISABLE AVEC computeNucleusParameters SANS CONFINGFILE
 
     public static void computeNucleusParameters(String RawImageSourceFile, String SegmentedImagesSourceFile) throws IOException, FormatException ,fileInOut,Exception{
         PluginParameters pluginParameters= new PluginParameters(RawImageSourceFile,SegmentedImagesSourceFile);
         Directory directoryInput = new Directory(pluginParameters.getOutputFolder());
-        directoryInput.listFiles(pluginParameters.getOutputFolder());
+        directoryInput.listImageFiles(pluginParameters.getOutputFolder());
         directoryInput.checkIfEmpty();
-        ArrayList<File> rawImages =directoryInput.m_listeOfFiles;
+        ArrayList<File> segImages =directoryInput.m_listeOfFiles;
         String outputCropGeneralInfoOTSU=pluginParameters.getAnalyseParameters()+getColnameResult();
-        for (short i = 0; i < rawImages.size(); ++i) {
-            File currentFile = rawImages.get(i);
+        for (short i = 0; i < segImages.size(); ++i) {
+            File currentFile = segImages.get(i);
+            System.out.println("current File "+currentFile.getName());
 
-            ImagePlus Raw = new ImagePlus(currentFile.getAbsolutePath());
+            ImagePlus Raw = new ImagePlus(pluginParameters.getInputFolder()+directoryInput.getSeparator()+currentFile.getName());
             ImagePlus[] Segmented = BF.openImagePlus(pluginParameters.getOutputFolder()+currentFile.getName());
             Measure3D mesure3D = new Measure3D(Segmented, Raw, pluginParameters.getXcalibration(Raw), pluginParameters.getYcalibration(Raw),pluginParameters.getZcalibration(Raw));
             outputCropGeneralInfoOTSU+=mesure3D.nucleusParameter3D()+"\n";
@@ -157,6 +164,68 @@ public class main {
         resultFileOutputOTSU.SaveTexteFile( outputCropGeneralInfoOTSU);
 
     }
+
+    // TODO AJOUTER computeNucleusParametersDL avec configFILE FACTORISABLE AVEC computeNucleusParametersCONFINGFILE
+
+    public static void computeNucleusParametersDL(String RawImageSourceFile, String SegmentedImagesSourceFile) throws IOException, FormatException ,fileInOut,Exception{
+        PluginParameters pluginParameters= new PluginParameters(RawImageSourceFile,SegmentedImagesSourceFile);
+        Directory directoryInput = new Directory(pluginParameters.getOutputFolder());
+        directoryInput.listImageFiles(pluginParameters.getOutputFolder());
+        directoryInput.checkIfEmpty();
+        ArrayList<File> segImages =directoryInput.m_listeOfFiles;
+        String outputCropGeneralInfoOTSU=pluginParameters.getAnalyseParameters()+getColnameResult();
+        for (short i = 0; i < segImages.size(); ++i) {
+            File currentFile = segImages.get(i);
+            System.out.println("current File "+currentFile.getName());
+            ImagePlus Raw = new ImagePlus(pluginParameters.getInputFolder()+directoryInput.getSeparator()+currentFile.getName());
+            ImagePlus[] Segmented = BF.openImagePlus(pluginParameters.getOutputFolder()+currentFile.getName());
+            // TODO TRANSFORMATION FACTORISABLE AVEC METHODE DU DESSUS !!!!!
+            Segmented[0]=generateSegmentedImage(Segmented[0],1);
+            Segmented[0] = BinaryImages.componentsLabeling(Segmented[0], 26,32);
+            LabelImages.removeBorderLabels(Segmented[0]);
+            Segmented[0]=generateSegmentedImage(Segmented[0],1);
+            Histogram histogram = new Histogram ();
+            histogram.run(Segmented[0]);
+            if (histogram.getNbLabels() > 0) {
+                Measure3D mesure3D = new Measure3D(Segmented, Raw, pluginParameters.getXcalibration(Raw), pluginParameters.getYcalibration(Raw), pluginParameters.getZcalibration(Raw));
+                outputCropGeneralInfoOTSU += mesure3D.nucleusParameter3D() + "\n";
+            }
+        }
+
+        OutputTexteFile resultFileOutputOTSU=new OutputTexteFile(pluginParameters.getOutputFolder()
+                +directoryInput.getSeparator()
+                +"result_Segmentation_Analyse.csv");
+        resultFileOutputOTSU.SaveTexteFile( outputCropGeneralInfoOTSU);
+
+    }
+
+
+    public static ImagePlus generateSegmentedImage (ImagePlus imagePlusInput,
+                                                    int threshold)  {
+        ImageStack imageStackInput = imagePlusInput.getStack();
+        ImagePlus imagePlusSegmented = imagePlusInput.duplicate();
+
+        imagePlusSegmented.setTitle(imagePlusInput.getTitle());
+        ImageStack imageStackSegmented = imagePlusSegmented.getStack();
+        for(int k = 0; k < imagePlusInput.getStackSize(); ++k) {
+            for (int i = 0; i < imagePlusInput.getWidth(); ++i) {
+                for (int j = 0; j < imagePlusInput.getHeight(); ++j) {
+                    double voxelValue = imageStackInput.getVoxel(i, j, k);
+                    if (voxelValue > 1) {
+                        imageStackSegmented.setVoxel(i, j, k, 255);
+                        imageStackInput.getVoxel(i, j, k);
+                    }
+                    else {
+                        imageStackSegmented.setVoxel(i, j, k, 0);
+                    }
+                }
+            }
+        }
+        return imagePlusSegmented;
+
+    }
+
+
     public static String getColnameResult(){
         return "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\tMeanIntensity\tStandardDeviation\tMinIntensity\tMaxIntensity\n";
     }
@@ -165,6 +234,10 @@ public class main {
 
 
     public static void main(String[] args) throws IOException, FormatException, fileInOut,Exception {
+        DebugTools.enableLogging("OFF");
+
+        System.setProperty("java.awt.headless", "false");
+
         if(args[0].equals("autocrop")) {
             System.out.println("start "+args[0]);
             if((args.length==4)&& (args[3].equals("ConfigFile"))){
@@ -200,6 +273,9 @@ public class main {
              else{
                     computeNucleusParameters(args[1], args[2]);
                 }
+        }
+        else if(args[0].equals("computeParametersDL")){
+            computeNucleusParametersDL(args[1], args[2]);
         }
         else{
             System.out.println("Argument le premier argument doit être   autocrop  ou   segmentation ou computeParameters");
