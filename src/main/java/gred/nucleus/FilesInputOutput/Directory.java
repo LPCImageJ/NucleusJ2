@@ -106,7 +106,6 @@ public class Directory  {
 
         for (File f : list) {
             this.m_listeOfFiles.add(f);
-
             if (f.isDirectory()) {
                 listAllFiles(f.getAbsolutePath());
 
@@ -167,9 +166,8 @@ public class Directory  {
      */
     public File searchFileNameWithoutExention(String fileName){
         File fileToReturn =null;
-        System.out.println("dedans");
 
-        for (File f : m_listeOfFiles) {
+        for (File f : this.m_listeOfFiles) {
             if(f.getName().split("\\.")[0].equals(fileName)){
                 fileToReturn=f;
             }
