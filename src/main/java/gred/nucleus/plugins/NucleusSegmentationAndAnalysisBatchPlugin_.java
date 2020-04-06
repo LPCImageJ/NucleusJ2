@@ -18,7 +18,7 @@ public class NucleusSegmentationAndAnalysisBatchPlugin_ implements PlugIn {
 	NucleusSegmentationAndAnalysisBatchDialog _nucleusPipelineBatchDialog = new NucleusSegmentationAndAnalysisBatchDialog();
 	
 	/**
-	 * 
+	 * TODO CHANGER LES METHODES APPELER !!!!!!!
 	 */
 	public void run(String arg) {
 		while( _nucleusPipelineBatchDialog.isShowing()) {
@@ -30,7 +30,7 @@ public class NucleusSegmentationAndAnalysisBatchPlugin_ implements PlugIn {
             SegmentationCalling otsuModif = new SegmentationCalling(_nucleusPipelineBatchDialog.getRawDataDirectory(), _nucleusPipelineBatchDialog.getWorkDirectory(),
                     (short)_nucleusPipelineBatchDialog.getMinVolume(), (short)_nucleusPipelineBatchDialog.getMaxVolume());
             try {
-                String log = otsuModif.runSeveralImages();
+                String log = otsuModif.runSeveralImages2();
             } catch (Exception e) {     e.printStackTrace();
              }
 
