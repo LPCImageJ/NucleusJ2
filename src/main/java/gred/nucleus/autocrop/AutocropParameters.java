@@ -51,11 +51,11 @@ public class AutocropParameters extends PluginParameters {
     /**
      * Surface percent of boxes to groups them
      */
-    private int boxesPercentSurfaceToFilter=50;
+    private int m_boxesPercentSurfaceToFilter=50;
     /**
      * Activation of boxes regroupement
      */
-    private boolean boxesRegroupement=true;
+    private boolean m_boxesRegroupement=true;
 
     /** Constructor with default parameter
      * @param inputFolder : path folder containing Images
@@ -200,6 +200,11 @@ public class AutocropParameters extends PluginParameters {
                     Integer.valueOf(prop.getProperty("maxVolumeNucleus"));}
             if(idProp.equals("minVolumeNucleus")){this.m_minVolumeNucleus =
                     Integer.valueOf(prop.getProperty("minVolumeNucleus"));}
+            if(idProp.equals("boxesPercentSurfaceToFilter")){this.m_boxesPercentSurfaceToFilter =
+                    Integer.valueOf(prop.getProperty("boxesPercentSurfaceToFilter"));}
+            if(idProp.equals("boxesRegroupement")){this.m_boxesRegroupement =
+                    Boolean.valueOf(prop.getProperty("boxesRegroupement"));}
+
         }
     }
 
@@ -281,11 +286,11 @@ public class AutocropParameters extends PluginParameters {
      * @return status
      */
     public boolean getboxesRegroupement(){
-        return this.boxesRegroupement;
+        return this.m_boxesRegroupement;
     }
     /**
      * Getter percent of surface intersection to merge 2 rectangles.
      * @return percentage surface
      */
-    public int getBoxesPercentSurfaceToFilter(){return this.boxesPercentSurfaceToFilter;}
+    public int getBoxesPercentSurfaceToFilter(){return this.m_boxesPercentSurfaceToFilter;}
 }
