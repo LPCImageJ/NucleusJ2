@@ -8,6 +8,7 @@ import gred.nucleus.imageProcess.Thresholding;
 import gred.nucleus.utils.Histogram;
 import ij.ImagePlus;
 import ij.ImageStack;
+import ij.io.FileSaver;
 import ij.measure.Calibration;
 import ij.plugin.ChannelSplitter;
 import ij.plugin.Duplicator;
@@ -131,9 +132,16 @@ public class AutoCrop {
 		Thresholding thresholding = new Thresholding();
 		this.m_outputFilesPrefix = outputFilesPrefix;
 		setChannelNumbers();
-		this.m_imageSeg = thresholding.contrastAnd8bits(
-				getImageChannel(
-						this.m_autocropParameters.getChannelToComputeThreshold()));
+		if(this.m_rawImg.getBitDepth()>8) {
+			System.out.println("du coup on check bien le 8bits " +this.m_rawImg.getBitDepth());
+			this.m_imageSeg = thresholding.contrastAnd8bits(
+					getImageChannel(
+							this.m_autocropParameters.getChannelToComputeThreshold()));
+		}
+		else{
+			this.m_imageSeg=this.m_rawImg;
+		}
+		this.m_imageSeg.show();
 		this.m_infoImageAnalyse =
 				autocropParametersAnalyse.getAnalyseParameters();
 
@@ -186,6 +194,7 @@ public class AutoCrop {
 	public void thresholdKernels() {
 		this.sliceUsedForOTSU = "default";
 		GaussianBlur3D.blur(this.m_imageSeg, 0.5, 0.5, 1);
+
 		Thresholding thresholding = new Thresholding();
 		int thresh = thresholding.computeOtsuThreshold(this.m_imageSeg);
 		if (thresh < this.m_autocropParameters.getThresholdOTSUcomputing()) {
@@ -228,7 +237,6 @@ public class AutoCrop {
 				26,
 				32);
 
-
 	}
 
 	/**
@@ -267,7 +275,6 @@ public class AutoCrop {
 	 */
 	public void componentBorderFilter() {
 		LabelImages.removeBorderLabels(this.m_imageSeg_labelled);
-
 	}
 
 	/**
@@ -332,6 +339,7 @@ public class AutoCrop {
 			int i = 0;
 			for (Map.Entry<Double, Box> entry : this.m_boxes.entrySet()) {
 				Box box = entry.getValue();
+				//System.out.println(box.getXMin()+" "+box.getYMin()+" "+box.getZMin());
 				int xmin = box.getXMin()
 						- this.m_autocropParameters.getxCropBoxSize();
 				int ymin = box.getYMin()
@@ -344,36 +352,53 @@ public class AutoCrop {
 
 				if (xmin <= 0)
 					xmin = 1;
-				if (ymin <= 0)
-					ymin = 1;
+				if (ymin <= 0) { ymin = 1;}
 				if (zmin <= 0)
 					zmin = 1;
-
 				int width = box.getXMax()
 						+ (2 * this.m_autocropParameters.getxCropBoxSize())
 						- box.getXMin();
+				if(width>m_imageSeg.getWidth()){
+					width=m_imageSeg.getWidth()-1;
+				}
 				int height = box.getYMax()
 						+ (2 * this.m_autocropParameters.getxCropBoxSize())
 						- box.getYMin();
 				int depth = box.getZMax()
 						+ (2 * this.m_autocropParameters.getzCropBoxSize())
 						- box.getZMin();
-				if (width + xmin >= this.m_imageSeg.getWidth())
-					width -= (width + xmin) - this.m_imageSeg.getWidth();
+				if (width + xmin >= this.m_imageSeg.getWidth() || width<0)
+					width =  this.m_imageSeg.getWidth()-xmin;
 
-				if (height + ymin >= this.m_imageSeg.getHeight())
-					height -= (height + ymin) - this.m_imageSeg.getHeight();
-
-				if (depth + zmin >= this.m_imageSeg.getNSlices())
-					depth -= (depth + zmin) - this.m_imageSeg.getNSlices();
+				if ((height + ymin) >= this.m_imageSeg.getHeight() ||(height<0)){
+					height = this.m_imageSeg.getHeight()-ymin;
+				}
+				if (depth + zmin >= this.m_imageSeg.getNSlices() || depth<0)
+					depth =  this.m_imageSeg.getNSlices()-zmin;
+				//System.out.println(ymin+" " +height +" "+this.m_imageSeg.getHeight());
 				box.setXMin((short)xmin);
 				box.setXMax((short)(xmin+width));
 				box.setYMin((short)ymin);
+
 				box.setYMax((short)(ymin+height));
 				box.setZMin((short)zmin);
 				box.setZMax((short)(zmin+depth));
 
 
+			}
+			for (Map.Entry<Double, Box> entry : this.m_boxes.entrySet()) {
+				Box box = entry.getValue();
+
+				if(box.getYMax()>this.m_imageSeg.getHeight()) {
+					System.out.println("on en a bordel"+box.getYMax()+"   " +this.m_imageSeg.getHeight()+"\n"
+					+" "+ box.getXMin()+" "+box.getYMin()+" "+box.getZMin()+" "+entry.getKey());
+				}
+
+				//System.out.println("les clef "+entry.getKey());
+				if(entry.getKey()==2.0) {
+					//System.out.println("on en a bordel"+box.getYMax()+"\n"
+					//		+" "+ box.getXMin()+" "+box.getYMin()+" "+box.getZMin()+" "+entry.getKey());
+				}
 			}
 		}
 	}
@@ -390,6 +415,7 @@ public class AutoCrop {
 			this.m_outputDirPath+File.separator+this.m_outputFilesPrefix);
 		dirOutput.CheckAndCreateDir();
 		this.m_infoImageAnalyse += getSpecificImageInfo() + getColoneName();
+		System.out.println("on passe au crop \n\n");
 		for (int y =0 ;y<this.m_channelNumbers;y++) {
 			int i=0;
 			for (Map.Entry<Double , Box> entry : this.m_boxes.entrySet()) {
@@ -407,6 +433,7 @@ public class AutoCrop {
 
 				ImagePlus imgResu;
 				if(this.m_rawImg.getNSlices()>1) {
+					System.out.println("la clef qui merde "+ entry.getKey());
 					imgResu = cropImage(xmin, ymin,zmin, width,height, depth,y);
 				}
 				else{
@@ -547,6 +574,7 @@ public class AutoCrop {
 		ImagePlus sort = new ImagePlus();
 		ChannelSplitter channelSplitter = new ChannelSplitter();
 		imps = channelSplitter.split(imps[0]);
+		System.out.println(xmin +" "+ ymin +" "+zmin+" "+width+" "+ height+" "+depth);
 		sort.setStack(imps[channelNumber].getStack().crop(xmin, ymin ,zmin,width
 				, height,depth));
 		return sort;
