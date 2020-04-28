@@ -59,7 +59,25 @@ public class annotAutoCrop {
 
     }
 
+    /**
+     * Main method to generate Z projection of wide fild 3D image.
+     * Parameter use are max intensity projection (projectionMax method)
+     * and contrast modification of 0,3.
+     *
+     */
+    public void runAddBadCrop(ArrayList<Integer> _box){
+        ZProjector zProjectionTmp = new ZProjector(this.m_zProjection);
+        for(int i = 0; i < this.m_boxCoordinates.size(); ++i) {
+            String [] splitLine = this.m_boxCoordinates.get(i).split("\\t");
+            String [] fileName =splitLine[0].split("\\/");
+            String [] Name =fileName[fileName.length-1].split("_");
+            addBadCropBoxToZProjection(this.m_boxCoordinates.get(i),Integer.parseInt(Name[Name.length-2]));
+        }
+        String outFileZbox = this.m_outputDirPath+".tif";
+        saveFile(this.m_zProjection,outFileZbox);
 
+
+    }
 
 
     /**
@@ -120,7 +138,7 @@ public class annotAutoCrop {
         /** heigthBox calculation */
         int heigthBox=Math.abs(Integer.parseInt(currentBox[4]))-Math.abs(Integer.parseInt(currentBox[3]));
         /** Line size parameter */
-        IJ.setForegroundColor(0,0,0);
+        IJ.setForegroundColor(0, 0, 0);
         IJ.run("Line Width...", "line=4");
         /** Set draw current box*/
         this.m_zProjection.setRoi(Integer.parseInt(currentBox[1]),
@@ -150,6 +168,50 @@ public class annotAutoCrop {
 
     }
 
+
+    private void addBadCropBoxToZProjection(String coordinateList ,int boxNumber){
+        String currentBox[] =coordinateList.split("\t");
+        /** withBox calculation */
+
+        int withBox=Math.abs(Integer.parseInt(currentBox[2]))-Math.abs(Integer.parseInt(currentBox[1]));
+        /** heigthBox calculation */
+        int heigthBox=Math.abs(Integer.parseInt(currentBox[4]))-Math.abs(Integer.parseInt(currentBox[3]));
+        /** Line size parameter */
+
+      /** !!!!!!!!!!! on contrast la projection sinon elle est en GRIS ?????? */
+        IJ.run(this.m_zProjection, "Enhance Contrast", "saturated=0.35");
+        IJ.run(this.m_zProjection, "RGB Color", "");
+        IJ.setForegroundColor(255, 0, 0);
+        IJ.run("Line Width...", "line=4");
+        /** Set draw current box*/
+        this.m_zProjection.setRoi(Integer.parseInt(currentBox[1]),
+                Integer.parseInt(currentBox[3]),
+                withBox,heigthBox);
+        IJ.run(this.m_zProjection, "Draw", "stack");
+
+
+        /** Calculation of the coordinate to add nuclei Number */
+        int xBorder=Integer.parseInt(currentBox[1])-100;
+        int yBorder=Integer.parseInt(currentBox[3])+((
+                Integer.parseInt(currentBox[4])
+                        -Integer.parseInt(currentBox[3]))/2)
+                -20;
+        if (xBorder <= 40){  // When the box is in left border the number need
+            // to be write on the right of the box
+            xBorder =Integer.parseInt(currentBox[2])+60;
+        }
+        Font font = new Font("Arial", Font.PLAIN, 30);
+
+        IJ.run("Colors...", "foreground=red");
+        TextRoi left = new TextRoi(xBorder,
+                yBorder,
+                Integer.toString(boxNumber),
+                font);
+        this.m_zProjection.setRoi(left);
+        /** Draw the nucleus number aside the box */
+        IJ.run(this.m_zProjection, "Draw", "stack");
+
+    }
     /**
      * Method to Contrast the images values and invert the LUT.
      *
