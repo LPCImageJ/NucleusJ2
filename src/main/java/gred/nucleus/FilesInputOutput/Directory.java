@@ -174,5 +174,16 @@ public class Directory  {
         }
         return fileToReturn;
     }
+    public boolean checkIfFileExists(String fileName){
+        boolean fileExists =false;
+
+        for (File f : this.m_listeOfFiles) {
+            if((f.getName().split("\\.")[0].equals(fileName))
+            || (f.getName().equals(fileName))){
+                fileExists=true;
+            }
+        }
+        return fileExists;
+    }
 
 }
