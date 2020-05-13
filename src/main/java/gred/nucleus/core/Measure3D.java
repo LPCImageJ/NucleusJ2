@@ -51,6 +51,8 @@ public class Measure3D {
     double _zCal;
 
     HashMap< Double, Integer> _segmentedNucleusHisto =new HashMap <Double, Integer>();
+    HashMap< Double, Integer> _backgroundHisto =new HashMap <Double, Integer>();
+
 
 
     public Measure3D() {
@@ -609,6 +611,19 @@ public class Measure3D {
                                         imageStackRaw.getVoxel(i, j, k)) + 1);
                         }
                     }
+                    else{
+                        if(!this._backgroundHisto.containsKey(
+                                imageStackRaw.getVoxel(i, j, k)) ){
+                            this._backgroundHisto.put(
+                                    imageStackRaw.getVoxel(i, j, k),  1);
+                        }
+                        else{
+                            this._backgroundHisto.put(
+                                    imageStackRaw.getVoxel(i, j, k),
+                                    this._backgroundHisto.get(
+                                            imageStackRaw.getVoxel(i, j, k)) + 1);
+                        }
+                    }
                 }
             }
         }
@@ -638,6 +653,33 @@ public class Measure3D {
     }
 
     /**
+     * Compute mean intensity of background
+     * @return mean intensity of background
+     */
+
+    private double meanIntensityBackground (){
+        double meanIntensity=0;
+        int voxelCounted=0;
+        ImageStack imageStackRaw = this._rawImage.getStack();
+        ImageStack imageStackSeg = this._imageSeg[0].getStack();
+        for(int k = 0; k <this._rawImage.getStackSize(); ++k) {
+            for (int i = 0; i < this._rawImage.getWidth(); ++i) {
+                for (int j = 0; j <this._rawImage.getHeight(); ++j) {
+                    if(imageStackSeg.getVoxel(i, j, k)==0){
+                        meanIntensity+=imageStackRaw.getVoxel(i, j, k);
+                        voxelCounted++;
+                    }
+
+                }
+            }
+        }
+        meanIntensity=meanIntensity/voxelCounted;
+        return meanIntensity;
+
+    }
+
+
+    /**
      * Compute the standard deviation of the mean intensity
      * @see Measure3D#meanIntensity()
      * @return the standard deviation of the mean intensity of segmented object
@@ -657,6 +699,8 @@ public class Measure3D {
 
 
     }
+
+
 
     /**
      * Find the maximum intensity voxel of segmented object
@@ -697,6 +741,76 @@ public class Measure3D {
     }
 
     /**
+     * Compute the median intensity value of raw image voxel
+     * @return median intensity value of raw image voxel
+     */
+
+    public double medianComputingImage(){
+        double voxelMedianValue=0;
+        Histogram histogram = new Histogram();
+        histogram.run(this._rawImage);
+        HashMap< Double, Integer> _segmentedNucleusHisto =histogram.getHistogram();
+        int medianElementStop= (this._rawImage.getHeight()*this._rawImage.getWidth()*this._rawImage.getNSlices())/2;
+        int increment=0;
+        for (HashMap.Entry<Double,Integer  > entry :  _segmentedNucleusHisto.entrySet()) {
+            increment+=entry.getValue();
+            if(increment>medianElementStop){
+                voxelMedianValue=entry.getKey();
+                break;
+            }
+
+
+        }
+        return voxelMedianValue;
+    }
+
+    private double medianIntensityNucleus (){
+        double voxelMedianValue=0;
+        int numberOfVoxelNucleus = 0;
+        for (int f : this._segmentedNucleusHisto.values()) {
+            numberOfVoxelNucleus += f;
+        }
+        int medianElementStop= (numberOfVoxelNucleus)/2;
+        int increment=0;
+        for(Map.Entry<Double , Integer> entry :
+                this._segmentedNucleusHisto.entrySet()) {
+            increment+=entry.getValue();
+            if(increment>medianElementStop){
+                voxelMedianValue=entry.getKey();
+                break;
+            }
+
+
+        }
+        return voxelMedianValue;
+    }
+
+    private double medianIntensityBackground (){
+        double voxelMedianValue=0;
+        int numberOfVoxelBackground = 0;
+        for (int f : this._segmentedNucleusHisto.values()) {
+            numberOfVoxelBackground += f;
+        }
+        int medianElementStop= (numberOfVoxelBackground)/2;
+        int increment=0;
+        for(Map.Entry<Double , Integer> entry :
+                this._backgroundHisto.entrySet()) {
+            increment+=entry.getValue();
+            if(increment>medianElementStop){
+                voxelMedianValue=entry.getKey();
+                break;
+            }
+
+
+        }
+        return voxelMedianValue;
+    }
+
+
+
+
+
+    /**
      * list of parameters compute in this method returned in tabulated format
      * @return list of parameters compute in this method returned in tabulated
      * format
@@ -721,9 +835,15 @@ public class Measure3D {
                 + bis + "\t"
                 + computeSphericity(volume, bis)+ "\t"
                 +meanIntensity()+ "\t"
+                +meanIntensityBackground()+"\t"
                 +standardDeviationIntensity(meanIntensity())+ "\t"
                 +minIntensity()+ "\t"
-                +maxIntensity();
+                +maxIntensity()+ "\t"
+                +medianComputingImage()+ "\t"
+                +medianIntensityNucleus ()+ "\t"
+                +medianIntensityBackground ()+ "\t"
+                +this._rawImage.getHeight()*this._rawImage.getWidth()*this._rawImage.getNSlices()
+        ;
         return resu;
     }
 
