@@ -297,6 +297,24 @@ public class SegmentationCalling {
 
 
     public String getColnameResult(){
-        return "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\tMeanIntensity\tStandardDeviation\tMinIntensity\tMaxIntensity\tOTSUThreshold\n";
+        return "NucleusFileName\t" +
+                "Volume\t" +
+                "Flatness\t" +
+                "Elongation\t" +
+                "Sphericity\t" +
+                "Esr\t" +
+                "SurfaceArea\t" +
+                "SurfaceAreaCorrected\t" +
+                "SphericityCorrected\t" +
+                "MeanIntensityNucleus\t" +
+                "MeanIntensityBackground\t" +
+                "StandardDeviation\t" +
+                "MinIntensity\t" +
+                "MaxIntensity\t" +
+                "MedianIntensityImage\t" +
+                "MedianIntensityNucleus\t" +
+                "MedianIntensityBackground\t" +
+                "ImageSize\t" +
+                "OTSUThreshold\n";
     }
 }
