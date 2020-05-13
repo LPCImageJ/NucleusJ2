@@ -7,8 +7,11 @@ import gred.nucleus.core.Measure3D;
 import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.plugins.PluginParameters;
 import ij.ImagePlus;
+import ij.ImageStack;
+import loci.common.DebugTools;
 import loci.formats.FormatException;
 import loci.plugins.BF;
+import org.apache.commons.lang.ObjectUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +22,7 @@ public class computeSegmentationParameters {
     public static void computeNucleusParameters(String RawImageSourceFile, String SegmentedImagesSourceFile, String pathToConfig) throws IOException, FormatException ,fileInOut,Exception{
         PluginParameters pluginParameters= new PluginParameters(RawImageSourceFile,SegmentedImagesSourceFile,pathToConfig);
         Directory directoryInput = new Directory(pluginParameters.getInputFolder());
-        directoryInput.listFiles(pluginParameters.getInputFolder());
+        directoryInput.listImageFiles(pluginParameters.getInputFolder());
         directoryInput.checkIfEmpty();
         ArrayList<File> rawImages =directoryInput.m_listeOfFiles;
          String outputCropGeneralInfoOTSU=pluginParameters.getAnalyseParameters()+getColnameResult();
@@ -43,17 +46,23 @@ public class computeSegmentationParameters {
     public static void computeNucleusParameters(String RawImageSourceFile, String SegmentedImagesSourceFile) throws IOException, FormatException ,fileInOut,Exception{
         PluginParameters pluginParameters= new PluginParameters(RawImageSourceFile,SegmentedImagesSourceFile);
         Directory directoryInput = new Directory(pluginParameters.getInputFolder());
-        directoryInput.listFiles(pluginParameters.getInputFolder());
+        directoryInput.listImageFiles(pluginParameters.getInputFolder());
         directoryInput.checkIfEmpty();
         ArrayList<File> rawImages =directoryInput.m_listeOfFiles;
         String outputCropGeneralInfoOTSU=pluginParameters.getAnalyseParameters()+getColnameResult();
         for (short i = 0; i < rawImages.size(); ++i) {
             File currentFile = rawImages.get(i);
+            System.out.println("current File "+currentFile.getName());
 
             ImagePlus Raw = new ImagePlus(currentFile.getAbsolutePath());
             ImagePlus[] Segmented = BF.openImagePlus(pluginParameters.getOutputFolder()+currentFile.getName());
-            Measure3D mesure3D = new Measure3D(Segmented, Raw, pluginParameters.getXcalibration(Raw), pluginParameters.getYcalibration(Raw),pluginParameters.getZcalibration(Raw));
-            outputCropGeneralInfoOTSU+=mesure3D.nucleusParameter3D()+"\n";
+            Measure3D mesure3D = new Measure3D(Segmented,
+                    Raw,
+                    pluginParameters.getXcalibration(Raw),
+                    pluginParameters.getYcalibration(Raw),
+                    pluginParameters.getZcalibration(Raw));
+
+            outputCropGeneralInfoOTSU+=mesure3D.nucleusParameter3D()+"\tNA"+"\n";
         }
 
         OutputTexteFile resultFileOutputOTSU=new OutputTexteFile(pluginParameters.getOutputFolder()
@@ -64,30 +73,52 @@ public class computeSegmentationParameters {
     }
 
     public static void main(String[] args) throws IOException, FormatException, fileInOut,Exception {
-
-        computeNucleusParameters("/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_MICROSCOPE_02-2020/AutoCrop/Output/Segmented/RAW/",
-                "/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_MICROSCOPE_02-2020/AutoCrop/Output/Segmented/GIFT/"
-                ,"/media/tridubos/DATA1/DATA_ANALYSE/WARIO_SEG_TRAINING/config_1_1_1");
-
-/**
-computeNucleusParameters("/media/tridubos/DATA1/DATA_ANALYSE/WARIO_SEG_TRAINING/RAW",
-                "/media/tridubos/DATA1/DATA_ANALYSE/WARIO_SEG_TRAINING/STACK_RECONSTITUEES"
-                ,"/media/tridubos/DATA1/DATA_ANALYSE/WARIO_SEG_TRAINING/config_1_1_1");
-*/
+        DebugTools.enableLogging("OFF");
+        computeNucleusParameters(
+                "/media/titus/DATA/ML_ANALYSE_DATA/ANALYSE_COMPARAISON_REANALYSE/129_ANNOTATION_FULL/RAW",
+                        "/media/titus/DATA/ML_ANALYSE_DATA/ANALYSE_COMPARAISON_REANALYSE/129_ANNOTATION_FULL/GIFT");
     }
-    /**
-    public static void main(String[] args) throws IOException, FormatException, fileInOut,Exception {
 
-        computeNucleusParameters("/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/test_calib_segmentation/Raw",
-                "/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/test_calib_segmentation/Segmented/GIFT"
-                ,"/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/test_calib_segmentation/Segmented/config_1_1_1");
-
-    }
-        */
 
 
     public static String getColnameResult(){
-        return "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\tMeanIntensity\tStandardDeviation\tMinIntensity\tMaxIntensity\n";
+        return "NucleusFileName\t" +
+                "Volume\t" +
+                "Flatness\t" +
+                "Elongation\t" +
+                "Sphericity\t" +
+                "Esr\t" +
+                "SurfaceArea\t" +
+                "SurfaceAreaCorrected\t" +
+                "SphericityCorrected\t" +
+                "MeanIntensityNucleus\t" +
+                "MeanIntensityBackground\t" +
+                "StandardDeviation\t" +
+                "MinIntensity\t" +
+                "MaxIntensity\t" +
+                "MedianIntensityImage\t" +
+                "MedianIntensityNucleus\t" +
+                "MedianIntensityBackground\t" +
+                "ImageSize\t" +
+                "OTSUThreshold\n";
     }
+    public static int recomputeOTSU(ImagePlus _Raw , ImagePlus _Segmented){
+        int OTSUthreshold= Integer.MAX_VALUE;
+        ImageStack imageStackRaw = _Raw.getStack();
+        ImageStack imageStackSeg = _Segmented.getStack();
+        for(int k = 0; k < _Raw.getStackSize(); ++k) {
+            for (int i = 0; i < _Raw.getWidth(); ++i) {
+                for (int j = 0; j < _Raw.getHeight(); ++j) {
+                    if((imageStackSeg.getVoxel(i, j, k)==255) && (OTSUthreshold>=imageStackRaw.getVoxel(i, j, k))){
+                        OTSUthreshold=(int)(imageStackRaw.getVoxel(i, j,k));
+                    }
+
+                }
+            }
+        }
+        return OTSUthreshold;
+
+    }
+
 }
 

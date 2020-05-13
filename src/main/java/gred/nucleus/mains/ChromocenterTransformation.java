@@ -25,7 +25,7 @@ public class ChromocenterTransformation {
 
 
         Directory directoryInput = new Directory(input);
-        directoryInput.listFiles(input);
+        directoryInput.listImageFiles(input);
         directoryInput.checkIfEmpty();
         for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
             File currentFile = directoryInput.getFile(i);

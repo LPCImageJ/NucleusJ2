@@ -14,7 +14,7 @@ public class bitsConvert {
 
     public static void main(String[] args) throws IOException, FormatException, fileInOut,Exception {
         Directory directoryInput = new Directory("/media/tridubos/DATA1/DATA/Axel_Bioinformatics/RawDataNucleus");
-        directoryInput.listFiles("/media/tridubos/DATA1/DATA/Axel_Bioinformatics/RawDataNucleus");
+        directoryInput.listImageFiles("/media/tridubos/DATA1/DATA/Axel_Bioinformatics/RawDataNucleus");
         for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
             File currentFile = directoryInput.getFile(i);
 

@@ -17,9 +17,9 @@ public class ImagesToStack {
 
 
 
-        Directory directoryOutput=new Directory("/media/tridubos/DATA1/DATA_ANALYSE/MACHINE_LEARNING_TRAIN/SPERMATO_DL_GIFT_2_MUTANTS/DL_SEG_STACK/");
-        Directory directoryInput=new Directory("/media/tridubos/DATA1/DATA_ANALYSE/MACHINE_LEARNING_TRAIN/SPERMATO_DL_GIFT_2_MUTANTS/DL_SEG_SLICE/");
-        directoryInput.listFiles("/media/tridubos/DATA1/DATA_ANALYSE/MACHINE_LEARNING_TRAIN/SPERMATO_DL_GIFT_2_MUTANTS/DL_SEG_SLICE/");
+        Directory directoryOutput=new Directory("/home/titus/Bureau/TEST_NJ/ML_PARAM/ML_SEG/STACK");
+        Directory directoryInput=new Directory("/home/titus/Bureau/TEST_NJ/ML_PARAM/ML_SEG/SLICE");
+        directoryInput.listImageFiles("/home/titus/Bureau/TEST_NJ/ML_PARAM/ML_SEG/SLICE");
         //Parcour de l'ensemble des images du dossier
         for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
             String tm = directoryInput.getFile(i).getName();
@@ -49,9 +49,6 @@ public class ImagesToStack {
             ImagePlus imp3 = new Concatenator().concatenate(image, false);
             saveFile(imp3,directoryOutput.m_dirPath
                     +entry.getKey()+".tif");
-
-
-
         }
         /**
             ImagePlus[] image =new ImagePlus[99];

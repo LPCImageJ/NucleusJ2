@@ -99,8 +99,8 @@ public class TestSegmentationMethods {
         testStupidSeveralImages("/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/test_calib_segmentation/Raw",
         "/media/tridubos/DATA1/DATA_ANALYSE/ANALYSE_BILLES_11-2019/test_calib_segmentation/Segmented");
          */
-        testStupidSeveralImages("/home/titus/Bureau/TEST_NJ/SEG/TEST_SEG/test1",
-                "/home/titus/Bureau/TEST_NJ/SEG/TEST_SEG/SEG_DIVISER_DANS_PARENTHESE");
+        testStupidSeveralImages("/media/titus/DATA/ML_ANALYSE_DATA/ANALYSE_COMPARAISON_REANALYSE/129_ANNOTATION_FULL/TEST_NEW_PARAMETER/RAW",
+                "/media/titus/DATA/ML_ANALYSE_DATA/ANALYSE_COMPARAISON_REANALYSE/129_ANNOTATION_FULL/TEST_NEW_PARAMETER/SEG");
         //testStupidSeveralImages("/home/titus/Bureau/TEST_NJ/AUTOCROP/DEBUG/RAWBUG",
         //"/home/titus/Bureau/TEST_NJ/AUTOCROP/DEBUG/SEGBUG");
 
@@ -125,8 +125,8 @@ public class TestSegmentationMethods {
         System.err.println("The program ended normally.");
         String timeStampend = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
 
-        System.out.println( "Start :"+ timeStampStart);
-        System.out.println( "Start :"+ timeStampend);
+        System.out.println( "START :"+ timeStampStart);
+        System.out.println( "END :"+ timeStampend);
 
     }
 

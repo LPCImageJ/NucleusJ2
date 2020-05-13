@@ -11,8 +11,11 @@ import gred.nucleus.segmentation.SegmentationCalling;
 
 import gred.nucleus.segmentation.SegmentationParameters;
 import gred.nucleus.utils.Histogram;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
+import ij.io.FileSaver;
+import ij.plugin.Concatenator;
 import inra.ijpb.binary.BinaryImages;
 import inra.ijpb.label.LabelImages;
 import loci.common.DebugTools;
@@ -24,6 +27,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 
@@ -169,6 +174,17 @@ public class main {
 
     // TODO AJOUTER computeNucleusParametersDL avec configFILE FACTORISABLE AVEC computeNucleusParametersCONFINGFILE
 
+    /**
+     * MA BITE
+     *
+     * @param RawImageSourceFile
+     * @param SegmentedImagesSourceFile
+     * @throws IOException
+     * @throws FormatException
+     * @throws fileInOut
+     * @throws Exception
+     */
+
     public static void computeNucleusParametersDL(String RawImageSourceFile, String SegmentedImagesSourceFile) throws IOException, FormatException ,fileInOut,Exception{
         PluginParameters pluginParameters= new PluginParameters(RawImageSourceFile,SegmentedImagesSourceFile);
         Directory directoryInput = new Directory(pluginParameters.getOutputFolder());
@@ -227,6 +243,10 @@ public class main {
 
     }
 
+    /**
+     *
+     * @return
+     */
 
     public static String getColnameResult(){
         return "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\tMeanIntensity\tStandardDeviation\tMinIntensity\tMaxIntensity\n";
@@ -242,7 +262,7 @@ public class main {
             // TODO FAIRE UNE FONCTION POUR CHOPER LE FICHIER IMAGE DANS LE DIR PEUT IMPORTE L EXTENSION !
             File tifFile =directoryTIF.searchFileNameWithoutExention(coordinateFile.getName().split("\\.")[0]);
             if (tifFile !=null) {
-                System.out.println("Dedand");
+                System.out.println("Dedand "+tifFile.getAbsolutePath());
 
                 AutocropParameters autocropParameters= new AutocropParameters(tifFile.getParent(),tifFile.getParent());
                 ArrayList<String> listOfBoxes =readCoordonnateTXT(coordinateFile);
@@ -283,6 +303,50 @@ public class main {
     }
 
 
+
+    public static void sliceToStack(String pathToSliceDir, String pathToOutputDir) throws Exception {
+        HashMap<String, Integer> test = new HashMap();
+
+
+        Directory directoryOutput = new Directory(pathToOutputDir);
+        Directory directoryInput = new Directory(pathToSliceDir);
+        directoryInput.listImageFiles(pathToSliceDir);
+        //Parcour de l'ensemble des images du dossier
+        for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
+            String tm = directoryInput.getFile(i).getName();
+            tm = tm.substring(0, tm.lastIndexOf("_"));
+            tm = tm.substring(0, tm.lastIndexOf("_"));
+            if (test.get(tm) != null) {
+                test.put(tm, test.get(tm) + 1);
+            } else {
+                test.put(tm, 1);
+            }
+        }
+
+        for (Map.Entry<String, Integer> entry : test.entrySet()) {
+            ImagePlus[] image = new ImagePlus[entry.getValue()];
+            System.out.println("image :" + entry.getKey());
+            for (short i = 0; i < image.length; ++i) {
+                //image= BF.openImagePlus((directoryInput.m_dirPath
+                image[i] = IJ.openImage((directoryInput.m_dirPath
+                        + "/"
+                        + entry.getKey()
+                        + "_"
+                        + i + "_MLprediction.tif"));
+                IJ.run(image[i], "8-bit", "");
+                //
+            }
+            ImagePlus imp3 = new Concatenator().concatenate(image, false);
+            saveFile(imp3, directoryOutput.m_dirPath+directoryOutput.m_separator
+                    + entry.getKey() + ".tif");
+        }
+
+    }
+
+    public static void saveFile ( ImagePlus imagePlusInput, String pathFile) {
+        FileSaver fileSaver = new FileSaver(imagePlusInput);
+        fileSaver.saveAsTiff(pathFile);
+    }
 
     public static void main(String[] args) throws IOException, FormatException, fileInOut,Exception {
         DebugTools.enableLogging("OFF");
@@ -330,6 +394,9 @@ public class main {
         }
         else if(args[0].equals("generateProjection")){
             generateProjectionFromCoordonne(args[1], args[2]);
+        }
+        else if (args[0].equals("SliceToStack")){
+            sliceToStack(args[1], args[2]);
         }
         else{
             System.out.println("Argument le premier argument doit être   autocrop  ou   segmentation ou computeParameters");
