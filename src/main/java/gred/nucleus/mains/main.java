@@ -49,49 +49,64 @@ public class main {
      * maxVolumeNucleus:2147483647
      * minVolumeNucleus:1
      *
-     * @param imageSourceFile : path to the image's folder
-     * @param output : path to output folder analysis
+     * @param inputDirectory path to the raw image's folder
+     * @param outputDirectory path to output folder analysis
      * @throws IOException
      * @throws FormatException
      * @throws fileInOut
      * @throws Exception
      */
-    public static void runAutoCropFolder(String imageSourceFile, String output) throws IOException, FormatException ,fileInOut,Exception{
-        AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
+    public static void runAutoCropFolder(String inputDirectory, String outputDirectory) throws IOException, FormatException ,fileInOut,Exception{
+        AutocropParameters autocropParameters= new AutocropParameters(inputDirectory,outputDirectory);
         AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
         autoCrop.runFolder();
     }
 
     /**
      * Method to run autocrop with input folder, output folder and with config file analysis:
-     * @param imageSourceFile :: path to the image's folder
-     * @param output : path to output folder analysis
-     * @param pathToConfig : path to config file
+     * @param inputDirectory path to the raw image's folder
+     * @param outputDirectory path to output folder analysis
+     * @param pathToConfig path to config file
      * @throws IOException
      * @throws FormatException
      * @throws fileInOut
      * @throws Exception
      */
-    public static void runAutoCropFolder(String imageSourceFile, String output, String pathToConfig) throws IOException, FormatException ,fileInOut,Exception{
-        AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output,pathToConfig);
+    public static void runAutoCropFolder(String inputDirectory, String outputDirectory, String pathToConfig) throws IOException, FormatException ,fileInOut,Exception{
+        AutocropParameters autocropParameters= new AutocropParameters(inputDirectory,outputDirectory,pathToConfig);
         AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
         autoCrop.runFolder();
     }
 
-    public static void runAutoCropFile(String imageSourceFile, String output) throws IOException , fileInOut,Exception{
+    /**
+     * Method to run autocrop with input folder, output folder :
+     * @param inputDirectory  path to the raw image's folder
+     * @param outputDirectory path to output folder analysis
+     * @throws IOException
+     * @throws fileInOut
+     * @throws Exception
+     */
+
+    public static void runAutoCropFile(String inputDirectory, String outputDirectory) throws IOException , fileInOut,Exception{
         //AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
-        AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
+        AutocropParameters autocropParameters= new AutocropParameters(inputDirectory,outputDirectory);
         AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
-        autoCrop.runFile(imageSourceFile);
+        autoCrop.runFile(inputDirectory);
     }
 
 
 
     //========================= Segmentation calling ===========================================
 
+    /**
+     * Method to run segmentation with input folder, output folder :
+     * @param inputDirectory path to the raw image's folder
+     * @param outputDirectory path to output folder analysis
+     * @throws Exception
+     */
 
-    public static void segmentationFolder(String input, String output ) throws Exception {
-        SegmentationParameters segmentationParameters = new SegmentationParameters(input,output);
+    public static void segmentationFolder(String inputDirectory, String outputDirectory ) throws Exception {
+        SegmentationParameters segmentationParameters = new SegmentationParameters(inputDirectory,outputDirectory);
         SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
         try {
             String log = otsuModif.runSeveralImages2();
@@ -100,8 +115,15 @@ public class main {
         }catch (IOException e) { e.printStackTrace();}
     }
 
-    public static void segmentationFolder(String input, String output ,String config) throws Exception {
-        SegmentationParameters segmentationParameters = new SegmentationParameters(input,output,config);
+    /**
+     * Method to run segmentation with input folder, output folder with config file :
+     * @param inputDirectory path to the raw image's folder
+     * @param outputDirectory path to output folder analysis
+     * @param config path to config file
+     * @throws Exception
+     */
+    public static void segmentationFolder(String inputDirectory, String outputDirectory ,String config) throws Exception {
+        SegmentationParameters segmentationParameters = new SegmentationParameters(inputDirectory,outputDirectory,config);
         SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
         try {
             String log = otsuModif.runSeveralImages2();
@@ -110,21 +132,37 @@ public class main {
         }catch (IOException e) { e.printStackTrace();}
     }
 
+    /**
+     * Method to run segmentation on one image :
+     * @param inputDirectory path to one raw image
+     * @param outputDirectory path to output folder analysis
+     * @throws Exception
+     */
 
-    public static void segmentationOneImage(String input, String output) throws Exception {
-        SegmentationParameters segmentationParameters = new SegmentationParameters(input,output);
+    public static void segmentationOneImage(String inputDirectory, String outputDirectory) throws Exception {
+        SegmentationParameters segmentationParameters = new SegmentationParameters(inputDirectory,outputDirectory);
         SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
         try {
-            String log = otsuModif.runOneImage(input);
+            String log = otsuModif.runOneImage(inputDirectory);
             if(!(log.equals("")))
                 System.out.println("Nuclei which didn't pass the segmentation\n"+log);
         }catch (IOException e) { e.printStackTrace();}
     }
 
+    /**
+     * Compute parameter from raw data folder and segmented data :
+     *
+     * @param rawImagesInputDirectory path to the raw image's folder
+     * @param segmentedImagesDirectory path to the segmented image's folder
+     * @param pathToConfig path to config file
+     * @throws IOException
+     * @throws FormatException
+     * @throws fileInOut
+     * @throws Exception
+     */
 
-
-    public static void computeNucleusParameters(String RawImageSourceFile, String SegmentedImagesSourceFile, String pathToConfig) throws IOException, FormatException ,fileInOut,Exception{
-        PluginParameters pluginParameters= new PluginParameters(RawImageSourceFile,SegmentedImagesSourceFile,pathToConfig);
+    public static void computeNucleusParameters(String rawImagesInputDirectory, String segmentedImagesDirectory, String pathToConfig) throws IOException, FormatException ,fileInOut,Exception{
+        PluginParameters pluginParameters= new PluginParameters(rawImagesInputDirectory,segmentedImagesDirectory,pathToConfig);
         Directory directoryInput = new Directory(pluginParameters.getInputFolder());
         directoryInput.listImageFiles(pluginParameters.getInputFolder());
         directoryInput.checkIfEmpty();
@@ -148,8 +186,20 @@ public class main {
 
     // TODO  configFILE FACTORISABLE AVEC computeNucleusParameters SANS CONFINGFILE
 
-    public static void computeNucleusParameters(String RawImageSourceFile, String SegmentedImagesSourceFile) throws IOException, FormatException ,fileInOut,Exception{
-        PluginParameters pluginParameters= new PluginParameters(RawImageSourceFile,SegmentedImagesSourceFile);
+    /**
+     *
+     * Compute parameter from raw data folder and segmented data :
+     *
+     * @param rawImagesInputDirectory path to the raw image's folder
+     * @param segmentedImagesDirectory path to the segmented image's folder
+     * @throws IOException
+     * @throws FormatException
+     * @throws fileInOut
+     * @throws Exception
+     */
+
+    public static void computeNucleusParameters(String rawImagesInputDirectory, String segmentedImagesDirectory) throws IOException, FormatException ,fileInOut,Exception{
+        PluginParameters pluginParameters= new PluginParameters(rawImagesInputDirectory,segmentedImagesDirectory);
         Directory directoryInput = new Directory(pluginParameters.getOutputFolder());
         directoryInput.listImageFiles(pluginParameters.getOutputFolder());
         directoryInput.checkIfEmpty();
@@ -175,18 +225,20 @@ public class main {
     // TODO AJOUTER computeNucleusParametersDL avec configFILE FACTORISABLE AVEC computeNucleusParametersCONFINGFILE
 
     /**
-     * MA BITE
      *
-     * @param RawImageSourceFile
-     * @param SegmentedImagesSourceFile
+     *
+     * Compute parameter from raw data folder and segmented data from deep leaning output:
+     *
+     * @param rawImagesInputDirectory path to the raw image's folder
+     * @param segmentedImagesDirectory path to the segmented image's folder
      * @throws IOException
      * @throws FormatException
      * @throws fileInOut
      * @throws Exception
      */
 
-    public static void computeNucleusParametersDL(String RawImageSourceFile, String SegmentedImagesSourceFile) throws IOException, FormatException ,fileInOut,Exception{
-        PluginParameters pluginParameters= new PluginParameters(RawImageSourceFile,SegmentedImagesSourceFile);
+    public static void computeNucleusParametersDL(String rawImagesInputDirectory, String segmentedImagesDirectory) throws IOException, FormatException ,fileInOut,Exception{
+        PluginParameters pluginParameters= new PluginParameters(rawImagesInputDirectory,segmentedImagesDirectory);
         Directory directoryInput = new Directory(pluginParameters.getOutputFolder());
         directoryInput.listImageFiles(pluginParameters.getOutputFolder());
         directoryInput.checkIfEmpty();
