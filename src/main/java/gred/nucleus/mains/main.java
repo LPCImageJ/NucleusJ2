@@ -2,6 +2,7 @@ package gred.nucleus.mains;
 import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.FilesInputOutput.OutputTexteFile;
 import gred.nucleus.autocrop.AutocropParameters;
+import gred.nucleus.autocrop.CropFromCoordonnate;
 import gred.nucleus.autocrop.annotAutoCrop;
 import gred.nucleus.core.Measure3D;
 import gred.nucleus.exceptions.fileInOut;
@@ -394,6 +395,11 @@ public class main {
         }
 
     }
+    public static void cropFromCoordinates(String coordonnateDir) throws IOException, FormatException,Exception {
+
+        CropFromCoordonnate test = new CropFromCoordonnate(coordonnateDir);
+        test.runCropFromCoordonnate();
+    }
 
     public static void saveFile ( ImagePlus imagePlusInput, String pathFile) {
         FileSaver fileSaver = new FileSaver(imagePlusInput);
@@ -449,6 +455,9 @@ public class main {
         }
         else if (args[0].equals("SliceToStack")){
             sliceToStack(args[1], args[2]);
+        }
+        else if(args[0].equals("CropFromCoordonnate")){
+            cropFromCoordinates(args[1]);
         }
         else{
             System.out.println("Argument le premier argument doit être   autocrop  ou   segmentation ou computeParameters");
