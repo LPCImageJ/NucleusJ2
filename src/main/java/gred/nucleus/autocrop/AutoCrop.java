@@ -133,7 +133,6 @@ public class AutoCrop {
 		this.m_outputFilesPrefix = outputFilesPrefix;
 		setChannelNumbers();
 		if(this.m_rawImg.getBitDepth()>8) {
-			System.out.println("du coup on check bien le 8bits " +this.m_rawImg.getBitDepth());
 			this.m_imageSeg = thresholding.contrastAnd8bits(
 					getImageChannel(
 							this.m_autocropParameters.getChannelToComputeThreshold()));
@@ -141,11 +140,28 @@ public class AutoCrop {
 		else{
 			this.m_imageSeg=this.m_rawImg;
 		}
-		this.m_imageSeg.show();
 		this.m_infoImageAnalyse =
 				autocropParametersAnalyse.getAnalyseParameters();
 
 	}
+
+	public AutoCrop(File imageFile, String outputFilesPrefix,
+					AutocropParameters autocropParametersAnalyse,HashMap<Double, Box> _boxes)
+			throws IOException, FormatException, fileInOut, Exception {
+		this.m_autocropParameters = autocropParametersAnalyse;
+		this.m_currentFile = imageFile;
+		this.m_imageFilePath = imageFile.getAbsolutePath();
+		this.m_outputDirPath = this.m_autocropParameters.getOutputFolder();
+		Thresholding thresholding = new Thresholding();
+		this.m_outputFilesPrefix = outputFilesPrefix;
+		setChannelNumbers();
+		this.m_imageSeg=this.m_rawImg;
+		this.m_infoImageAnalyse =autocropParametersAnalyse.getAnalyseParameters();
+		m_boxes=_boxes;
+	}
+
+
+
 
 	/**
 	 * Method to get specific channel to compute OTSU threshold
@@ -415,7 +431,6 @@ public class AutoCrop {
 			this.m_outputDirPath+File.separator+this.m_outputFilesPrefix);
 		dirOutput.CheckAndCreateDir();
 		this.m_infoImageAnalyse += getSpecificImageInfo() + getColoneName();
-		System.out.println("on passe au crop \n\n");
 		for (int y =0 ;y<this.m_channelNumbers;y++) {
 			int i=0;
 			for (Map.Entry<Double , Box> entry : this.m_boxes.entrySet()) {
@@ -433,7 +448,6 @@ public class AutoCrop {
 
 				ImagePlus imgResu;
 				if(this.m_rawImg.getNSlices()>1) {
-					System.out.println("la clef qui merde "+ entry.getKey());
 					imgResu = cropImage(xmin, ymin,zmin, width,height, depth,y);
 				}
 				else{
@@ -574,7 +588,6 @@ public class AutoCrop {
 		ImagePlus sort = new ImagePlus();
 		ChannelSplitter channelSplitter = new ChannelSplitter();
 		imps = channelSplitter.split(imps[0]);
-		System.out.println(xmin +" "+ ymin +" "+zmin+" "+width+" "+ height+" "+depth);
 		sort.setStack(imps[channelNumber].getStack().crop(xmin, ymin ,zmin,width
 				, height,depth));
 		return sort;
@@ -691,5 +704,13 @@ public class AutoCrop {
             recompute.runRectangleRecompilation();
             this.m_boxes = recompute.getNewBoxes();
         }
+	}
+
+	/**
+	 * Set a list of boxes
+	 * @param boxes list of boxes
+	 */
+	public void setBoxes(HashMap<Double, Box> boxes){
+		this.m_boxes=boxes;
 	}
 }
