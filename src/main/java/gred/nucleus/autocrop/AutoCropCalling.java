@@ -42,7 +42,7 @@ public class AutoCropCalling {
     }
 
     /**
-     * Run auto crop on the input:
+     * Run auto crop on image's folder:
      * -If input is a file: open the image with bioformat plugin to obtain the
      *  metadata then run the auto crop.
      * -If input is directory, listed the file, foreach tif file loaded file
@@ -92,6 +92,18 @@ public class AutoCropCalling {
                         +"result_Autocrop_Analyse.csv");
         resultFileOutput.SaveTexteFile( this.m_outputCropGeneralInfo);
     }
+
+
+    /**
+     *  Run auto crop on one image :
+     *   -If input is a file: open the image with bioformat plugin to obtain the
+     *   metadata then run the auto crop.
+     *   -If input is directory, listed the file, foreach tif file loaded file
+     *   with bioformat, run the auto crop.
+     *
+     * @param file
+     * @throws Exception
+     */
     public void runFile(String file) throws Exception {
         File currentFile =  new File(file);
         String fileImg = currentFile.toString();
@@ -119,8 +131,14 @@ public class AutoCropCalling {
     }
 
 
-        public String getColnameResult(){
-        return "FileName\tNumberOfCrop\tOTSUThreshold\tDefaultOTSUThreshold\n";
+
+    /**
+     * List of colunms name in csv coordinates output file.
+     * @return columns name
+     */
+
+    public String getColnameResult(){
+    return "FileName\tNumberOfCrop\tOTSUThreshold\tDefaultOTSUThreshold\n";
     }
 }
 

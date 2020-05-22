@@ -1,12 +1,9 @@
 package gred.nucleus.mains;
 import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.FilesInputOutput.OutputTexteFile;
-import gred.nucleus.autocrop.AutocropParameters;
-import gred.nucleus.autocrop.CropFromCoordonnate;
-import gred.nucleus.autocrop.annotAutoCrop;
+import gred.nucleus.autocrop.*;
 import gred.nucleus.core.Measure3D;
 import gred.nucleus.exceptions.fileInOut;
-import gred.nucleus.autocrop.AutoCropCalling;
 import gred.nucleus.plugins.PluginParameters;
 import gred.nucleus.segmentation.SegmentationCalling;
 
@@ -22,7 +19,6 @@ import inra.ijpb.label.LabelImages;
 import loci.common.DebugTools;
 import loci.formats.FormatException;
 import loci.plugins.BF;
-//import org.apache.commons.cli.Options;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,7 +32,6 @@ import java.util.Scanner;
 public class main {
 
 
-    static ArrayList <String> m_test;
 
     /**
      * Method to run autocrop with only input output folder and with default parameters which are:
@@ -304,56 +299,16 @@ public class main {
     public static String getColnameResult(){
         return "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\tMeanIntensity\tStandardDeviation\tMinIntensity\tMaxIntensity\n";
     }
-    public static void generateProjectionFromCoordonne(String coordonnateDir,String tiffAssociatedDir) throws IOException, FormatException,Exception {
-        Directory directoryCoordonne = new Directory(coordonnateDir);
-        Directory directoryTIF = new Directory(tiffAssociatedDir);
-        directoryCoordonne.listAllFiles(directoryCoordonne.get_dirPath());
-        directoryTIF.listAllFiles(directoryTIF.get_dirPath());
-        for (short i = 0; i < directoryCoordonne.getNumberFiles(); ++i) {
-            File coordinateFile = directoryCoordonne.getFile(i);
 
-            // TODO FAIRE UNE FONCTION POUR CHOPER LE FICHIER IMAGE DANS LE DIR PEUT IMPORTE L EXTENSION !
-            File tifFile =directoryTIF.searchFileNameWithoutExention(coordinateFile.getName().split("\\.")[0]);
-            if (tifFile !=null) {
-                System.out.println("Dedand "+tifFile.getAbsolutePath());
+    // UN DOSSIER AVEC LES IMAGETTES
+    // UN DOSSIER AVEC LES COORDONNEES
+    // UN DOSSIER AVEC LES ZPROJECTION
 
-                AutocropParameters autocropParameters= new AutocropParameters(tifFile.getParent(),tifFile.getParent());
-                ArrayList<String> listOfBoxes =readCoordonnateTXT(coordinateFile);
-                annotAutoCrop annotAutoCrop =new annotAutoCrop(listOfBoxes,tifFile,tifFile.getAbsolutePath(),autocropParameters);
-
-                annotAutoCrop.run();
-            }
-        }
-
+    public static void generateProjectionFromCoordinnates(String pathToGIFTSeg, String pathToZprojection,String pathToCoordonnate) throws IOException, FormatException,Exception {
+        generateProjectionFromCoordonne projection =new generateProjectionFromCoordonne(pathToGIFTSeg, pathToZprojection, pathToCoordonnate);
+        projection.run();
     }
-    public static ArrayList<String> readCoordonnateTXT(File boxeFile) {
 
-        ArrayList<String> boxLists = new ArrayList();
-        try {
-            Scanner scanner = new Scanner(boxeFile);
-            while (scanner.hasNextLine()) {
-                String line = scanner.nextLine();
-
-                if ((!(line.matches("^#.*")))
-                        && (!(line.matches("^FileName.*")))) {
-                    String [] splitLine = line.split("\\t");
-                    int xMax=Integer.valueOf(splitLine[3])+Integer.valueOf(splitLine[6]);
-                    int yMax=Integer.valueOf(splitLine[4])+Integer.valueOf(splitLine[7]);
-                    int zMax=Integer.valueOf(splitLine[5])+Integer.valueOf(splitLine[8]);
-                    boxLists.add(splitLine[0]
-                            + "\t" + splitLine[3]
-                            + "\t" + xMax
-                            + "\t" + splitLine[4]
-                            + "\t" + yMax
-                            + "\t" + splitLine[5]
-                            + "\t" + zMax);
-                }
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        return boxLists;
-    }
 
 
 
@@ -451,7 +406,7 @@ public class main {
             computeNucleusParametersDL(args[1], args[2]);
         }
         else if(args[0].equals("generateProjection")){
-            generateProjectionFromCoordonne(args[1], args[2]);
+            generateProjectionFromCoordinnates(args[1], args[2],args[3]);
         }
         else if (args[0].equals("SliceToStack")){
             sliceToStack(args[1], args[2]);
