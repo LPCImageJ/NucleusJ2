@@ -1,32 +1,25 @@
 package gred.nucleus.mains;
 import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.FilesInputOutput.OutputTexteFile;
+import gred.nucleus.MachineLeaningUtils.SliceToStack;
+import gred.nucleus.MachineLeaningUtils.ComputeNucleiParametersML;
 import gred.nucleus.autocrop.*;
+import gred.nucleus.core.ComputeNucleiParameters;
 import gred.nucleus.core.Measure3D;
 import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.plugins.PluginParameters;
 import gred.nucleus.segmentation.SegmentationCalling;
 
 import gred.nucleus.segmentation.SegmentationParameters;
-import gred.nucleus.utils.Histogram;
-import ij.IJ;
 import ij.ImagePlus;
-import ij.ImageStack;
 import ij.io.FileSaver;
-import ij.plugin.Concatenator;
-import inra.ijpb.binary.BinaryImages;
-import inra.ijpb.label.LabelImages;
 import loci.common.DebugTools;
 import loci.formats.FormatException;
 import loci.plugins.BF;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
 
 
 public class main {
@@ -157,28 +150,10 @@ public class main {
      * @throws Exception
      */
 
-    public static void computeNucleusParameters(String rawImagesInputDirectory, String segmentedImagesDirectory, String pathToConfig) throws IOException, FormatException ,fileInOut,Exception{
-        PluginParameters pluginParameters= new PluginParameters(rawImagesInputDirectory,segmentedImagesDirectory,pathToConfig);
-        Directory directoryInput = new Directory(pluginParameters.getInputFolder());
-        directoryInput.listImageFiles(pluginParameters.getInputFolder());
-        directoryInput.checkIfEmpty();
-        ArrayList<File> rawImages =directoryInput.m_listeOfFiles;
-        String outputCropGeneralInfoOTSU=pluginParameters.getAnalyseParameters()+getColnameResult();
-        for (short i = 0; i < rawImages.size(); ++i) {
-            File currentFile = rawImages.get(i);
-            ImagePlus Raw = new ImagePlus(currentFile.getAbsolutePath());
-            ImagePlus[] Segmented = BF.openImagePlus(pluginParameters.getOutputFolder()+currentFile.getName());
-
-
-            Measure3D mesure3D = new Measure3D(Segmented, Raw, pluginParameters.getXcalibration(Raw), pluginParameters.getYcalibration(Raw),pluginParameters.getZcalibration(Raw));
-            outputCropGeneralInfoOTSU+=mesure3D.nucleusParameter3D()+"\n";
+        public static void computeNucleusParameters(String rawImagesInputDirectory, String segmentedImagesDirectory,String pathToConfig) throws IOException, FormatException ,fileInOut,Exception{
+            ComputeNucleiParameters generateParameters =new ComputeNucleiParameters(rawImagesInputDirectory, segmentedImagesDirectory,pathToConfig);
+            generateParameters.run();
         }
-        OutputTexteFile resultFileOutputOTSU=new OutputTexteFile(pluginParameters.getOutputFolder()
-                +directoryInput.getSeparator()
-                +"result_Segmentation_Analyse.csv");
-        resultFileOutputOTSU.SaveTexteFile( outputCropGeneralInfoOTSU);
-
-    }
 
     // TODO  configFILE FACTORISABLE AVEC computeNucleusParameters SANS CONFINGFILE
 
@@ -195,110 +170,23 @@ public class main {
      */
 
     public static void computeNucleusParameters(String rawImagesInputDirectory, String segmentedImagesDirectory) throws IOException, FormatException ,fileInOut,Exception{
-        PluginParameters pluginParameters= new PluginParameters(rawImagesInputDirectory,segmentedImagesDirectory);
-        Directory directoryInput = new Directory(pluginParameters.getOutputFolder());
-        directoryInput.listImageFiles(pluginParameters.getOutputFolder());
-        directoryInput.checkIfEmpty();
-        ArrayList<File> segImages =directoryInput.m_listeOfFiles;
-        String outputCropGeneralInfoOTSU=pluginParameters.getAnalyseParameters()+getColnameResult();
-        for (short i = 0; i < segImages.size(); ++i) {
-            File currentFile = segImages.get(i);
-            System.out.println("current File "+currentFile.getName());
-
-            ImagePlus Raw = new ImagePlus(pluginParameters.getInputFolder()+directoryInput.getSeparator()+currentFile.getName());
-            ImagePlus[] Segmented = BF.openImagePlus(pluginParameters.getOutputFolder()+currentFile.getName());
-            Measure3D mesure3D = new Measure3D(Segmented, Raw, pluginParameters.getXcalibration(Raw), pluginParameters.getYcalibration(Raw),pluginParameters.getZcalibration(Raw));
-            outputCropGeneralInfoOTSU+=mesure3D.nucleusParameter3D()+"\n";
-        }
-
-        OutputTexteFile resultFileOutputOTSU=new OutputTexteFile(pluginParameters.getOutputFolder()
-                +directoryInput.getSeparator()
-                +"result_Segmentation_Analyse.csv");
-        resultFileOutputOTSU.SaveTexteFile( outputCropGeneralInfoOTSU);
-
+        ComputeNucleiParameters generateParameters =new ComputeNucleiParameters(rawImagesInputDirectory, segmentedImagesDirectory);
+        generateParameters.run();
     }
 
     // TODO AJOUTER computeNucleusParametersDL avec configFILE FACTORISABLE AVEC computeNucleusParametersCONFINGFILE
 
-    /**
-     *
-     *
-     * Compute parameter from raw data folder and segmented data from deep leaning output:
-     *
-     * @param rawImagesInputDirectory path to the raw image's folder
-     * @param segmentedImagesDirectory path to the segmented image's folder
-     * @throws IOException
-     * @throws FormatException
-     * @throws fileInOut
-     * @throws Exception
-     */
+
 
     public static void computeNucleusParametersDL(String rawImagesInputDirectory, String segmentedImagesDirectory) throws IOException, FormatException ,fileInOut,Exception{
-        PluginParameters pluginParameters= new PluginParameters(rawImagesInputDirectory,segmentedImagesDirectory);
-        Directory directoryInput = new Directory(pluginParameters.getOutputFolder());
-        directoryInput.listImageFiles(pluginParameters.getOutputFolder());
-        directoryInput.checkIfEmpty();
-        ArrayList<File> segImages =directoryInput.m_listeOfFiles;
-        String outputCropGeneralInfoOTSU=pluginParameters.getAnalyseParameters()+getColnameResult();
-        for (short i = 0; i < segImages.size(); ++i) {
-            File currentFile = segImages.get(i);
-            System.out.println("current File "+currentFile.getName());
-            ImagePlus Raw = new ImagePlus(pluginParameters.getInputFolder()+directoryInput.getSeparator()+currentFile.getName());
-            ImagePlus[] Segmented = BF.openImagePlus(pluginParameters.getOutputFolder()+currentFile.getName());
-            // TODO TRANSFORMATION FACTORISABLE AVEC METHODE DU DESSUS !!!!!
-            Segmented[0]=generateSegmentedImage(Segmented[0],1);
-            Segmented[0] = BinaryImages.componentsLabeling(Segmented[0], 26,32);
-            LabelImages.removeBorderLabels(Segmented[0]);
-            Segmented[0]=generateSegmentedImage(Segmented[0],1);
-            Histogram histogram = new Histogram ();
-            histogram.run(Segmented[0]);
-            if (histogram.getNbLabels() > 0) {
-                Measure3D mesure3D = new Measure3D(Segmented, Raw, pluginParameters.getXcalibration(Raw), pluginParameters.getYcalibration(Raw), pluginParameters.getZcalibration(Raw));
-                outputCropGeneralInfoOTSU += mesure3D.nucleusParameter3D() + "\n";
-            }
-        }
-
-        OutputTexteFile resultFileOutputOTSU=new OutputTexteFile(pluginParameters.getOutputFolder()
-                +directoryInput.getSeparator()
-                +"result_Segmentation_Analyse.csv");
-        resultFileOutputOTSU.SaveTexteFile( outputCropGeneralInfoOTSU);
-
+        ComputeNucleiParametersML computeParameters = new ComputeNucleiParametersML(rawImagesInputDirectory,  segmentedImagesDirectory);
+        computeParameters.run();
     }
 
 
-    public static ImagePlus generateSegmentedImage (ImagePlus imagePlusInput,
-                                                    int threshold)  {
-        ImageStack imageStackInput = imagePlusInput.getStack();
-        ImagePlus imagePlusSegmented = imagePlusInput.duplicate();
 
-        imagePlusSegmented.setTitle(imagePlusInput.getTitle());
-        ImageStack imageStackSegmented = imagePlusSegmented.getStack();
-        for(int k = 0; k < imagePlusInput.getStackSize(); ++k) {
-            for (int i = 0; i < imagePlusInput.getWidth(); ++i) {
-                for (int j = 0; j < imagePlusInput.getHeight(); ++j) {
-                    double voxelValue = imageStackInput.getVoxel(i, j, k);
-                    if (voxelValue > 1) {
-                        imageStackSegmented.setVoxel(i, j, k, 255);
-                        imageStackInput.getVoxel(i, j, k);
-                    }
-                    else {
-                        imageStackSegmented.setVoxel(i, j, k, 0);
-                    }
-                }
-            }
-        }
-        return imagePlusSegmented;
 
-    }
 
-    /**
-     *
-     * @return
-     */
-
-    public static String getColnameResult(){
-        return "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\tMeanIntensity\tStandardDeviation\tMinIntensity\tMaxIntensity\n";
-    }
 
     // UN DOSSIER AVEC LES IMAGETTES
     // UN DOSSIER AVEC LES COORDONNEES
@@ -313,41 +201,9 @@ public class main {
 
 
     public static void sliceToStack(String pathToSliceDir, String pathToOutputDir) throws Exception {
-        HashMap<String, Integer> test = new HashMap();
+        SliceToStack createStack =new SliceToStack(pathToSliceDir,pathToOutputDir);
+        createStack.run();
 
-
-        Directory directoryOutput = new Directory(pathToOutputDir);
-        Directory directoryInput = new Directory(pathToSliceDir);
-        directoryInput.listImageFiles(pathToSliceDir);
-        //Parcour de l'ensemble des images du dossier
-        for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
-            String tm = directoryInput.getFile(i).getName();
-            tm = tm.substring(0, tm.lastIndexOf("_"));
-            tm = tm.substring(0, tm.lastIndexOf("_"));
-            if (test.get(tm) != null) {
-                test.put(tm, test.get(tm) + 1);
-            } else {
-                test.put(tm, 1);
-            }
-        }
-
-        for (Map.Entry<String, Integer> entry : test.entrySet()) {
-            ImagePlus[] image = new ImagePlus[entry.getValue()];
-            System.out.println("image :" + entry.getKey());
-            for (short i = 0; i < image.length; ++i) {
-                //image= BF.openImagePlus((directoryInput.m_dirPath
-                image[i] = IJ.openImage((directoryInput.m_dirPath
-                        + "/"
-                        + entry.getKey()
-                        + "_"
-                        + i + "_MLprediction.tif"));
-                IJ.run(image[i], "8-bit", "");
-                //
-            }
-            ImagePlus imp3 = new Concatenator().concatenate(image, false);
-            saveFile(imp3, directoryOutput.m_dirPath+directoryOutput.m_separator
-                    + entry.getKey() + ".tif");
-        }
 
     }
     public static void cropFromCoordinates(String coordonnateDir) throws IOException, FormatException,Exception {
