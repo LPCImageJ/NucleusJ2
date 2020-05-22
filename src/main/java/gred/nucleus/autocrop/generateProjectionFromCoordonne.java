@@ -1,11 +1,8 @@
 package gred.nucleus.autocrop;
 
 import gred.nucleus.FilesInputOutput.Directory;
-import loci.formats.FormatException;
-
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.*;
 
 public class generateProjectionFromCoordonne {
@@ -14,12 +11,25 @@ public class generateProjectionFromCoordonne {
     String m_pathToZprojection;
     String m_pathToCoordonnate;
 
-   public generateProjectionFromCoordonne(String pathToGIFTSeg, String pathToZprojection,String pathToCoordonnate) throws Exception {
-        m_pathToGIFTSeg=pathToGIFTSeg;
-        m_pathToZprojection=pathToZprojection;
-        m_pathToCoordonnate=pathToCoordonnate;
+    /**
+     * Constructor
+     * @param pathToGIFTSeg path to segmented image's folder
+     * @param pathToZprojection path to Zprojection image's from autocrop
+     * @param pathToCoordinnate path to coordinates files from autocrop
+     * @throws Exception
+     */
+   public generateProjectionFromCoordonne(String pathToGIFTSeg, String pathToZprojection,String pathToCoordinnate) throws Exception {
+        this.m_pathToGIFTSeg=pathToGIFTSeg;
+        this.m_pathToZprojection=pathToZprojection;
+        this.m_pathToCoordonnate=pathToCoordinnate;
     }
 
+    /**
+     * Run new annotation of Zprojection, color in red nuclei which were filtered
+     * (in case of GIFT wrapping color in red nuclei which not pass the segmentation
+     * most of case Z truncated )
+     * @throws Exception
+     */
     public void run()throws Exception{
         Directory GIFTsegImages = new Directory(m_pathToGIFTSeg);
         GIFTsegImages.listImageFiles(m_pathToGIFTSeg);
@@ -34,7 +44,7 @@ public class generateProjectionFromCoordonne {
             File coordinateFile = Coordonnate.getFile(i);
             System.out.println("la clef "+coordinateFile.getName()+"\n"+Coordonnate.getFile(i).getName());
 
-            HashMap<String, String> listOfBoxes = readCoordonnateTXT(coordinateFile);
+            HashMap<String, String> listOfBoxes = readCoordinnateTXT(coordinateFile);
             ArrayList<Integer> boxNumber =new ArrayList();
             ArrayList<String> boxListsNucleiNotPass = new ArrayList();
             Map<String, String> sortedMap = new TreeMap<String, String>(listOfBoxes);
@@ -55,7 +65,13 @@ public class generateProjectionFromCoordonne {
 
     }
 
-    public static HashMap<String,String> readCoordonnateTXT(File boxeFile) {
+    /**
+     * Compute list of boxes from coordinates file.
+     *
+     * @param boxeFile coordinate file
+     * @return  list of boxes file to draw in red
+     */
+    public static HashMap<String,String> readCoordinnateTXT(File boxeFile) {
 
         HashMap<String,String> boxLists = new HashMap();
         try {
