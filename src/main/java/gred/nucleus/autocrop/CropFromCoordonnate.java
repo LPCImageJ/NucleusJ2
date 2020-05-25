@@ -8,10 +8,7 @@ import loci.formats.FormatException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 
 public class CropFromCoordonnate {
 
@@ -50,7 +47,7 @@ public class CropFromCoordonnate {
             FilesNames outPutFilesNames = new FilesNames(listOfFile.getValue());
             String _prefix = outPutFilesNames.PrefixeNameFile();
             AutoCrop autoCrop = new AutoCrop(rawImage, _prefix,   autocropParameters,m_boxes);
-            autoCrop.cropKernels2();
+            autoCrop.cropKernels3();
         }
     }
 
@@ -83,7 +80,8 @@ public class CropFromCoordonnate {
                             yMax,
                             Short.valueOf(splitLine[5]),
                             Short.valueOf(zMax));
-                    boxLists.put(count,box);
+
+                    boxLists.put(Double.valueOf(splitLine[2]),box);
                 }
                 count++;
             }
@@ -92,4 +90,5 @@ public class CropFromCoordonnate {
         }
         return boxLists;
     }
+
 }

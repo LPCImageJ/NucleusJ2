@@ -516,6 +516,101 @@ public class AutoCrop {
 			}
 		}
 	}
+    /**
+     * Method crops a box of interest, from coordinate files.
+     *
+     */
+    public void cropKernels3()throws Exception {
+        Directory dirOutput= new Directory(
+                this.m_outputDirPath+File.separator+this.m_outputFilesPrefix);
+        dirOutput.CheckAndCreateDir();
+        this.m_infoImageAnalyse += getSpecificImageInfo() + getColoneName();
+        for (int y =0 ;y<this.m_channelNumbers;y++) {
+
+            for (Map.Entry<Double , Box> entry : this.m_boxes.entrySet()) {
+                int i = (entry.getKey().intValue());
+                Box box =  entry.getValue();
+                int xmin = box.getXMin();
+                int ymin = box.getYMin();
+                int zmin = box.getZMin();
+                String coord = box.getXMin()
+                        + "_" + box.getYMin()
+                        + "_" + box.getZMin();
+
+                int width = box.getXMax()- box.getXMin();
+                int height = box.getYMax()- box.getYMin();
+                int depth = box.getZMax() - box.getZMin();
+
+                ImagePlus imgResu;
+                if(this.m_rawImg.getNSlices()>1) {
+                    imgResu = cropImage(xmin, ymin,zmin, width,height, depth,y);
+                }
+                else{
+                    imgResu = cropImage2D(xmin, ymin, width, height, y);
+                }
+
+                Calibration cal = this.m_rawImg.getCalibration();
+                imgResu.setCalibration(cal);
+                OutputTiff fileOutput = new OutputTiff(
+                        this.m_outputDirPath
+                                + this.m_outputFilesPrefix
+                                + File.separator
+                                + this.m_outputFilesPrefix
+                                + "_"
+                                + i
+                                +"_C"
+                                + y
+                                + ".tif");
+                this.m_infoImageAnalyse=this.m_infoImageAnalyse
+                        + m_outputDirPath
+                        + this.m_outputFilesPrefix
+                        + File.separator
+                        + this.m_outputFilesPrefix
+                        + "_"
+                        + i
+                        +"_C"
+                        + y
+                        + ".tif\t"
+                        + y  + "\t"
+                        + i + "\t"
+                        + xmin + "\t"
+                        + ymin + "\t"
+                        + zmin + "\t"
+                        + width + "\t"
+                        + height + "\t"
+                        + depth + "\n";
+                fileOutput.SaveImage(imgResu);
+                this.m_outputFile.add(
+                        this.m_outputDirPath
+                                + File.separator
+                                + this.m_outputFilesPrefix
+                                + File.separator
+                                + this.m_outputFilesPrefix
+                                +  "_"
+                                + i
+                                + ".tif");
+
+                if(y==0) {
+                    int xmax=xmin+width;
+                    int ymax=ymin+height;
+                    int zmax =zmin+depth;
+                    this.m_boxCoordinates.add(
+                            this.m_outputDirPath
+                                    + File.separator
+                                    + this.m_outputFilesPrefix + "_"
+                                    + coord + i
+                                    + "\t" + xmin
+                                    + "\t" + xmax
+                                    + "\t" + ymin
+                                    + "\t" + ymax
+                                    + "\t" + zmin
+                                    + "\t" + zmax);
+                    //xmin, ymin,zmin, width,height, depth,y
+                }
+                i++;
+            }
+        }
+    }
 	/**
 	 * Getter for the m_outoutFiel ArrayList
 	 * @return m_outputFile: ArrayList of String for the path of the output

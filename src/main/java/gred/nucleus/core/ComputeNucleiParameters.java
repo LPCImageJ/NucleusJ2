@@ -50,9 +50,10 @@ public class ComputeNucleiParameters {
      * @throws Exception
      */
     public void run() throws Exception{
-        Directory directoryInput = new Directory(this.m_pluginParameters.getInputFolder());
-        directoryInput.listImageFiles(this.m_pluginParameters.getInputFolder());
+        Directory directoryInput = new Directory(this.m_pluginParameters.getOutputFolder());
+        directoryInput.listImageFiles(this.m_pluginParameters.getOutputFolder());
         directoryInput.checkIfEmpty();
+
         ArrayList<File> rawImages =directoryInput.m_listeOfFiles;
         String outputCropGeneralInfoOTSU=this.m_pluginParameters.getAnalyseParameters()+getColnameResult();
         for (short i = 0; i < rawImages.size(); ++i) {
@@ -74,8 +75,26 @@ public class ComputeNucleiParameters {
      *
      * @return columns names for results
      */
-    public static String getColnameResult(){
-        return "NucleusFileName\tVolume\tFlatness\tElongation\tSphericity\tEsr\tSurfaceArea\tSurfaceAreaCorrected\tSphericityCorrected\tMeanIntensity\tStandardDeviation\tMinIntensity\tMaxIntensity\n";
+    public String getColnameResult(){
+        return "NucleusFileName\t" +
+                "Volume\t" +
+                "Flatness\t" +
+                "Elongation\t" +
+                "Sphericity\t" +
+                "Esr\t" +
+                "SurfaceArea\t" +
+                "SurfaceAreaCorrected\t" +
+                "SphericityCorrected\t" +
+                "MeanIntensityNucleus\t" +
+                "MeanIntensityBackground\t" +
+                "StandardDeviation\t" +
+                "MinIntensity\t" +
+                "MaxIntensity\t" +
+                "MedianIntensityImage\t" +
+                "MedianIntensityNucleus\t" +
+                "MedianIntensityBackground\t" +
+                "ImageSize\t" +
+                "OTSUThreshold\n";
     }
 
 }

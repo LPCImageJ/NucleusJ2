@@ -42,15 +42,11 @@ public class generateProjectionFromCoordonne {
         Coordonnate.checkIfEmpty();
         for (short i = 0; i < Coordonnate.getNumberFiles(); ++i) {
             File coordinateFile = Coordonnate.getFile(i);
-            System.out.println("la clef "+coordinateFile.getName()+"\n"+Coordonnate.getFile(i).getName());
-
             HashMap<String, String> listOfBoxes = readCoordinnateTXT(coordinateFile);
             ArrayList<Integer> boxNumber =new ArrayList();
             ArrayList<String> boxListsNucleiNotPass = new ArrayList();
             Map<String, String> sortedMap = new TreeMap<String, String>(listOfBoxes);
             for (HashMap.Entry<String, String> entry : sortedMap.entrySet()) {
-                System.out.println("la clef "+entry.getKey());
-
                 if (!(GIFTsegImages.checkIfFileExists(entry.getKey()))) {
                     boxListsNucleiNotPass.add(entry.getValue());
                 }
