@@ -51,8 +51,7 @@ public class generateProjectionFromCoordonne {
                     boxListsNucleiNotPass.add(entry.getValue());
                 }
             }
-
-            File CurrentZprojection=  Zprojection.searchFileNameWithoutExention(coordinateFile.getName().split("\\.")[0]+"_Zprojection");
+            File CurrentZprojection=  Zprojection.searchFileNameWithoutExention(coordinateFile.getName().substring(0, coordinateFile.getName().lastIndexOf('.'))+"_Zprojection");
             AutocropParameters autocropParameters= new AutocropParameters(CurrentZprojection.getParent(),
                     CurrentZprojection.getParent()+Zprojection.getSeparator());
             annotAutoCrop annotAutoCrop =new annotAutoCrop(boxListsNucleiNotPass,CurrentZprojection,CurrentZprojection.getParent()+Zprojection.getSeparator()+CurrentZprojection.getName().split("\\.")[0]+"_GIFTAnnotation",autocropParameters);

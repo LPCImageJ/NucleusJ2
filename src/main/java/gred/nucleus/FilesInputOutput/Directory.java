@@ -168,7 +168,7 @@ public class Directory  {
         File fileToReturn =null;
 
         for (File f : this.m_listeOfFiles) {
-            if(f.getName().split("\\.")[0].equals(fileName)){
+            if(f.getName().substring(0, f.getName().lastIndexOf('.')).equals(fileName)){
                 fileToReturn=f;
             }
         }
@@ -178,7 +178,7 @@ public class Directory  {
         boolean fileExists =false;
 
         for (File f : this.m_listeOfFiles) {
-            if((f.getName().split("\\.")[0].equals(fileName))
+            if((f.getName().substring(0, f.getName().lastIndexOf('.')).equals(fileName))
             || (f.getName().equals(fileName))){
                 fileExists=true;
             }
