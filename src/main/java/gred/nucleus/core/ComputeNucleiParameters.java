@@ -58,11 +58,9 @@ public class ComputeNucleiParameters {
         directorySegmentedInput.checkIfEmpty();
         ArrayList<File> rawImages =directoryRawInput.m_listeOfFiles;
         ArrayList<File> segmentedImages =directorySegmentedInput.m_listeOfFiles;
-
         String outputCropGeneralInfoOTSU=this.m_pluginParameters.getAnalyseParameters()+getColnameResult();
         for (short i = 0; i < segmentedImages.size(); ++i) {
             File currentFile = segmentedImages.get(i);
-            System.out.println(this.m_pluginParameters.getInputFolder()+currentFile.getName());
             ImagePlus Raw = new ImagePlus(this.m_pluginParameters.getInputFolder()+currentFile.separator+currentFile.getName());
             ImagePlus[] Segmented = BF.openImagePlus(currentFile.getAbsolutePath());
 
