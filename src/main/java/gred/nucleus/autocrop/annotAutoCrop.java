@@ -1,5 +1,6 @@
 package gred.nucleus.autocrop;
 
+import gred.nucleus.FilesInputOutput.Directory;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.TextRoi;
@@ -33,9 +34,44 @@ public class annotAutoCrop {
     private String m_outputDirPath;
     /** Parameters crop analyse */
     private AutocropParameters m_autocropParameters;
+    /**
+     * The prefix of the names of the output cropped images, which are automatically numbered
+     */
+    private String m_outputFilesPrefix;
 
     /**
-     * Class constructor :
+     * Constructor for autocrop
+     * @param ListBox : ArrayList of coordinate (coordinate of nuclei cropped)
+     * @param imageFile : File of current image analysed
+     * @param outputDirPath : path to the output folder
+     * @param autocropParameters : autocrop parameters used to crop nuclei
+     * @param prefix : name of raw image (use for z projection)
+     * @throws IOException
+     * @throws FormatException
+     */
+
+    public annotAutoCrop(ArrayList<String> ListBox,
+                         File imageFile,
+                         String outputDirPath,
+                         String prefix,
+                         AutocropParameters autocropParameters)
+            throws IOException, FormatException {
+        this.m_autocropParameters=autocropParameters;
+        this.m_currentFile=imageFile;
+        this.m_zProjection = BF.openImagePlus(
+                imageFile.getAbsolutePath())[
+                        this.m_autocropParameters.getSlicesOTSUcomputing()];
+        this.m_boxCoordinates = ListBox;
+        this.m_outputFilesPrefix=prefix;
+        this.m_outputDirPath=outputDirPath;
+        Directory dirOutput= new Directory(
+                this.m_outputDirPath+"zprojection");
+        dirOutput.CheckAndCreateDir();
+
+
+    }
+    /**
+     * Constructor for re-generate projection after segmentatio
      * @param ListBox : ArrayList of coordinate (coordinate of nuclei cropped)
      * @param imageFile : File of current image analysed
      * @param outputDirPath : path to the output folder
@@ -53,11 +89,16 @@ public class annotAutoCrop {
         this.m_currentFile=imageFile;
         this.m_zProjection = BF.openImagePlus(
                 imageFile.getAbsolutePath())[
-                        this.m_autocropParameters.getSlicesOTSUcomputing()];
+                this.m_autocropParameters.getSlicesOTSUcomputing()];
         this.m_boxCoordinates = ListBox;
+
+
         this.m_outputDirPath=outputDirPath;
 
+
+
     }
+
 
     /**
      * Main method to generate Z projection of wide fild 3D image.
@@ -73,7 +114,7 @@ public class annotAutoCrop {
             String [] Name =fileName[fileName.length-1].split("_");
             addBadCropBoxToZProjection(this.m_boxCoordinates.get(i),Integer.parseInt(Name[Name.length-2]));
         }
-        String outFileZbox = this.m_outputDirPath+".tif";
+        String outFileZbox = this.m_outputDirPath+"_BAD_CROP_LESS.tif";
         saveFile(this.m_zProjection,outFileZbox);
 
 
@@ -93,7 +134,9 @@ public class annotAutoCrop {
         for(int i = 0; i < this.m_boxCoordinates.size(); ++i) {
             addBoxCropToZProjection(this.m_boxCoordinates.get(i),i);
         }
-        String outFileZbox = this.m_outputDirPath+"_Zprojection.tif";
+        String outFileZbox = this.m_outputDirPath+this.m_currentFile.separator+"zprojection"+this.m_currentFile.separator+m_outputFilesPrefix+"_Zprojection.tif";
+
+
         saveFile(this.m_zProjection,outFileZbox);
 
 

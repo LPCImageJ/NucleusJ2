@@ -52,9 +52,14 @@ public class generateProjectionFromCoordonne {
                 }
             }
             File CurrentZprojection=  Zprojection.searchFileNameWithoutExention(coordinateFile.getName().substring(0, coordinateFile.getName().lastIndexOf('.'))+"_Zprojection");
+            System.out.println(CurrentZprojection.getParent() + " "+
+                    CurrentZprojection.getParent()+Zprojection.getSeparator());
             AutocropParameters autocropParameters= new AutocropParameters(CurrentZprojection.getParent(),
                     CurrentZprojection.getParent()+Zprojection.getSeparator());
-            annotAutoCrop annotAutoCrop =new annotAutoCrop(boxListsNucleiNotPass,CurrentZprojection,CurrentZprojection.getParent()+Zprojection.getSeparator()+CurrentZprojection.getName().split("\\.")[0]+"_GIFTAnnotation",autocropParameters);
+            annotAutoCrop annotAutoCrop =new annotAutoCrop(boxListsNucleiNotPass,
+                            CurrentZprojection,
+                            CurrentZprojection.getParent()+Zprojection.getSeparator()+CurrentZprojection.getName().substring(0, CurrentZprojection.getName().lastIndexOf('.')),
+                            autocropParameters);
             annotAutoCrop.runAddBadCrop(boxNumber);
         }
 

@@ -304,9 +304,6 @@ public class AutoCrop {
 	 * thresholdKernels() or your own binarisation method.
 	 */
 	public void computeBoxes2() {
-		Directory dirOutput = new Directory(
-				this.m_outputDirPath + File.separator + this.m_outputFilesPrefix);
-		dirOutput.CheckAndCreateDir();
 		try {
 			ImageStack imageStackInput = this.m_imageSeg_labelled.getStack();
 			Box box;
@@ -402,20 +399,6 @@ public class AutoCrop {
 
 
 			}
-			for (Map.Entry<Double, Box> entry : this.m_boxes.entrySet()) {
-				Box box = entry.getValue();
-
-				if(box.getYMax()>this.m_imageSeg.getHeight()) {
-					System.out.println("on en a bordel"+box.getYMax()+"   " +this.m_imageSeg.getHeight()+"\n"
-					+" "+ box.getXMin()+" "+box.getYMin()+" "+box.getZMin()+" "+entry.getKey());
-				}
-
-				//System.out.println("les clef "+entry.getKey());
-				if(entry.getKey()==2.0) {
-					//System.out.println("on en a bordel"+box.getYMax()+"\n"
-					//		+" "+ box.getXMin()+" "+box.getYMin()+" "+box.getZMin()+" "+entry.getKey());
-				}
-			}
 		}
 	}
 	/**
@@ -428,7 +411,7 @@ public class AutoCrop {
 	 */
 	public void cropKernels2()throws Exception {
 		Directory dirOutput= new Directory(
-			this.m_outputDirPath+File.separator+this.m_outputFilesPrefix);
+			this.m_outputDirPath+File.separator+"nuclei");
 		dirOutput.CheckAndCreateDir();
 		this.m_infoImageAnalyse += getSpecificImageInfo() + getColoneName();
 		for (int y =0 ;y<this.m_channelNumbers;y++) {
@@ -457,8 +440,7 @@ public class AutoCrop {
 				Calibration cal = this.m_rawImg.getCalibration();
 				imgResu.setCalibration(cal);
 				OutputTiff fileOutput = new OutputTiff(
-						this.m_outputDirPath
-								+ this.m_outputFilesPrefix
+						dirOutput.get_dirPath()
 								+ File.separator
 								+ this.m_outputFilesPrefix
 								+ "_"
@@ -466,9 +448,7 @@ public class AutoCrop {
 								+"_C"
 								+ y
 								+ ".tif");
-				this.m_infoImageAnalyse=this.m_infoImageAnalyse
-						+ m_outputDirPath
-						+ this.m_outputFilesPrefix
+				this.m_infoImageAnalyse=dirOutput.get_dirPath()
 						+ File.separator
 						+ this.m_outputFilesPrefix
 						+ "_"
@@ -521,9 +501,9 @@ public class AutoCrop {
      *
      */
     public void cropKernels3()throws Exception {
-        Directory dirOutput= new Directory(
-                this.m_outputDirPath+File.separator+this.m_outputFilesPrefix);
-        dirOutput.CheckAndCreateDir();
+		Directory dirOutput= new Directory(
+				this.m_outputDirPath+File.separator+"Nuclei");
+		dirOutput.CheckAndCreateDir();
         this.m_infoImageAnalyse += getSpecificImageInfo() + getColoneName();
         for (int y =0 ;y<this.m_channelNumbers;y++) {
 
@@ -551,21 +531,18 @@ public class AutoCrop {
 
                 Calibration cal = this.m_rawImg.getCalibration();
                 imgResu.setCalibration(cal);
-                OutputTiff fileOutput = new OutputTiff(
-                        this.m_outputDirPath
-                                + this.m_outputFilesPrefix
-                                + File.separator
-                                + this.m_outputFilesPrefix
+				OutputTiff fileOutput = new OutputTiff(
+						dirOutput.get_dirPath()
+								+ File.separator
+								+ this.m_outputFilesPrefix
                                 + "_"
                                 + i
                                 +"_C"
                                 + y
                                 + ".tif");
-                this.m_infoImageAnalyse=this.m_infoImageAnalyse
-                        + m_outputDirPath
-                        + this.m_outputFilesPrefix
-                        + File.separator
-                        + this.m_outputFilesPrefix
+				this.m_infoImageAnalyse=dirOutput.get_dirPath()
+						+ File.separator
+						+ this.m_outputFilesPrefix
                         + "_"
                         + i
                         +"_C"
@@ -751,9 +728,13 @@ public class AutoCrop {
      * @throws IOException
      */
     public void writeAnalyseInfo() throws IOException {
+		Directory dirOutput= new Directory(
+				this.m_outputDirPath + File.separator
+						+ "coordinates");
+		dirOutput.CheckAndCreateDir();
         OutputTexteFile resultFileOutput=new OutputTexteFile(
         		this.m_outputDirPath + File.separator
-						+ this.m_outputFilesPrefix + File.separator
+						+ "coordinates" + File.separator
 						+ this.m_outputFilesPrefix+".txt");
         resultFileOutput.SaveTexteFile(this.m_infoImageAnalyse);
 
