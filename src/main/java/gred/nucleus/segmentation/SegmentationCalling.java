@@ -226,14 +226,14 @@ public class SegmentationCalling {
                 +directoryInput.getSeparator()
                 +"OTSU"
                 +directoryInput.getSeparator()
-                +"result_Segmentation_Analyse.csv");
+                +"result_Segmentation_Analyse_OTSU.csv");
         resultFileOutputOTSU.SaveTexteFile( this.m_outputCropGeneralInfoOTSU);
         if(this.m_semgemtationParameters.getGiftWrapping()) {
             OutputTexteFile resultFileOutputGIFT = new OutputTexteFile(this.m_semgemtationParameters.getOutputFolder()
                     + directoryInput.getSeparator()
                     + "GIFT"
                     + directoryInput.getSeparator()
-                    + "result_Segmentation_Analyse.csv");
+                    + "result_Segmentation_Analyse_GIFT.csv");
             resultFileOutputGIFT.SaveTexteFile(this.m_outputCropGeneralInfoGIFT);
         }
 
