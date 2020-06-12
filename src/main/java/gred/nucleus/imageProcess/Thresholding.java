@@ -33,6 +33,9 @@ public class Thresholding {
         enh.setNormalize(true);
         enh.setUseStackHistogram(true);
         enh.setProcessStack(true);
+
+        imagePlusInput.getProcessor().setMinAndMax(0, 19839.0);
+
         enh.stretchHistogram(imagePlusInput.getProcessor(), 0.05);
         if(imagePlusInput.getNSlices()>1) { // 3D
             StackConverter stackConverter = new StackConverter(imagePlusInput);

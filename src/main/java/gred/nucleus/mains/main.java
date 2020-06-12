@@ -1,4 +1,5 @@
 package gred.nucleus.mains;
+
 import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.FilesInputOutput.OutputTexteFile;
 import gred.nucleus.MachineLeaningUtils.SliceToStack;
@@ -20,6 +21,12 @@ import loci.plugins.BF;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
+
+import fr.gredclermont.omero.Client;
+import fr.gredclermont.omero.ImageContainer;
+import fr.gredclermont.omero.repository.DatasetContainer;
+import fr.gredclermont.omero.repository.ProjectContainer;
 
 
 public class main {
@@ -83,6 +90,60 @@ public class main {
         autoCrop.runFile(inputDirectory);
     }
 
+    public static void runAutoCropOmero(String inputDirectory, String outputDirectory, Client client) throws Exception {
+        AutocropParameters autocropParameters = new AutocropParameters(".", ".");
+        AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
+
+        String[] param = inputDirectory.split("/");
+
+        if(param.length >= 2) {
+            if(param[0].equals("Image")) {
+                Long id = Long.parseLong(param[1]);
+                ImageContainer image = client.getImage(id);
+
+                autoCrop.runImageOmero(image, Long.parseLong(outputDirectory), client);
+            }
+            else {
+                Long id = Long.parseLong(param[1]);
+                List<ImageContainer> images = null; 
+
+                if(param[0].equals("Dataset")) {
+                    DatasetContainer dataset = client.getDataset(id);
+
+                    if(param.length == 4 && param[2].equals("Tag")) {
+                        images = dataset.getImagesTagged(client, Long.parseLong(param[3]));
+                    }
+                    else {
+                        images = dataset.getImages(client);
+                    }
+                }
+                else if(param[0].equals("Project")) {
+                    ProjectContainer project = client.getProject(id);
+
+                    if(param.length == 4 && param[2].equals("Tag")) {
+                        images = project.getImagesTagged(client, Long.parseLong(param[3]));
+                    }
+                    else {
+                        images = project.getImages(client);
+                    }
+                }
+                else if(param[0].equals("Tag")) {
+                    images = client.getImagesTagged(id);
+                }
+                else {
+                    throw new IllegalArgumentException();
+                }
+
+                autoCrop.runSeveralImageOmero(images, Long.parseLong(outputDirectory), client);
+            }   
+        }
+        else {
+            throw new IllegalArgumentException();
+        }
+
+        //autoCrop.runFileOmero();
+    }
+
 
 
     //========================= Segmentation calling ===========================================
@@ -95,6 +156,7 @@ public class main {
      */
 
     public static void segmentationFolder(String inputDirectory, String outputDirectory ) throws Exception {
+        System.out.println("test " + inputDirectory);
         SegmentationParameters segmentationParameters = new SegmentationParameters(inputDirectory,outputDirectory);
         SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
         try {
@@ -136,6 +198,79 @@ public class main {
             if(!(log.equals("")))
                 System.out.println("Nuclei which didn't pass the segmentation\n"+log);
         }catch (IOException e) { e.printStackTrace();}
+    }
+
+    public static void segmentationOmero(String inputDirectory, String outputDirectory, Client client)  throws Exception
+    {
+        SegmentationParameters segmentationParameters = new SegmentationParameters(".", ".");
+        SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
+
+        String[] param = inputDirectory.split("/");
+
+        if(param.length >= 2) {
+            if(param[0].equals("Image")) {
+                Long id = Long.parseLong(param[1]);
+                ImageContainer image = client.getImage(id);
+
+                try {
+                    String log;
+                    if(param.length == 3 && param[2].equals("ROI")) {
+                        log = otsuModif.runOneImageOmero(image, Long.parseLong(outputDirectory), client);
+                    }
+                    else {
+                        log = otsuModif.runOneImageOmeroROI(image, Long.parseLong(outputDirectory), client);
+                    }
+                    if(!(log.equals("")))
+                        System.out.println("Nuclei which didn't pass the segmentation\n"+log);
+                }catch (IOException e) { e.printStackTrace();}
+            }
+            else {
+                Long id = Long.parseLong(param[1]);
+                List<ImageContainer> images = null; 
+
+                if(param[0].equals("Dataset")) {
+                    DatasetContainer dataset = client.getDataset(id);
+
+                    if(param.length == 4 && param[2].equals("Tag")) {
+                        images = dataset.getImagesTagged(client, Long.parseLong(param[3]));
+                    }
+                    else {
+                        images = dataset.getImages(client);
+                    }
+                }
+                else if(param[0].equals("Project")) {
+                    ProjectContainer project = client.getProject(id);
+
+                    if(param.length == 4 && param[2].equals("Tag")) {
+                        images = project.getImagesTagged(client, Long.parseLong(param[3]));
+                    }
+                    else {
+                        images = project.getImages(client);
+                    }
+                }
+                else if(param[0].equals("Tag")) {
+                    images = client.getImagesTagged(id);
+                }
+                else {
+                    throw new IllegalArgumentException();
+                }
+                try {
+                    String log;
+                    if ((param.length == 3 && param[2].equals("ROI")) || (param.length == 5 && param[4].equals("ROI"))) {
+                        log = otsuModif.runSeveralImageOmeroROI(images, Long.parseLong(outputDirectory), client);
+                    }   
+                    else {
+                        log = otsuModif.runSeveralImageOmero(images, Long.parseLong(outputDirectory), client);
+                    }   
+                    if(!(log.equals("")))
+                        System.out.println("Nuclei which didn't pass the segmentation\n"+log);
+                }catch (IOException e) { e.printStackTrace();}
+            }
+        }
+        else
+        {
+            throw new IllegalArgumentException();
+        }
     }
 
     /**
@@ -221,20 +356,25 @@ public class main {
         DebugTools.enableLogging("OFF");
 
         System.setProperty("java.awt.headless", "false");
-
+        
         if(args[0].equals("autocrop")) {
             System.out.println("start "+args[0]);
             if((args.length==4)&& (args[3].equals("ConfigFile"))){
                 runAutoCropFolder(args[1], args[2], args[4]);
 
-            }
-            else if((args.length==4)&& (args[3].equals("File"))){
+            } else if((args.length==4)&& (args[3].equals("File"))){
                 runAutoCropFile(args[1], args[2]);
-            }
-            else{
+            } else if(args.length==7) {
+                Client client = new Client();
+                client.connect(args[3], Integer.parseInt(args[4]), args[5], args[6]);
+                runAutoCropOmero(args[1], args[2], client);
+            } else if(args.length==8) {
+                Client client = new Client();
+                client.connect(args[3], Integer.parseInt(args[4]), args[5], args[6], Long.parseLong(args[7]));
+                runAutoCropOmero(args[1], args[2], client);
+            } else {
                 runAutoCropFolder(args[1], args[2]);
             }
-
         }
         else if(args[0].equals("segmentation")) {
             System.out.println("start " + args[0]);
@@ -245,18 +385,25 @@ public class main {
 
                 //String input, String output, short vMin, int vMax, boolean gift
                 segmentationOneImage(args[1], args[2]);
+            } else if(args.length==7) {
+                Client client = new Client();
+                client.connect(args[3], Integer.parseInt(args[4]), args[5], args[6]);
+                segmentationOmero(args[1], args[2], client);
+            } else if(args.length==8) {
+                Client client = new Client();
+                client.connect(args[3], Integer.parseInt(args[4]), args[5], args[6], Long.parseLong(args[7]));
+                segmentationOmero(args[1], args[2], client);
             } else {
                 segmentationFolder(args[1], args[2]);
-
             }
         }
         else if(args[0].equals("computeParameters")){
             if ((args.length == 4) && (args[3].equals("ConfigFile"))) {
                 computeNucleusParameters(args[1], args[2], args[3]);
             }
-             else{
-                    computeNucleusParameters(args[1], args[2]);
-                }
+            else{
+                computeNucleusParameters(args[1], args[2]);
+            }
         }
         else if(args[0].equals("computeParametersDL")){
             computeNucleusParametersDL(args[1], args[2]);
@@ -277,7 +424,8 @@ public class main {
             System.out.println("\njava NucleusJ_giftwrapping.jar segmentation dossier/raw/ dossier/out/");
             System.out.println("\n\n");
         }
-        System.err.println("The program ended normally.");
+        
+        System.out.println("The program ended normally.");
     }
 }
 

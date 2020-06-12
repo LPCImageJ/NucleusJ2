@@ -2,8 +2,17 @@ package gred.nucleus.core;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutionException;
 
+import fr.gredclermont.omero.Client;
+import fr.gredclermont.omero.ImageContainer;
+import fr.gredclermont.omero.metadata.ROIContainer;
+import fr.gredclermont.omero.metadata.annotation.TagAnnotationContainer;
+import fr.gredclermont.omero.repository.DatasetContainer;
+import fr.gredclermont.omero.repository.ProjectContainer;
 import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.imageProcess.Thresholding;
 import gred.nucleus.segmentation.SegmentationParameters;
@@ -20,6 +29,11 @@ import ij.measure.*;
 import inra.ijpb.binary.ConnectedComponents;
 import loci.common.DebugTools;
 import loci.plugins.BF;
+import omero.ServerError;
+import omero.gateway.exception.DSAccessException;
+import omero.gateway.exception.DSOutOfServiceException;
+import omero.gateway.model.RectangleData;
+import omero.gateway.model.ShapeData;
 
 /**
  * Object segmentation method for 3D images. This segmentation used as initial
@@ -127,6 +141,49 @@ public class NucleusSegmentation {
 			    this.m_semgemtationParameters.getOutputFolder() + "GIFT");
 			dirOutputGIFT.CheckAndCreateDir();
 		}
+	}
+	
+	public NucleusSegmentation(ImageContainer image,
+							   SegmentationParameters semgemtationParameters, 
+							   Client client)
+            throws Exception {
+		this.m_semgemtationParameters = semgemtationParameters;
+			
+		int cBound[] = {0, 0};
+
+		this._imgRaw = image.toImagePlus(client, null, null, cBound, null, null);
+		// TODO ADD CHANNEL PARAMETERS (CASE OF CHANNELS UNSPLITED)
+		this._imgRaw.setTitle(image.getName());
+		this._imgRawTransformed = this._imgRaw.duplicate();
+		this._imgRawTransformed.setTitle(image.getName());
+	}
+	
+	public NucleusSegmentation(ImageContainer image,
+							   ROIContainer roi,
+							   int i,
+							   SegmentationParameters semgemtationParameters, 
+							   Client client)
+            throws Exception {
+		this.m_semgemtationParameters = semgemtationParameters;
+
+		List<ShapeData> shapes = roi.getShapes();
+
+		RectangleData rectangle = (RectangleData) shapes.get(0);
+
+		int cBound[] = {rectangle.getC(), rectangle.getC()};
+		int zBound[] = {rectangle.getZ(), rectangle.getZ() + shapes.size() - 1};
+		int xBound[] = {(int)rectangle.getX(), (int)rectangle.getX() + (int)rectangle.getWidth() - 1};
+		int yBound[] = {(int)rectangle.getY(), (int)rectangle.getY() + (int)rectangle.getHeight() - 1};
+
+		this._imgRaw = image.toImagePlus(client, xBound, yBound, cBound, zBound, null);
+
+		this._imgRaw.setTitle(image.getName()
+							  + "_"
+							  + i
+							  +"_C"
+						      + rectangle.getC());
+		this._imgRawTransformed = this._imgRaw.duplicate();
+		this._imgRawTransformed.setTitle(this._imgRaw.getTitle());
 	}
 
     /**
@@ -712,6 +769,30 @@ public class NucleusSegmentation {
 			fileToMove.renameTo(new File(BadCropFolder+file.separator+this._imgRawTransformed.getTitle()));
 		}
 	}
+
+	public void checkBadCrop(ImageContainer image, 
+							 Client client)
+		throws 
+			ServerError,
+			DSOutOfServiceException,
+			ExecutionException,
+			DSAccessException
+	{
+    	if((this._badCrop) || (this.getBestThreshold()==-1)){
+			List<TagAnnotationContainer> tags = client.getTags("BadCrop");
+
+			TagAnnotationContainer tagBadCrop;
+			if(tags.size() == 0) {
+				tagBadCrop = new TagAnnotationContainer(client, "BadCrop", "");
+			}
+			else {
+				tagBadCrop = tags.get(0);
+			}
+
+			image.addTag(client, tagBadCrop);
+		}
+	}
+
     /**
      * Method to save the OTSU segmented image.
      * TODO verifier cette methode si elle est à ca place
@@ -721,6 +802,35 @@ public class NucleusSegmentation {
 			String pathSegOTSU = this.m_semgemtationParameters.getOutputFolder() + "OTSU" + this.m_currentFile.separator + this.m_imageSeg[0].getTitle();
 			saveFile(this.m_imageSeg[0], pathSegOTSU);
 
+		}
+	}
+
+    /**
+     * Method to save the OTSU segmented image.
+     * TODO verifier cette methode si elle est à ca place
+     */
+	public void saveOTSUSegmentedOmero(Client client, Long id)
+		throws Exception{
+        if(getBadCrop()==false && getBestThreshold() != -1) {
+			String path = new java.io.File( "." ).getCanonicalPath() + "/" + this.m_imageSeg[0].getTitle();
+			saveFile(this.m_imageSeg[0], path);
+
+			ProjectContainer project = client.getProject(id);
+			List<DatasetContainer> datasets = project.getDataset("OTSU");
+
+			DatasetContainer otsu;
+			if(datasets.size() == 0) {
+				otsu = new DatasetContainer("OTSU", "");
+				Long datasetId = project.addDataset(client, otsu).getId();
+				otsu = client.getDataset(datasetId);
+			}
+			else
+				otsu = datasets.get(0);
+
+			otsu.importImages(client, path);
+
+			File file = new File(path);
+			file.delete();
 		}
 	}
     /**
@@ -742,6 +852,41 @@ public class NucleusSegmentation {
         }
 	}
     /**
+     * Method to save the OTSU segmented image.
+     * TODO verifier cette methode si elle est à ca place
+     */
+	public void saveGiftWrappingSegOmero(Client client, Long id)
+		throws Exception{
+		if(getBadCrop()==false && getBestThreshold() != -1
+                && this.m_semgemtationParameters.getGiftWrapping()) {
+			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
+
+			this.m_imageSeg[0] = nuc.run(this.m_imageSeg[0]
+					, this.m_semgemtationParameters);
+					
+			String path = new java.io.File( "." ).getCanonicalPath() + "/" + this.m_imageSeg[0].getTitle();
+			saveFile(this.m_imageSeg[0], path);
+
+			ProjectContainer project = client.getProject(id);
+			List<DatasetContainer> datasets = project.getDataset("GIFT");
+
+			DatasetContainer otsu;
+			if(datasets.size() == 0) {
+				otsu = new DatasetContainer("GIFT", "");
+				Long datasetId = project.addDataset(client, otsu).getId();
+				otsu = client.getDataset(datasetId);
+			}
+			else
+				otsu = datasets.get(0);
+
+			otsu.importImages(client, path);
+
+			File file = new File(path);
+			file.delete();
+        }
+	}
+
+    /**
      * Method to get the parameter of the 3D parameters for OTSU segmented image
      * if the object can't be segmented return -1 for
      * parameters.
@@ -749,7 +894,7 @@ public class NucleusSegmentation {
      * @return
      */
     public String getImageCropInfoOTSU(){
-        if(getBadCrop()==false && getBestThreshold() != -1) {
+		if(getBadCrop()==false && getBestThreshold() != -1) {
             return saveImageResult(this.m_imageSeg)
                     + "\t"
                     + this._bestThreshold

@@ -7,6 +7,10 @@ import gred.nucleus.exceptions.fileInOut;
 import loci.formats.FormatException;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+
+import fr.gredclermont.omero.Client;
+import fr.gredclermont.omero.ImageContainer;
 
 
 
@@ -127,7 +131,38 @@ public class AutoCropCalling {
         test.run();
         this.m_outputCropGeneralInfo=this.m_outputCropGeneralInfo
                 +autoCrop.getImageCropInfo();
+    }
 
+    public void runImageOmero(ImageContainer image, 
+                              Long outputDirectory, 
+                              Client client) 
+        throws Exception
+    {
+        String fileImg = image.getName();
+        FilesNames outPutFilesNames = new FilesNames(fileImg);
+        this._prefix = outPutFilesNames.PrefixeNameFile();
+        AutoCrop autoCrop = new AutoCrop(image, this.m_autocropParameters, client);
+        autoCrop.thresholdKernels();
+        autoCrop.computeConnectcomponent();
+        autoCrop.componentBorderFilter();
+        autoCrop.componentSizeFilter();
+        autoCrop.computeBoxes2();
+        autoCrop.addCROP_parameter();
+        autoCrop.boxIntesection();
+        Long id = autoCrop.cropKernelsOmero(image, outputDirectory, client);
+        autoCrop.writeAnalyseInfoOmero(id, client);
+
+        this.m_outputCropGeneralInfo=this.m_outputCropGeneralInfo
+                +autoCrop.getImageCropInfo();
+    }
+
+    public void runSeveralImageOmero(List<ImageContainer> images, 
+                                     Long outputDirectory, 
+                                     Client client) 
+        throws Exception {
+        for(ImageContainer image : images) {
+                runImageOmero(image, outputDirectory, client);
+        }
     }
 
 

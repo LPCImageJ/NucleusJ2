@@ -35,11 +35,11 @@
 			<artifactId>commons-cli</artifactId>
 			<version>1.0</version>
 		</dependency>
-			<dependency>
-				<groupId>commons-lang</groupId>
-				<artifactId>commons-lang</artifactId>
-				<version>1.0</version>
-			</dependency>
+		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+			<version>1.0</version>
+		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
@@ -65,6 +65,11 @@
 			<groupId>net.imagej</groupId>
 			<artifactId>ij</artifactId>
 			<version>1.51n</version>
+		</dependency>
+		<dependency>
+			<groupId>fr.gredclermont</groupId>
+			<artifactId>omero</artifactId>
+			<version>1.0</version>
 		</dependency>
 
 	</dependencies>

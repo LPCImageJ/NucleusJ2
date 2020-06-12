@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import fr.gredclermont.omero.ImageContainer;
+
 
 
 public class SegmentationParameters extends PluginParameters {

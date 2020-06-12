@@ -32,20 +32,19 @@ public class PluginParameters {
      *
      */
     public PluginParameters(String inputFolder,String outputFolder){
-        File input =new File(inputFolder);
+        File input = new File(inputFolder);
+
         if(input.isDirectory()) {
             this.m_inputFolder = inputFolder;
         }
         else if(input.isFile()) {
             this.m_inputFolder = input.getParent();
-
         }
-        Directory dirOutput =new Directory(outputFolder);
+        Directory dirOutput = new Directory(outputFolder);
         dirOutput.CheckAndCreateDir();
-        this.m_outputFolder=dirOutput.get_dirPath();
-
-
+        this.m_outputFolder = dirOutput.get_dirPath();
     }
+
     /** Constructor with specific calibration in x y and z
      *
      * @param inputFolder : path folder containing Images
