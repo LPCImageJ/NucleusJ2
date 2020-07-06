@@ -1,23 +1,18 @@
 package gred.nucleus.mains;
 
 import gred.nucleus.FilesInputOutput.Directory;
-import gred.nucleus.FilesInputOutput.OutputTexteFile;
-import gred.nucleus.core.Measure3D;
+import gred.nucleus.FilesInputOutput.OutputTextFile;
 import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.plugins.PluginParameters;
 import gred.nucleus.utils.Histogram;
 import ij.ImagePlus;
 import ij.ImageStack;
-import inra.ijpb.binary.BinaryImages;
-import inra.ijpb.label.LabelImages;
 import loci.formats.FormatException;
-import loci.plugins.BF;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 public class noiseComputing {
 
@@ -47,9 +42,9 @@ public class noiseComputing {
             System.out.println("Noise mean "+meanNoise);
 
         }
-        OutputTexteFile resultFileOutputOTSU=new OutputTexteFile(
+        OutputTextFile resultFileOutputOTSU=new OutputTextFile(
                 "/media/titus/DATA/ML_ANALYSE_DATA/ANALYSE_COMPARAISON_REANALYSE/129_ANNOTATION_FULL/NoiseGIFT.csv");
-        resultFileOutputOTSU.SaveTexteFile( ResultNoise);
+        resultFileOutputOTSU.SaveTextFile( ResultNoise);
     }
 
 

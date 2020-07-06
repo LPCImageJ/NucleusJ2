@@ -45,12 +45,14 @@ public class SegmentationParameters extends PluginParameters {
         try {
             is = new FileInputStream(fileName);
         } catch (FileNotFoundException ex) {
-
+            System.err.println(pathToConfigFile+" : can't find the config file !");
+            System.exit(-1);
         }
         try {
             prop.load(is);
         } catch (IOException ex) {
-
+            System.err.println(pathToConfigFile+" : can't load the config file !");
+            System.exit(-1);
         }
         for (String idProp :prop.stringPropertyNames()){
             if(idProp.equals("GiftWrapping")){this.m_giftVrapping = Boolean.valueOf(prop.getProperty("GiftWrapping"));}

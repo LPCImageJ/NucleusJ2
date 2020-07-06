@@ -1,13 +1,9 @@
 package gred.nucleus.mains;
-import gred.nucleus.FilesInputOutput.Directory;
-import gred.nucleus.FilesInputOutput.OutputTexteFile;
 import gred.nucleus.MachineLeaningUtils.SliceToStack;
 import gred.nucleus.MachineLeaningUtils.ComputeNucleiParametersML;
 import gred.nucleus.autocrop.*;
 import gred.nucleus.core.ComputeNucleiParameters;
-import gred.nucleus.core.Measure3D;
 import gred.nucleus.exceptions.fileInOut;
-import gred.nucleus.plugins.PluginParameters;
 import gred.nucleus.segmentation.SegmentationCalling;
 
 import gred.nucleus.segmentation.SegmentationParameters;
@@ -15,16 +11,11 @@ import ij.ImagePlus;
 import ij.io.FileSaver;
 import loci.common.DebugTools;
 import loci.formats.FormatException;
-import loci.plugins.BF;
 
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 
 
 public class main {
-
-
 
     /**
      * Method to run autocrop with only input output folder and with default parameters which are:

@@ -1,14 +1,14 @@
 package gred.nucleus.autocrop;
 
 import gred.nucleus.FilesInputOutput.Directory;
-import gred.nucleus.FilesInputOutput.OutputTexteFile;
+import gred.nucleus.FilesInputOutput.OutputTextFile;
 import gred.nucleus.FilesInputOutput.OutputTiff;
 import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.imageProcess.Thresholding;
 import gred.nucleus.utils.Histogram;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
-import ij.io.FileSaver;
 import ij.measure.Calibration;
 import ij.plugin.ChannelSplitter;
 import ij.plugin.Duplicator;
@@ -26,6 +26,7 @@ import java.util.Map;
 
 import inra.ijpb.binary.BinaryImages;
 import inra.ijpb.label.LabelImages;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * Class dedicate to crop nuclei in a isolate file from 3D wide field image from
@@ -113,6 +114,8 @@ public class AutoCrop {
 	 */
 	private HashMap<Double, Box> m_boxes = new HashMap<Double, Box>();
 
+	private ArrayList<String> supported_formats = new ArrayList<>();
+
 
 	/**
 	 * Autocrop constructor : initialisation of analyse parameter
@@ -125,6 +128,8 @@ public class AutoCrop {
 	public AutoCrop(File imageFile, String outputFilesPrefix,
 					AutocropParameters autocropParametersAnalyse)
 			throws IOException, FormatException, fileInOut, Exception {
+		initSupportedFormats();
+		testImageFormat(imageFile);
 		this.m_autocropParameters = autocropParametersAnalyse;
 		this.m_currentFile = imageFile;
 		this.m_imageFilePath = imageFile.getAbsolutePath();
@@ -148,6 +153,8 @@ public class AutoCrop {
 	public AutoCrop(File imageFile, String outputFilesPrefix,
 					AutocropParameters autocropParametersAnalyse,HashMap<Double, Box> _boxes)
 			throws IOException, FormatException, fileInOut, Exception {
+		initSupportedFormats();
+		testImageFormat(imageFile);
 		this.m_autocropParameters = autocropParametersAnalyse;
 		this.m_currentFile = imageFile;
 		this.m_imageFilePath = imageFile.getAbsolutePath();
@@ -160,7 +167,19 @@ public class AutoCrop {
 		m_boxes=_boxes;
 	}
 
+	private void testImageFormat(File imageFile){
+		String extension = FilenameUtils.getExtension(imageFile.getName());
+		if(!supported_formats.contains(extension)){
+			IJ.log(extension+" format is not supported");
+		}
+	}
 
+	private void initSupportedFormats(){
+		supported_formats.add("tif");
+		supported_formats.add("TIF");
+		supported_formats.add("czi");
+		supported_formats.add("nd");
+	}
 
 
 	/**
@@ -732,11 +751,11 @@ public class AutoCrop {
 				this.m_outputDirPath + File.separator
 						+ "coordinates");
 		dirOutput.CheckAndCreateDir();
-        OutputTexteFile resultFileOutput=new OutputTexteFile(
+        OutputTextFile resultFileOutput=new OutputTextFile(
         		this.m_outputDirPath + File.separator
 						+ "coordinates" + File.separator
 						+ this.m_outputFilesPrefix+".txt");
-        resultFileOutput.SaveTexteFile(this.m_infoImageAnalyse);
+        resultFileOutput.SaveTextFile(this.m_infoImageAnalyse);
 
     }
 

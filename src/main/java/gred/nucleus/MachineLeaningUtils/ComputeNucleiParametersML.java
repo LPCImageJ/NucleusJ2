@@ -1,7 +1,7 @@
 package gred.nucleus.MachineLeaningUtils;
 
 import gred.nucleus.FilesInputOutput.Directory;
-import gred.nucleus.FilesInputOutput.OutputTexteFile;
+import gred.nucleus.FilesInputOutput.OutputTextFile;
 import gred.nucleus.core.Measure3D;
 import gred.nucleus.plugins.PluginParameters;
 import gred.nucleus.utils.Histogram;
@@ -58,10 +58,10 @@ public class ComputeNucleiParametersML {
             }
         }
 
-        OutputTexteFile resultFileOutputOTSU=new OutputTexteFile(pluginParameters.getOutputFolder()
+        OutputTextFile resultFileOutputOTSU=new OutputTextFile(pluginParameters.getOutputFolder()
                 +directoryInput.getSeparator()
                 +"result_Segmentation_Analyse.csv");
-        resultFileOutputOTSU.SaveTexteFile( outputCropGeneralInfoOTSU);
+        resultFileOutputOTSU.SaveTextFile( outputCropGeneralInfoOTSU);
 
     }
 

@@ -1,6 +1,7 @@
 package gred.nucleus.plugins;
 
 import gred.nucleus.FilesInputOutput.Directory;
+import ij.IJ;
 import ij.ImagePlus;
 
 import java.io.*;
@@ -32,14 +33,7 @@ public class PluginParameters {
      *
      */
     public PluginParameters(String inputFolder,String outputFolder){
-        File input =new File(inputFolder);
-        if(input.isDirectory()) {
-            this.m_inputFolder = inputFolder;
-        }
-        else if(input.isFile()) {
-            this.m_inputFolder = input.getParent();
-
-        }
+        checkInputPaths(inputFolder,outputFolder);
         Directory dirOutput =new Directory(outputFolder);
         dirOutput.CheckAndCreateDir();
         this.m_outputFolder=dirOutput.get_dirPath();
@@ -56,14 +50,7 @@ public class PluginParameters {
      *
      */
     public PluginParameters(String inputFolder,String outputFolder,double xCal ,double yCal,double zCal){
-        File input =new File(inputFolder);
-        if(input.isDirectory()) {
-            this.m_inputFolder = inputFolder;
-        }
-        else if(input.isFile()) {
-            this.m_inputFolder = input.getParent();
-
-        }
+        checkInputPaths(inputFolder,outputFolder);
         Directory dirOutput =new Directory(outputFolder);
         dirOutput.CheckAndCreateDir();
         this.m_outputFolder=dirOutput.get_dirPath();
@@ -82,14 +69,7 @@ public class PluginParameters {
      */
 
     public PluginParameters (String inputFolder, String outputFolder, String pathToConfigFile){
-        File input =new File(inputFolder);
-        if(input.isDirectory()) {
-            this.m_inputFolder = inputFolder;
-        }
-        else if(input.isFile()) {
-            this.m_inputFolder = input.getParent();
-
-        }
+        checkInputPaths(inputFolder,outputFolder);
         Directory dirOutput =new Directory(outputFolder);
         dirOutput.CheckAndCreateDir();
         this.m_outputFolder=dirOutput.get_dirPath();
@@ -99,12 +79,14 @@ public class PluginParameters {
         try {
             is = new FileInputStream(fileName);
         } catch (FileNotFoundException ex) {
-
+            System.err.println(pathToConfigFile+" : can't find the config file !");
+            System.exit(-1);
         }
         try {
             prop.load(is);
         } catch (IOException ex) {
-
+            System.err.println(pathToConfigFile+" : can't load the config file !");
+            System.exit(-1);
         }
         for (String idProp :prop.stringPropertyNames()){
             if(idProp.equals("xcal")){ setXCal(Double.valueOf(prop.getProperty("xcal")));}
@@ -113,7 +95,24 @@ public class PluginParameters {
         }
     }
 
+    private void checkInputPaths(String inputFolder,String outputFolder) {
+        File input =new File(inputFolder);
+        if(input.isDirectory()) {
+            this.m_inputFolder = inputFolder;
+        }
+        else if(input.isFile()) {
+            this.m_inputFolder = input.getParent();
 
+        } else {
+            System.err.println(inputFolder+" : can't find the input folder/file !");
+            IJ.error(inputFolder+" : can't find the input folder/file !");
+//            System.exit(-1);
+        }
+        if(outputFolder==null){
+            IJ.error("Output directory is missing");
+            System.exit(-1);
+        }
+    }
 
 
 
