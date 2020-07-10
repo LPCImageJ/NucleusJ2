@@ -819,14 +819,15 @@ public class Measure3D {
     public String nucleusParameter3D() {
         String resu = "";
         histogramSegmentedNucleus();
-      //  double volume = computeVolumeObject2(255);
+        // double volume = computeVolumeObject2(255);
+
         double volume = computeVolumeObjectML();
         double surfaceArea = computeSurfaceObject( 255);
         double bis = computeComplexSurface();
         double[] tEigenValues = computeEigenValue3D(255);
-        resu = this._rawImage.getTitle() + "\t"
+        resu = this._rawImage.getTitle()
               //  + computeVolumeObject2(255) + "\t"
-        +computeVolumeObjectML()+ "\t"
+                +computeVolumeObjectML()+ "\t"
                 + computeFlatnessAndElongation( 255)[0] + "\t"
                 + computeFlatnessAndElongation( 255)[1] + "\t"
                 + computeSphericity(volume, surfaceArea) + "\t"
