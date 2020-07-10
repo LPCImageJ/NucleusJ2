@@ -1,6 +1,8 @@
 package gred.nucleus.autocrop;
 
 import gred.nucleus.FilesInputOutput.Directory;
+import gred.nucleus.FilesInputOutput.FilesNames;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
@@ -10,7 +12,7 @@ public class generateProjectionFromCoordonne {
     String m_pathToGIFTSeg;
     String m_pathToZprojection;
     String m_pathToCoordonnate;
-
+    String m_pathToRaw;
     /**
      * Constructor
      * @param pathToGIFTSeg path to segmented image's folder
@@ -25,20 +27,30 @@ public class generateProjectionFromCoordonne {
     }
 
     /**
+     * Constructor
+     * @param pathToCoordonnate path to segmented image's folder
+     * @param pathToRaw path to raw image
+     * @throws Exception
+     */
+    public generateProjectionFromCoordonne(String pathToCoordonnate, String pathToRaw) throws Exception {
+        this.m_pathToCoordonnate=pathToCoordonnate;
+        this.m_pathToRaw=pathToRaw;
+    }
+    /**
      * Run new annotation of Zprojection, color in red nuclei which were filtered
      * (in case of GIFT wrapping color in red nuclei which not pass the segmentation
      * most of case Z truncated )
      * @throws Exception
      */
     public void run()throws Exception{
-        Directory GIFTsegImages = new Directory(m_pathToGIFTSeg);
-        GIFTsegImages.listImageFiles(m_pathToGIFTSeg);
+        Directory GIFTsegImages = new Directory(this.m_pathToGIFTSeg);
+        GIFTsegImages.listImageFiles(this.m_pathToGIFTSeg);
         GIFTsegImages.checkIfEmpty();
-        Directory Zprojection = new Directory(m_pathToZprojection);
-        Zprojection.listImageFiles(m_pathToZprojection);
+        Directory Zprojection = new Directory(this.m_pathToZprojection);
+        Zprojection.listImageFiles(this.m_pathToZprojection);
         Zprojection.checkIfEmpty();
-        Directory Coordonnate = new Directory(m_pathToCoordonnate);
-        Coordonnate.listAllFiles(m_pathToCoordonnate);
+        Directory Coordonnate = new Directory(this.m_pathToCoordonnate);
+        Coordonnate.listAllFiles(this.m_pathToCoordonnate);
         Coordonnate.checkIfEmpty();
         for (short i = 0; i < Coordonnate.getNumberFiles(); ++i) {
             File coordinateFile = Coordonnate.getFile(i);
@@ -49,11 +61,10 @@ public class generateProjectionFromCoordonne {
             for (HashMap.Entry<String, String> entry : sortedMap.entrySet()) {
                 if (!(GIFTsegImages.checkIfFileExists(entry.getKey()))) {
                     boxListsNucleiNotPass.add(entry.getValue());
+                    System.out.println("add "+ entry.getValue());
                 }
             }
             File CurrentZprojection=  Zprojection.searchFileNameWithoutExention(coordinateFile.getName().substring(0, coordinateFile.getName().lastIndexOf('.'))+"_Zprojection");
-            System.out.println(CurrentZprojection.getParent() + " "+
-                    CurrentZprojection.getParent()+Zprojection.getSeparator());
             AutocropParameters autocropParameters= new AutocropParameters(CurrentZprojection.getParent(),
                     CurrentZprojection.getParent()+Zprojection.getSeparator());
             annotAutoCrop annotAutoCrop =new annotAutoCrop(boxListsNucleiNotPass,
@@ -64,6 +75,45 @@ public class generateProjectionFromCoordonne {
         }
 
     }
+
+    public void run2()throws Exception{
+        Directory RawImage = new Directory(this.m_pathToRaw);
+        RawImage.listImageFiles(this.m_pathToRaw);
+        RawImage.checkIfEmpty();
+        Directory Coordonnate = new Directory(this.m_pathToCoordonnate);
+        Coordonnate.listAllFiles(this.m_pathToCoordonnate);
+        Coordonnate.checkIfEmpty();
+
+        for (short i = 0; i < Coordonnate.getNumberFiles(); ++i) {
+            File coordinateFile = Coordonnate.getFile(i);
+            HashMap<String, String> listOfBoxes = readCoordinnateTXT(coordinateFile);
+            ArrayList<Integer> boxNumber =new ArrayList();
+            ArrayList<String> boxListsNucleiNotPass = new ArrayList();
+            Map<String, String> sortedMap = new TreeMap<String, String>(listOfBoxes);
+            for (HashMap.Entry<String, String> entry : listOfBoxes.entrySet()) {
+                    boxListsNucleiNotPass.add(entry.getValue());
+
+            }
+            System.out.println(coordinateFile.getName());
+
+            File CurrentRaw=  RawImage.searchFileNameWithoutExention(coordinateFile.getName().substring(0, coordinateFile.getName().lastIndexOf('.')));
+            FilesNames outPutFilesNames = new FilesNames(CurrentRaw.toString());
+            String prefix = outPutFilesNames.PrefixeNameFile();
+            System.out.println("la current raw " +CurrentRaw.getName());
+            AutocropParameters autocropParameters= new AutocropParameters(CurrentRaw.getParent(),
+                    CurrentRaw.getParent()+RawImage.getSeparator());
+            annotAutoCrop annotAutoCrop =new annotAutoCrop(boxListsNucleiNotPass,
+                    CurrentRaw,
+                    CurrentRaw.getParent()+RawImage.getSeparator(),
+                    prefix,
+                    autocropParameters);
+            annotAutoCrop.run();
+        }
+
+    }
+
+
+
 
     /**
      * Compute list of boxes from coordinates file.
