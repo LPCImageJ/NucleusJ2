@@ -204,6 +204,11 @@ public class main {
         SliceToStack createStack =new SliceToStack(pathToSliceDir,pathToOutputDir);
         createStack.run();
 
+        /*
+        * Method to crop image with coordinate in tab file :
+        *    tabulate file : pathToCoordinateFile pathToRawImageAssociate
+        *
+        */
 
     }
     public static void cropFromCoordinates(String coordonnateDir) throws Exception {
