@@ -14,20 +14,24 @@ public class CropFromCoodinateDialog extends JFrame implements ActionListener {
     private JButton _jButtonStart = new JButton("Start");
     private JButton _jButtonQuit = new JButton("Quit");
     private Container _container;
-    private JLabel _jLabelInput;
-    private JTextField _jInputFileChooser = new JTextField();
-    private JTextField _jOutputFileChooser = new JTextField();
-    private JTextField _jConfigFileChooser = new JTextField();
+    private JLabel _jLabelLink;
+    private JLabel _jLabelImage;
+    private JLabel _jLabelCoord;
+    private JTextField _jLinkFileChooser = new JTextField();
+    private JTextField _jImageChooser = new JTextField();
+    private JTextField _jCoordFileChooser = new JTextField();
     private boolean _start = false;
     private JFileChooser fc = new JFileChooser();
-    private JButton sourceButton;
+    private JButton linkFileButton;
+    private JButton imageButton;
+    private JButton coordButton;
 
     private File selectedInput;
     private File selectedOutput;
     private File selectedConfig;
-    private String inputChooserName = "inputChooser";
-    private String outputChooserName = "outputChooser";
-    private String configChooserName = "configChooser";
+    private String linkChooserName = "linkChooser";
+    private String imageChooserName = "imageChooser";
+    private String coordChooserName = "coordChooser";
 
     public CropFromCoodinateDialog(){
         this.setTitle("Autocrop NucleusJ2");
@@ -47,24 +51,70 @@ public class CropFromCoodinateDialog extends JFrame implements ActionListener {
         \*\/*/
 
 
-        _jLabelInput = new JLabel();
-        _container.add(_jLabelInput, new GridBagConstraints(0, 0, 0, 0, 0.0, 0.0,
+        _jLabelLink = new JLabel();
+        _container.add(_jLabelLink, new GridBagConstraints(0, 0, 0, 0, 0.0, 0.0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
                 new Insets(10, 10, 0, 0), 0, 0));
-        _jLabelInput.setText("Path to coordinate file:");
+        _jLabelLink.setText("Path to coordinate file:");
 
-        _container.add(_jInputFileChooser, new GridBagConstraints(0, 0, 0, 0, 0.0, 0.0,
+        _container.add(_jLinkFileChooser, new GridBagConstraints(0, 0, 0, 0, 0.0, 0.0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
                 new Insets(30, 10, 0, 0), 0, 0));
-        _jInputFileChooser.setPreferredSize(new java.awt.Dimension(300, 20));
-        _jInputFileChooser.setMinimumSize(new java.awt.Dimension(300, 20));
+        _jLinkFileChooser.setPreferredSize(new java.awt.Dimension(300, 20));
+        _jLinkFileChooser.setMinimumSize(new java.awt.Dimension(300, 20));
 
-        sourceButton = new JButton("...");
-        _container.add(sourceButton, new GridBagConstraints(0, 0, 0, 0, 0.0, 0.0,
+        linkFileButton = new JButton("...");
+        _container.add(linkFileButton, new GridBagConstraints(0, 0, 0, 0, 0.0, 0.0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
                 new Insets(30, 330, 0, 0), 0, 0));
-        sourceButton.addActionListener(this);
-        sourceButton.setName(inputChooserName);
+        linkFileButton.addActionListener(this);
+        linkFileButton.setName(linkChooserName);
+
+
+        /*/\*\
+        ------------------------------ Image + coordinates -----------------------------------------
+        \*\/*/
+
+
+        /*
+        JLabel imageFileLabel = new JLabel();
+        _container.add(imageFileLabel, new GridBagConstraints(0, 1, 0, 0, 0.0, 0.0,
+                GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
+                new Insets(10, 10, 0, 0), 0, 0));
+        imageFileLabel.setText("Path to image:");
+
+        _container.add(_jImageChooser, new GridBagConstraints(0, 1, 0, 0, 0.0, 0.0,
+                GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
+                new Insets(30, 10, 0, 0), 0, 0));
+        _jImageChooser.setPreferredSize(new java.awt.Dimension(300, 20));
+        _jImageChooser.setMinimumSize(new java.awt.Dimension(300, 20));
+
+        imageButton = new JButton("...");
+        _container.add(linkFileButton, new GridBagConstraints(0, 1, 0, 0, 0.0, 0.0,
+                GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
+                new Insets(30, 330, 0, 0), 0, 0));
+        imageButton.addActionListener(this);
+        imageButton.setName(imageChooserName);
+
+        _jLabelCoord = new JLabel();
+        _container.add(_jLabelCoord, new GridBagConstraints(0, 0, 0, 0, 0.0, 0.0,
+                GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
+                new Insets(10, 10, 0, 0), 0, 0));
+        _jLabelCoord.setText("Path to coordinates:");
+
+        _container.add(_jCoordFileChooser, new GridBagConstraints(0, 0, 0, 0, 0.0, 0.0,
+                GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
+                new Insets(30, 10, 0, 0), 0, 0));
+        _jCoordFileChooser.setPreferredSize(new java.awt.Dimension(300, 20));
+        _jCoordFileChooser.setMinimumSize(new java.awt.Dimension(300, 20));
+
+        coordButton = new JButton("...");
+        _container.add(coordButton, new GridBagConstraints(0, 0, 0, 0, 0.0, 0.0,
+                GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
+                new Insets(30, 330, 0, 0), 0, 0));
+        coordButton.addActionListener(this);
+        coordButton.setName(coordChooserName);
+        */
 
         /*/\*\
         ------------------------------ Buttons -----------------------------------------
@@ -87,20 +137,20 @@ public class CropFromCoodinateDialog extends JFrame implements ActionListener {
     }
 
     public boolean isStart() {	return _start; }
-    public String getInput() { return _jInputFileChooser.getText(); }
-    public String getOutput() { return _jOutputFileChooser.getText(); }
-    public String getConfig() { return _jConfigFileChooser.getText(); }
+    public String getLink() { return _jLinkFileChooser.getText(); }
+    public String getImage() { return _jImageChooser.getText(); }
+    public String getCoord() { return _jCoordFileChooser.getText(); }
 
     public void actionPerformed(ActionEvent e) {
-        if(((JButton)e.getSource()).getName().equals(inputChooserName)){
+        if(((JButton)e.getSource()).getName().equals(linkChooserName)){
             fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
         }
         fc.setAcceptAllFileFilterUsed(false);
 
         if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            if(((JButton)e.getSource()).getName().equals(inputChooserName)){
+            if(((JButton)e.getSource()).getName().equals(linkChooserName)){
                 selectedInput = fc.getSelectedFile();
-                _jInputFileChooser.setText(selectedInput.getPath());
+                _jLinkFileChooser.setText(selectedInput.getPath());
             }
         }
         fc.setSelectedFile(null);

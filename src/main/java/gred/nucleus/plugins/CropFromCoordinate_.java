@@ -24,14 +24,14 @@ public class CropFromCoordinate_ implements PlugIn {
         }
 
         if (cropFromCoodinateDialog.isStart()) {
-            String input = cropFromCoodinateDialog.getInput();
-            if(input==null || input.equals("")) {
+            String file = cropFromCoodinateDialog.getLink();
+            if(file==null || file.equals("")) {
                 IJ.error("Input file or directory is missing");
             } else {
                 try {
                     IJ.log("Begin Autocrop from coordinate process ");
 
-                    cropFromCoordinates(input);
+                    cropFromCoordinates(file);
 
                     IJ.log("\nAutocrop from coordinate process has ended successfully");
                 } catch (Exception e) {

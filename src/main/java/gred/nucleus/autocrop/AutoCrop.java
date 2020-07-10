@@ -114,8 +114,6 @@ public class AutoCrop {
 	 */
 	private HashMap<Double, Box> m_boxes = new HashMap<Double, Box>();
 
-	private ArrayList<String> supported_formats = new ArrayList<>();
-
 
 	/**
 	 * Autocrop constructor : initialisation of analyse parameter
@@ -128,11 +126,8 @@ public class AutoCrop {
 	public AutoCrop(File imageFile, String outputFilesPrefix,
 					AutocropParameters autocropParametersAnalyse)
 			throws IOException, FormatException, fileInOut, Exception {
-		initSupportedFormats();
+
 		String extension = FilenameUtils.getExtension(imageFile.getName());
-		if (!supported_formats.contains(extension)) {
-			IJ.log(extension + " format is not supported");
-		}else {
 			this.m_autocropParameters = autocropParametersAnalyse;
 			this.m_currentFile = imageFile;
 			this.m_imageFilePath = imageFile.getAbsolutePath();
@@ -149,18 +144,13 @@ public class AutoCrop {
 			}
 			this.m_infoImageAnalyse =
 					autocropParametersAnalyse.getAnalyseParameters();
-		}
 
 	}
 
 	public AutoCrop(File imageFile, String outputFilesPrefix,
 					AutocropParameters autocropParametersAnalyse,HashMap<Double, Box> _boxes)
 			throws IOException, FormatException, fileInOut, Exception {
-		initSupportedFormats();
-		String extension = FilenameUtils.getExtension(imageFile.getName());
-		if(!supported_formats.contains(extension)){
-			IJ.log(extension+" format is not supported");
-		}else {
+
 			this.m_autocropParameters = autocropParametersAnalyse;
 			this.m_currentFile = imageFile;
 			this.m_imageFilePath = imageFile.getAbsolutePath();
@@ -171,22 +161,8 @@ public class AutoCrop {
 			this.m_imageSeg = this.m_rawImg;
 			this.m_infoImageAnalyse = autocropParametersAnalyse.getAnalyseParameters();
 			m_boxes = _boxes;
-		}
 	}
 
-	private void testImageFormat(File imageFile){
-		String extension = FilenameUtils.getExtension(imageFile.getName());
-		if(!supported_formats.contains(extension)){
-			IJ.log(extension+" format is not supported");
-		}
-	}
-
-	private void initSupportedFormats(){
-		supported_formats.add("tif");
-		supported_formats.add("TIF");
-		supported_formats.add("czi");
-		supported_formats.add("nd");
-	}
 
 
 	/**
