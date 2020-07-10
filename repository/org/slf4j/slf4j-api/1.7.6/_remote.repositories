@@ -1,0 +1,4 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Thu Jun 18 12:56:07 CEST 2020
+slf4j-api-1.7.6.jar>imagej.public=
+slf4j-api-1.7.6.pom>imagej.public=

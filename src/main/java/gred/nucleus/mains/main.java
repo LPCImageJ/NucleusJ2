@@ -5,7 +5,6 @@ import gred.nucleus.autocrop.*;
 import gred.nucleus.core.ComputeNucleiParameters;
 import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.segmentation.SegmentationCalling;
-
 import gred.nucleus.segmentation.SegmentationParameters;
 import ij.ImagePlus;
 import ij.io.FileSaver;
@@ -13,6 +12,8 @@ import loci.common.DebugTools;
 import loci.formats.FormatException;
 
 import java.io.IOException;
+
+
 
 
 public class main {
@@ -176,12 +177,23 @@ public class main {
 
 
 
+    // UN DOSSIER AVEC LES IMAGETTES
+    // UN DOSSIER AVEC LES ZPROJECTION
+    // UN DOSSIER AVEC LES COORDONNEES
+
+
+    public static void generateProjectionFromCoordinnates(String pathToCoordonnate, String pathToRaw) throws IOException, FormatException,Exception {
+        generateProjectionFromCoordonne projection =new generateProjectionFromCoordonne(pathToCoordonnate, pathToRaw);
+        System.out.println("le run 2 :: ");
+        projection.run2();
+    }
 
 
 
     // UN DOSSIER AVEC LES IMAGETTES
-    // UN DOSSIER AVEC LES COORDONNEES
     // UN DOSSIER AVEC LES ZPROJECTION
+    // UN DOSSIER AVEC LES COORDONNEES
+
 
     public static void generateProjectionFromCoordinnates(String pathToGIFTSeg, String pathToZprojection,String pathToCoordonnate) throws IOException, FormatException,Exception {
         generateProjectionFromCoordonne projection =new generateProjectionFromCoordonne(pathToGIFTSeg, pathToZprojection, pathToCoordonnate);
@@ -189,28 +201,37 @@ public class main {
     }
 
 
-
-
     public static void sliceToStack(String pathToSliceDir, String pathToOutputDir) throws Exception {
         SliceToStack createStack =new SliceToStack(pathToSliceDir,pathToOutputDir);
         createStack.run();
 
+        /*
+        * Method to crop image with coordinate in tab file :
+        *    tabulate file : pathToCoordinateFile pathToRawImageAssociate
+        *
+        */
 
     }
-    public static void cropFromCoordinates(String coordonnateDir) throws IOException, FormatException,Exception {
+    public static void cropFromCoordinates(String coordonnateDir) throws Exception {
 
         CropFromCoordonnate test = new CropFromCoordonnate(coordonnateDir);
         test.runCropFromCoordonnate();
     }
+    // DIC_path zprojection_path
+    public static void genereOV(String linkOverlayProjection) throws Exception {
 
+        GenerateOverlay ov = new GenerateOverlay(linkOverlayProjection);
+        ov.run();
+
+    }
     public static void saveFile ( ImagePlus imagePlusInput, String pathFile) {
         FileSaver fileSaver = new FileSaver(imagePlusInput);
         fileSaver.saveAsTiff(pathFile);
     }
 
-    public static void main(String[] args) throws IOException, FormatException, fileInOut,Exception {
+    public static void main(String[] args) throws Exception {
+        // SET OFF BIOFORMATS WARNINGS
         DebugTools.enableLogging("OFF");
-
         System.setProperty("java.awt.headless", "false");
 
         if(args[0].equals("autocrop")) {
@@ -253,13 +274,21 @@ public class main {
             computeNucleusParametersDL(args[1], args[2]);
         }
         else if(args[0].equals("generateProjection")){
-            generateProjectionFromCoordinnates(args[1], args[2],args[3]);
+            if(args.length==4) {
+                generateProjectionFromCoordinnates(args[1], args[2], args[3]);
+            }
+            else{
+                generateProjectionFromCoordinnates(args[1], args[2]);
+            }
         }
         else if (args[0].equals("SliceToStack")){
             sliceToStack(args[1], args[2]);
         }
         else if(args[0].equals("CropFromCoordinate")){
             cropFromCoordinates(args[1]);
+        }
+        else if(args[0].equals("GenerateOverlay")){
+            genereOV(args[1]);
         }
         else{
             System.out.println("Argument le premier argument doit être   autocrop  ou   segmentation ou computeParameters");

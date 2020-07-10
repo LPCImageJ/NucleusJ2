@@ -1,0 +1,4 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Thu Jun 18 12:56:07 CEST 2020
+native-lib-loader-2.1.4.jar>imagej.public=
+native-lib-loader-2.1.4.pom>imagej.public=

@@ -97,6 +97,7 @@ public class Directory  {
         }
         for (File f : list) {
             if (f.isDirectory()) {
+                
                 listImageFiles(f.getAbsolutePath());
             }
             else {

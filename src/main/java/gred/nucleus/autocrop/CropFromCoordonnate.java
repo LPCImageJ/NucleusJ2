@@ -31,7 +31,7 @@ public class CropFromCoordonnate {
 
             if (!(line.matches("^#.*"))) {
                 String [] splitLine = line.split("\\t");
-                coordinateToRawImage.put(splitLine[0],splitLine[1]);
+                this.coordinateToRawImage.put(splitLine[0],splitLine[1]);
 
             }
         }

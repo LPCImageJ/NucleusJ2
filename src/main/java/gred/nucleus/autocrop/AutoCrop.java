@@ -476,7 +476,8 @@ public class AutoCrop {
 								+"_C"
 								+ y
 								+ ".tif");
-				this.m_infoImageAnalyse=dirOutput.get_dirPath()
+				this.m_infoImageAnalyse=this.m_infoImageAnalyse
+						+dirOutput.get_dirPath()
 						+ File.separator
 						+ this.m_outputFilesPrefix
 						+ "_"
@@ -568,7 +569,8 @@ public class AutoCrop {
                                 +"_C"
                                 + y
                                 + ".tif");
-				this.m_infoImageAnalyse=dirOutput.get_dirPath()
+				this.m_infoImageAnalyse=this.m_infoImageAnalyse
+						+dirOutput.get_dirPath()
 						+ File.separator
 						+ this.m_outputFilesPrefix
                         + "_"

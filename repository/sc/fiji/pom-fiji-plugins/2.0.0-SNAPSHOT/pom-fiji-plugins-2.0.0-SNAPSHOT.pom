@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+		http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>sc.fiji</groupId>
+		<artifactId>pom-fiji</artifactId>
+		<version>2.0.0-SNAPSHOT</version>
+	</parent>
+
+	<groupId>sc.fiji</groupId>
+	<artifactId>pom-fiji-plugins</artifactId>
+	<version>2.0.0-SNAPSHOT</version>
+	<packaging>pom</packaging>
+
+	<name>Aggregator project for the Fiji plugins</name>
+	<description></description>
+
+	<properties>
+		<imagej.app.directory>${rootdir}</imagej.app.directory>
+	</properties>
+
+	<modules>
+		<module>Linear_Kuwahara</module>
+		<module>LocalThickness_</module>
+		<module>MTrack2_</module>
+		<module>MTrackJ_</module>
+		<module>M_I_P</module>
+		<module>Manual_Tracking</module>
+		<module>MosaicJ_</module>
+		<module>Multi_Kymograph</module>
+		<module>PIV_analyser</module>
+		<module>PointPicker_</module>
+		<module>QuickPALM_</module>
+		<module>RATS_</module>
+		<module>RandomJ_</module>
+		<module>Reconstruct_Reader</module>
+		<module>Refresh_Javas</module>
+		<module>SPIM_Opener</module>
+		<module>Scala_Interpreter</module>
+		<module>Script_Editor</module>
+		<module>Series_Labeler</module>
+		<module>SheppLogan_</module>
+		<module>Simple_Neurite_Tracer</module>
+		<module>Skeletonize3D_</module>
+		<module>Snakuscule_</module>
+		<module>SplineDeformationGenerator_</module>
+		<module>StackReg_</module>
+		<module>Stack_Manipulation</module>
+		<module>Statistical_Region_Merging</module>
+		<module>Sync_Win</module>
+		<module>Thread_Killer</module>
+		<module>Threshold_Colour</module>
+		<module>Time_Stamper</module>
+		<module>ToAST_</module>
+		<module>TransformJ_</module>
+		<module>TurboReg_</module>
+		<module>UnwarpJ_</module>
+		<module>Updater_Fix</module>
+		<module>Vaa3d_Reader</module>
+		<module>VIB-lib</module>
+		<module>VIB_</module>
+		<module>Video_Editing</module>
+		<module>View5D_</module>
+		<module>Volume_Calculator</module>
+		<module>Volume_Viewer</module>
+		<module>blockmatching_</module>
+		<module>fiji-compat</module>
+		<module>fiji-lib</module>
+		<module>fiji-scripting</module>
+		<module>panorama_</module>
+		<module>register_virtual_stack_slices</module>
+		<module>registration_3d</module>
+		<module>weave_jy2java</module>
+	</modules>
+
+	<repositories>
+		<!-- NB: for project parent, in case of partial checkout -->
+		<repository>
+			<id>imagej.public</id>
+			<url>http://maven.imagej.net/content/groups/public</url>
+		</repository>
+	</repositories>
+
+</project>

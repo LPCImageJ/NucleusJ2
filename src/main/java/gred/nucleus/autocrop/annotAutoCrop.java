@@ -66,6 +66,7 @@ public class annotAutoCrop {
         this.m_outputDirPath=outputDirPath;
         Directory dirOutput= new Directory(
                 this.m_outputDirPath+"zprojection");
+        System.out.println("le dir "+this.m_outputDirPath+"zprojection");
         dirOutput.CheckAndCreateDir();
 
 
@@ -107,7 +108,10 @@ public class annotAutoCrop {
      *
      */
     public void runAddBadCrop(ArrayList<Integer> _box){
+        IJ.run(this.m_zProjection, "Enhance Contrast", "saturated=0.35");
+        IJ.run(this.m_zProjection, "RGB Color", "");
         ZProjector zProjectionTmp = new ZProjector(this.m_zProjection);
+
         for(int i = 0; i < this.m_boxCoordinates.size(); ++i) {
             String [] splitLine = this.m_boxCoordinates.get(i).split("\\t");
             String [] fileName =splitLine[0].split("\\/");
@@ -135,7 +139,7 @@ public class annotAutoCrop {
             addBoxCropToZProjection(this.m_boxCoordinates.get(i),i);
         }
         String outFileZbox = this.m_outputDirPath+this.m_currentFile.separator+"zprojection"+this.m_currentFile.separator+m_outputFilesPrefix+"_Zprojection.tif";
-
+        System.out.println("outFileZbox "+ outFileZbox);
 
         saveFile(this.m_zProjection,outFileZbox);
 
@@ -222,8 +226,8 @@ public class annotAutoCrop {
         /** Line size parameter */
 
       /** !!!!!!!!!!! on contrast la projection sinon elle est en GRIS ?????? */
-        IJ.run(this.m_zProjection, "Enhance Contrast", "saturated=0.35");
-        IJ.run(this.m_zProjection, "RGB Color", "");
+        //IJ.run(this.m_zProjection, "Enhance Contrast", "saturated=0.35");
+        //IJ.run(this.m_zProjection, "RGB Color", "");
         IJ.setForegroundColor(255, 0, 0);
         IJ.run("Line Width...", "line=4");
         /** Set draw current box*/
