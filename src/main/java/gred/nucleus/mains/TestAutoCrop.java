@@ -1,11 +1,12 @@
 package gred.nucleus.mains;
 
 import gred.nucleus.autocrop.AutocropParameters;
+import gred.nucleus.autocrop.CropFromCoordonnate;
 import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.autocrop.AutoCropCalling;
 
 import ij.IJ;
-
+import loci.formats.FormatException;
 
 
 import java.io.IOException;
@@ -54,6 +55,12 @@ public class TestAutoCrop {
 		AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
 		autoCrop.runFile(imageSourceFile);
 	}
+
+	public static void runCropFromCoordinates(String coordonnateDir) throws IOException, FormatException,Exception {
+
+		CropFromCoordonnate test = new CropFromCoordonnate(coordonnateDir);
+		test.runCropFromCoordonnate();
+	}
 	/**
 	 * Main function of the package's tests.
 	 * @param args
@@ -66,19 +73,8 @@ public class TestAutoCrop {
 		System.out.println("Maximum memory (bytes): " +
 				(maxMemory == Long.MAX_VALUE ? "no limit" : maxMemory*1e-9));
 
-		//OuputFileVerification fw = new OuputFileVerification();
-		//fw.GetFileResultExpeted(ExpectedResult);
-		//fw.GetFilesOutputFolder(outputTristan);
-		//testStupid(inputOneImageTristan, outputTristan);
 
-		//runAutoCrop("/home/tridubos/Bureau/IMAGES_TEST/Nouveau dossier/Autocrop_name/Raw",
-		//		"/home/tridubos/Bureau/IMAGES_TEST/Nouveau dossier/Autocrop_name/Crop");
-
-
-
-		runAutoCropFolder("/media/titus/DATA/KALINI/raw",
-		"/media/titus/DATA/KALINI/yup");
-				//"/home/titus/Bureau/TEST_NJ/AUTOCROP/autocrop/config.txt");
+		runCropFromCoordinates("C:/Users/Martin/Documents/IMAGE_TEST_NJ/AUTOCROP/RESULTS/RAW_ND/tab_file.txt");
 
 		System.err.println("The program ended normally.");
 

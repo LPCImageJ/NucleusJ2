@@ -14,6 +14,7 @@ public class SegmentationDialog extends JFrame implements ActionListener,ItemLis
     private static final long serialVersionUID = 1L;
     private JButton _jButtonStart = new JButton("Start");
     private JButton _jButtonQuit = new JButton("Quit");
+    private JButton _jButtonConfig = new JButton("Config");
     private Container _container;
     private JFormattedTextField _jTextFieldXCalibration = new JFormattedTextField(Number.class);
     private JFormattedTextField _jTextFieldYCalibration = new JFormattedTextField(Number.class);
@@ -34,6 +35,16 @@ public class SegmentationDialog extends JFrame implements ActionListener,ItemLis
     private JButton sourceButton;
     private JButton destButton;
     private JButton confButton;
+    private JLabel defConf = new JLabel("Default configuration");
+
+    private int configMode = 0;
+    private boolean manualConfig = false;
+    private SegmentationConfigDialog segmentationConfigFileDialog;
+
+    private ButtonGroup buttonGroup = new ButtonGroup();
+    private JRadioButton rdoDefault = new JRadioButton();
+    private JRadioButton rdoAddConfigFile = new JRadioButton();
+    private JRadioButton rdoAddConfigDialog = new JRadioButton();
 
     private File selectedInput;
     private File selectedOutput;
@@ -53,6 +64,8 @@ public class SegmentationDialog extends JFrame implements ActionListener,ItemLis
         this.setTitle("Segmentation NucleusJ2");
         this.setSize(500, 300);
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        segmentationConfigFileDialog = new SegmentationConfigDialog(this);
+        segmentationConfigFileDialog.setVisible(false);
         _container = getContentPane();
         GridBagLayout gridBagLayout = new GridBagLayout();
         gridBagLayout.rowWeights = new double[] {0.0, 0.0, 0.0, 0.1};
@@ -103,10 +116,24 @@ public class SegmentationDialog extends JFrame implements ActionListener,ItemLis
                 GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
                 new Insets(10, 10, 0, 0), 0, 0));
         _jLabelConfig.setText("Config file (optional):");
-        _container.add(addConfigBox, new GridBagConstraints(0, 2, 0, 0, 0.0, 0.0,
+
+        buttonGroup.add( rdoDefault );
+        rdoDefault.setSelected(true);
+        rdoDefault.addItemListener(this);
+        itemStateChanged(new ItemEvent(rdoDefault,0, rdoDefault,ItemEvent.SELECTED));
+        _container.add(rdoDefault, new GridBagConstraints(0, 2, 0, 0, 0.0, 0.0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
                 new Insets(10, 200, 0, 0), 0, 0));
-        addConfigBox.addItemListener(this);
+        buttonGroup.add( rdoAddConfigDialog );
+        rdoAddConfigDialog.addItemListener(this);
+        _container.add(rdoAddConfigDialog, new GridBagConstraints(0, 2, 0, 0, 0.0, 0.0,
+                GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
+                new Insets(10, 230, 0, 0), 0, 0));
+        buttonGroup.add( rdoAddConfigFile );
+        rdoAddConfigFile.addItemListener(this);
+        _container.add(rdoAddConfigFile, new GridBagConstraints(0, 2, 0, 0, 0.0, 0.0,
+                GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
+                new Insets(10, 260, 0, 0), 0, 0));
 
         _container.add(_jButtonStart, new GridBagConstraints(0, 3, 0, 0,0.0, 0.0,
                 GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
@@ -122,13 +149,16 @@ public class SegmentationDialog extends JFrame implements ActionListener,ItemLis
         _jButtonQuit.addActionListener(quitListener);
         SegmentationDialog.StartListener startListener = new SegmentationDialog.StartListener(this);
         _jButtonStart.addActionListener(startListener);
+        SegmentationDialog.ConfigListener configListener = new SegmentationDialog.ConfigListener(this);
+        _jButtonConfig.addActionListener(configListener);
     }
 
     public boolean isStart() {	return _start; }
     public String getInput() { return _jInputFileChooser.getText(); }
     public String getOutput() { return _jOutputFileChooser.getText(); }
     public String getConfig() { return _jConfigFileChooser.getText(); }
-    public boolean isConfigBoxSelected() { return addConfigBox.isSelected(); }
+    public int getConfigMode() { return configMode; }
+    public SegmentationConfigDialog getSegmentationConfigFileDialog() { return segmentationConfigFileDialog; }
 
     public void actionPerformed(ActionEvent e) {
         if(((JButton)e.getSource()).getName().equals(inputChooserName)){
@@ -157,7 +187,31 @@ public class SegmentationDialog extends JFrame implements ActionListener,ItemLis
 
     @Override
     public void itemStateChanged(ItemEvent e) {
-        if(addConfigBox.isSelected()){
+        if(configMode==0)
+            _container.remove(defConf);
+        else if(configMode==1){
+            _container.remove(_jButtonConfig);
+            if(segmentationConfigFileDialog.isVisible())
+                segmentationConfigFileDialog.setVisible(false);
+        }else if(configMode==2) {
+            _container.remove(_jConfigFileChooser);
+            _container.remove(confButton);
+        }
+
+        Object source = e.getSource();
+        if (source == rdoDefault) {
+            _container.add(defConf, new GridBagConstraints(0, 2, 0, 0, 0.0, 0.0,
+                    GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
+                    new Insets(40, 10, 0, 0), 0, 0));
+            configMode = 0;
+            manualConfig = false;
+        }else if (source == rdoAddConfigDialog) {
+            _container.add(_jButtonConfig, new GridBagConstraints(0, 2, 0, 0, 0.0, 0.0,
+                    GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
+                    new Insets(40, 10, 0, 0), 0, 0));
+            manualConfig = true;
+            configMode = 1;
+        }else if (source == rdoAddConfigFile) {
             _container.add(_jConfigFileChooser, new GridBagConstraints(0, 2, 0, 0, 0.0, 0.0,
                     GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
                     new Insets(40, 10, 0, 0), 0, 0));
@@ -170,9 +224,8 @@ public class SegmentationDialog extends JFrame implements ActionListener,ItemLis
                     new Insets(40, 330, 0, 0), 0, 0));
             confButton.addActionListener(this);
             confButton.setName(configChooserName);
-        } else {
-            _container.remove(_jConfigFileChooser);
-            _container.remove(confButton);
+            configMode = 2;
+            manualConfig = false;
         }
         validate();
         repaint();
@@ -218,5 +271,18 @@ public class SegmentationDialog extends JFrame implements ActionListener,ItemLis
          */
         public  QuitListener (SegmentationDialog segmentationDialog) { _segmentationDialog = segmentationDialog; }
         public void actionPerformed(ActionEvent actionEvent) { _segmentationDialog.dispose(); }
+    }
+
+    class ConfigListener implements ActionListener
+    {
+        SegmentationDialog _segmentationDialog;
+        /**
+         *
+         * @param segmentationDialog
+         */
+        public  ConfigListener (SegmentationDialog segmentationDialog) { _segmentationDialog = segmentationDialog; }
+        public void actionPerformed(ActionEvent actionEvent) {
+            segmentationConfigFileDialog.setVisible(true);
+        }
     }
 }

@@ -86,6 +86,7 @@ public class AutoCropCalling {
                         +autoCrop.getImageCropInfo();
                 }catch (Exception e){
                     IJ.error("Cannot run autocrop on "+currentFile.getName());
+                    e.printStackTrace();
                 }
 
         }

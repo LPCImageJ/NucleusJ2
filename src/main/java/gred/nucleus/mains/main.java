@@ -258,7 +258,7 @@ public class main {
         else if (args[0].equals("SliceToStack")){
             sliceToStack(args[1], args[2]);
         }
-        else if(args[0].equals("CropFromCoordonnate")){
+        else if(args[0].equals("CropFromCoordinate")){
             cropFromCoordinates(args[1]);
         }
         else{

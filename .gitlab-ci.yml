@@ -3,7 +3,7 @@ image: maven:3-jdk-8
 variables:
   CI_PROJECT_PATH: "ReightI/test-nucleusj-ci-cd"
   API_IMAGE_NAME: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
-  VERSION: "v1.0.2"
+  VERSION: "1.1.4"
 
 stages:
   - compile
@@ -46,4 +46,4 @@ release_branch:
   only:
     - master
   script:
-    - release-cli create --name "$VERSION" --description "release $VERSION" --tag-name "$VERSION" --ref "$CI_COMMIT_SHA [skip ci]" --assets-links-name ".jar" --assets-links-url "https://gitlab.com/api/v4/projects/19044962/packages/maven/burp/NucleusJ_2/1.0.2/NucleusJ_2-$VERSION.jar"
+    - release-cli create --name "v$VERSION" --description "new release" --tag-name "v$VERSION" --ref $CI_COMMIT_SHA --assets-links-name ".jar" --assets-links-url "https://gitlab.com/api/v4/projects/19044962/packages/maven/burp/NucleusJ_2/$VERSION/NucleusJ_2-$VERSION.jar"

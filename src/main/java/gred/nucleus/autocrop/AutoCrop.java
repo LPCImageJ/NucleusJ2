@@ -129,24 +129,27 @@ public class AutoCrop {
 					AutocropParameters autocropParametersAnalyse)
 			throws IOException, FormatException, fileInOut, Exception {
 		initSupportedFormats();
-		testImageFormat(imageFile);
-		this.m_autocropParameters = autocropParametersAnalyse;
-		this.m_currentFile = imageFile;
-		this.m_imageFilePath = imageFile.getAbsolutePath();
-		this.m_outputDirPath = this.m_autocropParameters.getOutputFolder();
-		Thresholding thresholding = new Thresholding();
-		this.m_outputFilesPrefix = outputFilesPrefix;
-		setChannelNumbers();
-		if(this.m_rawImg.getBitDepth()>8) {
-			this.m_imageSeg = thresholding.contrastAnd8bits(
-					getImageChannel(
-							this.m_autocropParameters.getChannelToComputeThreshold()));
+		String extension = FilenameUtils.getExtension(imageFile.getName());
+		if (!supported_formats.contains(extension)) {
+			IJ.log(extension + " format is not supported");
+		}else {
+			this.m_autocropParameters = autocropParametersAnalyse;
+			this.m_currentFile = imageFile;
+			this.m_imageFilePath = imageFile.getAbsolutePath();
+			this.m_outputDirPath = this.m_autocropParameters.getOutputFolder();
+			Thresholding thresholding = new Thresholding();
+			this.m_outputFilesPrefix = outputFilesPrefix;
+			setChannelNumbers();
+			if (this.m_rawImg.getBitDepth() > 8) {
+				this.m_imageSeg = thresholding.contrastAnd8bits(
+						getImageChannel(
+								this.m_autocropParameters.getChannelToComputeThreshold()));
+			} else {
+				this.m_imageSeg = this.m_rawImg;
+			}
+			this.m_infoImageAnalyse =
+					autocropParametersAnalyse.getAnalyseParameters();
 		}
-		else{
-			this.m_imageSeg=this.m_rawImg;
-		}
-		this.m_infoImageAnalyse =
-				autocropParametersAnalyse.getAnalyseParameters();
 
 	}
 
@@ -154,17 +157,21 @@ public class AutoCrop {
 					AutocropParameters autocropParametersAnalyse,HashMap<Double, Box> _boxes)
 			throws IOException, FormatException, fileInOut, Exception {
 		initSupportedFormats();
-		testImageFormat(imageFile);
-		this.m_autocropParameters = autocropParametersAnalyse;
-		this.m_currentFile = imageFile;
-		this.m_imageFilePath = imageFile.getAbsolutePath();
-		this.m_outputDirPath = this.m_autocropParameters.getOutputFolder();
-		Thresholding thresholding = new Thresholding();
-		this.m_outputFilesPrefix = outputFilesPrefix;
-		setChannelNumbers();
-		this.m_imageSeg=this.m_rawImg;
-		this.m_infoImageAnalyse =autocropParametersAnalyse.getAnalyseParameters();
-		m_boxes=_boxes;
+		String extension = FilenameUtils.getExtension(imageFile.getName());
+		if(!supported_formats.contains(extension)){
+			IJ.log(extension+" format is not supported");
+		}else {
+			this.m_autocropParameters = autocropParametersAnalyse;
+			this.m_currentFile = imageFile;
+			this.m_imageFilePath = imageFile.getAbsolutePath();
+			this.m_outputDirPath = this.m_autocropParameters.getOutputFolder();
+			Thresholding thresholding = new Thresholding();
+			this.m_outputFilesPrefix = outputFilesPrefix;
+			setChannelNumbers();
+			this.m_imageSeg = this.m_rawImg;
+			this.m_infoImageAnalyse = autocropParametersAnalyse.getAnalyseParameters();
+			m_boxes = _boxes;
+		}
 	}
 
 	private void testImageFormat(File imageFile){
@@ -227,6 +234,8 @@ public class AutoCrop {
 	 * 20.
 	 */
 	public void thresholdKernels() {
+		if(this.m_imageSeg==null)
+			return;
 		this.sliceUsedForOTSU = "default";
 		GaussianBlur3D.blur(this.m_imageSeg, 0.5, 0.5, 1);
 
