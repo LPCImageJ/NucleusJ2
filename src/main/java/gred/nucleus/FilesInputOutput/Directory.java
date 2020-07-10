@@ -87,6 +87,7 @@ public class Directory  {
         File[] list = root.listFiles();
         for (File f : list) {
             if (f.isDirectory()) {
+                
                 listImageFiles(f.getAbsolutePath());
             }
             else {
