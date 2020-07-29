@@ -1,14 +1,14 @@
 package gred.nucleus.autocrop;
 
 import gred.nucleus.FilesInputOutput.Directory;
-import gred.nucleus.FilesInputOutput.OutputTexteFile;
+import gred.nucleus.FilesInputOutput.OutputTextFile;
 import gred.nucleus.FilesInputOutput.OutputTiff;
 import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.imageProcess.Thresholding;
 import gred.nucleus.utils.Histogram;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
-import ij.io.FileSaver;
 import ij.measure.Calibration;
 import ij.plugin.ChannelSplitter;
 import ij.plugin.Duplicator;
@@ -26,6 +26,7 @@ import java.util.Map;
 
 import inra.ijpb.binary.BinaryImages;
 import inra.ijpb.label.LabelImages;
+import org.apache.commons.io.FilenameUtils;
 
 /**
  * Class dedicate to crop nuclei in a isolate file from 3D wide field image from
@@ -125,41 +126,42 @@ public class AutoCrop {
 	public AutoCrop(File imageFile, String outputFilesPrefix,
 					AutocropParameters autocropParametersAnalyse)
 			throws IOException, FormatException, fileInOut, Exception {
-		this.m_autocropParameters = autocropParametersAnalyse;
-		this.m_currentFile = imageFile;
-		this.m_imageFilePath = imageFile.getAbsolutePath();
-		this.m_outputDirPath = this.m_autocropParameters.getOutputFolder();
-		Thresholding thresholding = new Thresholding();
-		this.m_outputFilesPrefix = outputFilesPrefix;
-		setChannelNumbers();
-		if(this.m_rawImg.getBitDepth()>8) {
-			this.m_imageSeg = thresholding.contrastAnd8bits(
-					getImageChannel(
-							this.m_autocropParameters.getChannelToComputeThreshold()));
-		}
-		else{
-			this.m_imageSeg=this.m_rawImg;
-		}
-		this.m_infoImageAnalyse =
-				autocropParametersAnalyse.getAnalyseParameters();
+
+		String extension = FilenameUtils.getExtension(imageFile.getName());
+			this.m_autocropParameters = autocropParametersAnalyse;
+			this.m_currentFile = imageFile;
+			this.m_imageFilePath = imageFile.getAbsolutePath();
+			this.m_outputDirPath = this.m_autocropParameters.getOutputFolder();
+			Thresholding thresholding = new Thresholding();
+			this.m_outputFilesPrefix = outputFilesPrefix;
+			setChannelNumbers();
+			if (this.m_rawImg.getBitDepth() > 8) {
+				this.m_imageSeg = thresholding.contrastAnd8bits(
+						getImageChannel(
+								this.m_autocropParameters.getChannelToComputeThreshold()));
+			} else {
+				this.m_imageSeg = this.m_rawImg;
+			}
+			this.m_infoImageAnalyse =
+					autocropParametersAnalyse.getAnalyseParameters();
 
 	}
 
 	public AutoCrop(File imageFile, String outputFilesPrefix,
 					AutocropParameters autocropParametersAnalyse,HashMap<Double, Box> _boxes)
 			throws IOException, FormatException, fileInOut, Exception {
-		this.m_autocropParameters = autocropParametersAnalyse;
-		this.m_currentFile = imageFile;
-		this.m_imageFilePath = imageFile.getAbsolutePath();
-		this.m_outputDirPath = this.m_autocropParameters.getOutputFolder();
-		Thresholding thresholding = new Thresholding();
-		this.m_outputFilesPrefix = outputFilesPrefix;
-		setChannelNumbers();
-		this.m_imageSeg=this.m_rawImg;
-		this.m_infoImageAnalyse =autocropParametersAnalyse.getAnalyseParameters();
-		m_boxes=_boxes;
-	}
 
+			this.m_autocropParameters = autocropParametersAnalyse;
+			this.m_currentFile = imageFile;
+			this.m_imageFilePath = imageFile.getAbsolutePath();
+			this.m_outputDirPath = this.m_autocropParameters.getOutputFolder();
+			Thresholding thresholding = new Thresholding();
+			this.m_outputFilesPrefix = outputFilesPrefix;
+			setChannelNumbers();
+			this.m_imageSeg = this.m_rawImg;
+			this.m_infoImageAnalyse = autocropParametersAnalyse.getAnalyseParameters();
+			m_boxes = _boxes;
+	}
 
 
 
@@ -208,6 +210,8 @@ public class AutoCrop {
 	 * 20.
 	 */
 	public void thresholdKernels() {
+		if(this.m_imageSeg==null)
+			return;
 		this.sliceUsedForOTSU = "default";
 		GaussianBlur3D.blur(this.m_imageSeg, 0.5, 0.5, 1);
 
@@ -734,11 +738,11 @@ public class AutoCrop {
 				this.m_outputDirPath + File.separator
 						+ "coordinates");
 		dirOutput.CheckAndCreateDir();
-        OutputTexteFile resultFileOutput=new OutputTexteFile(
+        OutputTextFile resultFileOutput=new OutputTextFile(
         		this.m_outputDirPath + File.separator
 						+ "coordinates" + File.separator
 						+ this.m_outputFilesPrefix+".txt");
-        resultFileOutput.SaveTexteFile(this.m_infoImageAnalyse);
+        resultFileOutput.SaveTextFile(this.m_infoImageAnalyse);
 
     }
 

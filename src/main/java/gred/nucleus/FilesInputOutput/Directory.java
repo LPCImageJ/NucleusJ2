@@ -1,4 +1,5 @@
 package gred.nucleus.FilesInputOutput;
+import ij.IJ;
 import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
@@ -65,8 +66,13 @@ public class Directory  {
     private void CreateDire() {
         File dir = new File(this.m_dirPath);
         if (!dir.exists()) {
-            dir.mkdir();
-            System.out.println("New directory "+ this.m_dirPath);
+            boolean isDirCreated = dir.mkdirs();
+            if(isDirCreated)
+                IJ.log("New directory : " + this.m_dirPath);
+            else {
+                IJ.error(this.m_dirPath + " : directory cannot be created");
+                System.exit(-1);
+            }
         }
     }
 
@@ -85,6 +91,10 @@ public class Directory  {
     public void listImageFiles(String Path) {
         File root = new File(Path);
         File[] list = root.listFiles();
+        if(list==null){
+            IJ.error(Path+" does not contain files");
+            System.exit(-1);
+        }
         for (File f : list) {
             if (f.isDirectory()) {
                 

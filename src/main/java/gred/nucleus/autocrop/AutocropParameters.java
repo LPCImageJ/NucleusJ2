@@ -119,6 +119,45 @@ public class AutocropParameters extends PluginParameters {
         this.m_minVolumeNucleus=minVolumeNucleus;
 
     }
+    /** Constructor with all manual parameters 2
+     * @param inputFolder : path folder containing Images
+     * @param outputFolder : path folder output analyse
+     * @param xCropBoxSize : number of voxels add in x axis around object
+     * @param yCropBoxSize : number of voxels add in z axis around object
+     * @param zCropBoxSize : number of stack add in z axis around object
+     * @param channelToComputeThreshold : channel number to compute OTSU
+     * @param slicesOTSUcomputing : slice start to compute OTSU
+     * @param thresholdOTSUcomputing : minimum OTSU threshold used
+     * @param maxVolumeNucleus : volume maximum of objects detected
+     * @param minVolumeNucleus : volume minimum of objects detected
+     * @param boxesPercentSurfaceToFilter : surface percent of boxes to groups them
+     * @param boxesRegroupement : activation of boxes regroupement
+     */
+    public AutocropParameters(String inputFolder, String outputFolder,
+                              int xCropBoxSize,
+                              int yCropBoxSize,
+                              int zCropBoxSize,
+                              int slicesOTSUcomputing,
+                              int thresholdOTSUcomputing,
+                              int channelToComputeThreshold,
+                              int minVolumeNucleus,
+                              int maxVolumeNucleus,
+                              int boxesPercentSurfaceToFilter,
+                              boolean boxesRegroupement) {
+
+        super(inputFolder, outputFolder);
+        this.m_xCropBoxSize = xCropBoxSize;
+        this.m_yCropBoxSize = yCropBoxSize;
+        this.m_zCropBoxSize = zCropBoxSize;
+        this.m_thresholdOTSUcomputing = thresholdOTSUcomputing;
+        this.m_slicesOTSUcomputing = slicesOTSUcomputing;
+        this.m_channelToComputeThreshold=channelToComputeThreshold;
+        this.m_maxVolumeNucleus=maxVolumeNucleus;
+        this.m_minVolumeNucleus=minVolumeNucleus;
+        this.m_boxesRegroupement=boxesRegroupement;
+        this.m_boxesPercentSurfaceToFilter=boxesPercentSurfaceToFilter;
+
+    }
     /**
      * Constructor with box size modification and slice number used to start
      * OTSU threshold calculation
@@ -128,7 +167,11 @@ public class AutocropParameters extends PluginParameters {
      * @param xCropBoxSize : number of voxels add in x axis around object
      * @param yCropBoxSize : number of voxels add in z axis around object
      * @param zCropBoxSize : number of stack add in z axis around object
-     * @param slicesOTSUcomputing : slice from OTSU threshold calculation start
+     * @param channelToComputeThreshold : channel number to compute OTSU
+     * @param slicesOTSUcomputing : slice start to compute OTSU
+     * @param thresholdOTSUcomputing : minimum OTSU threshold used
+     * @param maxVolumeNucleus : volume maximum of objects detected
+     * @param minVolumeNucleus : volume minimum of objects detected
      *
      */
     public AutocropParameters(String inputFolder, String outputFolder,
@@ -157,6 +200,56 @@ public class AutocropParameters extends PluginParameters {
     }
 
     /**
+     * Constructor with box size modification and slice number used to start
+     * OTSU threshold calculation
+     * to last slice
+     * @param inputFolder : path folder containing Images
+     * @param outputFolder : path folder output analyse
+     * @param xCal : image calibration X
+     * @param yCal : image calibration Y
+     * @param zCal : image calibration Z
+     * @param xCropBoxSize : number of voxels add in x axis around object
+     * @param yCropBoxSize : number of voxels add in z axis around object
+     * @param zCropBoxSize : number of stack add in z axis around object
+     * @param channelToComputeThreshold : channel number to compute OTSU
+     * @param slicesOTSUcomputing : slice start to compute OTSU
+     * @param thresholdOTSUcomputing : minimum OTSU threshold used
+     * @param maxVolumeNucleus : volume maximum of objects detected
+     * @param minVolumeNucleus : volume minimum of objects detected
+     * @param boxesPercentSurfaceToFilter : surface percent of boxes to groups them
+     * @param boxesRegroupement : activation of boxes regroupement
+     *
+     */
+    public AutocropParameters(String inputFolder, String outputFolder,
+                              double xCal,
+                              double yCal,
+                              double zCal,
+                              int xCropBoxSize,
+                              int yCropBoxSize,
+                              int zCropBoxSize,
+                              int slicesOTSUcomputing,
+                              int thresholdOTSUcomputing,
+                              int channelToComputeThreshold,
+                              int minVolumeNucleus,
+                              int maxVolumeNucleus,
+                              int boxesPercentSurfaceToFilter,
+                              boolean boxesRegroupement) {
+
+        super(inputFolder, outputFolder, xCal, yCal, zCal);
+        this.m_xCropBoxSize = xCropBoxSize;
+        this.m_yCropBoxSize = yCropBoxSize;
+        this.m_zCropBoxSize = zCropBoxSize;
+        this.m_thresholdOTSUcomputing = thresholdOTSUcomputing;
+        this.m_slicesOTSUcomputing = slicesOTSUcomputing;
+        this.m_channelToComputeThreshold=channelToComputeThreshold;
+        this.m_maxVolumeNucleus=maxVolumeNucleus;
+        this.m_minVolumeNucleus=minVolumeNucleus;
+        this.m_boxesPercentSurfaceToFilter=boxesPercentSurfaceToFilter;
+        this.m_boxesRegroupement=boxesRegroupement;
+
+    }
+
+    /**
      * Constructor using input , output folders and config file (for command
      * line execution)
      * @param inputFolder : path folder containing Images
@@ -172,12 +265,14 @@ public class AutocropParameters extends PluginParameters {
         try {
             is = new FileInputStream(fileName);
         } catch (FileNotFoundException ex) {
-
+            System.err.println(pathToConfigFile+" : can't find the config file !");
+            System.exit(-1);
         }
         try {
             prop.load(is);
         } catch (IOException ex) {
-
+            System.err.println(pathToConfigFile+ " : can't load the config file !");
+            System.exit(-1);
         }
         for (String idProp :prop.stringPropertyNames()){
             if(idProp.equals("xCropBoxSize")){this.m_xCropBoxSize =

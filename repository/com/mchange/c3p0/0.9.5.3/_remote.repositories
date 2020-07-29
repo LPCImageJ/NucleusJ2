@@ -1,0 +1,4 @@
+#NOTE: This is a Maven Resolver internal implementation file, its format can be changed without prior notice.
+#Thu Jun 18 12:56:07 CEST 2020
+c3p0-0.9.5.3.jar>imagej.public=
+c3p0-0.9.5.3.pom>imagej.public=

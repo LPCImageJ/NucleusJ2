@@ -1,6 +1,8 @@
 package gred.nucleus.FilesInputOutput;
 
 import gred.nucleus.exceptions.fileInOut;
+import ij.IJ;
+
 import java.io.FileWriter;
 
 import java.io.*;
@@ -15,17 +17,22 @@ public class OutputTexteFile extends FilesNames {
      * TODO(@DesTristus) ADD ERROR IN LOG FILE*/
     public void SaveTexteFile(String text) throws IOException {
         try {
-            if (!is_fileExist()) {
+            BufferedWriter writer;
+            writer = new BufferedWriter(new FileWriter(new File(this._fullPathFile)));
+            writer.write(text);
+            writer.close();
+
+/*            if (!is_fileExist()) {
                 BufferedWriter writer;
                 writer = new BufferedWriter(new FileWriter(new File(this._fullPathFile)));
                 writer.write(text);
                 writer.close();
-            }
-            else{
-                throw new fileInOut(this._fullPathFile);
-            }
+            }*/
         }
-        catch (fileInOut e){
+        catch (IOException e){
+            IJ.log("\n"+this._fullPathFile+" creation failed");
+            e.printStackTrace();
         }
+        IJ.log("\n"+this._fullPathFile+" created");
     }
 }

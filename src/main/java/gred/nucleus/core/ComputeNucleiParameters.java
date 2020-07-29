@@ -1,15 +1,12 @@
 package gred.nucleus.core;
 
 import gred.nucleus.FilesInputOutput.Directory;
-import gred.nucleus.FilesInputOutput.OutputTexteFile;
-import gred.nucleus.exceptions.fileInOut;
+import gred.nucleus.FilesInputOutput.OutputTextFile;
 import gred.nucleus.plugins.PluginParameters;
 import ij.ImagePlus;
-import loci.formats.FormatException;
 import loci.plugins.BF;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class ComputeNucleiParameters {
@@ -67,10 +64,10 @@ public class ComputeNucleiParameters {
             Measure3D mesure3D = new Measure3D(Segmented, Raw, this.m_pluginParameters.getXcalibration(Raw), this.m_pluginParameters.getYcalibration(Raw),this.m_pluginParameters.getZcalibration(Raw));
             outputCropGeneralInfoOTSU+=mesure3D.nucleusParameter3D()+"\n";
         }
-        OutputTexteFile resultFileOutputOTSU=new OutputTexteFile(this.m_pluginParameters.getOutputFolder()
+        OutputTextFile resultFileOutputOTSU=new OutputTextFile(this.m_pluginParameters.getOutputFolder()
                 +directoryRawInput.getSeparator()
                 +"result_Segmentation_Analyse.csv");
-        resultFileOutputOTSU.SaveTexteFile( outputCropGeneralInfoOTSU);
+        resultFileOutputOTSU.SaveTextFile( outputCropGeneralInfoOTSU);
 
     }
     /**

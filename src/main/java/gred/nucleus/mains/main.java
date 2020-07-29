@@ -10,12 +10,13 @@ import ij.ImagePlus;
 import ij.io.FileSaver;
 import loci.common.DebugTools;
 import loci.formats.FormatException;
+
 import java.io.IOException;
 
 
 
-public class main {
 
+public class main {
 
     /**
      * Method to run autocrop with only input output folder and with default parameters which are:
@@ -283,7 +284,7 @@ public class main {
         else if (args[0].equals("SliceToStack")){
             sliceToStack(args[1], args[2]);
         }
-        else if(args[0].equals("CropFromCoordonnate")){
+        else if(args[0].equals("CropFromCoordinate")){
             cropFromCoordinates(args[1]);
         }
         else if(args[0].equals("GenerateOverlay")){
