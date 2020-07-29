@@ -8,7 +8,7 @@ variables:
 stages:
   - compile
   - deploy
- # - release
+  - release
 
 # ------------------------- Compile ----------------------------------------
 # Compile the Maven project with all it's dependencies thanks to maven-assembly-plugin.
