@@ -18,12 +18,14 @@ import loci.formats.FormatException;
 import loci.plugins.BF;
 import loci.plugins.in.ImporterOptions;
 import omero.ServerError;
-import omero.client;
 import omero.gateway.exception.DSAccessException;
 import omero.gateway.exception.DSOutOfServiceException;
 import omero.gateway.model.RectangleData;
 import omero.gateway.model.ShapeData;
+import omero.model.Length;
+import omero.model.enums.UnitsLength;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -34,10 +36,10 @@ import java.util.concurrent.ExecutionException;
 
 import org.apache.commons.io.FilenameUtils;
 
-import fr.gredclermont.omero.Client;
-import fr.gredclermont.omero.ImageContainer;
-import fr.gredclermont.omero.metadata.ROIContainer;
-import fr.gredclermont.omero.repository.DatasetContainer;
+import fr.igred.omero.Client;
+import fr.igred.omero.ImageContainer;
+import fr.igred.omero.metadata.ROIContainer;
+import fr.igred.omero.repository.DatasetContainer;
 import inra.ijpb.binary.BinaryImages;
 import inra.ijpb.label.LabelImages;
 
@@ -235,7 +237,7 @@ public class AutoCrop {
 		ChannelSplitter channelSplitter = new ChannelSplitter();
 		currentImage = channelSplitter.split(currentImage[0]);
 		this.m_rawImg = currentImage[0];
-
+		
 		if (currentImage.length > 1) {
 			this.m_channelNumbers = currentImage.length;
 		}
@@ -570,12 +572,12 @@ public class AutoCrop {
 	}
 
 
-	public Long cropKernelsOmero(ImageContainer image, Long projectId, Client client)throws Exception {
-		DatasetContainer dataset = new DatasetContainer(this.m_outputFilesPrefix, "");
+	public Long cropKernelsOmero(ImageContainer image, 
+								 Long datasetId, 
+								 Client client)
+		throws Exception {
 
-		Long datasetId = client.getProject(projectId).addDataset(client, dataset).getId();
-
-		dataset = client.getDataset(datasetId);
+		DatasetContainer dataset = client.getDataset(datasetId);
 
 		this.m_infoImageAnalyse += getSpecificImageInfo() + getColoneName();
 		for (int y =0 ;y<this.m_channelNumbers;y++) {
@@ -603,9 +605,13 @@ public class AutoCrop {
 
 				for(int z = box.getZMin(); z < box.getZMax(); z++) {
 					RectangleData rectangle = new RectangleData(xmin, ymin, width, height);
-					rectangle.setC(0);
+					rectangle.setC(y);
 					rectangle.setZ(z);
 					rectangle.setT(0);
+					rectangle.setText("" + i);
+
+					rectangle.getShapeSettings().getFontSize(UnitsLength.YOTTAMETER).setValue(45);
+					rectangle.getShapeSettings().setStroke(Color.GREEN);
 
 					shapes.add(rectangle);
 				}
@@ -646,6 +652,7 @@ public class AutoCrop {
 						+ width + "\t"
 						+ height + "\t"
 						+ depth + "\n";
+
 				fileOutput.SaveImage(imgResu);
 				this.m_outputFile.add(this.m_outputFilesPrefix
 						+  "_"

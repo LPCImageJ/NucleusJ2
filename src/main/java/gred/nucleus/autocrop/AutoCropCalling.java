@@ -9,8 +9,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import fr.gredclermont.omero.Client;
-import fr.gredclermont.omero.ImageContainer;
+import fr.igred.omero.Client;
+import fr.igred.omero.ImageContainer;
+import fr.igred.omero.repository.DatasetContainer;
 
 
 
@@ -134,7 +135,8 @@ public class AutoCropCalling {
     }
 
     public void runImageOmero(ImageContainer image, 
-                              Long outputDirectory, 
+                              Long outputDirectoryImages,
+                              Long outputDirectoryProjection,
                               Client client) 
         throws Exception
     {
@@ -149,8 +151,12 @@ public class AutoCropCalling {
         autoCrop.computeBoxes2();
         autoCrop.addCROP_parameter();
         autoCrop.boxIntesection();
-        Long id = autoCrop.cropKernelsOmero(image, outputDirectory, client);
+        Long id = autoCrop.cropKernelsOmero(image, outputDirectoryImages, client);
         autoCrop.writeAnalyseInfoOmero(id, client);
+        
+        annotAutoCrop test = new annotAutoCrop(
+                autoCrop.getFileCoordinates(), image, this.m_autocropParameters, client);
+        test.runOmero(outputDirectoryProjection, client);
 
         this.m_outputCropGeneralInfo=this.m_outputCropGeneralInfo
                 +autoCrop.getImageCropInfo();
@@ -160,8 +166,14 @@ public class AutoCropCalling {
                                      Long outputDirectory, 
                                      Client client) 
         throws Exception {
+	DatasetContainer datasetRes = new DatasetContainer("resultsAutocrop", "");
+	DatasetContainer datasetProj = new DatasetContainer("projectionsAutocrop", "");
+
+	Long datasetResId = client.getProject(outputDirectory).addDataset(client, datasetRes).getId();
+	Long datasetProjId = client.getProject(outputDirectory).addDataset(client, datasetProj).getId();
+
         for(ImageContainer image : images) {
-                runImageOmero(image, outputDirectory, client);
+            runImageOmero(image, datasetResId, datasetProjId, client);
         }
     }
 

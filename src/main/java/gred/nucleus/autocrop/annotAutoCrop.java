@@ -1,16 +1,30 @@
 package gred.nucleus.autocrop;
 
+import gred.nucleus.FilesInputOutput.Directory;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.TextRoi;
 import ij.io.FileSaver;
+import ij.plugin.ContrastEnhancer;
 import ij.plugin.ZProjector;
 import loci.formats.FormatException;
 import loci.plugins.BF;
+import omero.ServerError;
+import omero.gateway.exception.DSAccessException;
+import omero.gateway.exception.DSOutOfServiceException;
+import omero.gateway.exception.DataSourceException;
+
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
+
+import org.apache.commons.io.FilenameUtils;
+
+import fr.igred.omero.Client;
+import fr.igred.omero.ImageContainer;
+import fr.igred.omero.repository.DatasetContainer;
 
 /**
 * This class create Z projection file of 3D stack (wide field image)
@@ -33,9 +47,57 @@ public class annotAutoCrop {
     private String m_outputDirPath;
     /** Parameters crop analyse */
     private AutocropParameters m_autocropParameters;
+    /**
+     * The prefix of the names of the output cropped images, which are automatically numbered
+     */
+    private String m_outputFilesPrefix;
 
     /**
-     * Class constructor :
+     * Constructor for autocrop
+     * @param ListBox : ArrayList of coordinate (coordinate of nuclei cropped)
+     * @param imageFile : File of current image analysed
+     * @param outputDirPath : path to the output folder
+     * @param autocropParameters : autocrop parameters used to crop nuclei
+     * @param prefix : name of raw image (use for z projection)
+     * @throws IOException
+     * @throws FormatException
+     */
+
+    public annotAutoCrop(ArrayList<String> ListBox,
+                         File imageFile,
+                         String outputDirPath,
+                         String prefix,
+                         AutocropParameters autocropParameters)
+            throws IOException, FormatException {
+        this.m_autocropParameters=autocropParameters;
+        this.m_currentFile=imageFile;
+        this.m_zProjection = BF.openImagePlus(
+                imageFile.getAbsolutePath())[
+                        this.m_autocropParameters.getSlicesOTSUcomputing()];
+        this.m_boxCoordinates = ListBox;
+        this.m_outputFilesPrefix=prefix;
+        this.m_outputDirPath=outputDirPath;
+        Directory dirOutput= new Directory(
+                this.m_outputDirPath+"zprojection");
+        System.out.println("le dir "+this.m_outputDirPath+"zprojection");
+        dirOutput.CheckAndCreateDir();
+    }
+
+    public annotAutoCrop(ArrayList<String> ListBox,
+                         ImageContainer image,
+                         AutocropParameters autocropParameters,
+                         Client client)
+            throws DataSourceException, ExecutionException {
+        this.m_autocropParameters=autocropParameters;
+
+        int zBound[] = {this.m_autocropParameters.getSlicesOTSUcomputing(), this.m_autocropParameters.getSlicesOTSUcomputing()};
+        
+        this.m_zProjection = image.toImagePlus(client, null, null, null, zBound, null);
+        this.m_boxCoordinates = ListBox;
+        this.m_outputFilesPrefix = FilenameUtils.removeExtension(image.getName());
+    }
+    /**
+     * Constructor for re-generate projection after segmentatio
      * @param ListBox : ArrayList of coordinate (coordinate of nuclei cropped)
      * @param imageFile : File of current image analysed
      * @param outputDirPath : path to the output folder
@@ -53,11 +115,15 @@ public class annotAutoCrop {
         this.m_currentFile=imageFile;
         this.m_zProjection = BF.openImagePlus(
                 imageFile.getAbsolutePath())[
-                        this.m_autocropParameters.getSlicesOTSUcomputing()];
+                this.m_autocropParameters.getSlicesOTSUcomputing()];
         this.m_boxCoordinates = ListBox;
+
         this.m_outputDirPath=outputDirPath;
 
+
+
     }
+
 
     /**
      * Main method to generate Z projection of wide fild 3D image.
@@ -66,14 +132,17 @@ public class annotAutoCrop {
      *
      */
     public void runAddBadCrop(ArrayList<Integer> _box){
+        IJ.run(this.m_zProjection, "Enhance Contrast", "saturated=0.35");
+        IJ.run(this.m_zProjection, "RGB Color", "");
         ZProjector zProjectionTmp = new ZProjector(this.m_zProjection);
+
         for(int i = 0; i < this.m_boxCoordinates.size(); ++i) {
             String [] splitLine = this.m_boxCoordinates.get(i).split("\\t");
             String [] fileName =splitLine[0].split("\\/");
             String [] Name =fileName[fileName.length-1].split("_");
             addBadCropBoxToZProjection(this.m_boxCoordinates.get(i),Integer.parseInt(Name[Name.length-2]));
         }
-        String outFileZbox = this.m_outputDirPath+".tif";
+        String outFileZbox = this.m_outputDirPath+"_BAD_CROP_LESS.tif";
         saveFile(this.m_zProjection,outFileZbox);
 
 
@@ -93,11 +162,31 @@ public class annotAutoCrop {
         for(int i = 0; i < this.m_boxCoordinates.size(); ++i) {
             addBoxCropToZProjection(this.m_boxCoordinates.get(i),i);
         }
-        String outFileZbox = this.m_outputDirPath+"_Zprojection.tif";
+        String outFileZbox = this.m_outputDirPath+this.m_currentFile.separator+"zprojection"+this.m_currentFile.separator+m_outputFilesPrefix+"_Zprojection.tif";
+        System.out.println("outFileZbox "+ outFileZbox);
+
         saveFile(this.m_zProjection,outFileZbox);
-
-
     }
+    
+    public void runOmero(Long DatasetId, Client client)
+        throws DSAccessException, DSOutOfServiceException, ServerError, Exception{
+        ZProjector zProjectionTmp = new ZProjector(this.m_zProjection);
+        this.m_zProjection= projectionMax(zProjectionTmp);
+        ajustContrast(0.3);
+        for(int i = 0; i < this.m_boxCoordinates.size(); ++i) {
+            addBoxCropToZProjection(this.m_boxCoordinates.get(i),i);
+        }
+
+        String path = "./" + m_outputFilesPrefix+"_Zprojection.tif";
+        saveFile(this.m_zProjection, path);
+
+        DatasetContainer dataset = client.getDataset(DatasetId);
+        dataset.importImages(client, path);
+
+        File file = new File(path);
+        file.delete();
+    }
+
     /**
      * Save the ImagePlus Zprojection image
      *
@@ -179,8 +268,8 @@ public class annotAutoCrop {
         /** Line size parameter */
 
       /** !!!!!!!!!!! on contrast la projection sinon elle est en GRIS ?????? */
-        IJ.run(this.m_zProjection, "Enhance Contrast", "saturated=0.35");
-        IJ.run(this.m_zProjection, "RGB Color", "");
+        //IJ.run(this.m_zProjection, "Enhance Contrast", "saturated=0.35");
+        //IJ.run(this.m_zProjection, "RGB Color", "");
         IJ.setForegroundColor(255, 0, 0);
         IJ.run("Line Width...", "line=4");
         /** Set draw current box*/
@@ -219,9 +308,11 @@ public class annotAutoCrop {
      */
 
     private void ajustContrast (double contrast){
-        IJ.run(this.m_zProjection,
-                "Enhance Contrast...",
-                "saturated="+contrast);
+
+        ContrastEnhancer ce = new ContrastEnhancer();
+
+        ce.stretchHistogram(this.m_zProjection, contrast);
+        
         IJ.run(this.m_zProjection,
                 "Invert LUT", "");
     }

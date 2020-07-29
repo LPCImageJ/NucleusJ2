@@ -1,5 +1,6 @@
 package gred.nucleus.core;
 
+import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -7,12 +8,12 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
 
-import fr.gredclermont.omero.Client;
-import fr.gredclermont.omero.ImageContainer;
-import fr.gredclermont.omero.metadata.ROIContainer;
-import fr.gredclermont.omero.metadata.annotation.TagAnnotationContainer;
-import fr.gredclermont.omero.repository.DatasetContainer;
-import fr.gredclermont.omero.repository.ProjectContainer;
+import fr.igred.omero.Client;
+import fr.igred.omero.ImageContainer;
+import fr.igred.omero.metadata.ROIContainer;
+import fr.igred.omero.metadata.annotation.TagAnnotationContainer;
+import fr.igred.omero.repository.DatasetContainer;
+import fr.igred.omero.repository.ProjectContainer;
 import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.imageProcess.Thresholding;
 import gred.nucleus.segmentation.SegmentationParameters;
@@ -270,23 +271,18 @@ public class NucleusSegmentation {
                     26,
                     32);
 			if(this.m_semgemtationParameters.getManualParameter()) {
-				IJ.run(tempSeg, "Properties...",
-                        " unit=µm pixel_width="
-                                + this.m_semgemtationParameters.getXCal()
-                                + " pixel_height="
-                                + this.m_semgemtationParameters.getYCal()
-                                + " voxel_depth="
-                                + this.m_semgemtationParameters.getZCal());
+				tempSeg.setProperty("unit", "µm");
+				tempSeg.setProperty("pixel_width", this.m_semgemtationParameters.getXCal());
+				tempSeg.setProperty("pixel_height", this.m_semgemtationParameters.getYCal());
+				tempSeg.setProperty("voxel_depth", this.m_semgemtationParameters.getZCal());
 			}
 			else{
-				IJ.run(tempSeg, "Properties...",
-                        " unit=µm pixel_width="
-                                + this._imgRaw.getCalibration().pixelWidth
-                                + " pixel_height="
-                                + this._imgRaw.getCalibration().pixelHeight
-                                + " voxel_depth="
-                                + this._imgRaw.getCalibration().pixelDepth);
+				tempSeg.setProperty("unit", "µm");
+				tempSeg.setProperty("pixel_width", this._imgRaw.getCalibration().pixelWidth);
+				tempSeg.setProperty("pixel_height", this._imgRaw.getCalibration().pixelHeight);
+				tempSeg.setProperty("voxel_depth", this._imgRaw.getCalibration().pixelDepth);
 			}
+			
 			ImagePlus[] tempSegPlus=new ImagePlus[1];
 			tempSegPlus[0]=tempSeg;
 			Measure3D measure3D = new Measure3D(tempSegPlus,
@@ -793,6 +789,18 @@ public class NucleusSegmentation {
 		}
 	}
 
+	public void checkBadCrop(ROIContainer roi, 
+							 Client client) 
+		throws ServerError, DSOutOfServiceException
+	{
+    	if((this._badCrop) || (this.getBestThreshold()==-1)){
+			for(ShapeData shape : roi.getShapes()) {
+				shape.getShapeSettings().setStroke(Color.RED);
+			}
+		}
+		roi.updateROI(client);
+	}
+
     /**
      * Method to save the OTSU segmented image.
      * TODO verifier cette methode si elle est à ca place
@@ -816,7 +824,7 @@ public class NucleusSegmentation {
 			saveFile(this.m_imageSeg[0], path);
 
 			ProjectContainer project = client.getProject(id);
-			List<DatasetContainer> datasets = project.getDataset("OTSU");
+			List<DatasetContainer> datasets = project.getDatasets("OTSU");
 
 			DatasetContainer otsu;
 			if(datasets.size() == 0) {
@@ -868,7 +876,7 @@ public class NucleusSegmentation {
 			saveFile(this.m_imageSeg[0], path);
 
 			ProjectContainer project = client.getProject(id);
-			List<DatasetContainer> datasets = project.getDataset("GIFT");
+			List<DatasetContainer> datasets = project.getDatasets("GIFT");
 
 			DatasetContainer otsu;
 			if(datasets.size() == 0) {

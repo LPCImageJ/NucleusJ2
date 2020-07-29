@@ -13,9 +13,6 @@ import ij.plugin.ContrastEnhancer;
 import ij.plugin.GaussianBlur3D;
 import ij.process.StackConverter;
 import loci.formats.FormatException;
-import loci.plugins.BF;
-import ome.jxrlib.ImageData;
-import omero.gateway.model.TableData;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -25,12 +22,10 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
-import fr.gredclermont.omero.Client;
-import fr.gredclermont.omero.ImageContainer;
-import fr.gredclermont.omero.metadata.ROIContainer;
-import fr.gredclermont.omero.metadata.TableContainer;
-import fr.gredclermont.omero.repository.DatasetContainer;
-import fr.gredclermont.omero.repository.ProjectContainer;
+import fr.igred.omero.Client;
+import fr.igred.omero.ImageContainer;
+import fr.igred.omero.metadata.ROIContainer;
+import fr.igred.omero.repository.DatasetContainer;
 import gred.nucleus.FilesInputOutput.Directory;
 
 
@@ -304,7 +299,7 @@ public class SegmentationCalling {
             log += runOneImageOmero(image, output, client);
         }
 
-        DatasetContainer dataset = client.getProject(output).getDataset("OTSU").get(0);
+        DatasetContainer dataset = client.getProject(output).getDatasets("OTSU").get(0);
 
         String path = new java.io.File( "." ).getCanonicalPath() + "result_Segmentation_Analyse.csv";
         OutputTexteFile resultFileOutputOTSU=new OutputTexteFile(path);
@@ -315,7 +310,7 @@ public class SegmentationCalling {
         file.delete();
 
         if(this.m_semgemtationParameters.getGiftWrapping()) {
-            dataset = client.getProject(output).getDataset("GIFT").get(0);
+            dataset = client.getProject(output).getDatasets("GIFT").get(0);
             OutputTexteFile resultFileOutputGIFT = new OutputTexteFile(path);
             resultFileOutputGIFT.SaveTexteFile(this.m_outputCropGeneralInfoGIFT);
 
@@ -350,10 +345,12 @@ public class SegmentationCalling {
             NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(image, roi, i, this.m_semgemtationParameters, client);
             nucleusSegmentation.preProcessImage();
             nucleusSegmentation.findOTSUmaximisingSephericity();
-            nucleusSegmentation.checkBadCrop(image, client);
+            nucleusSegmentation.checkBadCrop(roi, client);
+
 
             nucleusSegmentation.saveOTSUSegmentedOmero(client, output);
             this.m_outputCropGeneralInfoOTSU= this.m_outputCropGeneralInfoOTSU+nucleusSegmentation.getImageCropInfoOTSU();
+
             nucleusSegmentation.saveGiftWrappingSegOmero(client, output);
             this.m_outputCropGeneralInfoGIFT= this.m_outputCropGeneralInfoGIFT+nucleusSegmentation.getImageCropInfoGIFT();
 
@@ -363,7 +360,7 @@ public class SegmentationCalling {
         timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
         System.out.println( "Fin :"+ timeStampStart);
 
-        DatasetContainer dataset = client.getProject(output).getDataset("OTSU").get(0);
+        DatasetContainer dataset = client.getProject(output).getDatasets("OTSU").get(0);
         String path = new java.io.File( "." ).getCanonicalPath() + "result_Segmentation_Analyse.csv";
         OutputTexteFile resultFileOutputOTSU=new OutputTexteFile(path);
         resultFileOutputOTSU.SaveTexteFile( this.m_outputCropGeneralInfoOTSU);
@@ -373,7 +370,7 @@ public class SegmentationCalling {
         file.delete();
 
         if(this.m_semgemtationParameters.getGiftWrapping()) {
-            dataset = client.getProject(output).getDataset("GIFT").get(0);
+            dataset = client.getProject(output).getDatasets("GIFT").get(0);
             OutputTexteFile resultFileOutputGIFT = new OutputTexteFile(path);
             resultFileOutputGIFT.SaveTexteFile(this.m_outputCropGeneralInfoGIFT);
 
@@ -393,44 +390,6 @@ public class SegmentationCalling {
         }
 
         return log;
-    }
-
-    private static void addColumnName(TableContainer table)
-    {
-        table.setColumn(0, "NucleusFileName", String.class);
-        table.setColumn(1, "Volume", String.class);
-        table.setColumn(2, "Flatness", String.class);
-        table.setColumn(3, "Elongation", String.class);
-        table.setColumn(4, "Sphericity", String.class);
-        table.setColumn(5, "Esr", String.class);
-        table.setColumn(6, "SurfaceArea", String.class);
-        table.setColumn(7, "SurfaceAreaCorrected", String.class);
-        table.setColumn(8, "SphericityCorrected", String.class);
-        table.setColumn(9, "MeanIntensityNucleus", String.class);
-        table.setColumn(10, "MeanIntensityBackground", String.class);
-        table.setColumn(11, "StandardDeviation", String.class);
-        table.setColumn(12, "MinIntensity", String.class);
-        table.setColumn(13, "MaxIntensity", String.class);
-        table.setColumn(14, "MedianIntensityImage", String.class);
-        table.setColumn(15, "MedianIntensityNucleus", String.class);
-        table.setColumn(16, "MedianIntensityBackground", String.class);
-        table.setColumn(17, "ImageSize", String.class);
-        table.setColumn(18, "OTSUThreshold", String.class);
-    }
-
-    private static void saveTable(TableContainer table, 
-                                  Long id, 
-                                  String name, 
-                                  Client client)
-        throws Exception
-    {
-        ProjectContainer project = client.getProject(id);
-        List<DatasetContainer> datasets = project.getDataset(name);
-
-        DatasetContainer dataset;
-        dataset = datasets.get(0);
-
-        dataset.addTable(client, table);
     }
 
 

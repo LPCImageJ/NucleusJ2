@@ -17,16 +17,18 @@ import ij.io.FileSaver;
 import loci.common.DebugTools;
 import loci.formats.FormatException;
 import loci.plugins.BF;
-
-import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-import fr.gredclermont.omero.Client;
-import fr.gredclermont.omero.ImageContainer;
-import fr.gredclermont.omero.repository.DatasetContainer;
-import fr.gredclermont.omero.repository.ProjectContainer;
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.Options;
+
+import fr.igred.omero.Client;
+import fr.igred.omero.ImageContainer;
+import fr.igred.omero.repository.DatasetContainer;
+import fr.igred.omero.repository.ProjectContainer;
 
 
 public class main {
@@ -90,44 +92,46 @@ public class main {
         autoCrop.runFile(inputDirectory);
     }
 
-    public static void runAutoCropOmero(String inputDirectory, String outputDirectory, Client client) throws Exception {
-        AutocropParameters autocropParameters = new AutocropParameters(".", ".");
-        AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
-
+    public static void runAutoCropOmero(String inputDirectory, String outputDirectory, Client client, AutoCropCalling autoCrop) throws Exception { 
         String[] param = inputDirectory.split("/");
 
         if(param.length >= 2) {
-            if(param[0].equals("Image")) {
+            if(param[0].equals("image")) {
                 Long id = Long.parseLong(param[1]);
                 ImageContainer image = client.getImage(id);
+                
+                DatasetContainer datasetRes = new DatasetContainer("resultsAutocrop", "");
+                DatasetContainer datasetProj = new DatasetContainer("projectionsAutocrop", "");
+                Long datasetResId = client.getProject( Long.parseLong(outputDirectory)).addDataset(client, datasetRes).getId();
+                Long datasetProjId = client.getProject( Long.parseLong(outputDirectory)).addDataset(client, datasetProj).getId();
 
-                autoCrop.runImageOmero(image, Long.parseLong(outputDirectory), client);
+                autoCrop.runImageOmero(image, datasetResId, datasetProjId, client);
             }
             else {
                 Long id = Long.parseLong(param[1]);
                 List<ImageContainer> images = null; 
 
-                if(param[0].equals("Dataset")) {
+                if(param[0].equals("dataset")) {
                     DatasetContainer dataset = client.getDataset(id);
 
-                    if(param.length == 4 && param[2].equals("Tag")) {
+                    if(param.length == 4 && param[2].equals("tag")) {
                         images = dataset.getImagesTagged(client, Long.parseLong(param[3]));
                     }
                     else {
                         images = dataset.getImages(client);
                     }
                 }
-                else if(param[0].equals("Project")) {
+                else if(param[0].equals("project")) {
                     ProjectContainer project = client.getProject(id);
 
-                    if(param.length == 4 && param[2].equals("Tag")) {
+                    if(param.length == 4 && param[2].equals("tag")) {
                         images = project.getImagesTagged(client, Long.parseLong(param[3]));
                     }
                     else {
                         images = project.getImages(client);
                     }
                 }
-                else if(param[0].equals("Tag")) {
+                else if(param[0].equals("tag")) {
                     images = client.getImagesTagged(id);
                 }
                 else {
@@ -140,8 +144,20 @@ public class main {
         else {
             throw new IllegalArgumentException();
         }
+    }
 
-        //autoCrop.runFileOmero();
+    public static void runAutoCropOmero(String inputDirectory, String outputDirectory, String pathToConfig, Client client) throws Exception {
+        AutocropParameters autocropParameters = new AutocropParameters(".", ".", pathToConfig);
+        AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
+
+        runAutoCropOmero(inputDirectory, outputDirectory, client, autoCrop);
+    }
+
+    public static void runAutoCropOmero(String inputDirectory, String outputDirectory, Client client) throws Exception {
+        AutocropParameters autocropParameters = new AutocropParameters(".", ".");
+        AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
+
+        runAutoCropOmero(inputDirectory, outputDirectory, client, autoCrop);
     }
 
 
@@ -200,15 +216,12 @@ public class main {
         }catch (IOException e) { e.printStackTrace();}
     }
 
-    public static void segmentationOmero(String inputDirectory, String outputDirectory, Client client)  throws Exception
+    public static void segmentationOmero(String inputDirectory, String outputDirectory, Client client, SegmentationCalling otsuModif)  throws Exception
     {
-        SegmentationParameters segmentationParameters = new SegmentationParameters(".", ".");
-        SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
-
         String[] param = inputDirectory.split("/");
 
         if(param.length >= 2) {
-            if(param[0].equals("Image")) {
+            if(param[0].equals("image")) {
                 Long id = Long.parseLong(param[1]);
                 ImageContainer image = client.getImage(id);
 
@@ -228,27 +241,27 @@ public class main {
                 Long id = Long.parseLong(param[1]);
                 List<ImageContainer> images = null; 
 
-                if(param[0].equals("Dataset")) {
+                if(param[0].equals("dataset")) {
                     DatasetContainer dataset = client.getDataset(id);
 
-                    if(param.length == 4 && param[2].equals("Tag")) {
+                    if(param.length == 4 && param[2].equals("tag")) {
                         images = dataset.getImagesTagged(client, Long.parseLong(param[3]));
                     }
                     else {
                         images = dataset.getImages(client);
                     }
                 }
-                else if(param[0].equals("Project")) {
+                else if(param[0].equals("project")) {
                     ProjectContainer project = client.getProject(id);
 
-                    if(param.length == 4 && param[2].equals("Tag")) {
+                    if(param.length == 4 && param[2].equals("tag")) {
                         images = project.getImagesTagged(client, Long.parseLong(param[3]));
                     }
                     else {
                         images = project.getImages(client);
                     }
                 }
-                else if(param[0].equals("Tag")) {
+                else if(param[0].equals("tag")) {
                     images = client.getImagesTagged(id);
                 }
                 else {
@@ -271,6 +284,22 @@ public class main {
         {
             throw new IllegalArgumentException();
         }
+    }
+
+    public static void segmentationOmero(String inputDirectory, String outputDirectory, String config, Client client)  throws Exception
+    {
+        SegmentationParameters segmentationParameters = new SegmentationParameters(".",".",config);
+        SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
+
+        segmentationOmero(inputDirectory, outputDirectory, client, otsuModif);
+    }
+
+    public static void segmentationOmero(String inputDirectory, String outputDirectory, Client client)  throws Exception
+    {
+        SegmentationParameters segmentationParameters = new SegmentationParameters(".", ".");
+        SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
+
+        segmentationOmero(inputDirectory, outputDirectory, client, otsuModif);
     }
 
     /**
@@ -352,49 +381,106 @@ public class main {
         fileSaver.saveAsTiff(pathFile);
     }
 
-    public static void main(String[] args) throws IOException, FormatException, fileInOut,Exception {
+    public static void main(String[] args) throws IOException, FormatException, fileInOut, Exception {
         DebugTools.enableLogging("OFF");
 
         System.setProperty("java.awt.headless", "false");
-        
-        if(args[0].equals("autocrop")) {
-            System.out.println("start "+args[0]);
-            if((args.length==4)&& (args[3].equals("ConfigFile"))){
-                runAutoCropFolder(args[1], args[2], args[4]);
+        CommandLine cmd;
 
-            } else if((args.length==4)&& (args[3].equals("File"))){
-                runAutoCropFile(args[1], args[2]);
-            } else if(args.length==7) {
+        Options options = new Options();
+        options.addOption("a",   "action",   true,  "Action to make");
+        options.addOption("in",  "input",    true,  "Input path");
+        options.addOption("out", "output",   true,  "Output path");
+        options.addOption("f",   "file",     false, "Input is a file");
+        options.addOption("c",   "config",   true, "Path to config file");
+        options.addOption("ome", "omero",    false, "Usage of OMERO");
+        options.addOption("h",   "hostname", true, "Hostname of the OMERO serveur");
+        options.addOption("pt",  "port",     true, "Port used by OMERO");
+        options.addOption("u",   "username", true, "Username in OMERO");
+        options.addOption("p",   "password", true, "Password in OMERO");
+        options.addOption("g",   "group"   , true, "Group in OMERO");
+
+        CommandLineParser parser = new DefaultParser();
+
+        cmd = parser.parse(options, args);
+
+        cmd.getOptionValue("action");
+
+        if(cmd.getOptionValue("action").equals("autocrop")) {
+            System.out.println("start autocrop");
+
+            if(cmd.hasOption("omero")) {
                 Client client = new Client();
-                client.connect(args[3], Integer.parseInt(args[4]), args[5], args[6]);
-                runAutoCropOmero(args[1], args[2], client);
-            } else if(args.length==8) {
-                Client client = new Client();
-                client.connect(args[3], Integer.parseInt(args[4]), args[5], args[6], Long.parseLong(args[7]));
-                runAutoCropOmero(args[1], args[2], client);
-            } else {
-                runAutoCropFolder(args[1], args[2]);
+                client.connect(cmd.getOptionValue("hostname"), 
+                               Integer.parseInt(cmd.getOptionValue("port")), 
+                               cmd.getOptionValue("username"), 
+                               cmd.getOptionValue("password"),
+                               Long.valueOf(cmd.getOptionValue("group")));
+                               
+                if(cmd.hasOption("config")) {
+                    runAutoCropOmero(cmd.getOptionValue("input"), 
+                                     cmd.getOptionValue("output"), 
+                                     cmd.getOptionValue("config"), 
+                                     client);
+                } else {
+                    runAutoCropOmero(cmd.getOptionValue("input"), 
+                                     cmd.getOptionValue("output"), 
+                                     client);
+                }
+            }
+            else {
+                if(cmd.hasOption("config")) {
+                    runAutoCropFolder(cmd.getOptionValue("input"),
+                                      cmd.getOptionValue("output"),
+                                      cmd.getOptionValue("config"));
+    
+                } else if(cmd.hasOption("file")){
+                    runAutoCropFile(cmd.getOptionValue("input"),
+                                    cmd.getOptionValue("output"));
+                } else {
+                    runAutoCropFolder(cmd.getOptionValue("input"),
+                                      cmd.getOptionValue("output"));
+                }
             }
         }
-        else if(args[0].equals("segmentation")) {
-            System.out.println("start " + args[0]);
-            if ((args.length == 4) && (args[3].equals("ConfigFile"))) {
-                segmentationFolder(args[1], args[2], args[3]);
+        else if(cmd.getOptionValue("action").equals("segmentation")) {
+            System.out.println("start " + "segmentation");
+            
 
-            } else if ((args.length == 4) && (args[3].equals("File"))) {
+            if(cmd.hasOption("omero"))
+            {
+                Client client = new Client();
+                client.connect(cmd.getOptionValue("hostname"), 
+                               Integer.parseInt(cmd.getOptionValue("port")), 
+                               cmd.getOptionValue("username"), 
+                               cmd.getOptionValue("password"), 
+                               Long.valueOf(cmd.getOptionValue("group")));
 
-                //String input, String output, short vMin, int vMax, boolean gift
-                segmentationOneImage(args[1], args[2]);
-            } else if(args.length==7) {
-                Client client = new Client();
-                client.connect(args[3], Integer.parseInt(args[4]), args[5], args[6]);
-                segmentationOmero(args[1], args[2], client);
-            } else if(args.length==8) {
-                Client client = new Client();
-                client.connect(args[3], Integer.parseInt(args[4]), args[5], args[6], Long.parseLong(args[7]));
-                segmentationOmero(args[1], args[2], client);
-            } else {
-                segmentationFolder(args[1], args[2]);
+                if(cmd.hasOption("config")) {
+                    segmentationOmero(cmd.getOptionValue("input"),
+                                      cmd.getOptionValue("output"),
+                                      cmd.getOptionValue("config"),
+                                      client);
+                }
+                else {
+                    segmentationOmero(cmd.getOptionValue("input"),
+                                      cmd.getOptionValue("output"),
+                                      client);
+                }
+            }
+            else {
+                if(cmd.hasOption("config")) {
+                    segmentationFolder(cmd.getOptionValue("input"),
+                                      cmd.getOptionValue("output"),
+                                      cmd.getOptionValue("config"));
+    
+                } else if(cmd.hasOption("file")){
+                    segmentationOneImage(cmd.getOptionValue("input"),
+                                         cmd.getOptionValue("output"));
+                } else {
+                    segmentationFolder(cmd.getOptionValue("input"),
+                                       cmd.getOptionValue("output"));
+                }
             }
         }
         else if(args[0].equals("computeParameters")){
@@ -424,8 +510,6 @@ public class main {
             System.out.println("\njava NucleusJ_giftwrapping.jar segmentation dossier/raw/ dossier/out/");
             System.out.println("\n\n");
         }
-        
-        System.out.println("The program ended normally.");
     }
 }
 
