@@ -81,7 +81,7 @@ public class ConvexeHullImageMaker{
 			indice = imagePlusBinary.getWidth();
 		}
 		BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
-		Graphics2D blackImage = bufferedImage.createGraphics();
+	//	Graphics2D blackImage = bufferedImage.createGraphics();
 		imagePlusBlack.setImage(bufferedImage);
 		ImageStack imageStackOutput = new ImageStack(width, height);
 		//parcours des differents stack en fontion des axes choisis
@@ -303,7 +303,6 @@ public class ConvexeHullImageMaker{
 		g2d.setColor(Color.WHITE);
 		g2d.dispose();
 		ip.setImage(bufferedImage);
-
 		return ip;
 	}
 	
