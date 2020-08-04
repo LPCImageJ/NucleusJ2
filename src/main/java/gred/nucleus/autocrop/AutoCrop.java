@@ -140,7 +140,8 @@ public class AutoCrop {
 						getImageChannel(
 								this.m_autocropParameters.getChannelToComputeThreshold()));
 			} else {
-				this.m_imageSeg = this.m_rawImg;
+				this.m_imageSeg = getImageChannel(
+						this.m_autocropParameters.getChannelToComputeThreshold());
 			}
 			this.m_infoImageAnalyse =
 					autocropParametersAnalyse.getAnalyseParameters();
