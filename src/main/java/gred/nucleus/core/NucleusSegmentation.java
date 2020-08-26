@@ -212,24 +212,25 @@ public class NucleusSegmentation {
 			tempSeg = ConnectedComponents.computeLabels(tempSeg,
                     26,
                     32);
+			Calibration cal = this._imgRaw.getCalibration();
 			if(this.m_semgemtationParameters.getManualParameter()) {
-				IJ.run(tempSeg, "Properties...",
-                        " unit=µm pixel_width="
-                                + this.m_semgemtationParameters.getXCal()
-                                + " pixel_height="
-                                + this.m_semgemtationParameters.getYCal()
-                                + " voxel_depth="
-                                + this.m_semgemtationParameters.getZCal());
+				//TODO AJOUTER LES UNITES
+				cal.setXUnit("µm");
+				cal.pixelWidth  = this.m_semgemtationParameters.getXCal();
+				cal.setYUnit("µm");
+				cal.pixelHeight = this.m_semgemtationParameters.getYCal();
+				cal.setZUnit("µm");
+				cal.pixelDepth = this.m_semgemtationParameters.getZCal();
 			}
 			else{
-				IJ.run(tempSeg, "Properties...",
-                        " unit=µm pixel_width="
-                                + this._imgRaw.getCalibration().pixelWidth
-                                + " pixel_height="
-                                + this._imgRaw.getCalibration().pixelHeight
-                                + " voxel_depth="
-                                + this._imgRaw.getCalibration().pixelDepth);
+				cal.setXUnit("µm");
+				cal.pixelWidth  = this._imgRaw.getCalibration().pixelWidth;
+				cal.setYUnit("µm");
+				cal.pixelHeight = this._imgRaw.getCalibration().pixelHeight;
+				cal.setZUnit("µm");
+				cal.pixelDepth = this._imgRaw.getCalibration().pixelDepth;
 			}
+			tempSeg.setCalibration(cal);
 			ImagePlus[] tempSegPlus=new ImagePlus[1];
 			tempSegPlus[0]=tempSeg;
 			Measure3D measure3D = new Measure3D(tempSegPlus,
