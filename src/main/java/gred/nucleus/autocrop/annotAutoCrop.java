@@ -9,22 +9,10 @@ import ij.plugin.ContrastEnhancer;
 import ij.plugin.ZProjector;
 import loci.formats.FormatException;
 import loci.plugins.BF;
-import omero.ServerError;
-import omero.gateway.exception.DSAccessException;
-import omero.gateway.exception.DSOutOfServiceException;
-import omero.gateway.exception.DataSourceException;
-
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-
-import org.apache.commons.io.FilenameUtils;
-
-import fr.igred.omero.Client;
-import fr.igred.omero.ImageContainer;
-import fr.igred.omero.repository.DatasetContainer;
 
 /**
 * This class create Z projection file of 3D stack (wide field image)
@@ -81,20 +69,8 @@ public class annotAutoCrop {
                 this.m_outputDirPath+"zprojection");
         System.out.println("le dir "+this.m_outputDirPath+"zprojection");
         dirOutput.CheckAndCreateDir();
-    }
 
-    public annotAutoCrop(ArrayList<String> ListBox,
-                         ImageContainer image,
-                         AutocropParameters autocropParameters,
-                         Client client)
-            throws DataSourceException, ExecutionException {
-        this.m_autocropParameters=autocropParameters;
 
-        int zBound[] = {this.m_autocropParameters.getSlicesOTSUcomputing(), this.m_autocropParameters.getSlicesOTSUcomputing()};
-        
-        this.m_zProjection = image.toImagePlus(client, null, null, null, zBound, null);
-        this.m_boxCoordinates = ListBox;
-        this.m_outputFilesPrefix = FilenameUtils.removeExtension(image.getName());
     }
     /**
      * Constructor for re-generate projection after segmentatio
@@ -117,6 +93,7 @@ public class annotAutoCrop {
                 imageFile.getAbsolutePath())[
                 this.m_autocropParameters.getSlicesOTSUcomputing()];
         this.m_boxCoordinates = ListBox;
+
 
         this.m_outputDirPath=outputDirPath;
 
@@ -166,27 +143,9 @@ public class annotAutoCrop {
         System.out.println("outFileZbox "+ outFileZbox);
 
         saveFile(this.m_zProjection,outFileZbox);
+
+
     }
-    
-    public void runOmero(Long DatasetId, Client client)
-        throws DSAccessException, DSOutOfServiceException, ServerError, Exception{
-        ZProjector zProjectionTmp = new ZProjector(this.m_zProjection);
-        this.m_zProjection= projectionMax(zProjectionTmp);
-        ajustContrast(0.3);
-        for(int i = 0; i < this.m_boxCoordinates.size(); ++i) {
-            addBoxCropToZProjection(this.m_boxCoordinates.get(i),i);
-        }
-
-        String path = "./" + m_outputFilesPrefix+"_Zprojection.tif";
-        saveFile(this.m_zProjection, path);
-
-        DatasetContainer dataset = client.getDataset(DatasetId);
-        dataset.importImages(client, path);
-
-        File file = new File(path);
-        file.delete();
-    }
-
     /**
      * Save the ImagePlus Zprojection image
      *
@@ -308,13 +267,10 @@ public class annotAutoCrop {
      */
 
     private void ajustContrast (double contrast){
-
-        ContrastEnhancer ce = new ContrastEnhancer();
-
-        ce.stretchHistogram(this.m_zProjection, contrast);
-        
+        IJ.run(this.m_zProjection,
+                "Enhance Contrast...",
+                "saturated="+contrast);
         IJ.run(this.m_zProjection,
                 "Invert LUT", "");
     }
-
 }

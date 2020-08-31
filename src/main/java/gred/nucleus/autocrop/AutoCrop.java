@@ -37,6 +37,7 @@ import java.util.concurrent.ExecutionException;
 import org.apache.commons.io.FilenameUtils;
 
 import fr.igred.omero.Client;
+import fr.igred.omero.FolderContainer;
 import fr.igred.omero.ImageContainer;
 import fr.igred.omero.metadata.ROIContainer;
 import fr.igred.omero.repository.DatasetContainer;
@@ -169,6 +170,7 @@ public class AutoCrop {
 		this.m_outputDirPath = this.m_autocropParameters.getOutputFolder();
 		Thresholding thresholding = new Thresholding();
 		this.m_outputFilesPrefix = FilenameUtils.removeExtension(image.getName());
+
 		setChannelNumbersOmero(image, client);
 		if(this.m_rawImg.getBitDepth()>8) {
 			this.m_imageSeg = thresholding.contrastAnd8bits(
@@ -246,7 +248,7 @@ public class AutoCrop {
 	public void setChannelNumbersOmero(ImageContainer image, Client client) throws Exception {
 		DebugTools.enableLogging("OFF");      // DEBUG INFO BIOFORMAT OFF
 
-		int cBound[] = {0, 0};
+		int cBound[] = {this.m_autocropParameters.getChannelToComputeThreshold(), this.m_autocropParameters.getChannelToComputeThreshold()};
 		this.m_rawImg  = image.toImagePlus(client, null, null, cBound, null, null);
 
 		this.m_channelNumbers = image.getPixels().getSizeC();
@@ -572,17 +574,20 @@ public class AutoCrop {
 	}
 
 
-	public Long cropKernelsOmero(ImageContainer image, 
-								 Long datasetId, 
+	public void cropKernelsOmero(ImageContainer image, 
+								 Long[] outputsDat, 
 								 Client client)
 		throws Exception {
-
-		DatasetContainer dataset = client.getDataset(datasetId);
 
 		this.m_infoImageAnalyse += getSpecificImageInfo() + getColoneName();
 		for (int y =0 ;y<this.m_channelNumbers;y++) {
 			int i=0;
+			FolderContainer folder = new FolderContainer(client, "C" + y);
+			folder.setImage(image);
 			for (Map.Entry<Double , Box> entry : this.m_boxes.entrySet()) {
+
+				DatasetContainer dataset = client.getDataset(outputsDat[y]);
+
 				Box box =  entry.getValue();
 				int xmin = box.getXMin();
 				int ymin = box.getYMin();
@@ -594,7 +599,6 @@ public class AutoCrop {
 				int width = box.getXMax()- box.getXMin();
 				int height = box.getYMax()- box.getYMin();
 				int depth = box.getZMax() - box.getZMin();
-
 
 				int xBound[] = { box.getXMin(), box.getXMax() - 1};
 				int yBound[] = { box.getYMin(), box.getYMax() - 1};
@@ -617,8 +621,7 @@ public class AutoCrop {
 				}
 
 				ROIContainer roi = new ROIContainer(shapes);
-
-				image.saveROI(client, roi);
+				folder.addROI(client, roi);
 
 				ImagePlus imgResu = image.toImagePlus(client, xBound, yBound, cBound, zBound, null);
 
@@ -629,8 +632,6 @@ public class AutoCrop {
 					+ this.m_outputFilesPrefix
 					+ "_"
 					+ i
-					+"_C"
-					+ y
 					+ ".tif";
 
 				OutputTiff fileOutput = new OutputTiff(path);
@@ -641,8 +642,6 @@ public class AutoCrop {
 						+ this.m_outputFilesPrefix
 						+ "_"
 						+ i
-						+"_C"
-						+ y
 						+ ".tif\t"
 						+ y  + "\t"
 						+ i + "\t"
@@ -684,7 +683,6 @@ public class AutoCrop {
 				i++;
 			}
 		}
-		return datasetId;
 	}
 
     /**

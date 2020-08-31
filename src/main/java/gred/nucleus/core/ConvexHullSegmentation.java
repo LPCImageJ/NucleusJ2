@@ -39,7 +39,7 @@ public class ConvexHullSegmentation {
 	   	nuc.setAxes("xz");
 	   	ImagePlus imagePlusXZ = nuc.giftWrapping(imagePlusInput,semgemtationParameters);
 	   	nuc.setAxes("yz");
-		ImagePlus imagePlusYZ = nuc.giftWrapping(imagePlusInput,semgemtationParameters);
+	   	ImagePlus imagePlusYZ = nuc.giftWrapping(imagePlusInput,semgemtationParameters);
 		return imageMakingUnion(imagePlusInput, imagePlusXY, imagePlusXZ, imagePlusYZ);
 	}
 

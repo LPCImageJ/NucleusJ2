@@ -798,7 +798,7 @@ public class NucleusSegmentation {
 				shape.getShapeSettings().setStroke(Color.RED);
 			}
 		}
-		roi.updateROI(client);
+		roi.saveROI(client);
 	}
 
     /**
@@ -878,16 +878,16 @@ public class NucleusSegmentation {
 			ProjectContainer project = client.getProject(id);
 			List<DatasetContainer> datasets = project.getDatasets("GIFT");
 
-			DatasetContainer otsu;
+			DatasetContainer gift;
 			if(datasets.size() == 0) {
-				otsu = new DatasetContainer("GIFT", "");
-				Long datasetId = project.addDataset(client, otsu).getId();
-				otsu = client.getDataset(datasetId);
+				gift = new DatasetContainer("GIFT", "");
+				Long datasetId = project.addDataset(client, gift).getId();
+				gift = client.getDataset(datasetId);
 			}
 			else
-				otsu = datasets.get(0);
+				gift = datasets.get(0);
 
-			otsu.importImages(client, path);
+			gift.importImages(client, path);
 
 			File file = new File(path);
 			file.delete();

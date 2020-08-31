@@ -1,9 +1,12 @@
 package gred.nucleus.FilesInputOutput;
 
 import gred.nucleus.exceptions.fileInOut;
+import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
 import org.apache.commons.io.FileExistsException;
+
+import java.io.File;
 
 public class OutputTiff extends FilesNames {
 
@@ -27,10 +30,21 @@ public class OutputTiff extends FilesNames {
                 }
             }
             else{
-                throw new fileInOut(imageToSave.getTitle());
+                File old = new File(this._fullPathFile);
+                if(old.delete()){
+                    IJ.log("Deleted old "+this._fullPathFile);
+                }
+                if(imageToSave.getNSlices()>1) {
+                    FileSaver fileSaver = new FileSaver(imageToSave);
+                    fileSaver.saveAsTiffStack(this._fullPathFile);
+                } else {
+                    FileSaver fileSaver = new FileSaver(imageToSave);
+                    fileSaver.saveAsTiff(this._fullPathFile);
+                }
             }
         }
-        catch (fileInOut e){
+        catch (Exception e){
+            e.printStackTrace();
         }
     }
 }

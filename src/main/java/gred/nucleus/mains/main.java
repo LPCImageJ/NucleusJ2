@@ -19,6 +19,7 @@ import loci.formats.FormatException;
 import loci.plugins.BF;
 import java.io.IOException;
 import java.util.List;
+import java.io.Console;  
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -99,36 +100,34 @@ public class main {
             if(param[0].equals("image")) {
                 Long id = Long.parseLong(param[1]);
                 ImageContainer image = client.getImage(id);
-                
-                DatasetContainer datasetRes = new DatasetContainer("resultsAutocrop", "");
-                DatasetContainer datasetProj = new DatasetContainer("projectionsAutocrop", "");
-                Long datasetResId = client.getProject( Long.parseLong(outputDirectory)).addDataset(client, datasetRes).getId();
-                Long datasetProjId = client.getProject( Long.parseLong(outputDirectory)).addDataset(client, datasetProj).getId();
 
-                autoCrop.runImageOmero(image, datasetResId, datasetProjId, client);
+                int sizeC = image.getPixels().getSizeC();
+
+                Long outputsDat[] = new Long[sizeC];
+
+                for(int i = 0; i < sizeC; i++) {
+                    DatasetContainer dataset = new DatasetContainer("C" + i + "_"  + image.getName() , "");
+                    outputsDat[i] = client.getProject(Long.parseLong(outputDirectory)).addDataset(client, dataset).getId();
+                }
+
+                autoCrop.runImageOmero(image, outputsDat, client);
             }
             else {
                 Long id = Long.parseLong(param[1]);
                 List<ImageContainer> images = null; 
 
+                String name = "";
+
                 if(param[0].equals("dataset")) {
                     DatasetContainer dataset = client.getDataset(id);
+
+                    name = dataset.getName();
 
                     if(param.length == 4 && param[2].equals("tag")) {
                         images = dataset.getImagesTagged(client, Long.parseLong(param[3]));
                     }
                     else {
                         images = dataset.getImages(client);
-                    }
-                }
-                else if(param[0].equals("project")) {
-                    ProjectContainer project = client.getProject(id);
-
-                    if(param.length == 4 && param[2].equals("tag")) {
-                        images = project.getImagesTagged(client, Long.parseLong(param[3]));
-                    }
-                    else {
-                        images = project.getImages(client);
                     }
                 }
                 else if(param[0].equals("tag")) {
@@ -138,7 +137,16 @@ public class main {
                     throw new IllegalArgumentException();
                 }
 
-                autoCrop.runSeveralImageOmero(images, Long.parseLong(outputDirectory), client);
+                int sizeC = images.get(0).getPixels().getSizeC();
+
+                Long outputsDat[] = new Long[sizeC];
+
+                for(int i = 0; i < sizeC; i++) {
+                    DatasetContainer dataset = new DatasetContainer("raw_C" + i + "_"  + name, "");
+                    outputsDat[i] = client.getProject( Long.parseLong(outputDirectory)).addDataset(client, dataset).getId();
+                }
+
+                autoCrop.runSeveralImageOmero(images, outputsDat, client);
             }   
         }
         else {
@@ -228,10 +236,10 @@ public class main {
                 try {
                     String log;
                     if(param.length == 3 && param[2].equals("ROI")) {
-                        log = otsuModif.runOneImageOmero(image, Long.parseLong(outputDirectory), client);
+                        log = otsuModif.runOneImageOmeroROI(image, Long.parseLong(outputDirectory), client);
                     }
                     else {
-                        log = otsuModif.runOneImageOmeroROI(image, Long.parseLong(outputDirectory), client);
+                        log = otsuModif.runOneImageOmero(image, Long.parseLong(outputDirectory), client);
                     }
                     if(!(log.equals("")))
                         System.out.println("Nuclei which didn't pass the segmentation\n"+log);
@@ -383,6 +391,7 @@ public class main {
 
     public static void main(String[] args) throws IOException, FormatException, fileInOut, Exception {
         DebugTools.enableLogging("OFF");
+        Console con = System.console();   
 
         System.setProperty("java.awt.headless", "false");
         CommandLine cmd;
@@ -411,10 +420,21 @@ public class main {
 
             if(cmd.hasOption("omero")) {
                 Client client = new Client();
+                String mdp;
+
+                if(cmd.hasOption("password")) 
+                    mdp = cmd.getOptionValue("password");
+                else 
+                {
+                    System.out.println("Enter the password: ");   
+                    mdp = con.readPassword("").toString();
+                }
+
+
                 client.connect(cmd.getOptionValue("hostname"), 
                                Integer.parseInt(cmd.getOptionValue("port")), 
                                cmd.getOptionValue("username"), 
-                               cmd.getOptionValue("password"),
+                               mdp,
                                Long.valueOf(cmd.getOptionValue("group")));
                                
                 if(cmd.hasOption("config")) {
@@ -446,14 +466,23 @@ public class main {
         else if(cmd.getOptionValue("action").equals("segmentation")) {
             System.out.println("start " + "segmentation");
             
-
             if(cmd.hasOption("omero"))
             {
                 Client client = new Client();
+                String mdp;
+
+                if(cmd.hasOption("password")) 
+                    mdp = cmd.getOptionValue("password");
+                else 
+                {
+                    System.out.println("Enter the password: ");   
+                    mdp = con.readPassword("").toString();
+                }
+
                 client.connect(cmd.getOptionValue("hostname"), 
                                Integer.parseInt(cmd.getOptionValue("port")), 
                                cmd.getOptionValue("username"), 
-                               cmd.getOptionValue("password"), 
+                               mdp, 
                                Long.valueOf(cmd.getOptionValue("group")));
 
                 if(cmd.hasOption("config")) {
@@ -510,6 +539,7 @@ public class main {
             System.out.println("\njava NucleusJ_giftwrapping.jar segmentation dossier/raw/ dossier/out/");
             System.out.println("\n\n");
         }
+        System.out.println("Fin du programme");
     }
 }
 

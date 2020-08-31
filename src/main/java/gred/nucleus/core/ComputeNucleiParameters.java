@@ -1,15 +1,12 @@
 package gred.nucleus.core;
 
 import gred.nucleus.FilesInputOutput.Directory;
-import gred.nucleus.FilesInputOutput.OutputTexteFile;
-import gred.nucleus.exceptions.fileInOut;
+import gred.nucleus.FilesInputOutput.OutputTextFile;
 import gred.nucleus.plugins.PluginParameters;
 import ij.ImagePlus;
-import loci.formats.FormatException;
 import loci.plugins.BF;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class ComputeNucleiParameters {
@@ -50,25 +47,27 @@ public class ComputeNucleiParameters {
      * @throws Exception
      */
     public void run() throws Exception{
-        Directory directoryInput = new Directory(this.m_pluginParameters.getOutputFolder());
-        directoryInput.listImageFiles(this.m_pluginParameters.getOutputFolder());
-        directoryInput.checkIfEmpty();
-
-        ArrayList<File> rawImages =directoryInput.m_listeOfFiles;
+        Directory directoryRawInput = new Directory(this.m_pluginParameters.getInputFolder());
+        directoryRawInput.listImageFiles(this.m_pluginParameters.getInputFolder());
+        directoryRawInput.checkIfEmpty();
+        Directory directorySegmentedInput = new Directory(this.m_pluginParameters.getOutputFolder());
+        directorySegmentedInput.listImageFiles(this.m_pluginParameters.getOutputFolder());
+        directorySegmentedInput.checkIfEmpty();
+        ArrayList<File> rawImages =directoryRawInput.m_listeOfFiles;
+        ArrayList<File> segmentedImages =directorySegmentedInput.m_listeOfFiles;
         String outputCropGeneralInfoOTSU=this.m_pluginParameters.getAnalyseParameters()+getColnameResult();
-        for (short i = 0; i < rawImages.size(); ++i) {
-            File currentFile = rawImages.get(i);
-            ImagePlus Raw = new ImagePlus(currentFile.getAbsolutePath());
-            ImagePlus[] Segmented = BF.openImagePlus(this.m_pluginParameters.getOutputFolder()+currentFile.getName());
-
+        for (short i = 0; i < segmentedImages.size(); ++i) {
+            File currentFile = segmentedImages.get(i);
+            ImagePlus Raw = new ImagePlus(this.m_pluginParameters.getInputFolder()+currentFile.separator+currentFile.getName());
+            ImagePlus[] Segmented = BF.openImagePlus(currentFile.getAbsolutePath());
 
             Measure3D mesure3D = new Measure3D(Segmented, Raw, this.m_pluginParameters.getXcalibration(Raw), this.m_pluginParameters.getYcalibration(Raw),this.m_pluginParameters.getZcalibration(Raw));
             outputCropGeneralInfoOTSU+=mesure3D.nucleusParameter3D()+"\n";
         }
-        OutputTexteFile resultFileOutputOTSU=new OutputTexteFile(this.m_pluginParameters.getOutputFolder()
-                +directoryInput.getSeparator()
+        OutputTextFile resultFileOutputOTSU=new OutputTextFile(this.m_pluginParameters.getOutputFolder()
+                +directoryRawInput.getSeparator()
                 +"result_Segmentation_Analyse.csv");
-        resultFileOutputOTSU.SaveTexteFile( outputCropGeneralInfoOTSU);
+        resultFileOutputOTSU.SaveTextFile( outputCropGeneralInfoOTSU);
 
     }
     /**

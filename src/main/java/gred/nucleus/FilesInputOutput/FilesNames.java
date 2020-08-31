@@ -47,4 +47,8 @@ public class FilesNames {
     public String get_pathFile() {
         return this._pathFile;
     }
+
+    public void set_fullPathFile(String fileName) {
+        this._fullPathFile = _pathFile+fileName;
+    }
 }

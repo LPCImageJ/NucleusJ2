@@ -135,12 +135,12 @@ public class AutoCropCalling {
     }
 
     public void runImageOmero(ImageContainer image, 
-                              Long outputDirectoryImages,
-                              Long outputDirectoryProjection,
+                              Long[] outputsDatImages,
                               Client client) 
         throws Exception
     {
         String fileImg = image.getName();
+        System.out.println("Current file : " + fileImg);
         FilesNames outPutFilesNames = new FilesNames(fileImg);
         this._prefix = outPutFilesNames.PrefixeNameFile();
         AutoCrop autoCrop = new AutoCrop(image, this.m_autocropParameters, client);
@@ -151,29 +151,22 @@ public class AutoCropCalling {
         autoCrop.computeBoxes2();
         autoCrop.addCROP_parameter();
         autoCrop.boxIntesection();
-        Long id = autoCrop.cropKernelsOmero(image, outputDirectoryImages, client);
-        autoCrop.writeAnalyseInfoOmero(id, client);
-        
-        annotAutoCrop test = new annotAutoCrop(
-                autoCrop.getFileCoordinates(), image, this.m_autocropParameters, client);
-        test.runOmero(outputDirectoryProjection, client);
+        autoCrop.cropKernelsOmero(image, outputsDatImages, client);
+
+        autoCrop.writeAnalyseInfoOmero(outputsDatImages[this.m_autocropParameters.getChannelToComputeThreshold()], 
+                                       client);
 
         this.m_outputCropGeneralInfo=this.m_outputCropGeneralInfo
                 +autoCrop.getImageCropInfo();
     }
 
     public void runSeveralImageOmero(List<ImageContainer> images, 
-                                     Long outputDirectory, 
+                                     Long[] outputsDatImages, 
                                      Client client) 
         throws Exception {
-	DatasetContainer datasetRes = new DatasetContainer("resultsAutocrop", "");
-	DatasetContainer datasetProj = new DatasetContainer("projectionsAutocrop", "");
-
-	Long datasetResId = client.getProject(outputDirectory).addDataset(client, datasetRes).getId();
-	Long datasetProjId = client.getProject(outputDirectory).addDataset(client, datasetProj).getId();
 
         for(ImageContainer image : images) {
-            runImageOmero(image, datasetResId, datasetProjId, client);
+            runImageOmero(image, outputsDatImages, client);
         }
     }
 
@@ -185,7 +178,7 @@ public class AutoCropCalling {
      */
 
     public String getColnameResult(){
-    return "FileName\tNumberOfCrop\tOTSUThreshold\tDefaultOTSUThreshold\n";
+        return "FileName\tNumberOfCrop\tOTSUThreshold\tDefaultOTSUThreshold\n";
     }
 }
 

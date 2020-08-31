@@ -301,7 +301,7 @@ public class SegmentationCalling {
 
         DatasetContainer dataset = client.getProject(output).getDatasets("OTSU").get(0);
 
-        String path = new java.io.File( "." ).getCanonicalPath() + "result_Segmentation_Analyse.csv";
+        String path = new java.io.File( "." ).getCanonicalPath() + dataset.getName() + "result_Segmentation_Analyse.csv";
         OutputTexteFile resultFileOutputOTSU=new OutputTexteFile(path);
         resultFileOutputOTSU.SaveTexteFile( this.m_outputCropGeneralInfoOTSU);
         
@@ -340,7 +340,7 @@ public class SegmentationCalling {
 
         for(ROIContainer roi : rois)
         {
-            System.out.println("Current ROI in process : n°" + i);
+            System.out.println("Current ROI in process : " + i);
 
             NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(image, roi, i, this.m_semgemtationParameters, client);
             nucleusSegmentation.preProcessImage();
