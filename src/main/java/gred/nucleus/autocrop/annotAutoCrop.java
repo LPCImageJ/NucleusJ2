@@ -5,7 +5,6 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.TextRoi;
 import ij.io.FileSaver;
-import ij.plugin.ContrastEnhancer;
 import ij.plugin.ZProjector;
 import loci.formats.FormatException;
 import loci.plugins.BF;
@@ -67,8 +66,9 @@ public class annotAutoCrop {
         this.m_outputDirPath=outputDirPath;
         Directory dirOutput= new Directory(
                 this.m_outputDirPath+"zprojection");
-        System.out.println("le dir "+this.m_outputDirPath+"zprojection");
         dirOutput.CheckAndCreateDir();
+
+
 
 
     }
@@ -100,6 +100,7 @@ public class annotAutoCrop {
 
 
     }
+
 
 
     /**

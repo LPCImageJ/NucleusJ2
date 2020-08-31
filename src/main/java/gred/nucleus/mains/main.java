@@ -1,16 +1,11 @@
 package gred.nucleus.mains;
 
-import gred.nucleus.FilesInputOutput.Directory;
-import gred.nucleus.FilesInputOutput.OutputTexteFile;
 import gred.nucleus.MachineLeaningUtils.SliceToStack;
 import gred.nucleus.MachineLeaningUtils.ComputeNucleiParametersML;
 import gred.nucleus.autocrop.*;
 import gred.nucleus.core.ComputeNucleiParameters;
-import gred.nucleus.core.Measure3D;
 import gred.nucleus.exceptions.fileInOut;
-import gred.nucleus.plugins.PluginParameters;
 import gred.nucleus.segmentation.SegmentationCalling;
-
 import gred.nucleus.segmentation.SegmentationParameters;
 import ij.ImagePlus;
 import ij.io.FileSaver;
@@ -32,9 +27,9 @@ import fr.igred.omero.repository.DatasetContainer;
 import fr.igred.omero.repository.ProjectContainer;
 
 
+
+
 public class main {
-
-
 
     /**
      * Method to run autocrop with only input output folder and with default parameters which are:
@@ -357,12 +352,23 @@ public class main {
 
 
 
+    // UN DOSSIER AVEC LES IMAGETTES
+    // UN DOSSIER AVEC LES ZPROJECTION
+    // UN DOSSIER AVEC LES COORDONNEES
+
+
+    public static void generateProjectionFromCoordinnates(String pathToCoordonnate, String pathToRaw) throws IOException, FormatException,Exception {
+        generateProjectionFromCoordonne projection =new generateProjectionFromCoordonne(pathToCoordonnate, pathToRaw);
+        System.out.println("le run 2 :: ");
+        projection.run2();
+    }
 
 
 
     // UN DOSSIER AVEC LES IMAGETTES
-    // UN DOSSIER AVEC LES COORDONNEES
     // UN DOSSIER AVEC LES ZPROJECTION
+    // UN DOSSIER AVEC LES COORDONNEES
+
 
     public static void generateProjectionFromCoordinnates(String pathToGIFTSeg, String pathToZprojection,String pathToCoordonnate) throws IOException, FormatException,Exception {
         generateProjectionFromCoordonne projection =new generateProjectionFromCoordonne(pathToGIFTSeg, pathToZprojection, pathToCoordonnate);
@@ -370,26 +376,106 @@ public class main {
     }
 
 
-
-
     public static void sliceToStack(String pathToSliceDir, String pathToOutputDir) throws Exception {
         SliceToStack createStack =new SliceToStack(pathToSliceDir,pathToOutputDir);
         createStack.run();
 
+        /*
+        * Method to crop image with coordinate in tab file :
+        *    tabulate file : pathToCoordinateFile pathToRawImageAssociate
+        *
+        */
 
     }
-    public static void cropFromCoordinates(String coordonnateDir) throws IOException, FormatException,Exception {
+    public static void cropFromCoordinates(String coordonnateDir) throws Exception {
 
         CropFromCoordonnate test = new CropFromCoordonnate(coordonnateDir);
         test.runCropFromCoordonnate();
     }
+    // DIC_path zprojection_path
+    public static void genereOV(String linkOverlayProjection) throws Exception {
 
+        GenerateOverlay ov = new GenerateOverlay(linkOverlayProjection);
+        ov.run();
+
+    }
     public static void saveFile ( ImagePlus imagePlusInput, String pathFile) {
         FileSaver fileSaver = new FileSaver(imagePlusInput);
         fileSaver.saveAsTiff(pathFile);
     }
 
-    public static void main(String[] args) throws IOException, FormatException, fileInOut, Exception {
+    public static void main(String[] args) throws Exception {
+        // SET OFF BIOFORMATS WARNINGS
+        DebugTools.enableLogging("OFF");
+        System.setProperty("java.awt.headless", "false");
+
+        if(args[0].equals("autocrop")) {
+            System.out.println("start "+args[0]);
+            if((args.length==4)&& (args[3].equals("ConfigFile"))){
+                runAutoCropFolder(args[1], args[2], args[4]);
+
+            }
+            else if((args.length==4)&& (args[3].equals("File"))){
+                runAutoCropFile(args[1], args[2]);
+            }
+            else{
+                runAutoCropFolder(args[1], args[2]);
+            }
+
+        }
+        else if(args[0].equals("segmentation")) {
+            System.out.println("start " + args[0]);
+            if ((args.length == 4) && (args[3].equals("ConfigFile"))) {
+                segmentationFolder(args[1], args[2], args[3]);
+
+            } else if ((args.length == 4) && (args[3].equals("File"))) {
+
+                //String input, String output, short vMin, int vMax, boolean gift
+                segmentationOneImage(args[1], args[2]);
+            } else {
+                segmentationFolder(args[1], args[2]);
+
+            }
+        }
+        else if(args[0].equals("computeParameters")){
+            if ((args.length == 4) && (args[3].equals("ConfigFile"))) {
+                computeNucleusParameters(args[1], args[2], args[3]);
+            }
+             else{
+                    computeNucleusParameters(args[1], args[2]);
+                }
+        }
+        else if(args[0].equals("computeParametersDL")){
+            computeNucleusParametersDL(args[1], args[2]);
+        }
+        else if(args[0].equals("generateProjection")){
+            if(args.length==4) {
+                generateProjectionFromCoordinnates(args[1], args[2], args[3]);
+            }
+            else{
+                generateProjectionFromCoordinnates(args[1], args[2]);
+            }
+        }
+        else if (args[0].equals("SliceToStack")){
+            sliceToStack(args[1], args[2]);
+        }
+        else if(args[0].equals("CropFromCoordinate")){
+            cropFromCoordinates(args[1]);
+        }
+        else if(args[0].equals("GenerateOverlay")){
+            genereOV(args[1]);
+        }
+        else{
+            System.out.println("Argument le premier argument doit être   autocrop  ou   segmentation ou computeParameters");
+            System.out.println("\nExemples :");
+            System.out.println("\njava NucleusJ_giftwrapping.jar autocrop dossier/raw/ dossier/out/");
+            System.out.println("\njava NucleusJ_giftwrapping.jar segmentation dossier/raw/ dossier/out/");
+            System.out.println("\n\n");
+        }
+        System.err.println("The program ended normally.");
+    }
+
+    public static void main2(String[] args) throws Exception {
         DebugTools.enableLogging("OFF");
         Console con = System.console();   
 
@@ -524,13 +610,21 @@ public class main {
             computeNucleusParametersDL(args[1], args[2]);
         }
         else if(args[0].equals("generateProjection")){
-            generateProjectionFromCoordinnates(args[1], args[2],args[3]);
+            if(args.length==4) {
+                generateProjectionFromCoordinnates(args[1], args[2], args[3]);
+            }
+            else{
+                generateProjectionFromCoordinnates(args[1], args[2]);
+            }
         }
         else if (args[0].equals("SliceToStack")){
             sliceToStack(args[1], args[2]);
         }
-        else if(args[0].equals("CropFromCoordonnate")){
+        else if(args[0].equals("CropFromCoordinate")){
             cropFromCoordinates(args[1]);
+        }
+        else if(args[0].equals("GenerateOverlay")){
+            genereOV(args[1]);
         }
         else{
             System.out.println("Argument le premier argument doit être   autocrop  ou   segmentation ou computeParameters");

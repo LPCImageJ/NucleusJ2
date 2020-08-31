@@ -1,11 +1,11 @@
 package gred.nucleus.segmentation;
 
 import gred.nucleus.FilesInputOutput.FilesNames;
+import gred.nucleus.FilesInputOutput.OutputTextFile;
 import gred.nucleus.FilesInputOutput.OutputTexteFile;
 import gred.nucleus.core.ConvexHullSegmentation;
 import gred.nucleus.core.NucleusSegmentation;
 import gred.nucleus.nucleusCaracterisations.NucleusAnalysis;
-import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
 import ij.measure.Calibration;
@@ -14,9 +14,7 @@ import ij.plugin.GaussianBlur3D;
 import ij.process.StackConverter;
 import loci.formats.FormatException;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -226,19 +224,19 @@ public class SegmentationCalling {
             System.out.println( "Fin :"+ timeStampStart);
 
         }
-        OutputTexteFile resultFileOutputOTSU=new OutputTexteFile(this.m_semgemtationParameters.getOutputFolder()
+        OutputTextFile resultFileOutputOTSU=new OutputTextFile(this.m_semgemtationParameters.getOutputFolder()
                 +directoryInput.getSeparator()
                 +"OTSU"
                 +directoryInput.getSeparator()
-                +"result_Segmentation_Analyse.csv");
-        resultFileOutputOTSU.SaveTexteFile( this.m_outputCropGeneralInfoOTSU);
+                +"result_Segmentation_Analyse_OTSU.csv");
+        resultFileOutputOTSU.SaveTextFile( this.m_outputCropGeneralInfoOTSU);
         if(this.m_semgemtationParameters.getGiftWrapping()) {
-            OutputTexteFile resultFileOutputGIFT = new OutputTexteFile(this.m_semgemtationParameters.getOutputFolder()
+            OutputTextFile resultFileOutputGIFT = new OutputTextFile(this.m_semgemtationParameters.getOutputFolder()
                     + directoryInput.getSeparator()
                     + "GIFT"
                     + directoryInput.getSeparator()
-                    + "result_Segmentation_Analyse.csv");
-            resultFileOutputGIFT.SaveTexteFile(this.m_outputCropGeneralInfoGIFT);
+                    + "result_Segmentation_Analyse_GIFT.csv");
+            resultFileOutputGIFT.SaveTextFile(this.m_outputCropGeneralInfoGIFT);
         }
 
         return log;

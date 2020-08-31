@@ -2,8 +2,8 @@ package gred.nucleus.autocrop;
 
 import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.FilesInputOutput.FilesNames;
-import gred.nucleus.FilesInputOutput.OutputTexteFile;
-import gred.nucleus.exceptions.fileInOut;
+import gred.nucleus.FilesInputOutput.OutputTextFile;
+import ij.IJ;
 import loci.formats.FormatException;
 import java.io.File;
 import java.io.IOException;
@@ -70,8 +70,9 @@ public class AutoCropCalling {
                 String fileImg = currentFile.toString();
                 FilesNames outPutFilesNames = new FilesNames(fileImg);
                 this._prefix = outPutFilesNames.PrefixeNameFile();
-                AutoCrop autoCrop = new AutoCrop(currentFile, this._prefix,
-                        this.m_autocropParameters);
+                try {
+                    AutoCrop autoCrop = new AutoCrop(currentFile, this._prefix,
+                            this.m_autocropParameters);
                 autoCrop.thresholdKernels();
                 autoCrop.computeConnectcomponent();
                 autoCrop.componentBorderFilter();
@@ -83,19 +84,23 @@ public class AutoCropCalling {
                 autoCrop.writeAnalyseInfo();
                 annotAutoCrop test = new annotAutoCrop(
                         autoCrop.getFileCoordinates(), currentFile,
-                        this.m_autocropParameters.getOutputFolder()
-                                + this._prefix,this.m_autocropParameters);
+                        this.m_autocropParameters.getOutputFolder()+currentFile.separator
+                                ,this._prefix, this.m_autocropParameters);
                 test.run();
                 this.m_outputCropGeneralInfo=this.m_outputCropGeneralInfo
                         +autoCrop.getImageCropInfo();
+                }catch (Exception e){
+                    IJ.error("Cannot run autocrop on "+currentFile.getName());
+                    e.printStackTrace();
+                }
 
         }
         System.out.println(this.m_autocropParameters.getInputFolder()
                 +"result_Autocrop_Analyse");
-        OutputTexteFile resultFileOutput=new OutputTexteFile(
+        OutputTextFile resultFileOutput=new OutputTextFile(
                 this.m_autocropParameters.getOutputFolder()
                         +"result_Autocrop_Analyse.csv");
-        resultFileOutput.SaveTexteFile( this.m_outputCropGeneralInfo);
+        resultFileOutput.SaveTextFile( this.m_outputCropGeneralInfo);
     }
 
 
@@ -127,8 +132,8 @@ public class AutoCropCalling {
         autoCrop.writeAnalyseInfo();
         annotAutoCrop test = new annotAutoCrop(
                 autoCrop.getFileCoordinates(), currentFile,
-                this.m_autocropParameters.getOutputFolder()
-                        + this._prefix,this.m_autocropParameters);
+                this.m_autocropParameters.getOutputFolder()+currentFile.separator
+                       ,this._prefix, this.m_autocropParameters);
         test.run();
         this.m_outputCropGeneralInfo=this.m_outputCropGeneralInfo
                 +autoCrop.getImageCropInfo();

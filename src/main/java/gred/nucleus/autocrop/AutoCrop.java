@@ -1,6 +1,7 @@
 package gred.nucleus.autocrop;
 
 import gred.nucleus.FilesInputOutput.Directory;
+import gred.nucleus.FilesInputOutput.OutputTextFile;
 import gred.nucleus.FilesInputOutput.OutputTexteFile;
 import gred.nucleus.FilesInputOutput.OutputTiff;
 import gred.nucleus.exceptions.fileInOut;
@@ -8,7 +9,6 @@ import gred.nucleus.imageProcess.Thresholding;
 import gred.nucleus.utils.Histogram;
 import ij.ImagePlus;
 import ij.ImageStack;
-import ij.io.FileSaver;
 import ij.measure.Calibration;
 import ij.plugin.ChannelSplitter;
 import ij.plugin.Duplicator;
@@ -22,7 +22,6 @@ import omero.gateway.exception.DSAccessException;
 import omero.gateway.exception.DSOutOfServiceException;
 import omero.gateway.model.RectangleData;
 import omero.gateway.model.ShapeData;
-import omero.model.Length;
 import omero.model.enums.UnitsLength;
 
 import java.awt.Color;
@@ -148,13 +147,13 @@ public class AutoCrop {
 		Thresholding thresholding = new Thresholding();
 		this.m_outputFilesPrefix = outputFilesPrefix;
 		setChannelNumbers();
-		if(this.m_rawImg.getBitDepth()>8) {
+		if (this.m_rawImg.getBitDepth() > 8) {
 			this.m_imageSeg = thresholding.contrastAnd8bits(
 					getImageChannel(
 							this.m_autocropParameters.getChannelToComputeThreshold()));
-		}
-		else{
-			this.m_imageSeg=this.m_rawImg;
+		} else {
+			this.m_imageSeg = getImageChannel(
+					this.m_autocropParameters.getChannelToComputeThreshold());
 		}
 		this.m_infoImageAnalyse =
 				autocropParametersAnalyse.getAnalyseParameters();
@@ -187,18 +186,18 @@ public class AutoCrop {
 	public AutoCrop(File imageFile, String outputFilesPrefix,
 					AutocropParameters autocropParametersAnalyse,HashMap<Double, Box> _boxes)
 			throws IOException, FormatException, fileInOut, Exception {
-		this.m_autocropParameters = autocropParametersAnalyse;
-		this.m_currentFile = imageFile;
-		this.m_imageFilePath = imageFile.getAbsolutePath();
-		this.m_outputDirPath = this.m_autocropParameters.getOutputFolder();
-		Thresholding thresholding = new Thresholding();
-		this.m_outputFilesPrefix = outputFilesPrefix;
-		setChannelNumbers();
-		this.m_imageSeg=this.m_rawImg;
-		this.m_infoImageAnalyse =autocropParametersAnalyse.getAnalyseParameters();
-		m_boxes=_boxes;
-	}
 
+			this.m_autocropParameters = autocropParametersAnalyse;
+			this.m_currentFile = imageFile;
+			this.m_imageFilePath = imageFile.getAbsolutePath();
+			this.m_outputDirPath = this.m_autocropParameters.getOutputFolder();
+			Thresholding thresholding = new Thresholding();
+			this.m_outputFilesPrefix = outputFilesPrefix;
+			setChannelNumbers();
+			this.m_imageSeg = this.m_rawImg;
+			this.m_infoImageAnalyse = autocropParametersAnalyse.getAnalyseParameters();
+			m_boxes = _boxes;
+	}
 
 
 
@@ -266,6 +265,8 @@ public class AutoCrop {
 	 * 20.
 	 */
 	public void thresholdKernels() {
+		if(this.m_imageSeg==null)
+			return;
 		this.sliceUsedForOTSU = "default";
 		GaussianBlur3D.blur(this.m_imageSeg, 0.5, 0.5, 1);
 
@@ -457,20 +458,6 @@ public class AutoCrop {
 
 
 			}
-			for (Map.Entry<Double, Box> entry : this.m_boxes.entrySet()) {
-				Box box = entry.getValue();
-
-				if(box.getYMax()>this.m_imageSeg.getHeight()) {
-					System.out.println("on en a bordel"+box.getYMax()+"   " +this.m_imageSeg.getHeight()+"\n"
-					+" "+ box.getXMin()+" "+box.getYMin()+" "+box.getZMin()+" "+entry.getKey());
-				}
-
-				//System.out.println("les clef "+entry.getKey());
-				if(entry.getKey()==2.0) {
-					//System.out.println("on en a bordel"+box.getYMax()+"\n"
-					//		+" "+ box.getXMin()+" "+box.getYMin()+" "+box.getZMin()+" "+entry.getKey());
-				}
-			}
 		}
 	}
 	/**
@@ -483,7 +470,7 @@ public class AutoCrop {
 	 */
 	public void cropKernels2()throws Exception {
 		Directory dirOutput= new Directory(
-			this.m_outputDirPath+File.separator+this.m_outputFilesPrefix);
+			this.m_outputDirPath+File.separator+"nuclei");
 		dirOutput.CheckAndCreateDir();
 		this.m_infoImageAnalyse += getSpecificImageInfo() + getColoneName();
 		for (int y =0 ;y<this.m_channelNumbers;y++) {
@@ -512,8 +499,7 @@ public class AutoCrop {
 				Calibration cal = this.m_rawImg.getCalibration();
 				imgResu.setCalibration(cal);
 				OutputTiff fileOutput = new OutputTiff(
-						this.m_outputDirPath
-								+ this.m_outputFilesPrefix
+						dirOutput.get_dirPath()
 								+ File.separator
 								+ this.m_outputFilesPrefix
 								+ "_"
@@ -522,8 +508,7 @@ public class AutoCrop {
 								+ y
 								+ ".tif");
 				this.m_infoImageAnalyse=this.m_infoImageAnalyse
-						+ m_outputDirPath
-						+ this.m_outputFilesPrefix
+						+dirOutput.get_dirPath()
 						+ File.separator
 						+ this.m_outputFilesPrefix
 						+ "_"
@@ -686,9 +671,9 @@ public class AutoCrop {
      *
      */
     public void cropKernels3()throws Exception {
-        Directory dirOutput= new Directory(
-                this.m_outputDirPath+File.separator+this.m_outputFilesPrefix);
-        dirOutput.CheckAndCreateDir();
+		Directory dirOutput= new Directory(
+				this.m_outputDirPath+File.separator+"Nuclei");
+		dirOutput.CheckAndCreateDir();
         this.m_infoImageAnalyse += getSpecificImageInfo() + getColoneName();
         for (int y =0 ;y<this.m_channelNumbers;y++) {
 
@@ -716,21 +701,19 @@ public class AutoCrop {
 
                 Calibration cal = this.m_rawImg.getCalibration();
                 imgResu.setCalibration(cal);
-                OutputTiff fileOutput = new OutputTiff(
-                        this.m_outputDirPath
-                                + this.m_outputFilesPrefix
-                                + File.separator
-                                + this.m_outputFilesPrefix
+				OutputTiff fileOutput = new OutputTiff(
+						dirOutput.get_dirPath()
+								+ File.separator
+								+ this.m_outputFilesPrefix
                                 + "_"
                                 + i
                                 +"_C"
                                 + y
                                 + ".tif");
-                this.m_infoImageAnalyse=this.m_infoImageAnalyse
-                        + m_outputDirPath
-                        + this.m_outputFilesPrefix
-                        + File.separator
-                        + this.m_outputFilesPrefix
+				this.m_infoImageAnalyse=this.m_infoImageAnalyse
+						+dirOutput.get_dirPath()
+						+ File.separator
+						+ this.m_outputFilesPrefix
                         + "_"
                         + i
                         +"_C"
@@ -916,11 +899,15 @@ public class AutoCrop {
      * @throws IOException
      */
     public void writeAnalyseInfo() throws IOException {
-        OutputTexteFile resultFileOutput=new OutputTexteFile(
+		Directory dirOutput= new Directory(
+				this.m_outputDirPath + File.separator
+						+ "coordinates");
+		dirOutput.CheckAndCreateDir();
+        OutputTextFile resultFileOutput=new OutputTextFile(
         		this.m_outputDirPath + File.separator
-						+ this.m_outputFilesPrefix + File.separator
+						+ "coordinates" + File.separator
 						+ this.m_outputFilesPrefix+".txt");
-        resultFileOutput.SaveTexteFile(this.m_infoImageAnalyse);
+        resultFileOutput.SaveTextFile(this.m_infoImageAnalyse);
 
 	}
 	
