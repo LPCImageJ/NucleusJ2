@@ -37,7 +37,6 @@ import java.util.concurrent.ExecutionException;
 import org.apache.commons.io.FilenameUtils;
 
 import fr.igred.omero.Client;
-import fr.igred.omero.FolderContainer;
 import fr.igred.omero.ImageContainer;
 import fr.igred.omero.metadata.ROIContainer;
 import fr.igred.omero.repository.DatasetContainer;
@@ -582,8 +581,6 @@ public class AutoCrop {
 		this.m_infoImageAnalyse += getSpecificImageInfo() + getColoneName();
 		for (int y =0 ;y<this.m_channelNumbers;y++) {
 			int i=0;
-			FolderContainer folder = new FolderContainer(client, "C" + y);
-			folder.setImage(image);
 			for (Map.Entry<Double , Box> entry : this.m_boxes.entrySet()) {
 
 				DatasetContainer dataset = client.getDataset(outputsDat[y]);
@@ -621,7 +618,6 @@ public class AutoCrop {
 				}
 
 				ROIContainer roi = new ROIContainer(shapes);
-				folder.addROI(client, roi);
 
 				ImagePlus imgResu = image.toImagePlus(client, xBound, yBound, cBound, zBound, null);
 

@@ -70,7 +70,7 @@
 		</dependency>
 		<dependency>
 			<groupId>fr.igred</groupId>
-			<artifactId>omero</artifactId>
+			<artifactId>simple-omero-client</artifactId>
 			<version>5.6.0</version>
 		</dependency>
 	</dependencies>
@@ -200,7 +200,7 @@
 		</repository>
 		<repository>
 			<id>gred-snapshots</id>
-			<url>https://artifacts.igred.fr/snapshots</url>
+			<url>https://artifacts.igred.fr/releases</url>
 		</repository>
 	</repositories>
 
