@@ -785,7 +785,13 @@ public class NucleusSegmentation {
 				tagBadCrop = tags.get(0);
 			}
 
-			image.addTag(client, tagBadCrop);
+			System.out.println("Adding Bad Crop tag");
+			try {
+				image.addTag(client, tagBadCrop);
+			}
+			catch(Exception e) {
+				System.out.println("Tag already added");
+			}
 		}
 	}
 
