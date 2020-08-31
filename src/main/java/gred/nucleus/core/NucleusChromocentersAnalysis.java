@@ -99,7 +99,9 @@ public class NucleusChromocentersAnalysis{
 		histogram.run(imagePlusChromocenter);
 		Calibration calibration = imagePlusInput.getCalibration();
 		double voxelVolume = calibration.pixelDepth*calibration.pixelHeight*calibration.pixelWidth;
-		Measure3D measure3D = new Measure3D();
+		ImagePlus [] tmp =new ImagePlus[1];
+		tmp[0]=imagePlusSegmented;
+		Measure3D measure3D = new Measure3D(tmp,imagePlusInput,calibration.pixelDepth,calibration.pixelHeight,calibration.pixelWidth);
 		double volume = measure3D.computeVolumeObject(imagePlusSegmented,255);
 		double surfaceArea = measure3D.computeSurfaceObject(255);
 		File fileResults = new File(pathResultsFile);
