@@ -17,7 +17,9 @@ compile:
   stage: compile
   except:
     - tags
-  script: mvn clean package
+  script:
+      - mvn versions:set -DnewVersion=$VERSION
+      - mvn clean package
   artifacts:
     paths:
       - target
@@ -27,10 +29,12 @@ compile:
 
 deploy:
   stage: deploy
+  only:
+    - master
   except:
     - tags
   script:
-    - mvn deploy:deploy-file -Durl=https://gitlab.com/api/v4/projects/19044962/packages/maven/ -DrepositoryId=gitlab-maven -Dfile=target/NucleusJ_2-1.0.2.jar -DgroupId=burp -DartifactId=NucleusJ_2 -Dversion=$VERSION -Dpackaging=jar -DgeneratePom=false -DuniqueVersion=true -s ci_settings.xml
+    - mvn deploy:deploy-file -Durl=https://gitlab.com/api/v4/projects/19044962/packages/maven/ -DrepositoryId=gitlab-maven -Dfile=target/NucleusJ_2-$VERSION.jar -DgroupId=burp -DartifactId=NucleusJ_2 -Dversion=$VERSION -Dpackaging=jar -DgeneratePom=false -DuniqueVersion=true -s ci_settings.xml
   dependencies:
     - compile
 

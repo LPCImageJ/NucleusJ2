@@ -810,7 +810,7 @@ public class NucleusSegmentation {
 				shape.getShapeSettings().setStroke(Color.RED);
 			}
 		}
-		roi.updateROI(client);
+		roi.saveROI(client);
 	}
 
     /**

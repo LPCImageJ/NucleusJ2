@@ -11,8 +11,6 @@
 	<name>NucleusJ</name>
 	<description>Ensemble of ImageJ plugins for nuclear analysis</description>
 
-
-
 	<dependencies>
 		<dependency>
 			<groupId>gov.nist.math</groupId>
@@ -116,7 +114,7 @@
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
-					<version>1.4</version>
+					<version>3.2.4</version>
 					<executions>
 						<execution>
 							<phase>package</phase>
@@ -136,9 +134,12 @@
 
 								<filters>
 									<filter>
-										<artifact>org.something:SomeDependency</artifact>
+										<artifact>*:*</artifact>
 										<excludes>
-											<exclude>plugins.config</exclude>
+											<!--<exclude>plugins.config</exclude>-->
+											<exclude>META-INF/DUMMY.SF</exclude>
+											<exclude>META-INF/DUMMY.DSA</exclude>
+											<exclude>META-INF/DUMMY.RSA</exclude>
 										</excludes>
 									</filter>
 								</filters>
@@ -178,7 +179,6 @@
 				</plugin-->
 			</plugins>
 		</pluginManagement>
-
 		<plugins>
 <!--			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -191,6 +191,7 @@
 				<version>3.2.4</version>
 			</plugin>
 		</plugins>
+
 	</build>
 
 	<developers>
@@ -213,7 +214,7 @@
 			<url>http://maven.imagej.net/content/groups/public</url>
 		</repository>
 		<repository>
-			<id>gred-snapshots</id>
+			<id>gred-releases</id>
 			<url>https://artifacts.igred.fr/releases</url>
 		</repository>
 		<repository>
