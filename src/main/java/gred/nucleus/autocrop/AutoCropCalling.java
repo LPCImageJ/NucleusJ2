@@ -7,6 +7,11 @@ import ij.IJ;
 import loci.formats.FormatException;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+
+import fr.igred.omero.Client;
+import fr.igred.omero.ImageContainer;
+import fr.igred.omero.repository.DatasetContainer;
 
 
 
@@ -132,7 +137,42 @@ public class AutoCropCalling {
         test.run();
         this.m_outputCropGeneralInfo=this.m_outputCropGeneralInfo
                 +autoCrop.getImageCropInfo();
+    }
 
+    public void runImageOmero(ImageContainer image, 
+                              Long[] outputsDatImages,
+                              Client client) 
+        throws Exception
+    {
+        String fileImg = image.getName();
+        System.out.println("Current file : " + fileImg);
+        FilesNames outPutFilesNames = new FilesNames(fileImg);
+        this._prefix = outPutFilesNames.PrefixeNameFile();
+        AutoCrop autoCrop = new AutoCrop(image, this.m_autocropParameters, client);
+        autoCrop.thresholdKernels();
+        autoCrop.computeConnectcomponent();
+        autoCrop.componentBorderFilter();
+        autoCrop.componentSizeFilter();
+        autoCrop.computeBoxes2();
+        autoCrop.addCROP_parameter();
+        autoCrop.boxIntesection();
+        autoCrop.cropKernelsOmero(image, outputsDatImages, client);
+
+        autoCrop.writeAnalyseInfoOmero(outputsDatImages[this.m_autocropParameters.getChannelToComputeThreshold()], 
+                                       client);
+
+        this.m_outputCropGeneralInfo=this.m_outputCropGeneralInfo
+                +autoCrop.getImageCropInfo();
+    }
+
+    public void runSeveralImageOmero(List<ImageContainer> images, 
+                                     Long[] outputsDatImages, 
+                                     Client client) 
+        throws Exception {
+
+        for(ImageContainer image : images) {
+            runImageOmero(image, outputsDatImages, client);
+        }
     }
 
 
@@ -143,7 +183,7 @@ public class AutoCropCalling {
      */
 
     public String getColnameResult(){
-    return "FileName\tNumberOfCrop\tOTSUThreshold\tDefaultOTSUThreshold\n";
+        return "FileName\tNumberOfCrop\tOTSUThreshold\tDefaultOTSUThreshold\n";
     }
 }
 

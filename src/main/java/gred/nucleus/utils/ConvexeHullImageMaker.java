@@ -240,6 +240,15 @@ public class ConvexeHullImageMaker{
 			tableWidth[convexHull.size()] = (int) convexHull.get(0)._j;
 			tableHeight[convexHull.size()] = (int) convexHull.get(0)._k;
 		}
+		/*
+		Polygon p = new Polygon(tableWidth, tableHeight,tableWidth.length );
+		Graphics2D g2d = bufferedImage.createGraphics();
+		g2d.drawPolygon(p);
+		g2d.fillPolygon(p);
+		g2d.setColor(Color.WHITE);
+		g2d.dispose();
+		*/
+		
 		ip.setImage(bufferedImage);
 		ip.getProcessor().setValue(255);
 		ip.getProcessor().fill(new PolygonRoi(tableWidth, tableHeight, tableWidth.length, Roi.POLYGON));

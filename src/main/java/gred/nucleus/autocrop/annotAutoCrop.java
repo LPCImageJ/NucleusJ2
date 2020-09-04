@@ -66,8 +66,9 @@ public class annotAutoCrop {
         this.m_outputDirPath=outputDirPath;
         Directory dirOutput= new Directory(
                 this.m_outputDirPath+"zprojection");
-        System.out.println("le dir "+this.m_outputDirPath+"zprojection");
         dirOutput.CheckAndCreateDir();
+
+
 
 
     }
@@ -99,6 +100,7 @@ public class annotAutoCrop {
 
 
     }
+
 
 
     /**
@@ -272,5 +274,4 @@ public class annotAutoCrop {
         IJ.run(this.m_zProjection,
                 "Invert LUT", "");
     }
-
 }
