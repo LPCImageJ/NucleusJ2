@@ -637,6 +637,7 @@ public class main {
     }
 }
 
+
 //IJ.log(""+getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() +" image type " +imgSeg.getType()+"\n");
 
 //long maxMemory = Runtime.getRuntime().maxMemory();
