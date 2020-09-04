@@ -12,7 +12,10 @@ import ij.io.FileSaver;
 import loci.common.DebugTools;
 import loci.formats.FormatException;
 import loci.plugins.BF;
+
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.io.Console;  
 
@@ -404,7 +407,7 @@ public class main {
         fileSaver.saveAsTiff(pathFile);
     }
 
-    public static void main(String[] args) throws Exception {
+    public static void main2(String[] args) throws Exception {
         // SET OFF BIOFORMATS WARNINGS
         DebugTools.enableLogging("OFF");
         System.setProperty("java.awt.headless", "false");
@@ -475,7 +478,7 @@ public class main {
         System.err.println("The program ended normally.");
     }
 
-    public static void main2(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
         DebugTools.enableLogging("OFF");
         Console con = System.console();   
 
@@ -512,8 +515,8 @@ public class main {
                     mdp = cmd.getOptionValue("password");
                 else 
                 {
-                    System.out.println("Enter the password: ");   
-                    mdp = con.readPassword("").toString();
+                    System.out.println("Enter password ");
+                    mdp = String.valueOf(con.readPassword());
                 }
 
 
@@ -561,8 +564,8 @@ public class main {
                     mdp = cmd.getOptionValue("password");
                 else 
                 {
-                    System.out.println("Enter the password: ");   
-                    mdp = con.readPassword("").toString();
+                    System.out.println("Enter password: ");
+                    mdp = String.valueOf(con.readPassword());
                 }
 
                 client.connect(cmd.getOptionValue("hostname"), 
@@ -635,6 +638,7 @@ public class main {
         }
         System.out.println("Fin du programme");
     }
+
 }
 
 
