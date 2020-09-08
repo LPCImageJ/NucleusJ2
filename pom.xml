@@ -4,7 +4,7 @@
 		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
 		http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>burp</groupId>
+	<groupId>igred</groupId>
 	<artifactId>NucleusJ_2</artifactId>
 	<version>1.0.2</version>
 
@@ -196,10 +196,10 @@
 
 	<developers>
 		<developer>
-			<id>PouletAxel</id>
-			<name>Axel Poulet</name>
-			<email>pouletaxel@gmail.com</email>
-			<organization>GRED</organization>
+			<id>DesTristus</id>
+			<name>Tristan Dubos</name>
+			<email>tristan.duos33@gmail.com</email>
+			<organization>iGReD</organization>
 			<roles>
 				<role>architect</role>
 				<role>developer</role>
