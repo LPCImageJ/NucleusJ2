@@ -41,7 +41,9 @@ public class ChromocentersEnhancement {
 	    ImagePlus imagePlusExtrema = regionalExtremaFilter.applyWithMask( imagePlusGradient);
 	    ImagePlus imagePlusLabels = ConnectedComponents.computeLabels(imagePlusExtrema, 26, 32);
 	    ImagePlus imagePlusWatershed = Watershed.computeWatershed(imagePlusGradient,imagePlusLabels,imagePlusSegmented, 26,false,false);
-		imagePlusWatershed=tmp(imagePlusWatershed);
+		imagePlusWatershed.show();
+		//saveFile(imagePlusWatershed,"/home/tridubos/Bureau/TEST/burp/save_verif.tiff");
+	    imagePlusWatershed=tmp(imagePlusWatershed);
 		double [] contrast = computeContrast (imagePlusRaw,imagePlusWatershed);
 		return computeImage (imagePlusWatershed, contrast);
 	}
@@ -77,7 +79,6 @@ public class ChromocentersEnhancement {
 					voxelValue = (int)imageStackWatershed.getVoxel(i,j,k);
 					for (int kk = k-1; kk <= k+1; kk += 2){
 						neighborVoxelValue = (int) imageStackWatershed.getVoxel(i,j,kk);
-						System.out.println(i+" "+j+" "+kk+" "+neighborVoxelValue +" "+voxelValue);
 
 						if (neighborVoxelValue > 0 && voxelValue != neighborVoxelValue)
 							tRegionAdjacencyGraph[voxelValue][neighborVoxelValue] += volumeVoxel;

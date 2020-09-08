@@ -21,7 +21,9 @@
 		<dependency>
 			<groupId>fr.inra.ijpb</groupId>
 			<artifactId>MorphoLibJ_</artifactId>
-			<version>1.4.0</version>
+			<version>1.4.3</version>
+			<systemPath>/home/tridubos/Bureau/dependance/MorphoLibJ_-1.4.3-SNAPSHOT.jar</systemPath>
+			<scope>system</scope>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
