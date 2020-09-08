@@ -2,11 +2,11 @@ package gred.nucleus.autocrop;
 
 import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.FilesInputOutput.OutputTextFile;
+import gred.nucleus.FilesInputOutput.OutputTexteFile;
 import gred.nucleus.FilesInputOutput.OutputTiff;
 import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.imageProcess.Thresholding;
 import gred.nucleus.utils.Histogram;
-import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.measure.Calibration;
@@ -17,16 +17,30 @@ import loci.common.DebugTools;
 import loci.formats.FormatException;
 import loci.plugins.BF;
 import loci.plugins.in.ImporterOptions;
+import omero.ServerError;
+import omero.gateway.exception.DSAccessException;
+import omero.gateway.exception.DSOutOfServiceException;
+import omero.gateway.model.RectangleData;
+import omero.gateway.model.ShapeData;
+import omero.model.enums.UnitsLength;
+
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
+import org.apache.commons.io.FilenameUtils;
 
+import fr.igred.omero.Client;
+import fr.igred.omero.ImageContainer;
+import fr.igred.omero.metadata.ROIContainer;
+import fr.igred.omero.repository.DatasetContainer;
 import inra.ijpb.binary.BinaryImages;
 import inra.ijpb.label.LabelImages;
-import org.apache.commons.io.FilenameUtils;
 
 /**
  * Class dedicate to crop nuclei in a isolate file from 3D wide field image from
@@ -126,26 +140,47 @@ public class AutoCrop {
 	public AutoCrop(File imageFile, String outputFilesPrefix,
 					AutocropParameters autocropParametersAnalyse)
 			throws IOException, FormatException, fileInOut, Exception {
+		this.m_autocropParameters = autocropParametersAnalyse;
+		this.m_currentFile = imageFile;
+		this.m_imageFilePath = imageFile.getAbsolutePath();
+		this.m_outputDirPath = this.m_autocropParameters.getOutputFolder();
+		Thresholding thresholding = new Thresholding();
+		this.m_outputFilesPrefix = outputFilesPrefix;
+		setChannelNumbers();
+		if (this.m_rawImg.getBitDepth() > 8) {
+			this.m_imageSeg = thresholding.contrastAnd8bits(
+					getImageChannel(
+							this.m_autocropParameters.getChannelToComputeThreshold()));
+		} else {
+			this.m_imageSeg = getImageChannel(
+					this.m_autocropParameters.getChannelToComputeThreshold());
+		}
+		this.m_infoImageAnalyse =
+				autocropParametersAnalyse.getAnalyseParameters();
+	}
 
-		String extension = FilenameUtils.getExtension(imageFile.getName());
-			this.m_autocropParameters = autocropParametersAnalyse;
-			this.m_currentFile = imageFile;
-			this.m_imageFilePath = imageFile.getAbsolutePath();
-			this.m_outputDirPath = this.m_autocropParameters.getOutputFolder();
-			Thresholding thresholding = new Thresholding();
-			this.m_outputFilesPrefix = outputFilesPrefix;
-			setChannelNumbers();
-			if (this.m_rawImg.getBitDepth() > 8) {
-				this.m_imageSeg = thresholding.contrastAnd8bits(
-						getImageChannel(
-								this.m_autocropParameters.getChannelToComputeThreshold()));
-			} else {
-				this.m_imageSeg = getImageChannel(
-						this.m_autocropParameters.getChannelToComputeThreshold());
-			}
-			this.m_infoImageAnalyse =
-					autocropParametersAnalyse.getAnalyseParameters();
+	public AutoCrop(ImageContainer image,
+					AutocropParameters autocropParametersAnalyse, 
+					Client client)
+			throws IOException, FormatException, fileInOut, Exception {
+		this.m_currentFile = new File(image.getName());
+		this.m_autocropParameters = autocropParametersAnalyse;
+		this.m_outputDirPath = this.m_autocropParameters.getOutputFolder();
+		Thresholding thresholding = new Thresholding();
+		this.m_outputFilesPrefix = FilenameUtils.removeExtension(image.getName());
 
+		setChannelNumbersOmero(image, client);
+		if(this.m_rawImg.getBitDepth()>8) {
+			this.m_imageSeg = thresholding.contrastAnd8bits(
+					getImageChannelOmero(this.m_autocropParameters.getChannelToComputeThreshold(), 
+										 image, 
+										 client));
+		}
+		else{
+			this.m_imageSeg=this.m_rawImg;
+		}
+		this.m_infoImageAnalyse =
+				autocropParametersAnalyse.getAnalyseParameters();
 	}
 
 	public AutoCrop(File imageFile, String outputFilesPrefix,
@@ -180,6 +215,15 @@ public class AutoCrop {
 		return currentImage[channelNumber];
 	}
 
+	public ImagePlus getImageChannelOmero(int channelNumber, 
+										  ImageContainer image, 
+										  Client client) 
+		throws Exception {
+		int cBound[] = {channelNumber, channelNumber};
+
+		return image.toImagePlus(client, null, null, cBound, null, null);
+	}
+
 
 	/**
 	 * Method to check multichannel and initialising channelNumbers variable
@@ -193,9 +237,19 @@ public class AutoCrop {
 		ChannelSplitter channelSplitter = new ChannelSplitter();
 		currentImage = channelSplitter.split(currentImage[0]);
 		this.m_rawImg = currentImage[0];
+		
 		if (currentImage.length > 1) {
 			this.m_channelNumbers = currentImage.length;
 		}
+	}
+
+	public void setChannelNumbersOmero(ImageContainer image, Client client) throws Exception {
+		DebugTools.enableLogging("OFF");      // DEBUG INFO BIOFORMAT OFF
+
+		int cBound[] = {this.m_autocropParameters.getChannelToComputeThreshold(), this.m_autocropParameters.getChannelToComputeThreshold()};
+		this.m_rawImg  = image.toImagePlus(client, null, null, cBound, null, null);
+
+		this.m_channelNumbers = image.getPixels().getSizeC();
 	}
 
 
@@ -502,6 +556,116 @@ public class AutoCrop {
 			}
 		}
 	}
+
+
+	public void cropKernelsOmero(ImageContainer image, 
+								 Long[] outputsDat, 
+								 Client client)
+		throws Exception {
+
+		this.m_infoImageAnalyse += getSpecificImageInfo() + getColoneName();
+		for (int y =0 ;y<this.m_channelNumbers;y++) {
+			int i=0;
+			for (Map.Entry<Double , Box> entry : this.m_boxes.entrySet()) {
+
+				DatasetContainer dataset = client.getDataset(outputsDat[y]);
+
+				Box box =  entry.getValue();
+				int xmin = box.getXMin();
+				int ymin = box.getYMin();
+				int zmin = box.getZMin();
+				String coord = box.getXMin()
+						+ "_" + box.getYMin()
+						+ "_" + box.getZMin();
+
+				int width = box.getXMax()- box.getXMin();
+				int height = box.getYMax()- box.getYMin();
+				int depth = box.getZMax() - box.getZMin();
+
+				int xBound[] = { box.getXMin(), box.getXMax() - 1};
+				int yBound[] = { box.getYMin(), box.getYMax() - 1};
+				int zBound[] = { box.getZMin(), box.getZMax() - 1};
+				int cBound[] = { y, y };
+				
+				List<ShapeData> shapes = new ArrayList<ShapeData>();
+
+				for(int z = box.getZMin(); z < box.getZMax(); z++) {
+					RectangleData rectangle = new RectangleData(xmin, ymin, width, height);
+					rectangle.setC(y);
+					rectangle.setZ(z);
+					rectangle.setT(0);
+					rectangle.setText("" + i);
+
+					rectangle.getShapeSettings().getFontSize(UnitsLength.YOTTAMETER).setValue(45);
+					rectangle.getShapeSettings().setStroke(Color.GREEN);
+
+					shapes.add(rectangle);
+				}
+
+				ROIContainer roi = new ROIContainer(shapes);
+
+				ImagePlus imgResu = image.toImagePlus(client, xBound, yBound, cBound, zBound, null);
+
+				Calibration cal = this.m_rawImg.getCalibration();
+				imgResu.setCalibration(cal);
+				String path = new java.io.File( "." ).getCanonicalPath() 
+				    + "/"
+					+ this.m_outputFilesPrefix
+					+ "_"
+					+ i
+					+ ".tif";
+
+				OutputTiff fileOutput = new OutputTiff(path);
+				this.m_infoImageAnalyse=this.m_infoImageAnalyse
+						+ m_outputDirPath
+						+ this.m_outputFilesPrefix
+						+ File.separator
+						+ this.m_outputFilesPrefix
+						+ "_"
+						+ i
+						+ ".tif\t"
+						+ y  + "\t"
+						+ i + "\t"
+						+ xmin + "\t"
+						+ ymin + "\t"
+						+ zmin + "\t"
+						+ width + "\t"
+						+ height + "\t"
+						+ depth + "\n";
+
+				fileOutput.SaveImage(imgResu);
+				this.m_outputFile.add(this.m_outputFilesPrefix
+						+  "_"
+						+ i
+						+ ".tif");
+
+				dataset.importImages(client, path);
+
+				File file = new File(path);
+				file.delete();
+
+				if(y==0) {
+					int xmax=xmin+width;
+					int ymax=ymin+height;
+					int zmax =zmin+depth;
+					this.m_boxCoordinates.add(
+							this.m_outputDirPath
+									+ File.separator
+									+ this.m_outputFilesPrefix + "_"
+									+ coord + i
+									+ "\t" + xmin
+									+ "\t" + xmax
+									+ "\t" + ymin
+									+ "\t" + ymax
+									+ "\t" + zmin
+									+ "\t" + zmax);
+					//xmin, ymin,zmin, width,height, depth,y
+				}
+				i++;
+			}
+		}
+	}
+
     /**
      * Method crops a box of interest, from coordinate files.
      *
@@ -745,6 +909,32 @@ public class AutoCrop {
 						+ this.m_outputFilesPrefix+".txt");
         resultFileOutput.SaveTextFile(this.m_infoImageAnalyse);
 
+	}
+	
+    /**
+     * Write analyse info in output texte file
+     * @throws IOException
+     */
+	public void writeAnalyseInfoOmero(Long id, 
+									  Client client) 
+		throws DSOutOfServiceException,
+			   IOException,
+			   DSAccessException,
+			   ExecutionException,
+			   ServerError
+		{
+		String path = new java.io.File( "." ).getCanonicalPath() 
+					  + this.m_outputFilesPrefix+".txt";
+					  
+		OutputTexteFile resultFileOutput=new OutputTexteFile(path);
+		
+		resultFileOutput.SaveTexteFile(this.m_infoImageAnalyse);
+		
+		DatasetContainer dataset = client.getDataset(id);
+		File file = new File(path);
+
+		dataset.addFile(client, file);
+		file.delete();
     }
 
 

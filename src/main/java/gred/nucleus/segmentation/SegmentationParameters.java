@@ -2,16 +2,12 @@ package gred.nucleus.segmentation;
 
 
 import gred.nucleus.plugins.PluginParameters;
-import ij.IJ;
-import ij.ImagePlus;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
-
 
 public class SegmentationParameters extends PluginParameters {
     /** GIFT wrapping option */
