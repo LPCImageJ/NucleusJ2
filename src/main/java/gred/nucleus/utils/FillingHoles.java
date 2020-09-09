@@ -2,7 +2,7 @@ package gred.nucleus.utils;
 
 import ij.*;
 import ij.process.*;
-import inra.ijpb.binary.ConnectedComponents;
+import inra.ijpb.binary.BinaryImages;
 
 /**
  * Class HolesFilling
@@ -33,7 +33,7 @@ public class FillingHoles {
                 }
             }
         }
-		imagePlusCorrected = ConnectedComponents.computeLabels(imagePlusCorrected, 26, 32);
+		imagePlusCorrected = BinaryImages.componentsLabeling(imagePlusCorrected, 26, 32);
 		int label;
 		boolean[] tEdgeFlags  = new boolean [(int)imagePlusCorrected.getStatistics().max+1];
 		imageStackCorrected = imagePlusCorrected.getImageStack();
@@ -106,7 +106,7 @@ public class FillingHoles {
                         imageProcessorLabellised.putPixelValue(i, j, 255);
                 }
             }
-			imageProcessorLabellised = ConnectedComponents.computeLabels(imageProcessorLabellised, 26, 32);
+			imageProcessorLabellised = BinaryImages.componentsLabeling(imageProcessorLabellised, 26, 32);
 			int label;
 			boolean [] tEdgeFlags = new boolean [(int)imageProcessorLabellised.getMax()+1];
 			for (int a = 0; a < tEdgeFlags.length; ++a)
