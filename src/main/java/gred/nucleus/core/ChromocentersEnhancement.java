@@ -4,7 +4,7 @@ import gred.nucleus.utils.RegionalExtremaFilter;
 import ij.measure.*;
 import ij.*;
 import ij.process.*;
-import inra.ijpb.binary.ConnectedComponents;
+import inra.ijpb.binary.BinaryImages;
 import inra.ijpb.watershed.Watershed;
 
 /**
@@ -36,7 +36,7 @@ public class ChromocentersEnhancement {
 		RegionalExtremaFilter regionalExtremaFilter = new RegionalExtremaFilter();
 	    regionalExtremaFilter.setMask(imagePlusSegmented);
 	    ImagePlus imagePlusExtrema = regionalExtremaFilter.applyWithMask( imagePlusGradient);
-	    ImagePlus imagePlusLabels = ConnectedComponents.computeLabels(imagePlusExtrema, 26, 32);
+	    ImagePlus imagePlusLabels = BinaryImages.componentsLabeling(imagePlusExtrema, 26, 32);
 	    ImagePlus imagePlusWatershed = Watershed.computeWatershed(imagePlusGradient,imagePlusLabels,imagePlusSegmented, 26,true,false);
 		double [] contrast = computeContrast (imagePlusRaw,imagePlusWatershed);
 		return computeImage (imagePlusWatershed, contrast);
