@@ -27,7 +27,7 @@ import ij.plugin.Filters3D;
 import ij.plugin.GaussianBlur3D;
 import ij.process.*;
 import ij.measure.*;
-import inra.ijpb.binary.ConnectedComponents;
+import inra.ijpb.binary.BinaryImages;
 import loci.common.DebugTools;
 import loci.plugins.BF;
 import omero.ServerError;
@@ -267,7 +267,7 @@ public class NucleusSegmentation {
 			ImagePlus tempSeg ;
 			tempSeg = generateSegmentedImage(this._imgRawTransformed, t);
 
-			tempSeg = ConnectedComponents.computeLabels(tempSeg,
+			tempSeg = BinaryImages.componentsLabeling(tempSeg,
                     26,
                     32);
 			Calibration cal = this._imgRaw.getCalibration();
@@ -387,7 +387,7 @@ public class NucleusSegmentation {
              ++t) {
 			ImagePlus imagePlusSegmentedTemp = generateSegmentedImage(
 			        imagePlusInput,t);
-			imagePlusSegmentedTemp = ConnectedComponents.computeLabels(
+			imagePlusSegmentedTemp = BinaryImages.componentsLabeling(
 			        imagePlusSegmentedTemp, 26, 32);
 			deleteArtefact(imagePlusSegmentedTemp);
 			imagePlusSegmentedTemp.setCalibration(calibration);
