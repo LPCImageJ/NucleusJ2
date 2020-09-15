@@ -1,15 +1,18 @@
 package gred.nucleus.core;
 import gred.nucleus.myGradient.MyGradient;
 import gred.nucleus.utils.RegionalExtremaFilter;
+import ij.io.FileSaver;
 import ij.measure.*;
 import ij.*;
 import ij.process.*;
 import inra.ijpb.binary.BinaryImages;
 import inra.ijpb.watershed.Watershed;
 
+import java.io.File;
+
 /**
  * Several method to create the image of contrasted regions
- * 
+ *
  * @author Tristan Dubos and Axel Poulet
 
  */
@@ -24,7 +27,7 @@ public class ChromocentersEnhancement {
 
 	/**
 	 * compute and create the image contrast with the raw image and the segmented image
-	 *  
+	 *
 	 * @param imagePlusRaw	raw image
 	 * @param imagePlusSegmented segmented image of the nucleus
 	 * @return image of the cotrasted region
@@ -37,15 +40,26 @@ public class ChromocentersEnhancement {
 	    regionalExtremaFilter.setMask(imagePlusSegmented);
 	    ImagePlus imagePlusExtrema = regionalExtremaFilter.applyWithMask( imagePlusGradient);
 	    ImagePlus imagePlusLabels = BinaryImages.componentsLabeling(imagePlusExtrema, 26, 32);
-	    ImagePlus imagePlusWatershed = Watershed.computeWatershed(imagePlusGradient,imagePlusLabels,imagePlusSegmented, 26,true,false);
+	    ImagePlus imagePlusWatershed = Watershed.computeWatershed(imagePlusGradient,imagePlusLabels,imagePlusSegmented, 26,false,false);
+	    // Change -1 value in 0
+	    imagePlusWatershed=convertNegativeValue(imagePlusWatershed);
 		double [] contrast = computeContrast (imagePlusRaw,imagePlusWatershed);
 		return computeImage (imagePlusWatershed, contrast);
 	}
-
+	public static void saveFile ( ImagePlus imagePlus, String pathFile) {
+		FileSaver fileSaver = new FileSaver(imagePlus);
+		File file = new File(pathFile);
+		if (file.exists())
+			fileSaver.saveAsTiffStack( pathFile+File.separator+imagePlus.getTitle());
+		else {
+			file.mkdir();
+			fileSaver.saveAsTiffStack( pathFile+File.separator+imagePlus.getTitle());
+		}
+	}
 
 	/**
 	 * Compute the region adjacency graph. The aim is to detect the  neighboring region.
-	 * 
+	 *
 	 * @param imagePlusWatershed image results of the watershed
 	 * @return a float table which contain the value of the contrast between each region
 	 */
@@ -57,39 +71,39 @@ public class ChromocentersEnhancement {
 		Calibration calibration = imagePlusWatershed.getCalibration();
 		double volumeVoxel = calibration.pixelWidth * calibration.pixelHeight * calibration.pixelDepth;
 		ImageStack imageStackWatershed = imagePlusWatershed.getStack();
-		for (int k = 0; k < imagePlusWatershed.getNSlices(); ++k) {
-            for (int i = 0; i < imagePlusWatershed.getWidth(); ++i) {
-                for (int j = 0; j < imagePlusWatershed.getHeight(); ++j) {
-                    voxelValue = (int) imageStackWatershed.getVoxel(i, j, k);
-                    for (int kk = k - 1; kk <= k + 1; kk += 2) {
-                        neighborVoxelValue = (int) imageStackWatershed.getVoxel(i, j, kk);
-                        if (neighborVoxelValue > 0 && voxelValue != neighborVoxelValue)
-                            tRegionAdjacencyGraph[voxelValue][neighborVoxelValue] += volumeVoxel;
-                    }
-                    for (int jj = j - 1; jj <= j + 1; jj += 2) {
-                        neighborVoxelValue = (int) imageStackWatershed.getVoxel(i, jj, k);
-                        if (neighborVoxelValue > 0 && voxelValue != neighborVoxelValue)
-                            tRegionAdjacencyGraph[voxelValue][neighborVoxelValue] += volumeVoxel;
-                    }
-                    for (int ii = i - 1; ii <= i + 1; ii += 2) {
-                        neighborVoxelValue = (int) imageStackWatershed.getVoxel(ii, j, k);
-                        if (neighborVoxelValue > 0 && voxelValue != neighborVoxelValue)
-                            tRegionAdjacencyGraph[voxelValue][neighborVoxelValue] += volumeVoxel;
-                    }
-                }
-            }
-        }
+		for (int k = 1; k < imagePlusWatershed.getNSlices()-1; ++k)
+			for (int i = 1; i < imagePlusWatershed.getWidth()-1; ++i)
+				for (int j = 1; j < imagePlusWatershed.getHeight()-1; ++j)
+				{
+					voxelValue = (int)imageStackWatershed.getVoxel(i,j,k);
+					for (int kk = k-1; kk <= k+1; kk += 2){
+						neighborVoxelValue = (int) imageStackWatershed.getVoxel(i,j,kk);
+
+						if (neighborVoxelValue > 0 && voxelValue != neighborVoxelValue)
+							tRegionAdjacencyGraph[voxelValue][neighborVoxelValue] += volumeVoxel;
+					}
+					for (int jj = j-1; jj <= j+1; jj += 2){
+						neighborVoxelValue = (int) imageStackWatershed.getVoxel(i,jj,k);
+						if (neighborVoxelValue > 0 && voxelValue != neighborVoxelValue)
+							tRegionAdjacencyGraph[voxelValue][neighborVoxelValue] += volumeVoxel;
+					}
+					for (int ii = i-1; ii <= i+1; ii += 2){
+						neighborVoxelValue = (int) imageStackWatershed.getVoxel(ii,j,k);
+						if (neighborVoxelValue > 0 && voxelValue != neighborVoxelValue)
+							tRegionAdjacencyGraph[voxelValue][neighborVoxelValue] += volumeVoxel;
+					}
+				}
 		return tRegionAdjacencyGraph;
 	}
 
 	/**
 	 * Compute the contrasts between neighboring region.
-	 * 
+	 *
 	 * @param imagePlusRaw raw image
 	 * @param imagePlusRegions imag of the contrasted regions
 	 * @return table of contrast
 	 */
-	
+
 	private double [] computeContrast (ImagePlus imagePlusRaw,ImagePlus imagePlusRegions) {
 		double [][] tRegionAdjacencyGraph = getRegionAdjacencyGraph(imagePlusRegions);
 		double [] tMean = computeMeanIntensity (imagePlusRaw,imagePlusRegions);
@@ -114,12 +128,12 @@ public class ChromocentersEnhancement {
 
 	/**
 	 * Compute the mean of value voxel for each region
-	 * 
+	 *
 	 * @param imagePlusInput ImagePlus raw image
 	 * @param imagePlusWatershed ImagePlus of the results of the watershed
 	 * @return table of double of average intensity for each watershed label
 	 */
-	
+
 	private double [] computeMeanIntensity (ImagePlus imagePlusInput,ImagePlus imagePlusWatershed) {
 		ImageStatistics imageStatistics = new StackStatistics(imagePlusWatershed);
 		ImageStack imageStackWatershed = imagePlusWatershed.getStack();
@@ -146,7 +160,7 @@ public class ChromocentersEnhancement {
 
 	/**
 	 * Creation of the image of contrasted regions
-	 * 
+	 *
 	 * @param imagePlusInput ImagePlus raw image
 	 * @param tVoxelValue table of double of the mean region value
 	 * @return ImagePlus image contrast
@@ -164,6 +178,28 @@ public class ChromocentersEnhancement {
                 }
             }
         }
+		return imagePlusContrast;
+	}
+
+	/**
+	 * Passe les valeurs de -1 a 0 suite à la nouvelle version de MorpholibJ
+	 *
+	 * @param imagePlusInput
+	 * @return
+	 */
+	private ImagePlus convertNegativeValue (ImagePlus imagePlusInput) {
+		double voxelValue;
+		ImagePlus imagePlusContrast = imagePlusInput.duplicate();
+		ImageStack imageStackConstrast = imagePlusContrast.getStack();
+		for (int k = 0; k < imagePlusContrast.getNSlices(); ++k) {
+			for (int i = 0; i < imagePlusContrast.getWidth(); ++i) {
+				for (int j = 0; j < imagePlusContrast.getHeight(); ++j) {
+					if (imageStackConstrast.getVoxel(i, j, k)==-1.0){
+						imageStackConstrast.setVoxel(i, j, k,0.0);
+					}
+				}
+			}
+		}
 		return imagePlusContrast;
 	}
 }
