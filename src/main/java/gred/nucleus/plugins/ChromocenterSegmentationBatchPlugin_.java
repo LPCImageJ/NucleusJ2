@@ -39,12 +39,7 @@ public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
 			File[] tFileRawData =fileList.run(_chromocenterSegmentationPipelineBatchDialog.getRawDataDirectory());
 			if (fileList.isDirectoryOrFileExist(".+RawDataNucleus.+",tFileRawData) &&
 				fileList.isDirectoryOrFileExist(".+SegmentedDataNucleus.+",tFileRawData)) {
-				if(_chromocenterSegmentationPipelineBatchDialog.getCalibrationStatus()) {
-					this.xCalibration = _chromocenterSegmentationPipelineBatchDialog.getXCalibration();
-					this.yCalibration = _chromocenterSegmentationPipelineBatchDialog.getYCalibration();
-					this.zCalibration = _chromocenterSegmentationPipelineBatchDialog.getZCalibration();
-					this.calibUnit = _chromocenterSegmentationPipelineBatchDialog.getUnit();
-				}
+
 				ArrayList<String> arrayListImageSegmenetedDataNucleus = fileList.fileSearchList(".+SegmentedDataNucleus.+",tFileRawData);
 				String workDirectory = _chromocenterSegmentationPipelineBatchDialog.getWorkDirectory();
 				for (int i = 0; i < arrayListImageSegmenetedDataNucleus.size(); ++i) {
@@ -68,10 +63,15 @@ public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
 						IJ.setMinAndMax(imagePlusInput, 0, max);
 						IJ.run(imagePlusInput, "Apply LUT", "stack");
 						Calibration calibration = new Calibration();
-						calibration.pixelDepth = zCalibration;
-						calibration.pixelWidth = xCalibration;
-						calibration.pixelHeight = yCalibration;
-						calibration.setUnit(this.calibUnit);
+						if(_chromocenterSegmentationPipelineBatchDialog.getCalibrationStatus()) {
+							calibration.pixelWidth = _chromocenterSegmentationPipelineBatchDialog.getXCalibration();
+							calibration.pixelHeight = _chromocenterSegmentationPipelineBatchDialog.getYCalibration();
+							calibration.pixelDepth = _chromocenterSegmentationPipelineBatchDialog.getZCalibration();
+							calibration.setUnit(_chromocenterSegmentationPipelineBatchDialog.getUnit());
+						}
+						else {
+							calibration=imagePlusInput.getCalibration();
+						}
 						imagePlusSegmented.setCalibration(calibration);
 						imagePlusInput.setCalibration(calibration);
 						ChromocentersEnhancement chromocenterSegmentation = new ChromocentersEnhancement();
