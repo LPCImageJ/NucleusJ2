@@ -42,10 +42,12 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 
 
 	private JPanel Calib ;
-	private JPanel XCalib;
-	private JPanel YCalib;
-	private JPanel ZCalib;
-
+	private JLabel calibx = new JLabel();
+	private JLabel caliby = new JLabel();
+	private JLabel calibz = new JLabel();
+	private JTextPane calibXRead = new JTextPane();
+	private JTextPane calibYRead = new JTextPane();
+	private JTextPane calibZRead = new JTextPane();
 
 
 	private JCheckBox addCalibBox = new JCheckBox();
@@ -182,156 +184,32 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 
 		//_jLabelCalibration.setText("Voxel Calibration:");
 		Calib= new JPanel();
-		JPanel calibPanel = new JPanel();
+		Calib.setLayout(new GridBagLayout());
+
+		GridBagConstraints gc = new GridBagConstraints();
+		gc.weightx = 2;
+		gc.weighty = 4;
+		gc.ipady = gc.anchor = GridBagConstraints.NORTHWEST;
+
 		JLabel calibLabel = new JLabel("Calibration:");
-
+		gc.gridx =0 ;gc.gridy = 0;
 		calibLabel.setAlignmentX(0);
-		Calib.setLayout(new BoxLayout(Calib, BoxLayout.X_AXIS));
-
 		Calib.add(calibLabel);
 
-		addCalibBox.setSelected(false);
-		//addCalibBox.setMinimumSize(new Dimension(10,10));
-		addCalibBox.addItemListener(this);
+		gc.gridx =1 ;gc.gridy = 0;
 
-		calibPanel.add(addCalibBox);
-		Calib.add(calibPanel);
-		//Calib.setLayout(new BoxLayout(Calib, BoxLayout.Y_AXIS));
+		addCalibBox.setSelected(false);
+		addCalibBox.addItemListener(this);
+		Calib.add(addCalibBox,gc);
+
 
 		_container.add(Calib,
 				new GridBagConstraints(0, 2, 2, 0, 0.0, 0.0,
 				GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
 
 
-        XCalib = new JPanel();
-        XCalib.setLayout(new BoxLayout(XCalib, BoxLayout.X_AXIS));
-        XCalib.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-        JLabel xBox2 = new JLabel("X:");
-        XCalib.add(xBox2);
-        XCalib.add(Box.createRigidArea(new Dimension(10, 0)));
-        xCalibration.setText("1");
-        xCalibration.setMinimumSize(new Dimension(60, 10));
-        XCalib.add(xCalibration);
-        _container.add(XCalib);
 
 
-
-		//
-		/*
-		_container.setLayout (gridBagLayout);
-		_jLabelXcalibration = new JLabel();
-		_container.add
-		(
-			_jLabelXcalibration,
-			new GridBagConstraints
-			(
-				0, 2, 0, 0, 0.0, 0.0,
-				GridBagConstraints.NORTHWEST,
-				GridBagConstraints.NONE,
-				new Insets(40, 20, 0, 0), 0, 0
-			)
-		);
-
-		_jLabelXcalibration.setText("x :");
-		_jLabelXcalibration.setFont(new java.awt.Font("Albertus Extra Bold (W1)",2,12));
-		_container.add
-		(
-			_jTextFieldXCalibration, 
-			new GridBagConstraints
-			(
-				0, 2, 0, 0, 0.0, 0.0,
-				GridBagConstraints.NORTHWEST,
-				GridBagConstraints.NONE,
-				new Insets(40, 60, 0, 0), 0, 0
-			)
-		);
-		_jTextFieldXCalibration.setText("1");
-		_jTextFieldXCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
-			
-		_jLabelYcalibration = new JLabel();
-		_container.add
-		(
-			_jLabelYcalibration,
-			new GridBagConstraints
-			(
-				0, 2, 0, 0, 0.0, 0.0,
-				GridBagConstraints.NORTHWEST,
-				GridBagConstraints.NONE,
-				new Insets(65, 20, 0, 0), 0, 0
-			)
-		);
-		_jLabelYcalibration.setText("y :");
-		_jLabelYcalibration.setFont(new java.awt.Font("Albertus Extra Bold (W1)",2,12));
-		_container.add
-		(
-			_jTextFieldYCalibration,
-			new GridBagConstraints
-			(
-				0, 2, 0, 0, 0.0, 0.0,
-				GridBagConstraints.NORTHWEST,
-				GridBagConstraints.NONE,
-				new Insets(65, 60, 0, 0), 0, 0
-			)
-		);
-		_jTextFieldYCalibration.setText("1");
-		_jTextFieldYCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
-			
-		_jLabelZcalibration = new JLabel();
-		_container.add
-		(
-			_jLabelZcalibration,
-			new GridBagConstraints
-			(
-				0, 2, 0, 0, 0.0, 0.0,
-				GridBagConstraints.NORTHWEST,
-				GridBagConstraints.NONE,
-				new Insets(90, 20, 0, 0), 0, 0
-			)
-		);
-		_jLabelZcalibration.setText("z :");
-		_jLabelZcalibration.setFont(new java.awt.Font("Albertus Extra Bold (W1)",2,12));
-		_container.add
-		(
-			_jTextFieldZCalibration,
-			new GridBagConstraints
-			(
-				0, 2,0, 0, 0.0, 0.0,
-				GridBagConstraints.NORTHWEST,
-				GridBagConstraints.NONE,
-				new Insets(90, 60, 0, 0), 0, 0
-			)
-		);
-		_jTextFieldZCalibration.setText("1");
-		_jTextFieldZCalibration.setPreferredSize(new java.awt.Dimension(60, 21));	 
-			
-		_jLabelUnit = new JLabel();
-		_container.add
-		(
-			_jLabelUnit,
-			new GridBagConstraints
-			(
-				0, 2, 0, 0, 0.0, 0.0,
-				GridBagConstraints.NORTHWEST,
-				GridBagConstraints.NONE,
-				new Insets(115, 20, 0, 0), 0, 0
-			)
-		);
-		_jLabelUnit.setText("unit :");
-		_jLabelUnit.setFont(new java.awt.Font("Albertus Extra Bold (W1)",2,12));
-		_container.add
-		(
-			_jTextFieldUnit,
-			new GridBagConstraints
-			(
-				0, 2,0, 0, 0.0, 0.0,
-				GridBagConstraints.NORTHWEST,
-				GridBagConstraints.NONE,
-				new Insets(115, 60, 0, 0), 0, 0
-			)
-		);
-		_jTextFieldUnit.setText("pixel");
-		_jTextFieldUnit.setPreferredSize(new java.awt.Dimension(60, 21));	
-			*/
 		_container.add
 		(
 			_jButtonStart,
@@ -515,61 +393,54 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 		if (e.getSource() == addCalibBox) {
 			if ((addCalibBox.isSelected())) {
 
-				XCalib = new JPanel();
-				XCalib.setLayout(new BoxLayout(XCalib, BoxLayout.Y_AXIS));
-				//XCalib.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-				JLabel xBox2 = new JLabel("X:");
-				XCalib.add(xBox2);
-				//xCalibration.setLayout(new BoxLayout(xCalibration, BoxLayout.Y_AXIS));
-				xCalibration.add(new JTextField(5), "text");
+				GridBagConstraints gc = new GridBagConstraints();
+				gc.insets = new Insets(0, 0, 5, 0);
 
-				//xCalibration.add(new JTextField(10), "text");
-				//XCalib.add(xCalibration);
+				calibx.setText("X :");
+				gc.gridx =0 ;gc.gridy = 1;
+				Calib.add(calibx,gc);
+				calibXRead.setPreferredSize(new Dimension( 100, 20 ));
+				calibXRead.setText("1");
+				gc.gridx =1 ;gc.gridy = 1;
+				Calib.add(calibXRead,gc);
+				calibx.setVisible(true);
+				calibXRead.setVisible(true);
 
-				//xCalibration.setText("1");
-				//xCalibration.setMinimumSize(new Dimension(60, 10));
-				//XCalib.add(yCalibration);
+				caliby.setText("Y :");
+				gc.gridx =0 ;gc.gridy = 2;
+				Calib.add(caliby,gc);
+				calibYRead.setPreferredSize(new Dimension( 100, 20 ));
+				calibYRead.setText("1");
+				gc.gridx =1 ;gc.gridy = 2;
+				Calib.add(calibYRead,gc);
+				caliby.setVisible(true);
+				calibYRead.setVisible(true);
 
-
-				YCalib = new JPanel();
-				YCalib.setLayout(new BoxLayout(YCalib, BoxLayout.Y_AXIS));
-				//YCalib.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-				JLabel yBox2 = new JLabel("Y:");
-				YCalib.add(yBox2);
-				//YCalib.add(Box.createRigidArea(new Dimension(10, 0)));
-				YCalib.add(new JTextField(5), "text");
-
-				//yCalibration.setText("1");
-				//yCalibration.setMinimumSize(new Dimension(60, 10));
-				//YCalib.add(yCalibration);
-
-				ZCalib = new JPanel();
-				ZCalib.setLayout(new BoxLayout(ZCalib, BoxLayout.Y_AXIS));
-				//ZCalib.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-				JLabel zBox2 = new JLabel("Z:");
-				ZCalib.add(zBox2);
-			//	ZCalib.add(Box.createRigidArea(new Dimension(10, 0)));
-				ZCalib.add(new JTextField(5), "text");
-
-				//zCalibration.setText("1");
-				//zCalibration.setMinimumSize(new Dimension(60, 10));
-				//ZCalib.add(zCalibration);
+				calibz.setText("Z :");
+				gc.gridx =0 ;gc.gridy = 3;
+				Calib.add(calibz,gc);
+				calibZRead.setPreferredSize(new Dimension( 100, 20 ));
+				calibZRead.setText("1");
+				gc.gridx =1 ;gc.gridy = 3;
+				Calib.add(calibZRead,gc);
+				calibz.setVisible(true);
+				calibZRead.setVisible(true);
 
 
-				Calib.add(XCalib);
-				Calib.add(YCalib);
-				Calib.add(ZCalib);
-				//Calib.show();
 				validate();
-				pack();
+				//pack();
 
 				repaint();
 			} else {
-				Calib.remove(XCalib);
-				Calib.remove(YCalib);
-				Calib.remove(ZCalib);
+				calibx.setVisible(false);
+				caliby.setVisible(false);
+				calibz.setVisible(false);
+
+				calibXRead.setVisible(false);
+				calibYRead.setVisible(false);
+				calibZRead.setVisible(false);
+
 				validate();
-				pack();
 				repaint();
 				try {
 

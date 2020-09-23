@@ -32,7 +32,7 @@ public class test {
         //    segmentationFolder("/home/titus/Bureau/TEST_NJ/TEST_ANALYSE/raw", "/home/titus/Bureau/TEST_NJ/TEST_ANALYSE/SEG_OTSU_GIFT");
         //computeNucleusParametersDL("/home/tridubos/MACHINE_LEARNING/TEST_APPLY_MODEL/RAW_DONE/","/home/tridubos/MACHINE_LEARNING/TEST_APPLY_MODEL/PREDICTION/");
         //segmentationFolder("/home/tridubos/Bureau/TEST/Raw", "/home/tridubos/Bureau/TEST//home/tridubos/Bureau/TEST/BALEC");
-        //tmp();
+  //      tmp();
         /*
         ChromocenterSegmentationPipelineBatchDialog _chromocenterSegmentationPipelineBatchDialog = new ChromocenterSegmentationPipelineBatchDialog();
         while( _chromocenterSegmentationPipelineBatchDialog.isShowing()) {
@@ -42,12 +42,13 @@ public class test {
         }
 
         System.out.println(_chromocenterSegmentationPipelineBatchDialog.getxCalibration2());
-        */
+*/
         dialogue_train aa = new dialogue_train();
         while( aa.isShowing()) {
             try {Thread.sleep(1);}
             catch (InterruptedException e) {e.printStackTrace();}
         }
+
     }
 
 
