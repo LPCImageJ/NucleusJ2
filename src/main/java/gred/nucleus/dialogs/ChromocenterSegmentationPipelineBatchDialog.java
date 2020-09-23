@@ -252,20 +252,25 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 		
 	public double getXCalibration()
 	{
-		String xCal = _jTextFieldXCalibration.getText();
+		String xCal = calibXRead.getText();
 		return Double.parseDouble(xCal.replaceAll(",", "."));
 	}
 	public double getYCalibration()
 	{
-		String yCal = _jTextFieldYCalibration.getText();
-		return Double.parseDouble(yCal.replaceAll(",", ".")); 
+		String yCal = calibYRead.getText();
+		return Double.parseDouble(yCal.replaceAll(",", "."));
 	}
 	public double getZCalibration()
 	{
-		String zCal = _jTextFieldZCalibration.getText();
+		String zCal = calibZRead.getText();
 		return Double.parseDouble(zCal.replaceAll(",", "."));
 	}
-	public String getUnit(){ return _jTextFieldUnit.getText(); }
+
+    public boolean getCalibrationStatus(){
+	    return addCalibBox.isSelected();
+    }
+
+    public String getUnit(){ return unitRead.getText(); }
 	public String getWorkDirectory(){return _jTextFieldWorkDirectory.getText();}
 	public String getRawDataDirectory(){return _jTextFieldRawData.getText();}
 	public boolean isStart() {	return _start; };
