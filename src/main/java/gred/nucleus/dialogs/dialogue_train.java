@@ -12,6 +12,8 @@ public class dialogue_train extends JFrame implements ItemListener {
     private JLabel calibx = new JLabel();
     private JButton workdir = new JButton("Output Directory");
 
+    JTextPane lecture = new JTextPane();
+
 
     public dialogue_train() {
     run();
@@ -25,6 +27,8 @@ public class dialogue_train extends JFrame implements ItemListener {
         this.setLocationRelativeTo(null);
         _container = getContentPane();
         _container.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        //_container.setLayout(new GridLayout(5,1));
         JLabel chooseLabel = new JLabel("Choose Download Folder :");
         JLabel folderLabel = new JLabel("Folder :");
         JTextField folderTextField = new JTextField();
@@ -42,7 +46,7 @@ public class dialogue_train extends JFrame implements ItemListener {
         gbc.gridx = gbc.gridy = 0;
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         gbc.anchor = GridBagConstraints.LINE_START;
-        //gbc.insets = new Insets(10, 15, 0, 0);
+        gbc.insets = new Insets(10, 15, 0, 0);
         _container.add(intro,gbc);
 
 
@@ -55,26 +59,40 @@ public class dialogue_train extends JFrame implements ItemListener {
         gbc.gridx =0; gbc.gridy = 1;
         _container.add(jTextPane,gbc);
 
+
+        JPanel test= new JPanel();
+        test.setLayout(new GridLayout(4, 2));
+
         JLabel calibLabel = new JLabel();
         calibLabel.setText("Calibration:");
-        gbc.gridx =0 ;gbc.gridy = 2;
-        _container.add(calibLabel,gbc);
+        gbc.gridx =0 ;gbc.gridy = 1;
+        test.add(calibLabel,gbc);
 
-        gbc.gridx =1 ;gbc.gridy = 2;
+        gbc.gridx =0 ;gbc.gridy = 2;
         gbc.insets = new Insets(0, 100, 0,0 );
         gbc.gridwidth = GridBagConstraints.REMAINDER;
         addCalibBox.setSelected(false);
 
         addCalibBox.addItemListener(this);
 
-        _container.add(addCalibBox,gbc);
+        test.add(addCalibBox,gbc);
 
 
         calibx.setText("X :");
         gbc.gridx =0 ;gbc.gridy = 3;
-        gbc.insets = new Insets(0, 0, 0,0 );
+        //gbc.insets = new Insets(50, 0, 0,0 );
         calibx.setVisible(false);
-        _container.add(calibx,gbc);
+        test.add(calibx,gbc);
+        lecture.setText("1");
+        gbc.gridx =1 ;gbc.gridy = 3;
+        lecture.setVisible(false);
+        test.add(lecture,gbc);
+
+
+        _container.add(test);
+        //_container.setLayout(new GridLayout(1, 1));
+
+
 
 
         gbc.gridx =0 ;gbc.gridy = 5;
@@ -93,12 +111,14 @@ public class dialogue_train extends JFrame implements ItemListener {
 
     public void itemStateChanged(ItemEvent e) {
         if (e.getSource() == addCalibBox) {
-            if ((addCalibBox.isSelected())) {
+            if ((addCalibBox.isSelected())) { 
                 calibx.setVisible(true);
+                lecture.setVisible(true);
                 //this.validate();
                 //this.repaint();
                // invalidate();
                // validate();
+
 
             } else {
                 calibx.setVisible(false);
