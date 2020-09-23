@@ -42,6 +42,10 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 
 
 	private JPanel Calib ;
+
+	private JTextPane unitRead = new JTextPane();
+    private JLabel unit = new JLabel();
+
 	private JLabel calibx = new JLabel();
 	private JLabel caliby = new JLabel();
 	private JLabel calibz = new JLabel();
@@ -188,7 +192,7 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.weightx = 2;
-		gc.weighty = 4;
+		gc.weighty = 5;
 		gc.ipady = gc.anchor = GridBagConstraints.NORTHWEST;
 
 		JLabel calibLabel = new JLabel("Calibration:");
@@ -396,36 +400,45 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 				GridBagConstraints gc = new GridBagConstraints();
 				gc.insets = new Insets(0, 0, 5, 0);
 
+				unit.setText("Unit :");
+                gc.gridx =0 ;gc.gridy = 1;
+                Calib.add(unit,gc);
+                unitRead.setPreferredSize(new Dimension( 100, 20 ));
+                unitRead.setText("µm");
+                gc.gridx =1 ;gc.gridy = 1;
+                Calib.add(unitRead,gc);
+                unit.setVisible(true);
+                unitRead.setVisible(true);
+
 				calibx.setText("X :");
-				gc.gridx =0 ;gc.gridy = 1;
+				gc.gridx =0 ;gc.gridy = 2;
 				Calib.add(calibx,gc);
 				calibXRead.setPreferredSize(new Dimension( 100, 20 ));
 				calibXRead.setText("1");
-				gc.gridx =1 ;gc.gridy = 1;
+				gc.gridx =1 ;gc.gridy = 2;
 				Calib.add(calibXRead,gc);
 				calibx.setVisible(true);
 				calibXRead.setVisible(true);
 
 				caliby.setText("Y :");
-				gc.gridx =0 ;gc.gridy = 2;
+				gc.gridx =0 ;gc.gridy = 3;
 				Calib.add(caliby,gc);
 				calibYRead.setPreferredSize(new Dimension( 100, 20 ));
 				calibYRead.setText("1");
-				gc.gridx =1 ;gc.gridy = 2;
+				gc.gridx =1 ;gc.gridy = 3;
 				Calib.add(calibYRead,gc);
 				caliby.setVisible(true);
 				calibYRead.setVisible(true);
 
 				calibz.setText("Z :");
-				gc.gridx =0 ;gc.gridy = 3;
+				gc.gridx =0 ;gc.gridy = 4;
 				Calib.add(calibz,gc);
 				calibZRead.setPreferredSize(new Dimension( 100, 20 ));
 				calibZRead.setText("1");
-				gc.gridx =1 ;gc.gridy = 3;
+				gc.gridx =1 ;gc.gridy = 4;
 				Calib.add(calibZRead,gc);
 				calibz.setVisible(true);
 				calibZRead.setVisible(true);
-
 
 				validate();
 				//pack();
@@ -435,10 +448,12 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 				calibx.setVisible(false);
 				caliby.setVisible(false);
 				calibz.setVisible(false);
+                unit.setVisible(false);
 
 				calibXRead.setVisible(false);
 				calibYRead.setVisible(false);
 				calibZRead.setVisible(false);
+                unitRead.setVisible(false);
 
 				validate();
 				repaint();
