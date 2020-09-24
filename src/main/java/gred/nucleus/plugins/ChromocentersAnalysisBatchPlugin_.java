@@ -42,10 +42,7 @@ public class ChromocentersAnalysisBatchPlugin_ implements PlugIn {
 			if(	fileList.isDirectoryOrFileExist(".+RawDataNucleus.+",tFileRawImage) && 
 				fileList.isDirectoryOrFileExist(".+SegmentedDataNucleus.+",tFileRawImage)&&
 				fileList.isDirectoryOrFileExist(".+SegmentedDataCc.+",tFileRawImage)) {
-				double xCalibration = chromocentersPipelineBatchDialog.getXCalibration();
-				double yCalibration = chromocentersPipelineBatchDialog.getYCalibration();
-				double zCalibration = chromocentersPipelineBatchDialog.getZCalibration();
-				String unit = chromocentersPipelineBatchDialog.getUnit();
+
 				String rhfChoice;
 				if (chromocentersPipelineBatchDialog.isRHFVolumeAndIntensity())
 					rhfChoice = "Volume and intensity";
@@ -77,10 +74,15 @@ public class ChromocentersAnalysisBatchPlugin_ implements PlugIn {
 						ImagePlus imagePlusChromocenter = IJ.openImage(arrayListImageChromocenter.get(i));
 						ImagePlus imagePlusSegmented = IJ.openImage(pathNucleusSegmented);
 						Calibration calibration = new Calibration();
-						calibration.pixelDepth = zCalibration;
-						calibration.pixelWidth = xCalibration;
-						calibration.pixelHeight = yCalibration;
-						calibration.setUnit(unit);
+						if(chromocentersPipelineBatchDialog.getCalibrationStatus()) {
+							calibration.pixelWidth = chromocentersPipelineBatchDialog.getXCalibration();
+							calibration.pixelHeight = chromocentersPipelineBatchDialog.getYCalibration();
+							calibration.pixelDepth = chromocentersPipelineBatchDialog.getZCalibration();
+							calibration.setUnit(chromocentersPipelineBatchDialog.getUnit());
+						}
+						else {
+							calibration=imagePlusInput.getCalibration();
+						}
 						imagePlusChromocenter.setCalibration(calibration);
 						imagePlusSegmented.setCalibration(calibration);
 						imagePlusInput.setCalibration(calibration);
