@@ -70,8 +70,8 @@ public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
 						ChromocentersEnhancement chromocenterSegmentation = new ChromocentersEnhancement();
 						ImagePlus imagePlusConstraste = chromocenterSegmentation.applyEnhanceChromocenters(imagePlusInput, imagePlusSegmented);
 						imagePlusConstraste.setTitle(imagePlusInput.getTitle());
-                        imagePlusConstraste.getCalibration().setUnit(calibration.getUnit());
-						saveFile (imagePlusConstraste,workDirectory+File.separator+"ConstrastDataNucleus");
+                        imagePlusConstraste.setCalibration(calibration);
+						saveFile (imagePlusConstraste,workDirectory+File.separator+"ContrastDataNucleus");
 					}
 				}
 				IJ.log("End of the chromocenter segmentation , the results are in "+_chromocenterSegmentationPipelineBatchDialog.getWorkDirectory());
