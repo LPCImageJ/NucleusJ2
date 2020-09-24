@@ -1,21 +1,10 @@
 package gred.nucleus.dialogs;
-import java.awt.Container;
-import java.awt.Cursor;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JRadioButton;
-import javax.swing.JTextField;
-import javax.swing.JTextPane;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import javax.swing.*;
 
 
 /**
@@ -25,7 +14,7 @@ import javax.swing.JTextPane;
  *
  */
 
-public class ChromocentersAnalysisPipelineBatchDialog extends JFrame
+public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements ItemListener
 {
 	private static final long serialVersionUID = 1L;
 	private JButton _jButtonWorkDirectory = new JButton("Output Directory");
@@ -64,7 +53,21 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame
 	private String _workDirectory;
 	private String _rawDataDirectory;
 	private boolean _start = false;
-	
+    private JPanel Calib ;
+
+    private JTextPane unitRead = new JTextPane();
+    private JLabel unit = new JLabel();
+
+    private JLabel calibx = new JLabel();
+    private JLabel caliby = new JLabel();
+    private JLabel calibz = new JLabel();
+    private JTextPane calibXRead = new JTextPane();
+    private JTextPane calibYRead = new JTextPane();
+    private JTextPane calibZRead = new JTextPane();
+
+
+    private JCheckBox addCalibBox = new JCheckBox();
+
 	/**
 	 * 
 	 * @param args
@@ -182,134 +185,31 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame
 		);
 	   	_jTextFieldWorkDirectory.setPreferredSize(new java.awt.Dimension(280, 21));
 	   	_jTextFieldWorkDirectory.setFont(new java.awt.Font("Albertus",2,10));
-	   	
-	   	_jLabelCalibration = new JLabel();
-	   	_container.add
-	   	(
-	   		_jLabelCalibration,
-	   		new GridBagConstraints
-	   		(
-	   			0, 2, 0, 0, 0.0, 0.0,
-	   			GridBagConstraints.NORTHWEST,
-	   			GridBagConstraints.NONE,
-	   			new Insets(0, 10, 0, 0), 0, 0
-	   	    )
-	   	);
-	   	_jLabelCalibration.setText("Voxel Calibration:");
-	   	
-	   	_container.setLayout (gridBagLayout);
-		_jLabelXcalibration = new JLabel();
-		_container.add
-		(
-			_jLabelXcalibration,
-			new GridBagConstraints
-			(
-				0, 2, 0, 0, 0.0, 0.0,
-				GridBagConstraints.NORTHWEST,
-				GridBagConstraints.NONE,
-				new Insets(40, 20, 0, 0), 0, 0
-			)
-		);
-		_jLabelXcalibration.setText("x :");
-		_jLabelXcalibration.setFont(new java.awt.Font("Albertus Extra Bold (W1)",2,12));
-		_container.add
-		(
-			_jTextFieldXCalibration,
-			new GridBagConstraints
-			(
-				0, 2, 0, 0, 0.0, 0.0, 
-				GridBagConstraints.NORTHWEST, 
-				GridBagConstraints.NONE,
-				new Insets(40, 60, 0, 0), 0, 0
-			)
-		);
-		_jTextFieldXCalibration.setText("1");
-		_jTextFieldXCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
-	
-		_jLabelYcalibration = new JLabel();
-		_container.add
-		(
-			_jLabelYcalibration,
-			new GridBagConstraints
-			(
-				0, 2, 0, 0, 0.0, 0.0,
-				GridBagConstraints.NORTHWEST,
-				GridBagConstraints.NONE,
-				new Insets(65, 20, 0, 0), 0, 0
-			)
-		);
-		_jLabelYcalibration.setText("y :");
-		_jLabelYcalibration.setFont(new java.awt.Font("Albertus Extra Bold (W1)",2,12));
-		_container.add
-		(
-			_jTextFieldYCalibration,
-			new GridBagConstraints
-			(
-				0, 2, 0, 0, 0.0, 0.0,
-				GridBagConstraints.NORTHWEST,
-				GridBagConstraints.NONE,
-				new Insets(65, 60, 0, 0), 0, 0
-			)
-		);
-		_jTextFieldYCalibration.setText("1");
-		_jTextFieldYCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
-	
-		_jLabelZcalibration = new JLabel();
-		_container.add
-		(
-			_jLabelZcalibration,
-			new GridBagConstraints
-			(
-				0, 2, 0, 0, 0.0, 0.0,
-				GridBagConstraints.NORTHWEST,
-				GridBagConstraints.NONE,
-				new Insets(90, 20, 0, 0), 0, 0
-		    )
-		);
-		_jLabelZcalibration.setText("z :");
-		_jLabelZcalibration.setFont(new java.awt.Font("Albertus Extra Bold (W1)",2,12));
-		_container.add
-		(
-			_jTextFieldZCalibration,
-			new GridBagConstraints
-			(
-				0, 2,0, 0, 0.0, 0.0,
-				GridBagConstraints.NORTHWEST,
-				GridBagConstraints.NONE,
-				new Insets(90, 60, 0, 0), 0, 0
-		    )
-		);
-		_jTextFieldZCalibration.setText("1");
-		_jTextFieldZCalibration.setPreferredSize(new java.awt.Dimension(60, 21));	 
-		
-		_jLabelUnit = new JLabel();
-		_container.add
-		(
-			_jLabelUnit,
-			new GridBagConstraints
-			(
-				0, 2, 0, 0, 0.0, 0.0,
-				GridBagConstraints.NORTHWEST,
-				GridBagConstraints.NONE,
-				new Insets(115, 20, 0, 0), 0, 0
-			)
-		);
-		_jLabelUnit.setText("unit :");
-		_jLabelUnit.setFont(new java.awt.Font("Albertus Extra Bold (W1)",2,12));
-		_container.add
-		(
-			_jTextFieldUnit,
-			new GridBagConstraints
-			(
-				0, 2,0, 0, 0.0, 0.0,
-				GridBagConstraints.NORTHWEST,
-				GridBagConstraints.NONE,
-				new Insets(115, 60, 0, 0), 0, 0
-		    )
-		);
-		_jTextFieldUnit.setText("pixel");
-		_jTextFieldUnit.setPreferredSize(new java.awt.Dimension(60, 21));	
-		
+
+
+        Calib= new JPanel();
+        Calib.setLayout(new GridBagLayout());
+
+        GridBagConstraints gc = new GridBagConstraints();
+        gc.weightx = 2;
+        gc.weighty = 5;
+        gc.ipady = gc.anchor = GridBagConstraints.NORTHWEST;
+
+        JLabel calibLabel = new JLabel("Calibration:");
+        gc.gridx =0 ;gc.gridy = 0;
+        calibLabel.setAlignmentX(0);
+        Calib.add(calibLabel);
+
+        gc.gridx =1 ;gc.gridy = 0;
+
+        addCalibBox.setSelected(false);
+        addCalibBox.addItemListener(this);
+        Calib.add(addCalibBox,gc);
+        _container.add(Calib,
+                new GridBagConstraints(0, 2, 2, 0, 0.0, 0.0,
+                        GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+
+
 		_jLabelAnalysis = new JLabel();
 	   	_container.add
 	   	(
@@ -456,22 +356,26 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame
 	   	_jButtonStart.addActionListener(startListener);	  
 	   	this.setVisible(true);
 	 }
-	
-	public double getXCalibration()
-	{
-		String xCal = _jTextFieldXCalibration.getText();
-		return Double.parseDouble(xCal.replaceAll(",", "."));
-	}
-	public double getYCalibration()
-	{
-		String yCal = _jTextFieldYCalibration.getText();
-		return Double.parseDouble(yCal.replaceAll(",", ".")); 
-	}
-	public double getZCalibration()
-	{
-		String zCal = _jTextFieldZCalibration.getText();
-		return Double.parseDouble(zCal.replaceAll(",", "."));
-	}
+
+    public double getXCalibration()
+    {
+        String xCal = calibXRead.getText();
+        return Double.parseDouble(xCal.replaceAll(",", "."));
+    }
+    public double getYCalibration()
+    {
+        String yCal = calibYRead.getText();
+        return Double.parseDouble(yCal.replaceAll(",", "."));
+    }
+    public double getZCalibration()
+    {
+        String zCal = calibZRead.getText();
+        return Double.parseDouble(zCal.replaceAll(",", "."));
+    }
+
+    public boolean getCalibrationStatus(){
+        return addCalibBox.isSelected();
+    }
 	public String getUnit(){ return _jTextFieldUnit.getText(); }
 	public String getWorkDirectory(){return _jTextFieldWorkDirectory.getText();}
 	public String getRawDataDirectory(){return _jTextFieldRawData.getText();}
@@ -606,4 +510,76 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame
 			 setCursor (Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		 }	
 	 }
+    public void itemStateChanged(ItemEvent e) {
+        if (e.getSource() == addCalibBox) {
+            if ((addCalibBox.isSelected())) {
+
+                GridBagConstraints gc = new GridBagConstraints();
+                gc.insets = new Insets(0, 0, 5, 0);
+
+                unit.setText("Unit :");
+                gc.gridx =0 ;gc.gridy = 1;
+                Calib.add(unit,gc);
+                unitRead.setPreferredSize(new Dimension( 100, 20 ));
+                unitRead.setText("µm");
+                gc.gridx =1 ;gc.gridy = 1;
+                Calib.add(unitRead,gc);
+                unit.setVisible(true);
+                unitRead.setVisible(true);
+
+                calibx.setText("X :");
+                gc.gridx =0 ;gc.gridy = 2;
+                Calib.add(calibx,gc);
+                calibXRead.setPreferredSize(new Dimension( 100, 20 ));
+                calibXRead.setText("1");
+                gc.gridx =1 ;gc.gridy = 2;
+                Calib.add(calibXRead,gc);
+                calibx.setVisible(true);
+                calibXRead.setVisible(true);
+
+                caliby.setText("Y :");
+                gc.gridx =0 ;gc.gridy = 3;
+                Calib.add(caliby,gc);
+                calibYRead.setPreferredSize(new Dimension( 100, 20 ));
+                calibYRead.setText("1");
+                gc.gridx =1 ;gc.gridy = 3;
+                Calib.add(calibYRead,gc);
+                caliby.setVisible(true);
+                calibYRead.setVisible(true);
+
+                calibz.setText("Z :");
+                gc.gridx =0 ;gc.gridy = 4;
+                Calib.add(calibz,gc);
+                calibZRead.setPreferredSize(new Dimension( 100, 20 ));
+                calibZRead.setText("1");
+                gc.gridx =1 ;gc.gridy = 4;
+                Calib.add(calibZRead,gc);
+                calibz.setVisible(true);
+                calibZRead.setVisible(true);
+
+                validate();
+                //pack();
+
+                repaint();
+            } else {
+                calibx.setVisible(false);
+                caliby.setVisible(false);
+                calibz.setVisible(false);
+                unit.setVisible(false);
+
+                calibXRead.setVisible(false);
+                calibYRead.setVisible(false);
+                calibZRead.setVisible(false);
+                unitRead.setVisible(false);
+
+                validate();
+                repaint();
+                try {
+
+                } catch (NullPointerException nullPointerException) {
+                    // Do nothing
+                }
+            }
+        }
+    }
 }
