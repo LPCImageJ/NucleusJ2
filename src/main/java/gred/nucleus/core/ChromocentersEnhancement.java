@@ -39,7 +39,7 @@ public class ChromocentersEnhancement {
 		RegionalExtremaFilter regionalExtremaFilter = new RegionalExtremaFilter();
 	    regionalExtremaFilter.setMask(imagePlusSegmented);
 	    ImagePlus imagePlusExtrema = regionalExtremaFilter.applyWithMask( imagePlusGradient);
-	    ImagePlus imagePlusLabels = BinaryImages.componentsLabeling(imagePlusExtrema, 26, 32);
+        ImagePlus imagePlusLabels = BinaryImages.componentsLabeling(imagePlusExtrema, 26, 32);
 	    ImagePlus imagePlusWatershed = Watershed.computeWatershed(imagePlusGradient,imagePlusLabels,imagePlusSegmented, 26,false,false);
         // Change -1 value in 0
 		// TODO remove this line after updating morpholib_J versions (>=1.4.3)

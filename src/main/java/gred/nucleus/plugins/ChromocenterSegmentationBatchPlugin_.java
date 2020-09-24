@@ -13,20 +13,15 @@ import ij.measure.Calibration;
 import java.io.File;
 import java.util.ArrayList;
 /**
- * Method to detect the chromocenters on batch
+ * Method to detect the chromocenters on batch using watershed 3D from
+ * morpholibJ.
  * 
  * @author Tristan Dubos and Axel Poulet
  *
  */
 public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
-	/**
-	 *  
-	 * double xCalibration
-	 */
-	double xCalibration;
-	double yCalibration;
-	double zCalibration;
-	String calibUnit;
+
+
 
 	public void run(String arg) {
 		ChromocenterSegmentationPipelineBatchDialog _chromocenterSegmentationPipelineBatchDialog = new ChromocenterSegmentationPipelineBatchDialog();
@@ -72,11 +67,10 @@ public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
 						else {
 							calibration=imagePlusInput.getCalibration();
 						}
-						imagePlusSegmented.setCalibration(calibration);
-						imagePlusInput.setCalibration(calibration);
 						ChromocentersEnhancement chromocenterSegmentation = new ChromocentersEnhancement();
 						ImagePlus imagePlusConstraste = chromocenterSegmentation.applyEnhanceChromocenters(imagePlusInput, imagePlusSegmented);
 						imagePlusConstraste.setTitle(imagePlusInput.getTitle());
+                        imagePlusConstraste.getCalibration().setUnit(calibration.getUnit());
 						saveFile (imagePlusConstraste,workDirectory+File.separator+"ConstrastDataNucleus");
 					}
 				}
