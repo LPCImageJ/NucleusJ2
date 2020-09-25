@@ -377,7 +377,7 @@ public class main {
         generateProjectionFromCoordonne projection =new generateProjectionFromCoordonne(pathToGIFTSeg, pathToZprojection, pathToCoordonnate);
         projection.run();
     }
-    
+
 
     public static void cropFromCoordinates(String coordonnateDir) throws Exception {
 
