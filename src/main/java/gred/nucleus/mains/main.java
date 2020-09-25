@@ -377,19 +377,8 @@ public class main {
         generateProjectionFromCoordonne projection =new generateProjectionFromCoordonne(pathToGIFTSeg, pathToZprojection, pathToCoordonnate);
         projection.run();
     }
+    
 
-
-    public static void sliceToStack(String pathToSliceDir, String pathToOutputDir) throws Exception {
-        SliceToStack createStack =new SliceToStack(pathToSliceDir,pathToOutputDir);
-        createStack.run();
-
-        /*
-        * Method to crop image with coordinate in tab file :
-        *    tabulate file : pathToCoordinateFile pathToRawImageAssociate
-        *
-        */
-
-    }
     public static void cropFromCoordinates(String coordonnateDir) throws Exception {
 
         CropFromCoordonnate test = new CropFromCoordonnate(coordonnateDir);
@@ -458,9 +447,6 @@ public class main {
             else{
                 generateProjectionFromCoordinnates(args[1], args[2]);
             }
-        }
-        else if (args[0].equals("SliceToStack")){
-            sliceToStack(args[1], args[2]);
         }
         else if(args[0].equals("CropFromCoordinate")){
             cropFromCoordinates(args[1]);
@@ -619,9 +605,6 @@ public class main {
             else{
                 generateProjectionFromCoordinnates(args[1], args[2]);
             }
-        }
-        else if (args[0].equals("SliceToStack")){
-            sliceToStack(args[1], args[2]);
         }
         else if(args[0].equals("CropFromCoordinate")){
             cropFromCoordinates(args[1]);
