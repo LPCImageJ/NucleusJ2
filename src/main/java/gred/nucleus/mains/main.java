@@ -395,75 +395,7 @@ public class main {
         FileSaver fileSaver = new FileSaver(imagePlusInput);
         fileSaver.saveAsTiff(pathFile);
     }
-
-    public static void main2(String[] args) throws Exception {
-        // SET OFF BIOFORMATS WARNINGS
-        DebugTools.enableLogging("OFF");
-        System.setProperty("java.awt.headless", "false");
-
-        if(args[0].equals("autocrop")) {
-            System.out.println("start "+args[0]);
-            if((args.length==4)&& (args[3].equals("ConfigFile"))){
-                runAutoCropFolder(args[1], args[2], args[4]);
-
-            }
-            else if((args.length==4)&& (args[3].equals("File"))){
-                runAutoCropFile(args[1], args[2]);
-            }
-            else{
-                runAutoCropFolder(args[1], args[2]);
-            }
-
-        }
-        else if(args[0].equals("segmentation")) {
-            System.out.println("start " + args[0]);
-            if ((args.length == 4) && (args[3].equals("ConfigFile"))) {
-                segmentationFolder(args[1], args[2], args[3]);
-
-            } else if ((args.length == 4) && (args[3].equals("File"))) {
-
-                //String input, String output, short vMin, int vMax, boolean gift
-                segmentationOneImage(args[1], args[2]);
-            } else {
-                segmentationFolder(args[1], args[2]);
-
-            }
-        }
-        else if(args[0].equals("computeParameters")){
-            if ((args.length == 4) && (args[3].equals("ConfigFile"))) {
-                computeNucleusParameters(args[1], args[2], args[3]);
-            }
-             else{
-                    computeNucleusParameters(args[1], args[2]);
-                }
-        }
-        else if(args[0].equals("computeParametersDL")){
-            computeNucleusParametersDL(args[1], args[2]);
-        }
-        else if(args[0].equals("generateProjection")){
-            if(args.length==4) {
-                generateProjectionFromCoordinnates(args[1], args[2], args[3]);
-            }
-            else{
-                generateProjectionFromCoordinnates(args[1], args[2]);
-            }
-        }
-        else if(args[0].equals("CropFromCoordinate")){
-            cropFromCoordinates(args[1]);
-        }
-        else if(args[0].equals("GenerateOverlay")){
-            genereOV(args[1]);
-        }
-        else{
-            System.out.println("Argument le premier argument doit être   autocrop  ou   segmentation ou computeParameters");
-            System.out.println("\nExemples :");
-            System.out.println("\njava NucleusJ_giftwrapping.jar autocrop dossier/raw/ dossier/out/");
-            System.out.println("\njava NucleusJ_giftwrapping.jar segmentation dossier/raw/ dossier/out/");
-            System.out.println("\n\n");
-        }
-        System.err.println("The program ended normally.");
-    }
-
+    
     public static void main(String[] args) throws Exception {
         DebugTools.enableLogging("OFF");
         Console con = System.console();   
