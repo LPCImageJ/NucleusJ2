@@ -7,6 +7,7 @@ Manual user : [wiki](https://gitlab.com/DesTristus/NucleusJ2.0/-/wikis/home)
 
 # Authors
 ===========================
+
 Axel Poulet
 
 Dubos Tristan
