@@ -3,7 +3,6 @@ package gred.nucleus.mains;
 import gred.nucleus.MachineLeaningUtils.ComputeNucleiParametersML;
 import gred.nucleus.core.ChromocentersEnhancement;
 import gred.nucleus.dialogs.ChromocenterSegmentationPipelineBatchDialog;
-import gred.nucleus.dialogs.dialogue_train;
 import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.plugins.ChromocenterSegmentationBatchPlugin_;
 import gred.nucleus.segmentation.SegmentationCalling;
@@ -43,11 +42,7 @@ public class test {
 
         System.out.println(_chromocenterSegmentationPipelineBatchDialog.getxCalibration2());
 */
-        dialogue_train aa = new dialogue_train();
-        while( aa.isShowing()) {
-            try {Thread.sleep(1);}
-            catch (InterruptedException e) {e.printStackTrace();}
-        }
+
 
     }
 
