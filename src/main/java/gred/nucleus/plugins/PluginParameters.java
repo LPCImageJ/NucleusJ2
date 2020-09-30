@@ -56,8 +56,8 @@ public class PluginParameters {
         this.m_outputFolder=dirOutput.get_dirPath();
         this.m_manualParameter=true;
         this.m_xCal=xCal;
-        this.m_yCal=xCal;
-        this.m_zCal=xCal;
+        this.m_yCal=yCal;
+        this.m_zCal=zCal;
 
     }
 
