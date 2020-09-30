@@ -71,11 +71,15 @@ public class ComputeNucleiParameters {
 
         for (File f : segmentedImages) {
             ImagePlus Raw = new ImagePlus(this.m_pluginParameters.getInputFolder()+File.separator+f.getName());
-            ImagePlus[] Segmented = BF.openImagePlus(f.getAbsolutePath());
+            try {
+                ImagePlus[] Segmented = BF.openImagePlus(f.getAbsolutePath());
 
-            Measure3D measure3D = new Measure3D(Segmented, Raw, this.m_pluginParameters.getXcalibration(Raw), this.m_pluginParameters.getYcalibration(Raw),this.m_pluginParameters.getZcalibration(Raw));
-            outputCropGeneralInfoOTSU.append(measure3D.nucleusParameter3D()).append("\n");
-
+                Measure3D measure3D = new Measure3D(Segmented, Raw, this.m_pluginParameters.getXcalibration(Raw), this.m_pluginParameters.getYcalibration(Raw), this.m_pluginParameters.getZcalibration(Raw));
+                outputCropGeneralInfoOTSU.append(measure3D.nucleusParameter3D()).append("\n");
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
         }
         OutputTextFile resultFileOutputOTSU=new OutputTextFile(
                 this.m_pluginParameters.getOutputFolder()
