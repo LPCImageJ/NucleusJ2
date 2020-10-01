@@ -1,7 +1,6 @@
 package gred.nucleus.plugins;
 import gred.nucleus.core.ComputeNucleiParameters;
-import gred.nucleus.dialogs.computeParamertersDialog;
-
+import gred.nucleus.dialogs.computeParametersDialog;
 import ij.measure.Calibration;
 import ij.plugin.PlugIn;
 
@@ -13,9 +12,9 @@ public class computeParametersPlugin_ implements PlugIn {
      */
 
     public void run(String arg) {
-        computeParamertersDialog computeParamertersDialog = new computeParamertersDialog();
+        computeParametersDialog _computeParametersDialog = new computeParametersDialog();
 
-        while (computeParamertersDialog.isShowing()) {
+        while (_computeParametersDialog.isShowing()) {
             try {
                 Thread.sleep(1);
             } catch (InterruptedException e) {
@@ -24,23 +23,23 @@ public class computeParametersPlugin_ implements PlugIn {
 
         }
         try {
-            if (computeParamertersDialog.isStart()) {
-                if(computeParamertersDialog.getCalibrationStatus()) {
+            if (_computeParametersDialog.isStart()) {
+                if(_computeParametersDialog.getCalibrationStatus()) {
                     Calibration calibration = new Calibration();
-                    calibration.pixelDepth = computeParamertersDialog.getZCalibration();
-                    calibration.pixelWidth = computeParamertersDialog.getXCalibration();
-                    calibration.pixelHeight = computeParamertersDialog.getYCalibration();
-                    calibration.setUnit(computeParamertersDialog.getUnit());
+                    calibration.pixelDepth = _computeParametersDialog.getZCalibration();
+                    calibration.pixelWidth = _computeParametersDialog.getXCalibration();
+                    calibration.pixelHeight = _computeParametersDialog.getYCalibration();
+                    calibration.setUnit(_computeParametersDialog.getUnit());
                     ComputeNucleiParameters generateParameters = new ComputeNucleiParameters(
-                            computeParamertersDialog.getRawDataDirectory(),
-                            computeParamertersDialog.getWorkDirectory(),
+                            _computeParametersDialog.getRawDataDirectory(),
+                            _computeParametersDialog.getWorkDirectory(),
                             calibration);
                     generateParameters.run();
                 }
                 else{
                     ComputeNucleiParameters generateParameters = new ComputeNucleiParameters(
-                            computeParamertersDialog.getRawDataDirectory(),
-                            computeParamertersDialog.getWorkDirectory());
+                            _computeParametersDialog.getRawDataDirectory(),
+                            _computeParametersDialog.getWorkDirectory());
                     generateParameters.run();
                 }
 
