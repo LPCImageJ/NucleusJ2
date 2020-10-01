@@ -84,11 +84,9 @@ public class computeSegmentationParameters {
                 "Volume\t" +
                 "Flatness\t" +
                 "Elongation\t" +
-                "Sphericity\t" +
                 "Esr\t" +
                 "SurfaceArea\t" +
-                "SurfaceAreaCorrected\t" +
-                "SphericityCorrected\t" +
+                "Sphericity\t" +
                 "MeanIntensityNucleus\t" +
                 "MeanIntensityBackground\t" +
                 "StandardDeviation\t" +
