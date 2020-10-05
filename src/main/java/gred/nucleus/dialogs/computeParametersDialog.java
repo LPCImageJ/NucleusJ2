@@ -9,7 +9,7 @@ import java.awt.event.ItemListener;
 
 public class computeParametersDialog extends JFrame implements ItemListener {
     private static final long serialVersionUID = 1L;
-    private static JButton _jButtonWorkDirectory = new JButton("Segmented images directory");
+    private static JButton _jButtonWorkDirectory = new JButton("Seg Data folder");
     private JButton _jButtonStart = new JButton("Start");
     private JButton _jButtonQuit = new JButton("Quit");
     private JButton _JButtonRawData = new JButton("Raw Data folder");
@@ -79,10 +79,10 @@ public class computeParametersDialog extends JFrame implements ItemListener {
         _jLabelWorkDirectory.setText("Work directory and Raw data choice : ");
 
         JTextPane jTextPane = new JTextPane();
-        jTextPane.setText("The Raw Data directory must contain 2 subdirectories:"
-                + "\n1.for raw nuclei images, named RawDataNucleus. "
-                + "\n2.for segmented nuclei images, named SegmentedDataNucleus."
-                + "\nPlease keep the same file name during the image processing.");
+        jTextPane.setText("You must select 2 directories:"
+                + "\n1 containing raw nuclei images. "
+                + "\n2 containing segmented nuclei images."
+                + "\nImages must have same file name.");
         jTextPane.setEditable(false);
         _container.add
                 (
