@@ -35,7 +35,8 @@ import fr.igred.omero.repository.ProjectContainer;
 public class main {
 
     /**
-     * Method to run autocrop with only input output folder and with default parameters which are:
+     * Method to run autocrop with only input output folder and with default
+     * parameters which are:
      *
      * xCropBoxSize:40
      * yCropBoxSize:40
@@ -60,7 +61,9 @@ public class main {
     }
 
     /**
-     * Method to run autocrop with input folder, output folder and with config file analysis:
+     * Method to run autocrop with input folder, output folder and with config
+     * file analysis :
+     *
      * @param inputDirectory path to the raw image's folder
      * @param outputDirectory path to output folder analysis
      * @param pathToConfig path to config file
@@ -189,7 +192,8 @@ public class main {
     }
 
     /**
-     * Method to run segmentation with input folder, output folder with config file :
+     * Method to run segmentation with input folder, output folder with config
+     * file :
      * @param inputDirectory path to the raw image's folder
      * @param outputDirectory path to output folder analysis
      * @param config path to config file
@@ -346,45 +350,91 @@ public class main {
 
     // TODO AJOUTER computeNucleusParametersDL avec configFILE FACTORISABLE AVEC computeNucleusParametersCONFINGFILE
 
+    /**
+     * Compute parameters from segmented images produce by ML segmentation.
+     * During this process we keep only biggest connected component.
+     *
+     * @param rawImagesInputFolder : path raw images folder
+     * @param segmentedImagesFolder : path segmented images folder
+     * @throws IOException
+     * @throws FormatException
+     * @throws fileInOut
+     * @throws Exception
+     */
 
-
-    public static void computeNucleusParametersDL(String rawImagesInputDirectory, String segmentedImagesDirectory) throws IOException, FormatException ,fileInOut,Exception{
-        ComputeNucleiParametersML computeParameters = new ComputeNucleiParametersML(rawImagesInputDirectory,  segmentedImagesDirectory);
+    public static void computeNucleusParametersDL(String rawImagesInputFolder, String segmentedImagesFolder) throws IOException, FormatException ,fileInOut,Exception{
+        ComputeNucleiParametersML computeParameters = new ComputeNucleiParametersML(rawImagesInputFolder,  segmentedImagesFolder);
         computeParameters.run();
     }
 
 
+    /**
+     * Generate a projection from coordinate file. 2 steps :
+     *    - 1 generate max projection from raw image
+     *    - 2 draw boxes on max projection
+     *
+     * @param pathToCoordonnate : folder containing coordinate files
+     * @param pathToRaw : folder containing raw images associate
+     * @throws IOException
+     * @throws FormatException
+     * @throws Exception
+     */
 
-    // UN DOSSIER AVEC LES IMAGETTES
+
     // UN DOSSIER AVEC LES ZPROJECTION
     // UN DOSSIER AVEC LES COORDONNEES
 
 
-    public static void generateProjectionFromCoordinnates(String pathToCoordonnate, String pathToRaw) throws IOException, FormatException,Exception {
+    public static void generateProjectionFromCoordinates(String pathToCoordonnate, String pathToRaw) throws IOException, FormatException,Exception {
         generateProjectionFromCoordonne projection =new generateProjectionFromCoordonne(pathToCoordonnate, pathToRaw);
-        System.out.println("le run 2 :: ");
         projection.run2();
     }
 
+    /**
+     *Method to draw missing boxes in initial projection after manual filtering.
+     *
+     * @param pathToGIFTSeg : path to cropped images
+     * @param pathToZprojection : path to projection images
+     * @param pathToCoordinate : path to coordinate
+     * @throws IOException
+     * @throws FormatException
+     * @throws Exception
+     */
 
 
-    // UN DOSSIER AVEC LES IMAGETTES
-    // UN DOSSIER AVEC LES ZPROJECTION
-    // UN DOSSIER AVEC LES COORDONNEES
-
-
-    public static void generateProjectionFromCoordinnates(String pathToGIFTSeg, String pathToZprojection,String pathToCoordonnate) throws IOException, FormatException,Exception {
-        generateProjectionFromCoordonne projection =new generateProjectionFromCoordonne(pathToGIFTSeg, pathToZprojection, pathToCoordonnate);
+    public static void generateProjectionFromCoordinates(String pathToGIFTSeg, String pathToZprojection,String pathToCoordinate) throws IOException, FormatException,Exception {
+        generateProjectionFromCoordonne projection =new generateProjectionFromCoordonne(pathToGIFTSeg, pathToZprojection, pathToCoordinate);
         projection.run();
     }
 
+    /**
+     * Method to crop an image from coordinates (case of multi channels).
+     * Tabulated file containing associate coordinate file and images ,
+     * 1 association per line example  :
+     *
+     * pathToCoordinateFile pathToRawImageAssociate
+     * @param coordonnateDir
+     * @throws Exception
+     */
 
     public static void cropFromCoordinates(String coordonnateDir) throws Exception {
 
         CropFromCoordonnate test = new CropFromCoordonnate(coordonnateDir);
         test.runCropFromCoordonnate();
     }
-    // DIC_path zprojection_path
+
+    /**
+     * Method merge overlay and raw images together (cellular population
+     * annotation , example guard cells pavement cells). This method contrast
+     * Tabulated file containing associate coordinate file and images ,
+     *
+     * 1 association per line example  :
+     * pathToOverlayFile pathToRawImageAssociate
+     * @param linkOverlayProjection
+     * @throws Exception
+     */
+
+
     public static void genereOV(String linkOverlayProjection) throws Exception {
 
         GenerateOverlay ov = new GenerateOverlay(linkOverlayProjection);
@@ -395,7 +445,7 @@ public class main {
         FileSaver fileSaver = new FileSaver(imagePlusInput);
         fileSaver.saveAsTiff(pathFile);
     }
-    
+
     public static void main(String[] args) throws Exception {
         DebugTools.enableLogging("OFF");
         Console con = System.console();   
@@ -532,10 +582,10 @@ public class main {
         }
         else if(args[0].equals("generateProjection")){
             if(args.length==4) {
-                generateProjectionFromCoordinnates(args[1], args[2], args[3]);
+                generateProjectionFromCoordinates(args[1], args[2], args[3]);
             }
             else{
-                generateProjectionFromCoordinnates(args[1], args[2]);
+                generateProjectionFromCoordinates(args[1], args[2]);
             }
         }
         else if(args[0].equals("CropFromCoordinate")){
@@ -557,7 +607,3 @@ public class main {
 }
 
 
-//IJ.log(""+getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber() +" image type " +imgSeg.getType()+"\n");
-
-//long maxMemory = Runtime.getRuntime().maxMemory();
-//System.out.println("Maximum memory (bytes): " +(maxMemory == Long.MAX_VALUE ? "no limit" : maxMemory*1e-9));
