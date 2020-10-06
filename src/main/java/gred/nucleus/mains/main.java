@@ -1,6 +1,5 @@
 package gred.nucleus.mains;
 
-import gred.nucleus.MachineLeaningUtils.SliceToStack;
 import gred.nucleus.MachineLeaningUtils.ComputeNucleiParametersML;
 import gred.nucleus.autocrop.*;
 import gred.nucleus.core.ComputeNucleiParameters;
@@ -11,11 +10,8 @@ import ij.ImagePlus;
 import ij.io.FileSaver;
 import loci.common.DebugTools;
 import loci.formats.FormatException;
-import loci.plugins.BF;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.List;
 import java.io.Console;  
 
