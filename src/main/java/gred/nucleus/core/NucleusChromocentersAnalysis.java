@@ -41,7 +41,7 @@ public class NucleusChromocentersAnalysis{
 		double voxelVolume = calibration.pixelDepth*calibration.pixelHeight*calibration.pixelWidth;
 		Measure3D measure3D = new Measure3D();
 		double volume = measure3D.computeVolumeObject(imagePlusSegmented,255);
-		double surfaceArea = measure3D.computeSurfaceObject(255);
+		double surfaceArea = measure3D.computeComplexSurface();
 		String text = imagePlusSegmented.getTitle()+" "+volume+" "
 				+measure3D.equivalentSphericalRadius(volume)+" "
 				+surfaceArea +" "
@@ -103,7 +103,7 @@ public class NucleusChromocentersAnalysis{
 		tmp[0]=imagePlusSegmented;
 		Measure3D measure3D = new Measure3D(tmp,imagePlusInput,calibration.pixelDepth,calibration.pixelHeight,calibration.pixelWidth);
 		double volume = measure3D.computeVolumeObject(imagePlusSegmented,255);
-		double surfaceArea = measure3D.computeSurfaceObject(255);
+		double surfaceArea = measure3D.computeComplexSurface();
 		File fileResults = new File(pathResultsFile);
 		boolean exist = fileResults.exists();
 		BufferedWriter bufferedWriterOutput;	

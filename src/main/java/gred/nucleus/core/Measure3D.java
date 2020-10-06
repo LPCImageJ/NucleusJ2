@@ -823,18 +823,16 @@ public class Measure3D {
 
         double volume = computeVolumeObjectML();
         double surfaceArea = computeSurfaceObject( 255);
-        double bis = computeComplexSurface();
+        double surfaceAreaNew = computeComplexSurface();
         double[] tEigenValues = computeEigenValue3D(255);
         resu = this._rawImage.getTitle()+ "\t"
               //  + computeVolumeObject2(255) + "\t"
                 +computeVolumeObjectML()+ "\t"
                 + computeFlatnessAndElongation( 255)[0] + "\t"
                 + computeFlatnessAndElongation( 255)[1] + "\t"
-                + computeSphericity(volume, surfaceArea) + "\t"
                 + equivalentSphericalRadius(volume) + "\t"
-                + surfaceArea + "\t"
-                + bis + "\t"
-                + computeSphericity(volume, bis)+ "\t"
+                + surfaceAreaNew + "\t"
+                + computeSphericity(volume, surfaceAreaNew)+ "\t"
                 +meanIntensity()+ "\t"
                 +meanIntensityBackground()+"\t"
                 +standardDeviationIntensity(meanIntensity())+ "\t"
