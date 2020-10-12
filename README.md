@@ -1,4 +1,12 @@
-# NucleusJ2.0
+# NucleusJ2.0 what's new
+
+NucleusJ 2.0 is a new release of [NucleusJ](https://github.com/PouletAxel/NucleusJ_), in which image processing is achieved more quickly using a command-line user interface. Starting with large collection of 3D nuclei, segmentation can be performed by the previously developed Otsu-modified method or by a new 3D gift-wrapping method, taking better account of nuclear indentations and unmarked nucleoli.
+
+A discrete geometric method was introduced to improve the surface area calculation, a key parameter when studying nuclear morphology, replacing an imageJ default tool by a new one that includes pixel context information.
+
+To increase the number of nuclei considered in a single analysis, a method was introduced to delimit an automatic bounding volume (autocrop) around each nucleus of a 3D wide-field stack containing ten to a hundred nuclei. Each of the collected nuclei can then be segmented through two complementary methods, either based on the Otsu threshold method or on edge-detection through a 3D gift-wrapping method.
+
+# Downloading and manual user links
 
 Downloading Last version : [jar](https://gitlab.com/api/v4/projects/19044962/packages/maven/burp/NucleusJ_2/1.1.0/NucleusJ_2-1.1.0.jar)
 
