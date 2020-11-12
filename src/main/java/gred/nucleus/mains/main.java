@@ -1,6 +1,8 @@
 package gred.nucleus.mains;
 
+import gred.nucleus.CLI.CLIActionOptionCmdLine;
 import gred.nucleus.CLI.CLIActionOptionOMERO;
+import gred.nucleus.CLI.CLIHelper;
 import gred.nucleus.MachineLeaningUtils.ComputeNucleiParametersML;
 import gred.nucleus.autocrop.*;
 import gred.nucleus.core.ComputeNucleiParameters;
@@ -444,60 +446,24 @@ public class main {
     public static void main(String[] args) throws Exception {
         DebugTools.enableLogging("OFF");
         List<String> listArgs = Arrays.asList(args);
-
-        ArrayList<String> actionList = new ArrayList<>();
-        actionList.add("autocrop");
-        actionList.add("segmentation");
-        actionList.add("computeParameters");
-        actionList.add("computeParametersDL");
-        actionList.add("generateProjection");
-        actionList.add("CropFromCoordinate");
-        actionList.add("GenerateOverlay");
-        Console con = System.console();
         System.setProperty("java.awt.headless", "false");
-        CommandLine cmd;
-        //actionList.contains()
 
-        Options options = new Options();
-        CommandLineParser parser = new DefaultParser();
 
-       // try {
-            Option omero = Option.builder("ome")
-                    .longOpt("omero")
-                    .type(boolean.class)
-                    .desc("Use of NucleusJ2.0 in omero, 2 actions available :\n" +
-                            " autocrop : crop wide field images\n" +
-                            " segmentation : nucleus segmentation\n")
-                    .build();
-            Option m_action = Option.builder("a")
-                    .longOpt("action")
-                    .required()
-                    .type(String.class)
-                    .desc("Action to make :" +
-                            "chose between \n" +
-                            " autocrop : crop wide field images\n" +
-                            " segmentation : nucleus segmentation\n" +
-                            "computeParameters : compute nucleus parameters\n" +
-                            "computeParametersDL : compute nucleus parameters DL \n")
-                    .numberOfArgs(1)
-                    .build();
-            options.addOption(omero);
-            options.addOption(m_action);
+        if(listArgs.contains("-h") ||listArgs.contains("-help")){
+            CLIHelper command = new CLIHelper( );
+            command.CmdHelp();
+        }
+        else if(listArgs.contains("-hOme") ||listArgs.contains("-helpOmero")) {
+            CLIHelper command = new CLIHelper();
+            command.OMEROHelp();
 
-        System.out.println("eu"+args[1]);
-        if ((listArgs.contains("-ome"))) {
+        }
+        else if ((listArgs.contains("-ome"))||(listArgs.contains("-omero"))) {
             CLIActionOptionOMERO command = new CLIActionOptionOMERO( args);
         }
-           /* else{
-
-            }
-        } catch (Exception e) {
-
-            HelpFormatter formatter = new HelpFormatter();
-            formatter.printHelp("NucleusJ2.0", options, true);
-            System.exit(1);
-
-        }*/
+        else{
+            CLIActionOptionCmdLine command = new CLIActionOptionCmdLine( args);
+        }
     }
 
     public static boolean  OMEROAvailableAction(String action) {

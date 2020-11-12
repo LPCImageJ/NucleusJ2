@@ -2,53 +2,91 @@ package gred.nucleus.CLI;
 
 import org.apache.commons.cli.*;
 
+/**
+ * Generic class to handle command line option
+ */
 public class CLIActionOptions {
-    Options m_options= new Options();
-    CommandLine m_cmd;
-    HelpFormatter m_formatter ;
-    CommandLineParser m_parser= new DefaultParser();
-    String NJversion ="1.1.0";
 
-    Option m_imputFolder= Option.builder("i")
+    /**
+     * List of options
+     */
+    Options m_options= new Options();
+    /**
+     * Command line
+     */
+    CommandLine m_cmd;
+    /**
+     * Help formatter
+     */
+    HelpFormatter m_formatter ;
+    /**
+     * Command line parser
+     */
+    CommandLineParser m_parser= new DefaultParser();
+    /**
+     * NucleusJ version
+     */
+    String NJversion ="1.1.0";
+    /**
+     * Path to input folder
+     */
+    Option m_imputFolder= Option.builder("in")
             .longOpt("input")
             .required()
             .type(String.class)
-            .desc("Path to input folder containing images to analyse\n")
             .numberOfArgs(1)
             .build();
-    Option m_outputFolder= Option.builder("o")
+    /**
+     * Path to output folder
+     */
+    Option m_outputFolder= Option.builder("out")
             .longOpt("output")
             .required()
             .type(String.class)
             .desc("Path to output folder containing images to analyse\n")
             .numberOfArgs(1)
             .build();
+    /**
+     * Path to config file
+     */
     Option m_configFile= Option.builder("c")
             .longOpt("config")
             .type(String.class)
             .desc("Path to config file\n")
             .numberOfArgs(1)
             .build();
+    /**
+     * List of available actions
+     */
     Option m_action = Option.builder("a")
             .longOpt("action")
             .required()
             .type(String.class)
-            .desc("Action to make :" +
-                    "chose between \n" +
-                    " autocrop : crop wide field images\n" +
-                    " segmentation : nucleus segmentation\n" +
-                    "computeParameters : compute nucleus parameters\n" +
-                    "computeParametersDL : compute nucleus parameters DL \n")
+            .desc("Action available:\n" +
+                    "autocrop : crop wide field images\n" +
+                    "segmentation : nucleus segmentation\n")
             .numberOfArgs(1)
             .build();
-    public CLIActionOptions(String[] args)throws Exception   {
+
+
+    /**
+     * Default constructor
+     */
+    public CLIActionOptions() {
+    }
+
+    /**
+     Constructor with argument
+     * @param argument : list of command line argument
+     * @throws Exception
+     */
+    public CLIActionOptions(String[] argument)throws Exception   {
         this.m_options.addOption(this.m_imputFolder);
         this.m_options.addOption(this.m_outputFolder);
         this.m_options.addOption(this.m_configFile);
         this.m_options.addOption(this.m_action);
         try {
-
-            this.m_cmd = this.m_parser.parse(this.m_options, args);
+            this.m_cmd = this.m_parser.parse(this.m_options, argument,true);
         }
         catch (ParseException  exp){
             System.out.println(exp.getMessage()+"\n");
@@ -56,10 +94,20 @@ public class CLIActionOptions {
             System.exit(1);
         }
     }
+
+    /**
+     * @return : helper info
+     */
     public String  getHelperInfos() {
         return "More details :\n" +
-               "java -jar NucleusJ_2-"+NJversion+" -h \n" +
+               "java -jar NucleusJ_2-"+NJversion+".jar -h \n" +
                 "or \n"+
-                "java -jar NucleusJ_2-"+NJversion+" -help \n";
+                "java -jar NucleusJ_2-"+NJversion+".jar -help \n";
+    }
+    /**
+     * @return list of options
+     */
+    public Options getM_options() {
+        return this.m_options;
     }
 }
