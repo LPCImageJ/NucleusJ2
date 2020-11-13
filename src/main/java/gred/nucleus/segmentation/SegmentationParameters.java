@@ -43,8 +43,12 @@ public class SegmentationParameters extends PluginParameters {
 
     }
 
-    public SegmentationParameters (String inputFolder, String outputFolder, String pathToConfigFile){
-        super(inputFolder, outputFolder,pathToConfigFile);
+    public SegmentationParameters (String inputFolder, String outputFolder, String pathToConfigFile) {
+        super(inputFolder, outputFolder, pathToConfigFile);
+        addProperties(pathToConfigFile);
+    }
+
+    public void addProperties (String pathToConfigFile) {
         Properties prop = new Properties();
         String fileName = pathToConfigFile;
         InputStream is = null;

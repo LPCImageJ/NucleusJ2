@@ -27,6 +27,9 @@ public class PluginParameters {
     /** Autocrop parameters information */
     public String m_headerInfo;
 
+    /** Constructor with default parameter*/
+     public PluginParameters(){}
+
     /** Constructor with default parameter
      * @param inputFolder : path folder containing Images
      * @param outputFolder : path folder output analyse
@@ -73,25 +76,36 @@ public class PluginParameters {
         Directory dirOutput =new Directory(outputFolder);
         dirOutput.CheckAndCreateDir();
         this.m_outputFolder=dirOutput.get_dirPath();
+        addGeneralProperties(pathToConfigFile);
+
+    }
+    public void addGeneralProperties (String pathToConfigFile) {
+
         Properties prop = new Properties();
         String fileName = pathToConfigFile;
         InputStream is = null;
         try {
             is = new FileInputStream(fileName);
         } catch (FileNotFoundException ex) {
-            System.err.println(pathToConfigFile+" : can't find the config file !");
+            System.err.println(pathToConfigFile + " : can't find the config file !");
             System.exit(-1);
         }
         try {
             prop.load(is);
         } catch (IOException ex) {
-            System.err.println(pathToConfigFile+" : can't load the config file !");
+            System.err.println(pathToConfigFile + " : can't load the config file !");
             System.exit(-1);
         }
-        for (String idProp :prop.stringPropertyNames()){
-            if(idProp.equals("xcal")){ setXCal(Double.valueOf(prop.getProperty("xcal")));}
-            if(idProp.equals("ycal")){ setYCal(Double.valueOf(prop.getProperty("ycal")));}
-            if(idProp.equals("zcal")){ setZCal(Double.valueOf(prop.getProperty("zcal")));}
+        for (String idProp : prop.stringPropertyNames()) {
+            if (idProp.equals("xcal")) {
+                setXCal(Double.valueOf(prop.getProperty("xcal")));
+            }
+            if (idProp.equals("ycal")) {
+                setYCal(Double.valueOf(prop.getProperty("ycal")));
+            }
+            if (idProp.equals("zcal")) {
+                setZCal(Double.valueOf(prop.getProperty("zcal")));
+            }
         }
     }
 
