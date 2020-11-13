@@ -110,4 +110,8 @@ public class CLIActionOptions {
     public Options getM_options() {
         return this.m_options;
     }
+    public CommandLine getCmd() {
+        return this.m_cmd;
+    }
+
 }

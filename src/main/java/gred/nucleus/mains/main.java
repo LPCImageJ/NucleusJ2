@@ -3,6 +3,7 @@ package gred.nucleus.mains;
 import gred.nucleus.CLI.CLIActionOptionCmdLine;
 import gred.nucleus.CLI.CLIActionOptionOMERO;
 import gred.nucleus.CLI.CLIHelper;
+import gred.nucleus.CLI.CLIRunAction;
 import gred.nucleus.MachineLeaningUtils.ComputeNucleiParametersML;
 import gred.nucleus.autocrop.*;
 import gred.nucleus.core.ComputeNucleiParameters;
@@ -463,6 +464,7 @@ public class main {
         }
         else{
             CLIActionOptionCmdLine command = new CLIActionOptionCmdLine( args);
+            CLIRunAction runCmd =new CLIRunAction(command.getCmd());
         }
     }
 
