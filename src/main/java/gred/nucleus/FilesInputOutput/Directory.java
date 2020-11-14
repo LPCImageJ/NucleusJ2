@@ -33,9 +33,15 @@ public class Directory  {
      * @param Path of directory
      */
     public Directory(String Path) {
-        this.m_dirPath = Path;
-        this.m_directory=new File(this.m_dirPath);
-        this.m_separator=this.m_directory.separator;
+        try {
+            this.m_dirPath = Path;
+            this.m_directory = new File(this.m_dirPath);
+            this.m_separator = this.m_directory.separator;
+        }
+        catch (Exception exp){
+            System.out.println(exp.getMessage());
+            System.exit(1);
+        }
     }
 
     /**
