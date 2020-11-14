@@ -59,6 +59,9 @@ public class CLIRunActionOMERO {
                 break;
         }
 
+        this.m_client.disconnect();
+
+
     }
 
     public void getOMEROPassword(){
