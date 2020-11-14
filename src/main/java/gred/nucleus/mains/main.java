@@ -1,9 +1,6 @@
 package gred.nucleus.mains;
 
-import gred.nucleus.CLI.CLIActionOptionCmdLine;
-import gred.nucleus.CLI.CLIActionOptionOMERO;
-import gred.nucleus.CLI.CLIHelper;
-import gred.nucleus.CLI.CLIRunAction;
+import gred.nucleus.CLI.*;
 import gred.nucleus.MachineLeaningUtils.ComputeNucleiParametersML;
 import gred.nucleus.autocrop.*;
 import gred.nucleus.core.ComputeNucleiParameters;
@@ -454,13 +451,9 @@ public class main {
             CLIHelper command = new CLIHelper( );
             command.CmdHelp();
         }
-        else if(listArgs.contains("-hOme") ||listArgs.contains("-helpOmero")) {
-            CLIHelper command = new CLIHelper();
-            command.OMEROHelp();
-
-        }
         else if ((listArgs.contains("-ome"))||(listArgs.contains("-omero"))) {
             CLIActionOptionOMERO command = new CLIActionOptionOMERO( args);
+            CLIRunActionOMERO runActionOMERO = new CLIRunActionOMERO(command.getCmd());
         }
         else{
             CLIActionOptionCmdLine command = new CLIActionOptionCmdLine( args);
