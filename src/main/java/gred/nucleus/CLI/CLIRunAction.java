@@ -35,10 +35,7 @@ public class CLIRunAction {
             case "GenerateOverlay":
                 runGenereOV();
                 break;
-
         }
-
-
     }
 
     private   void runGenereOV() throws Exception {
@@ -109,6 +106,7 @@ public class CLIRunAction {
             }catch (IOException e) { e.printStackTrace();}
         }
     }
+
     private void runComputeNucleiParameters()throws Exception {
         ComputeNucleiParameters generateParameters = new ComputeNucleiParameters(
                 this.m_cmd.getOptionValue("input")

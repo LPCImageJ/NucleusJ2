@@ -33,7 +33,7 @@ public class CLIActionOptions {
     Option m_imputFolder= Option.builder("in")
             .longOpt("input")
             .required()
-            .type(String.class)
+           // .type(String.class)
             .numberOfArgs(1)
             .build();
     /**
@@ -42,7 +42,7 @@ public class CLIActionOptions {
     Option m_outputFolder= Option.builder("out")
             .longOpt("output")
             .required()
-            .type(String.class)
+           // .type(String.class)
             .desc("Path to output folder containing images to analyse\n")
             .numberOfArgs(1)
             .build();
@@ -68,6 +68,14 @@ public class CLIActionOptions {
             .numberOfArgs(1)
             .build();
 
+    /**
+     * OMERO activate
+     */
+    Option m_omero = Option.builder("ome")
+            .longOpt("omero")
+            .type(boolean.class)
+            .desc("Use of NucleuJ2.0 in OMERO\n")
+            .build();
 
     /**
      * Default constructor
@@ -85,6 +93,7 @@ public class CLIActionOptions {
         this.m_options.addOption(this.m_outputFolder);
         this.m_options.addOption(this.m_configFile);
         this.m_options.addOption(this.m_action);
+        this.m_options.addOption(this.m_omero);
         try {
             this.m_cmd = this.m_parser.parse(this.m_options, argument,true);
         }

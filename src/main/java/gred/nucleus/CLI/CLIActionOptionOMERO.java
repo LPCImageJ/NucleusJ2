@@ -59,16 +59,6 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
             .desc("Group in OMERO")
             .numberOfArgs(1)
             .build();
-    /**
-     * OMERO activate
-     */
-    Option m_omero = Option.builder("ome")
-            .longOpt("omero")
-            .required()
-            .type(boolean.class)
-            .desc("Use of NucleuJ2.0 in OMERO\n")
-            .numberOfArgs(0)
-            .build();
 
     /**
      * Constructor
@@ -85,7 +75,6 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
     public CLIActionOptionOMERO(String[] argument) throws Exception {
         super(argument);
         this.m_options.addOption(this.m_action);
-        this.m_options.addOption(this.m_omero);
         this.m_options.addOption(this.m_port);
         this.m_options.addOption(this.m_hostname);
         this.m_options.addOption(this.m_username);
@@ -115,17 +104,6 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
         }
 
 
-    }
-
-    /**
-     * Method to get command line info
-     * @return header info
-     */
-    public String getHelperInfos() {
-        return "More details :\n" +
-                "java -jar NucleusJ_2-"+NJversion+".jar -hOme \n" +
-                "or \n"+
-                "java -jar NucleusJ_2-"+NJversion+".jar -helpOmero \n";
     }
 
     /**
