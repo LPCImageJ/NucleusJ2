@@ -16,49 +16,37 @@ public class CLIActionOptions {
      */
     CommandLine m_cmd;
     /**
-     * Help formatter
-     */
-    HelpFormatter m_formatter ;
-    /**
      * Command line parser
      */
     CommandLineParser m_parser= new DefaultParser();
     /**
      * NucleusJ version
      */
-    String NJversion ="1.1.0";
+    private static String NJversion ="1.1.0";
     /**
      * Path to input folder
      */
-    Option m_imputFolder= Option.builder("in")
+    public Option m_inputFolder= Option.builder("in")
             .longOpt("input")
             .required()
-           // .type(String.class)
-            .numberOfArgs(1)
-            .build();
-    /**
-     * Path to output folder
-     */
-    Option m_outputFolder= Option.builder("out")
-            .longOpt("output")
-            .required()
-           // .type(String.class)
-            .desc("Path to output folder containing images to analyse\n")
+            .type(String.class)
             .numberOfArgs(1)
             .build();
     /**
      * Path to config file
      */
-    Option m_configFile= Option.builder("c")
+     public Option m_configFile= Option.builder("c")
             .longOpt("config")
             .type(String.class)
-            .desc("Path to config file\n")
+            .desc("Path to config file\n" +
+                    "To generate config file example in current folder:\n" +
+                    "java -jar NucleusJ_2-" + NJversion +".jar -h configFileExample")
             .numberOfArgs(1)
             .build();
     /**
      * List of available actions
      */
-    Option m_action = Option.builder("a")
+    public Option m_action = Option.builder("a")
             .longOpt("action")
             .required()
             .type(String.class)
@@ -71,7 +59,7 @@ public class CLIActionOptions {
     /**
      * OMERO activate
      */
-    Option m_omero = Option.builder("ome")
+   public Option m_omero = Option.builder("ome")
             .longOpt("omero")
             .type(boolean.class)
             .desc("Use of NucleuJ2.0 in OMERO\n")
@@ -89,8 +77,7 @@ public class CLIActionOptions {
      * @throws Exception
      */
     public CLIActionOptions(String[] argument)throws Exception   {
-        this.m_options.addOption(this.m_imputFolder);
-        this.m_options.addOption(this.m_outputFolder);
+        this.m_options.addOption(this.m_inputFolder);
         this.m_options.addOption(this.m_configFile);
         this.m_options.addOption(this.m_action);
         this.m_options.addOption(this.m_omero);
@@ -108,10 +95,12 @@ public class CLIActionOptions {
      * @return : helper info
      */
     public String  getHelperInfos() {
-        return "More details :\n" +
+        return "More details for available actions:\n" +
                "java -jar NucleusJ_2-"+NJversion+".jar -h \n" +
-                "or \n"+
-                "java -jar NucleusJ_2-"+NJversion+".jar -help \n";
+               "java -jar NucleusJ_2-"+NJversion+".jar -help \n\n"+
+               "More details for a specific action:\n" +
+               "java -jar NucleusJ_2-"+NJversion+".jar -h <action>\n" +
+               "java -jar NucleusJ_2-"+NJversion+".jar -help <action>";
     }
     /**
      * @return list of options

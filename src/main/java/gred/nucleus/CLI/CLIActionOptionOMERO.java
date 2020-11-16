@@ -59,7 +59,15 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
             .desc("Group in OMERO")
             .numberOfArgs(1)
             .build();
-
+    /**
+     * Path to output folder
+     */
+    public Option m_outputFolder= Option.builder("out")
+            .longOpt("output")
+            .type(String.class)
+            .desc("Path to output folder containing images to analyse\n")
+            .numberOfArgs(1)
+            .build();
     /**
      * Constructor
       * @throws Exception
@@ -75,12 +83,13 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
     public CLIActionOptionOMERO(String[] argument) throws Exception {
         super(argument);
         this.m_options.addOption(this.m_action);
+        this.m_options.addOption(this.m_outputFolder);
         this.m_options.addOption(this.m_port);
         this.m_options.addOption(this.m_hostname);
         this.m_options.addOption(this.m_username);
         this.m_options.addOption(this.m_password);
         this.m_options.addOption(this.m_group);
-        this.m_imputFolder.setDescription(this.m_imputFolder.getDescription()+
+        this.m_inputFolder.setDescription(
                 "OMERO  inputs 2 information separated with slash separator :  " +
                 "Type input: dataset, project, image, tag " +
                 "Input id number" + "\n" +

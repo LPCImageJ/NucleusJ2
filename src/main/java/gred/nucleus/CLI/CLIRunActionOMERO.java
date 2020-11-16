@@ -58,7 +58,6 @@ public class CLIRunActionOMERO {
                 runSegmentationOmero();
                 break;
         }
-
         this.m_client.disconnect();
 
 

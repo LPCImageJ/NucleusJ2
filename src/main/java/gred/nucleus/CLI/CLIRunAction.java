@@ -1,5 +1,6 @@
 package gred.nucleus.CLI;
 
+import gred.nucleus.MachineLeaningUtils.ComputeNucleiParametersML;
 import gred.nucleus.autocrop.*;
 import gred.nucleus.core.ComputeNucleiParameters;
 import gred.nucleus.segmentation.SegmentationCalling;
@@ -26,6 +27,9 @@ public class CLIRunAction {
             case "computeParameters":
                 runComputeNucleiParameters();
                 break;
+            case "computeParametersDL":
+                runComputeNucleiParametersDL();
+                break;
             case "generateProjection":
                 runProjectionFromCoordinates();
                 break;
@@ -49,16 +53,18 @@ public class CLIRunAction {
     }
 
     private void runProjectionFromCoordinates()throws Exception {
-        if (this.m_cmd.hasOption("config")) {
+        if (this.m_cmd.hasOption("coordinateFiltered")) {
             generateProjectionFromCoordonne projection = new generateProjectionFromCoordonne(
                     this.m_cmd.getOptionValue("input")
-                    , this.m_cmd.getOptionValue("output"));
-            projection.run();
+                    , this.m_cmd.getOptionValue("input2"),
+                    this.m_cmd.getOptionValue("input3"));
+            projection.generateCoordinateFiltered();
         }
         else {
-            generateProjectionFromCoordonne projection = new generateProjectionFromCoordonne(this.m_cmd.getOptionValue("input")
-                    , this.m_cmd.getOptionValue("output"));
-            projection.run2();
+            generateProjectionFromCoordonne projection = new generateProjectionFromCoordonne(
+                    this.m_cmd.getOptionValue("input")
+                    , this.m_cmd.getOptionValue("input2"));
+            projection.generateCoordinate();
         }
     }
 
@@ -110,10 +116,16 @@ public class CLIRunAction {
     private void runComputeNucleiParameters()throws Exception {
         ComputeNucleiParameters generateParameters = new ComputeNucleiParameters(
                 this.m_cmd.getOptionValue("input")
-                , this.m_cmd.getOptionValue("output"));
+                , this.m_cmd.getOptionValue("input2"));
         if (this.m_cmd.hasOption("config")) {
             generateParameters.addConfigParameters(this.m_cmd.getOptionValue("config"));
         }
         generateParameters.run();
+    }
+    private void runComputeNucleiParametersDL() throws Exception {
+        ComputeNucleiParametersML computeParameters = new ComputeNucleiParametersML(
+                this.m_cmd.getOptionValue("input")
+                , this.m_cmd.getOptionValue("input2"));
+        computeParameters.run();
     }
 }
