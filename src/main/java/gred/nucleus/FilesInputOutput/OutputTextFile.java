@@ -16,7 +16,7 @@ public class OutputTextFile extends FilesNames {
     /** Method to save file
      * with verification if file already exists
      * TODO(@DesTristus) ADD ERROR IN LOG FILE*/
-    public void SaveTextFile(String text) throws IOException {
+    public void SaveTextFile(String text) throws Exception {
         try {
             int i = 0;
             while (is_fileExist()){
@@ -37,9 +37,9 @@ public class OutputTextFile extends FilesNames {
             }*/
         }
         catch (IOException e){
-            IJ.log("\n"+this._fullPathFile+" creation failed");
+            IJ.log("\n"+this._fullPathFile+" creation failed\n");
             e.printStackTrace();
         }
-        IJ.log("\n"+this._fullPathFile+" created");
+        IJ.log("\n"+this._fullPathFile+" created\n");
     }
 }

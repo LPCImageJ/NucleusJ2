@@ -898,7 +898,7 @@ public class AutoCrop {
      * Write analyse info in output texte file
      * @throws IOException
      */
-    public void writeAnalyseInfo() throws IOException {
+    public void writeAnalyseInfo() throws Exception {
 		Directory dirOutput= new Directory(
 				this.m_outputDirPath + File.separator
 						+ "coordinates");
