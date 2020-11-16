@@ -2,8 +2,6 @@ package gred.nucleus.CLI;
 
 import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.FilesInputOutput.OutputTextFile;
-import ij.ImagePlus;
-import ij.io.FileSaver;
 import org.apache.commons.cli.HelpFormatter;
 
 import java.io.File;
