@@ -4,7 +4,6 @@ import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.FilesInputOutput.OutputTextFile;
 import org.apache.commons.cli.HelpFormatter;
 
-import java.io.File;
 
 /**
  * Class to generate helper
@@ -12,8 +11,11 @@ import java.io.File;
 public class CLIHelper {
     private  static String NJversion ="1.1.0";
 
-
-    /* Constructor*/
+    /**
+     *  Constructor
+     * @param args command line arguement
+     * @throws Exception format helper
+     */
     public CLIHelper(String[] args)throws Exception{
         if(args.length==2){
             specificAction(args[1]);
@@ -22,14 +24,13 @@ public class CLIHelper {
             CmdHelpFull();
         }
     }
-    public void CmdHelp()throws Exception{
-        CmdHelpFull();
-    }
+
     /**
      *  Method get help for command line
-     * with example command line
+     *  with example command line
+     * @throws Exception format helper
      */
-    public static void CmdHelpFull() throws Exception {
+    private static void CmdHelpFull() throws Exception {
         String example_command = "java -jar NucleusJ_2-" + NJversion + ".jar ";
         String example_argument = "-action segmentation " +
                 "-input path/to/input/folder/ " +
@@ -50,19 +51,24 @@ public class CLIHelper {
                 "-group 000";
         String[] example_OMEROCmd = example_argument_OMERO.split(" ");
         CLIActionOptionOMERO command_OMERO = new CLIActionOptionOMERO(example_OMEROCmd);
-        HelpFormatter formatter_OMERO = new HelpFormatter();
         formatter.printHelp("NucleusJ2.0 OMERO MODE: ", command_OMERO.getM_options());
         System.out.println("\nCommand line example : \n\n" +
                 example_command + " " + example_argument_OMERO);
 
         System.exit(1);
     }
-    public static void specificAction(String action) throws Exception{
+
+    /**
+     * Helper for specific action.
+     * @param action action
+     * @throws Exception format helper
+     */
+
+    private static void specificAction(String action) throws Exception{
         String example_command = "java -jar NucleusJ_2-" + NJversion + ".jar ";
         String example_argument;
         String[] example_Cmd;
         HelpFormatter formatter;
-        HelpFormatter formatter_OMERO;
         CLIActionOptionCmdLine command;
         switch (action){
             case "segmentation":
@@ -225,6 +231,14 @@ public class CLIHelper {
 
         }
     }
+
+    /**
+     * Save information
+     * use to save config file parameter example.
+     * @param text text to save
+     * @param fileName file name
+     * @throws Exception file exception
+     */
     public static void saveFile (String text, String fileName) throws Exception {
         Directory dirOutput =new Directory(System.getProperty("user.dir"));
         OutputTextFile resultFileOutputOTSU=new OutputTextFile(
