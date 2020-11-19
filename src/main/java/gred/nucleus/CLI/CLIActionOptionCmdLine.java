@@ -105,6 +105,7 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
                         "Path to input folder containing images to analyse\n");
                 this.m_options.addOption(this.m_outputFolder);
                 break;
+
             case "computeParameters":
                 this.m_inputFolder.setDescription(
                         "Path to input folder containing RAW images\n");
@@ -113,6 +114,7 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
                 this.m_options.addOption(this.m_inputFolder2);
                 this.m_omero.setDescription("NOT AVAILABLE");
                 break;
+
             case "computeParametersDL":
                 this.m_inputFolder.setDescription(
                     "Path to input folder containing RAW images\n");
@@ -121,6 +123,7 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
                 this.m_options.addOption(this.m_inputFolder2);
                 this.m_omero.setDescription("NOT AVAILABLE");
                 break;
+
             case "generateProjection":
                 this.m_inputFolder.setDescription(
                     "Path to input folder containing coordinates files\n");
@@ -129,6 +132,7 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
                 this.m_options.addOption(this.m_inputFolder2);
                 this.m_omero.setDescription("NOT AVAILABLE");
                 break;
+
             case "generateProjectionFiletered":
                 this.m_inputFolder.setDescription(
                     "Path to input folder containing coordinates files\n");
@@ -140,12 +144,14 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
                 this.m_options.addOption(this.m_inputFolder3);
                 this.m_omero.setDescription("NOT AVAILABLE");
                 break;
+
             case "CropFromCoordinate":
                 this.m_inputFolder.setDescription(
                     "Path to tabulated file containing 2 columns :\n" +
                     "pathToCoordinateFile   pathToRawImageAssociate\n");
                 this.m_omero.setDescription("NOT AVAILABLE");
                 break;
+
             case "GenerateOverlay":
                 this.m_inputFolder.setDescription(
                     "Path to tabulated file containing 2 columns :\n" +
