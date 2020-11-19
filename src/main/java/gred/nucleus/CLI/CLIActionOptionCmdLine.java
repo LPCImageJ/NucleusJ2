@@ -16,7 +16,7 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
     /**
      * Path to output folder
      */
-    public Option m_outputFolder= Option.builder("out")
+    private Option m_outputFolder= Option.builder("out")
             .longOpt("output")
             .type(String.class)
             .desc("Path to output results\n")
@@ -26,7 +26,7 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
      * Path to second input folder
      * Need in specific action
      */
-    public Option m_inputFolder2= Option.builder("in2")
+    private Option m_inputFolder2= Option.builder("in2")
             .longOpt("input2")
             .required()
             .type(String.class)
@@ -36,7 +36,7 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
      * Path to second input folder
      * Need in specific action
      */
-    public Option m_inputFolder3= Option.builder("in3")
+    private Option m_inputFolder3= Option.builder("in3")
             .longOpt("input3")
             .required()
             .type(String.class)
@@ -45,7 +45,7 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
     /**
      *
      * @param args command line argument
-     * @throws Exception
+     * @throws Exception ParseException
      */
     public CLIActionOptionCmdLine( String[] args) throws Exception {
         super( args);
@@ -81,7 +81,7 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
      * @param action nucleusJ2.0 action to run
      * @return boolean existing action
      */
-    public static boolean  CMDAvailableAction(String action) {
+    private static boolean  CMDAvailableAction(String action) {
         ArrayList<String > actionAvailableInOmero= new ArrayList<>();
         actionAvailableInOmero.add("autocrop");
         actionAvailableInOmero.add("segmentation");
@@ -93,11 +93,11 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
         actionAvailableInOmero.add("GenerateOverlay");
         return actionAvailableInOmero.contains(action);
     }
+
     /**
      * Method to check specific action parameters
-     *
      */
-    public void checkSpecificOptions() {
+    private void checkSpecificOptions() {
         switch(this.m_cmd.getOptionValue("action")) {
             case "autocrop":
             case "segmentation":
