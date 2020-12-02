@@ -14,7 +14,7 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
     /**
      * Host name server
      */
-    Option m_hostname = Option.builder("ho")
+    private Option m_hostname = Option.builder("ho")
             .longOpt("hostname")
             .required()
             .type(String.class)
@@ -24,7 +24,7 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
     /**
      * Server port connexion
      */
-    Option m_port = Option.builder("pt")
+    private Option m_port = Option.builder("pt")
             .longOpt("port")
             .required()
             .type(Conversion.Int.class)
@@ -34,7 +34,7 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
     /**
      * username connexion
      */
-    Option m_username = Option.builder("u")
+    private Option m_username = Option.builder("u")
             .longOpt("username")
             .type(String.class)
             .desc("Username in OMERO")
@@ -43,7 +43,7 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
     /**
      * OMERO password connexion
      */
-    Option m_password = Option.builder("p")
+    private Option m_password = Option.builder("p")
             .longOpt("password")
             .type(String.class)
             .desc("Password in OMERO")
@@ -52,7 +52,7 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
     /**
      * Group user connexion
      */
-    Option m_group = Option.builder("g")
+    private Option m_group = Option.builder("g")
             .longOpt("group")
             .required()
             .type(String.class)
@@ -62,23 +62,17 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
     /**
      * Path to output folder
      */
-    public Option m_outputFolder= Option.builder("out")
+    private Option m_outputFolder= Option.builder("out")
             .longOpt("output")
             .type(String.class)
             .desc("Path to output folder containing images to analyse\n")
             .numberOfArgs(1)
             .build();
-    /**
-     * Constructor
-      * @throws Exception
-     */
-    public CLIActionOptionOMERO() throws Exception {
 
-    }
     /**
      Constructor with argument
      * @param argument : list of command line argument
-     * @throws Exception
+     * @throws Exception ParseException
      */
     public CLIActionOptionOMERO(String[] argument) throws Exception {
         super(argument);
@@ -120,13 +114,30 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
      * @param action nucleusJ2.0 action to run
      * @return boolean existing action
      */
-    public static boolean  OMEROAvailableAction(String action) {
+    private static boolean  OMEROAvailableAction(String action) {
         ArrayList<String > actionAvailableInOmero= new ArrayList<>();
         actionAvailableInOmero.add("autocrop");
         actionAvailableInOmero.add("segmentation");
         return actionAvailableInOmero.contains(action);
     }
-
+    private Option getGroup(){
+        return this.m_group;
+    }
+    private Option getHostname(){
+        return this.m_hostname;
+    }
+    private Option getPort(){
+        return this.m_port;
+    }
+    private Option getUsername(){
+        return this.m_username;
+    }
+    private Option getPassword(){
+        return this.m_password;
+    }
+    private Option getOutputFolder(){
+        return this.m_outputFolder;
+    }
 }
 
 //        if(cmd.getOptionValue("action").equals("autocrop")) {

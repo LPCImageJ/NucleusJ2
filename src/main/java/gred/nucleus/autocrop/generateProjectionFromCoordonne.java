@@ -99,7 +99,7 @@ public class generateProjectionFromCoordonne {
             File CurrentRaw=  RawImage.searchFileNameWithoutExention(coordinateFile.getName().substring(0, coordinateFile.getName().lastIndexOf('.')));
             FilesNames outPutFilesNames = new FilesNames(CurrentRaw.toString());
             String prefix = outPutFilesNames.PrefixeNameFile();
-            System.out.println("la current raw " +CurrentRaw.getName());
+            System.out.println("current raw " +CurrentRaw.getName());
             AutocropParameters autocropParameters= new AutocropParameters(CurrentRaw.getParent(),
                     CurrentRaw.getParent()+RawImage.getSeparator());
             annotAutoCrop annotAutoCrop =new annotAutoCrop(boxListsNucleiNotPass,

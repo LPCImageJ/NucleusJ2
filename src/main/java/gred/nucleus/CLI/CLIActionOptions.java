@@ -65,16 +65,11 @@ public class CLIActionOptions {
             .desc("Use of NucleuJ2.0 in OMERO\n")
             .build();
 
-    /**
-     * Default constructor
-     */
-    public CLIActionOptions() {
-    }
 
     /**
      Constructor with argument
      * @param argument : list of command line argument
-     * @throws Exception
+     * @throws Exception ParseException
      */
     public CLIActionOptions(String[] argument)throws Exception   {
         this.m_options.addOption(this.m_inputFolder);
