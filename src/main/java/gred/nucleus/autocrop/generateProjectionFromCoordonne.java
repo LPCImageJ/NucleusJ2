@@ -20,7 +20,7 @@ public class generateProjectionFromCoordonne {
      * @param pathToCoordinnate path to coordinates files from autocrop
      * @throws Exception
      */
-   public generateProjectionFromCoordonne(String pathToGIFTSeg, String pathToZprojection,String pathToCoordinnate) throws Exception {
+   public generateProjectionFromCoordonne(String pathToCoordinnate,String pathToGIFTSeg, String pathToZprojection) throws Exception {
         this.m_pathToGIFTSeg=pathToGIFTSeg;
         this.m_pathToZprojection=pathToZprojection;
         this.m_pathToCoordonnate=pathToCoordinnate;
@@ -42,7 +42,7 @@ public class generateProjectionFromCoordonne {
      * most of case Z truncated )
      * @throws Exception
      */
-    public void run()throws Exception{
+    public void generateCoordinateFiltered()throws Exception{
         Directory GIFTsegImages = new Directory(this.m_pathToGIFTSeg);
         GIFTsegImages.listImageFiles(this.m_pathToGIFTSeg);
         GIFTsegImages.checkIfEmpty();
@@ -76,7 +76,7 @@ public class generateProjectionFromCoordonne {
 
     }
 
-    public void run2()throws Exception{
+    public void generateCoordinate()throws Exception{
         Directory RawImage = new Directory(this.m_pathToRaw);
         RawImage.listImageFiles(this.m_pathToRaw);
         RawImage.checkIfEmpty();
@@ -99,7 +99,7 @@ public class generateProjectionFromCoordonne {
             File CurrentRaw=  RawImage.searchFileNameWithoutExention(coordinateFile.getName().substring(0, coordinateFile.getName().lastIndexOf('.')));
             FilesNames outPutFilesNames = new FilesNames(CurrentRaw.toString());
             String prefix = outPutFilesNames.PrefixeNameFile();
-            System.out.println("la current raw " +CurrentRaw.getName());
+            System.out.println("current raw " +CurrentRaw.getName());
             AutocropParameters autocropParameters= new AutocropParameters(CurrentRaw.getParent(),
                     CurrentRaw.getParent()+RawImage.getSeparator());
             annotAutoCrop annotAutoCrop =new annotAutoCrop(boxListsNucleiNotPass,

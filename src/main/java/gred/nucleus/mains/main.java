@@ -1,5 +1,6 @@
 package gred.nucleus.mains;
 
+import gred.nucleus.CLI.*;
 import gred.nucleus.MachineLeaningUtils.ComputeNucleiParametersML;
 import gred.nucleus.autocrop.*;
 import gred.nucleus.core.ComputeNucleiParameters;
@@ -12,13 +13,12 @@ import loci.common.DebugTools;
 import loci.formats.FormatException;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.io.Console;  
+import java.io.Console;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Options;
+import org.apache.commons.cli.*;
 
 import fr.igred.omero.Client;
 import fr.igred.omero.ImageContainer;
@@ -441,8 +441,40 @@ public class main {
         FileSaver fileSaver = new FileSaver(imagePlusInput);
         fileSaver.saveAsTiff(pathFile);
     }
-
     public static void main(String[] args) throws Exception {
+        DebugTools.enableLogging("OFF");
+        List<String> listArgs = Arrays.asList(args);
+        System.setProperty("java.awt.headless", "false");
+
+
+        if(listArgs.contains("-h") ||listArgs.contains("-help")){
+            CLIHelper command = new CLIHelper( );
+            command.CmdHelp();
+        }
+        else if ((listArgs.contains("-ome"))||(listArgs.contains("-omero"))) {
+            CLIActionOptionOMERO command = new CLIActionOptionOMERO( args);
+            CLIRunActionOMERO runActionOMERO = new CLIRunActionOMERO(command.getCmd());
+        }
+        else{
+            CLIActionOptionCmdLine command = new CLIActionOptionCmdLine( args);
+            CLIRunAction runCmd =new CLIRunAction(command.getCmd());
+        }
+    }
+
+    public static boolean  OMEROAvailableAction(String action) {
+        ArrayList <String > actionAvailableInOmero= new ArrayList<>();
+        actionAvailableInOmero.add("autocrop");
+        actionAvailableInOmero.add("segmentation");
+
+        return actionAvailableInOmero.contains(action);
+    }
+
+
+
+
+
+
+    public static void main2(String[] args) throws Exception {
         DebugTools.enableLogging("OFF");
         Console con = System.console();   
 
@@ -453,6 +485,7 @@ public class main {
         options.addOption("a",   "action",   true,  "Action to make");
         options.addOption("in",  "input",    true,  "Input path");
         options.addOption("out", "output",   true,  "Output path");
+        options.addOption("co", "coodinates",   true,  "Coordinates file");
         options.addOption("f",   "file",     false, "Input is a file");
         options.addOption("c",   "config",   true, "Path to config file");
         options.addOption("ome", "omero",    false, "Usage of OMERO");
@@ -465,8 +498,9 @@ public class main {
         CommandLineParser parser = new DefaultParser();
 
         cmd = parser.parse(options, args);
-
+        HelpFormatter formatter = new HelpFormatter();
         cmd.getOptionValue("action");
+
 
         if(cmd.getOptionValue("action").equals("autocrop")) {
             System.out.println("start autocrop");
@@ -565,37 +599,48 @@ public class main {
                 }
             }
         }
-        else if(args[0].equals("computeParameters")){
-            if ((args.length == 4) && (args[3].equals("ConfigFile"))) {
-                computeNucleusParameters(args[1], args[2], args[3]);
+        else if(cmd.getOptionValue("action").equals("computeParameters")){
+        //else if(args[0].equals("computeParameters")){
+            if ( (cmd.hasOption("config"))) {
+                computeNucleusParameters(cmd.getOptionValue("input"),
+                        cmd.getOptionValue("output"),
+                        cmd.getOptionValue("config"));
             }
             else{
-                computeNucleusParameters(args[1], args[2]);
+                computeNucleusParameters(cmd.getOptionValue("input"),
+                        cmd.getOptionValue("output"));
             }
         }
-        else if(args[0].equals("computeParametersDL")){
-            computeNucleusParametersDL(args[1], args[2]);
+        else if(cmd.getOptionValue("action").equals("computeParametersDL")){
+            computeNucleusParametersDL(cmd.getOptionValue("input"),
+                    cmd.getOptionValue("output"));
         }
-        else if(args[0].equals("generateProjection")){
-            if(args.length==4) {
-                generateProjectionFromCoordinates(args[1], args[2], args[3]);
+        else if(cmd.getOptionValue("action").equals("generateProjection")){
+            if(cmd.hasOption("config")) {
+                generateProjectionFromCoordinates(cmd.getOptionValue("input"),
+                        cmd.getOptionValue("output"),
+                        cmd.getOptionValue("config"));
             }
             else{
-                generateProjectionFromCoordinates(args[1], args[2]);
+                generateProjectionFromCoordinates(cmd.getOptionValue("input"),
+                        cmd.getOptionValue("output"));
             }
         }
-        else if(args[0].equals("CropFromCoordinate")){
-            cropFromCoordinates(args[1]);
+        else if(cmd.getOptionValue("action").equals("CropFromCoordinate")){
+            cropFromCoordinates(cmd.getOptionValue("input"));
         }
-        else if(args[0].equals("GenerateOverlay")){
-            genereOV(args[1]);
+        else if(cmd.getOptionValue("action").equals("GenerateOverlay")){
+            genereOV(cmd.getOptionValue("input"));
         }
         else{
+            formatter.printHelp( "NucleusJ2.0", options ,true);
+/*
             System.out.println("Argument le premier argument doit être   autocrop  ou   segmentation ou computeParameters");
             System.out.println("\nExemples :");
             System.out.println("\njava NucleusJ_giftwrapping.jar autocrop dossier/raw/ dossier/out/");
             System.out.println("\njava NucleusJ_giftwrapping.jar segmentation dossier/raw/ dossier/out/");
             System.out.println("\n\n");
+            */
         }
         System.out.println("Fin du programme");
     }

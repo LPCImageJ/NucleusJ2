@@ -470,7 +470,7 @@ public class AutoCrop {
 	 */
 	public void cropKernels2()throws Exception {
 		Directory dirOutput= new Directory(
-			this.m_outputDirPath+File.separator+"nuclei");
+			this.m_outputDirPath+"nuclei");
 		dirOutput.CheckAndCreateDir();
 		this.m_infoImageAnalyse += getSpecificImageInfo() + getColoneName();
 		for (int y =0 ;y<this.m_channelNumbers;y++) {
@@ -898,13 +898,13 @@ public class AutoCrop {
      * Write analyse info in output texte file
      * @throws IOException
      */
-    public void writeAnalyseInfo() throws IOException {
+    public void writeAnalyseInfo() throws Exception {
 		Directory dirOutput= new Directory(
-				this.m_outputDirPath + File.separator
+				this.m_outputDirPath
 						+ "coordinates");
 		dirOutput.CheckAndCreateDir();
         OutputTextFile resultFileOutput=new OutputTextFile(
-        		this.m_outputDirPath + File.separator
+        		this.m_outputDirPath
 						+ "coordinates" + File.separator
 						+ this.m_outputFilesPrefix+".txt");
         resultFileOutput.SaveTextFile(this.m_infoImageAnalyse);

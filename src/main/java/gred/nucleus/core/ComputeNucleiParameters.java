@@ -88,7 +88,15 @@ public class ComputeNucleiParameters {
 
         resultFileOutputOTSU.SaveTextFile(outputCropGeneralInfoOTSU.toString());
 
+
+
     }
+
+    public void addConfigParameters(String pathToconfig) throws Exception{
+        this.m_pluginParameters.addGeneralProperties(pathToconfig);
+
+    }
+
     /**
      *
      * @return columns names for results

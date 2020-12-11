@@ -57,6 +57,9 @@ public class AutocropParameters extends PluginParameters {
      */
     private boolean m_boxesRegroupement=true;
 
+
+    public AutocropParameters(){}
+
     /** Constructor with default parameter
      * @param inputFolder : path folder containing Images
      * @param outputFolder : path folder output analyse
@@ -259,50 +262,69 @@ public class AutocropParameters extends PluginParameters {
     public AutocropParameters (String inputFolder, String outputFolder,
                                String pathToConfigFile){
         super(inputFolder, outputFolder,pathToConfigFile);
+        addProperties(pathToConfigFile);
+
+    }
+    public void addProperties (String pathToConfigFile) {
         Properties prop = new Properties();
         String fileName = pathToConfigFile;
         InputStream is = null;
         try {
             is = new FileInputStream(fileName);
         } catch (FileNotFoundException ex) {
-            System.err.println(pathToConfigFile+" : can't find the config file !");
+            System.err.println(pathToConfigFile + " : can't find the config file !");
             System.exit(-1);
         }
         try {
             prop.load(is);
         } catch (IOException ex) {
-            System.err.println(pathToConfigFile+ " : can't load the config file !");
+            System.err.println(pathToConfigFile + " : can't load the config file !");
             System.exit(-1);
         }
-        for (String idProp :prop.stringPropertyNames()){
-            if(idProp.equals("xCropBoxSize")){this.m_xCropBoxSize =
-                    Integer.valueOf(prop.getProperty("xCropBoxSize"));}
-            if(idProp.equals("yCropBoxSize")){this.m_yCropBoxSize =
-                    Integer.valueOf(prop.getProperty("yCropBoxSize"));}
-            if(idProp.equals("zCropBoxSize")){this.m_zCropBoxSize =
-                    Integer.valueOf(prop.getProperty("zCropBoxSize"));}
-            if(idProp.equals("thresholdOTSUcomputing")){
+        for (String idProp : prop.stringPropertyNames()) {
+            if (idProp.equals("xCropBoxSize")) {
+                this.m_xCropBoxSize =
+                        Integer.valueOf(prop.getProperty("xCropBoxSize"));
+            }
+            if (idProp.equals("yCropBoxSize")) {
+                this.m_yCropBoxSize =
+                        Integer.valueOf(prop.getProperty("yCropBoxSize"));
+            }
+            if (idProp.equals("zCropBoxSize")) {
+                this.m_zCropBoxSize =
+                        Integer.valueOf(prop.getProperty("zCropBoxSize"));
+            }
+            if (idProp.equals("thresholdOTSUcomputing")) {
                 this.m_thresholdOTSUcomputing =
-                   Integer.valueOf(prop.getProperty("thresholdOTSUcomputing"));}
-            if(idProp.equals("slicesOTSUcomputing")){
+                        Integer.valueOf(prop.getProperty("thresholdOTSUcomputing"));
+            }
+            if (idProp.equals("slicesOTSUcomputing")) {
                 this.m_slicesOTSUcomputing =
-                    Integer.valueOf(prop.getProperty("slicesOTSUcomputing"));}
-            if(idProp.equals("channelToComputeThreshold")){
+                        Integer.valueOf(prop.getProperty("slicesOTSUcomputing"));
+            }
+            if (idProp.equals("channelToComputeThreshold")) {
                 this.m_channelToComputeThreshold =
-                Integer.valueOf(prop.getProperty("channelToComputeThreshold"));}
-            if(idProp.equals("maxVolumeNucleus")){
+                        Integer.valueOf(prop.getProperty("channelToComputeThreshold"));
+            }
+            if (idProp.equals("maxVolumeNucleus")) {
                 this.m_maxVolumeNucleus =
-                    Integer.valueOf(prop.getProperty("maxVolumeNucleus"));}
-            if(idProp.equals("minVolumeNucleus")){this.m_minVolumeNucleus =
-                    Integer.valueOf(prop.getProperty("minVolumeNucleus"));}
-            if(idProp.equals("boxesPercentSurfaceToFilter")){this.m_boxesPercentSurfaceToFilter =
-                    Integer.valueOf(prop.getProperty("boxesPercentSurfaceToFilter"));}
-            if(idProp.equals("boxesRegroupement")){this.m_boxesRegroupement =
-                    Boolean.valueOf(prop.getProperty("boxesRegroupement"));}
+                        Integer.valueOf(prop.getProperty("maxVolumeNucleus"));
+            }
+            if (idProp.equals("minVolumeNucleus")) {
+                this.m_minVolumeNucleus =
+                        Integer.valueOf(prop.getProperty("minVolumeNucleus"));
+            }
+            if (idProp.equals("boxesPercentSurfaceToFilter")) {
+                this.m_boxesPercentSurfaceToFilter =
+                        Integer.valueOf(prop.getProperty("boxesPercentSurfaceToFilter"));
+            }
+            if (idProp.equals("boxesRegroupement")) {
+                this.m_boxesRegroupement =
+                        Boolean.valueOf(prop.getProperty("boxesRegroupement"));
+            }
 
         }
     }
-
      /**
      * Method to get parameters of the analyse
      * @return : list of the parameters used for the analyse

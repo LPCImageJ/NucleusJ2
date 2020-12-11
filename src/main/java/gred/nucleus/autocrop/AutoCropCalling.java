@@ -84,7 +84,7 @@ public class AutoCropCalling {
                 autoCrop.writeAnalyseInfo();
                 annotAutoCrop test = new annotAutoCrop(
                         autoCrop.getFileCoordinates(), currentFile,
-                        this.m_autocropParameters.getOutputFolder()+currentFile.separator
+                        this.m_autocropParameters.getOutputFolder()
                                 ,this._prefix, this.m_autocropParameters);
                 test.run();
                 this.m_outputCropGeneralInfo=this.m_outputCropGeneralInfo
