@@ -383,7 +383,7 @@ public class main {
 
     public static void generateProjectionFromCoordinates(String pathToCoordonnate, String pathToRaw) throws IOException, FormatException,Exception {
         generateProjectionFromCoordonne projection =new generateProjectionFromCoordonne(pathToCoordonnate, pathToRaw);
-        projection.run2();
+        projection.generateCoordinate();
     }
 
     /**
@@ -400,7 +400,7 @@ public class main {
 
     public static void generateProjectionFromCoordinates(String pathToGIFTSeg, String pathToZprojection,String pathToCoordinate) throws IOException, FormatException,Exception {
         generateProjectionFromCoordonne projection =new generateProjectionFromCoordonne(pathToGIFTSeg, pathToZprojection, pathToCoordinate);
-        projection.run();
+        projection.generateCoordinateFiltered();
     }
 
     /**
@@ -448,8 +448,7 @@ public class main {
 
 
         if(listArgs.contains("-h") ||listArgs.contains("-help")){
-            CLIHelper command = new CLIHelper( );
-            command.CmdHelp();
+            CLIHelper command = new CLIHelper(args );
         }
         else if ((listArgs.contains("-ome"))||(listArgs.contains("-omero"))) {
             CLIActionOptionOMERO command = new CLIActionOptionOMERO( args);
