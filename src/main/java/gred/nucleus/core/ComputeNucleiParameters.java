@@ -117,8 +117,7 @@ public class ComputeNucleiParameters {
                 "MedianIntensityImage\t" +
                 "MedianIntensityNucleus\t" +
                 "MedianIntensityBackground\t" +
-                "ImageSize\t" +
-                "OTSUThreshold\n";
+                "ImageSize\n";
     }
 
 }
