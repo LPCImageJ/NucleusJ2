@@ -55,7 +55,7 @@ public class computeParametersDialog extends JFrame implements ItemListener {
 
     public computeParametersDialog ()
     {
-        this.setTitle("Chromocenters segmentation pipeline (Batch)");
+        this.setTitle("Compute morphological parameters");
         this.setSize(500, 500);
         this.setLocationRelativeTo(null);
         _container = getContentPane();
