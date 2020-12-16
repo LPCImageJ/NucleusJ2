@@ -92,7 +92,6 @@ public class generateProjectionFromCoordonne {
             Map<String, String> sortedMap = new TreeMap<String, String>(listOfBoxes);
             for (HashMap.Entry<String, String> entry : listOfBoxes.entrySet()) {
                     boxListsNucleiNotPass.add(entry.getValue());
-
             }
             System.out.println(coordinateFile.getName());
 
@@ -137,6 +136,13 @@ public class generateProjectionFromCoordonne {
                     int yMax=Integer.valueOf(splitLine[4])+Integer.valueOf(splitLine[7]);
                     int zMax=Integer.valueOf(splitLine[5])+Integer.valueOf(splitLine[8]);
                     boxLists.put(fileName[fileName.length-1],splitLine[0]
+                            + "\t" + splitLine[3]
+                            + "\t" + xMax
+                            + "\t" + splitLine[4]
+                            + "\t" + yMax
+                            + "\t" + splitLine[5]
+                            + "\t" + zMax);
+                    System.out.println("EUUU"+ fileName[fileName.length-1]+"value"+splitLine[0]
                             + "\t" + splitLine[3]
                             + "\t" + xMax
                             + "\t" + splitLine[4]

@@ -138,7 +138,11 @@ public class annotAutoCrop {
         this.m_zProjection= projectionMax(zProjectionTmp);
         ajustContrast(0.3);
         for(int i = 0; i < this.m_boxCoordinates.size(); ++i) {
-            addBoxCropToZProjection(this.m_boxCoordinates.get(i),i);
+            String [] splitLine = this.m_boxCoordinates.get(i).split("\\t");
+            String [] fileName =splitLine[0].split("\\/");
+            String [] Name =fileName[fileName.length-1].split("_");
+            System.out.println("le truc qui merde "+this.m_boxCoordinates.get(i)+"\n"+splitLine[0]+"\n"+Integer.parseInt(Name[Name.length-2]));
+            addBoxCropToZProjection(this.m_boxCoordinates.get(i),Integer.parseInt(Name[Name.length-2]));
         }
         String outFileZbox = this.m_outputDirPath+this.m_currentFile.separator+"zprojection"+this.m_currentFile.separator+m_outputFilesPrefix+"_Zprojection.tif";
         System.out.println("outFileZbox "+ outFileZbox);

@@ -543,7 +543,7 @@ public class AutoCrop {
 							this.m_outputDirPath
 									+ File.separator
 									+ this.m_outputFilesPrefix + "_"
-									+ coord + i
+									+ i+"_C0"
 									+ "\t" + xmin
 									+ "\t" + xmax
 									+ "\t" + ymin
@@ -746,7 +746,7 @@ public class AutoCrop {
                             this.m_outputDirPath
                                     + File.separator
                                     + this.m_outputFilesPrefix + "_"
-                                    + coord + i
+                                    + i
                                     + "\t" + xmin
                                     + "\t" + xmax
                                     + "\t" + ymin
