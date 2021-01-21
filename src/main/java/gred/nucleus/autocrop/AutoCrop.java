@@ -311,7 +311,6 @@ public class AutoCrop {
 				this.m_imageSeg,
 				26,
 				32);
-
 	}
 
 	/**
@@ -411,7 +410,6 @@ public class AutoCrop {
 			int i = 0;
 			for (Map.Entry<Double, Box> entry : this.m_boxes.entrySet()) {
 				Box box = entry.getValue();
-				//System.out.println(box.getXMin()+" "+box.getYMin()+" "+box.getZMin());
 				int xmin = box.getXMin()
 						- this.m_autocropParameters.getxCropBoxSize();
 				int ymin = box.getYMin()
@@ -423,10 +421,10 @@ public class AutoCrop {
 						+ "_" + box.getZMin();
 
 				if (xmin <= 0)
-					xmin = 1;
+					xmin = 0;
 				if (ymin <= 0) { ymin = 1;}
 				if (zmin <= 0)
-					zmin = 1;
+					zmin = 0;
 				int width = box.getXMax()
 						+ (2 * this.m_autocropParameters.getxCropBoxSize())
 						- box.getXMin();
