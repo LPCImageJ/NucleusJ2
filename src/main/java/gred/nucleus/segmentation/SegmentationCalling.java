@@ -157,7 +157,7 @@ public class SegmentationCalling {
             System.out.println("otsu modif threshold: "+nucleusSegmentation.getBestThreshold()+"\n");
             if (this.m_semgemtationParameters.getGiftWrapping()){
                 ConvexHullSegmentation nuc = new ConvexHullSegmentation();
-                imgSeg = nuc.run(imgSeg,this.m_semgemtationParameters);
+                imgSeg = nuc.runGIFTWrapping(imgSeg,this.m_semgemtationParameters);
             }
             imgSeg.setTitle(this._output);
             if(!this._output.equals(""))

@@ -32,7 +32,7 @@ public class ConvexHullSegmentation {
 	 * Current image segmented analysed
 	 * @return segmented image
 	 */
-	public ImagePlus run(ImagePlus imagePlusInput,SegmentationParameters semgemtationParameters){
+	public ImagePlus runGIFTWrapping(ImagePlus imagePlusInput,SegmentationParameters semgemtationParameters){
 		ConvexeHullImageMaker nuc = new ConvexeHullImageMaker();
 		nuc.setAxes("xy");
 	   	ImagePlus imagePlusXY = nuc.giftWrapping(imagePlusInput,semgemtationParameters);

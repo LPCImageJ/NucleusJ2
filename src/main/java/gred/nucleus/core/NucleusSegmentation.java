@@ -337,7 +337,7 @@ public class NucleusSegmentation {
      */
 	public void preProcessImage() {
 
-		GaussianBlur3D.blur(this._imgRawTransformed, 0.25, 0.25, 1);
+		GaussianBlur3D.blur(this._imgRawTransformed, 0.1, 0.1, 1);
 		ImageStack imageStack = this._imgRawTransformed.getStack();
 		int max = 0;
 		for (int k = 0; k < this._imgRawTransformed.getStackSize(); ++k) {
@@ -862,7 +862,7 @@ public class NucleusSegmentation {
 		if(getBadCrop()==false && getBestThreshold() != -1
                 && this.m_semgemtationParameters.getGiftWrapping()) {
 			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
-			this.m_imageSeg[0] = nuc.run(this.m_imageSeg[0]
+			this.m_imageSeg[0] = nuc.runGIFTWrapping(this.m_imageSeg[0]
                     , this.m_semgemtationParameters);
 			String pathSegGIFT = this.m_semgemtationParameters.getOutputFolder()
                     + "GIFT" + this.m_currentFile.separator
@@ -881,7 +881,7 @@ public class NucleusSegmentation {
                 && this.m_semgemtationParameters.getGiftWrapping()) {
 			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
 
-			this.m_imageSeg[0] = nuc.run(this.m_imageSeg[0]
+			this.m_imageSeg[0] = nuc.runGIFTWrapping(this.m_imageSeg[0]
 					, this.m_semgemtationParameters);
 					
 			String path = new java.io.File( "." ).getCanonicalPath() + "/" + this.m_imageSeg[0].getTitle();
