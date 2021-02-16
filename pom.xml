@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>igred</groupId>
 	<artifactId>NucleusJ_2</artifactId>
-	<version>1.0.2</version>
+	<version>1.2.1</version>
 
 	<name>NucleusJ</name>
 	<description>Ensemble of ImageJ plugins for nuclear analysis</description>
