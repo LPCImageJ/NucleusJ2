@@ -604,6 +604,8 @@ public class AutoCrop {
 
 				ROIContainer roi = new ROIContainer(shapes);
 
+				image.saveROI(client, roi);
+
 				ImagePlus imgResu = image.toImagePlus(client, xBound, yBound, cBound, zBound, null);
 
 				Calibration cal = this.m_rawImg.getCalibration();
