@@ -6,13 +6,16 @@ A discrete geometric method was introduced to improve the surface area calculati
 
 To increase the number of nuclei considered in a single analysis, a method was introduced to delimit an automatic bounding volume (autocrop) around each nucleus of a 3D wide-field stack containing ten to a hundred nuclei. Each of the collected nuclei can then be segmented through two complementary methods, either based on the Otsu threshold method or on edge-detection through a 3D gift-wrapping method.
 
+[Article direct link](https://www.tandfonline.com/doi/full/10.1080/19491034.2020.1845012)
+
+
 # Downloading and manual user links
 
 Downloading Last version : [jar](https://gitlab.com/api/v4/projects/19044962/packages/maven/burp/NucleusJ_2/1.2.0/NucleusJ_2-1.2.0.jar)
 
 Manual user and examples: [wiki](https://gitlab.com/DesTristus/NucleusJ2.0/-/wikis/home)
 
-# Authors
+# Authors & contact
 
 Axel Poulet
 
@@ -20,3 +23,6 @@ Dubos Tristan
 
 Contact: tristan.duos33@gmail.com
 
+# How to cite :
+
+Tristan Dubos, Axel Poulet, Céline Gonthier-Gueret, Guillaume Mougeot, Emmanuel Vanrobays, Yanru Li, Sylvie Tutois, Emilie Pery, Frédéric Chausse, Aline V. Probst, Christophe Tatout & Sophie Desset (2020) Automated 3D bio-imaging analysis of nuclear organization by NucleusJ 2.0, Nucleus, 11:1, 315-329, DOI: 10.1080/19491034.2020.1845012 
