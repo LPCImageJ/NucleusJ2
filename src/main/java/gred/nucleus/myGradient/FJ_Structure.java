@@ -136,10 +136,7 @@ class FJStructure {
 		} catch (OutOfMemoryError e) {
 			FJ.error("Not enough memory for this operation");
 			
-		} catch (IllegalArgumentException e) {
-			FJ.error(e.getMessage());
-			
-		} catch (IllegalStateException e) {
+		} catch (IllegalArgumentException | IllegalStateException e) {
 			FJ.error(e.getMessage());
 			
 		} catch (Throwable e) {

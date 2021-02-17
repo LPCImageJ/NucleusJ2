@@ -1,11 +1,11 @@
-/*****************************************************************************\
- Copyright (C) 2016 by Rémy Malgouyres                                    *
- http://malgouyres.org                                                    *
- File: ComponentRemovalBoundary.java                                      *
+/*
+ * Copyright (C) 2016 by Rémy Malgouyres
+ * http://malgouyres.org
+ * File: ComponentRemovalBoundary.java
  *
- The program is distributed under the terms of the GNU General Public License *
+ * The program is distributed under the terms of the GNU General Public License
  *
- \******************************************************************************/
+ */
 
 package gred.nucleus.componentRemoval;
 

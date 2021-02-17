@@ -27,7 +27,7 @@ public class Box {
 	/**
 	 * The coordinate z min of the Box
 	 */
-	private short m_zMin = 0;
+	private short m_zMin;
 	/**
 	 * The coordinate z max of the Box
 	 */

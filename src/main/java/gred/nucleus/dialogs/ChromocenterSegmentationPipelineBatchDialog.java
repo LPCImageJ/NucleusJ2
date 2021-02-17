@@ -289,13 +289,6 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 		return _start;
 	}
 	
-	/*******************************************************************************************************************************************
-	 Classes listener to interact with the several element of the window
-	 */
-	/*******************************************************************************************************************************************
-	 /********************************************************************************************************************************************
-	 /********************************************************************************************************************************************
-	 /********************************************************************************************************************************************/
 	
 	public String getxCalibration2() {
 		return xCalibration.getText();
@@ -377,8 +370,9 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 		}
 	}
 	
+	
 	/**
-	 *
+	 * Classes listener to interact with the several elements of the window
 	 */
 	class StartListener implements ActionListener {
 		ChromocenterSegmentationPipelineBatchDialog _chromocenterSegmentationPipelineBatchDialog;

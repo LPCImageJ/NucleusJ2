@@ -1,19 +1,19 @@
-/*****************************************************************************\
- Copyright (C) 2016 by Rémy Malgouyres                                    *
- http://malgouyres.org                                                    *
- File: ConnectedComponent3D.java                                          *
+/*
+ * Copyright (C) 2016 by Rémy Malgouyres
+ * http://malgouyres.org
+ * File: ConnectedComponent3D.java
  *
- The program is distributed under the terms of the GNU General Public License *
+ * The program is distributed under the terms of the GNU General Public License *
  *
- \******************************************************************************/
+ */
 
 package gred.nucleus.connectedComponent;
 
 import gred.nucleus.utils.Voxel;
-import java.util.LinkedList;
-import gred.nucleus.connectedComponent.ComponentInfo;
 import ij.ImagePlus;
 import ij.ImageStack;
+
+import java.util.LinkedList;
 
 
 /**

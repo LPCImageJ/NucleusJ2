@@ -1,6 +1,6 @@
 package gred.nucleus.plugins;
 
-import gred.nucleus.autocrop.CropFromCoordonnate;
+import gred.nucleus.autocrop.CropFromCoordinates;
 import gred.nucleus.dialogs.CropFromCoodinateDialog;
 import ij.IJ;
 import ij.plugin.PlugIn;
@@ -10,10 +10,10 @@ import java.io.IOException;
 
 public class CropFromCoordinate_ implements PlugIn {
 	
-	public static void cropFromCoordinates(String coordonnateDir) throws IOException, FormatException, Exception {
+	public static void cropFromCoordinates(String coordinateDir) throws IOException, FormatException, Exception {
 		
-		CropFromCoordonnate test = new CropFromCoordonnate(coordonnateDir);
-		test.runCropFromCoordonnate();
+		CropFromCoordinates test = new CropFromCoordinates(coordinateDir);
+		test.runCropFromCoordinate();
 	}
 	
 	@Override

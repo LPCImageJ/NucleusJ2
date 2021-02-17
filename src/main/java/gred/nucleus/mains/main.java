@@ -394,7 +394,7 @@ public class main {
 	 * Generate a projection from coordinate file. 2 steps : - 1 generate max projection from raw image - 2 draw boxes
 	 * on max projection
 	 *
-	 * @param pathToCoordonnate : folder containing coordinate files
+	 * @param pathToCoordinates : folder containing coordinate files
 	 * @param pathToRaw         : folder containing raw images associate
 	 *
 	 * @throws IOException
@@ -405,9 +405,10 @@ public class main {
 	
 	// UN DOSSIER AVEC LES ZPROJECTION
 	// UN DOSSIER AVEC LES COORDONNEES
-	public static void generateProjectionFromCoordinates(String pathToCoordonnate, String pathToRaw)
+	public static void generateProjectionFromCoordinates(String pathToCoordinates, String pathToRaw)
 	throws IOException, FormatException, Exception {
-		generateProjectionFromCoordonne projection = new generateProjectionFromCoordonne(pathToCoordonnate, pathToRaw);
+		generateProjectionFromCoordinates
+				projection = new generateProjectionFromCoordinates(pathToCoordinates, pathToRaw);
 		projection.generateCoordinate();
 	}
 	
@@ -428,8 +429,8 @@ public class main {
 	                                                     String pathToZprojection,
 	                                                     String pathToCoordinate)
 	throws IOException, FormatException, Exception {
-		generateProjectionFromCoordonne projection =
-				new generateProjectionFromCoordonne(pathToGIFTSeg, pathToZprojection, pathToCoordinate);
+		generateProjectionFromCoordinates projection =
+				new generateProjectionFromCoordinates(pathToGIFTSeg, pathToZprojection, pathToCoordinate);
 		projection.generateCoordinateFiltered();
 	}
 	
@@ -439,15 +440,15 @@ public class main {
 	 * <p>
 	 * pathToCoordinateFile pathToRawImageAssociate
 	 *
-	 * @param coordonnateDir
+	 * @param coordinatesDir
 	 *
 	 * @throws Exception
 	 */
 	
-	public static void cropFromCoordinates(String coordonnateDir) throws Exception {
+	public static void cropFromCoordinates(String coordinatesDir) throws Exception {
 		
-		CropFromCoordonnate test = new CropFromCoordonnate(coordonnateDir);
-		test.runCropFromCoordonnate();
+		CropFromCoordinates test = new CropFromCoordinates(coordinatesDir);
+		test.runCropFromCoordinate();
 	}
 	
 	/**

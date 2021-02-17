@@ -16,7 +16,7 @@ import ij.ImageStack;
 public class ConvexHullSegmentation {
 	
 	
-	private SegmentationParameters m_semgemtationParameters;
+	private SegmentationParameters m_segmentationParameters;
 	
 	/**
 	 * Run the gift wrapping analysis on 3D segmented image imputed for the different axis combined : XY XZ YZ
@@ -25,14 +25,14 @@ public class ConvexHullSegmentation {
 	 *
 	 * @return segmented image
 	 */
-	public ImagePlus runGIFTWrapping(ImagePlus imagePlusInput, SegmentationParameters semgemtationParameters) {
+	public ImagePlus runGIFTWrapping(ImagePlus imagePlusInput, SegmentationParameters segmentationParameters) {
 		ConvexeHullImageMaker nuc = new ConvexeHullImageMaker();
 		nuc.setAxes("xy");
-		ImagePlus imagePlusXY = nuc.giftWrapping(imagePlusInput, semgemtationParameters);
+		ImagePlus imagePlusXY = nuc.giftWrapping(imagePlusInput, segmentationParameters);
 		nuc.setAxes("xz");
-		ImagePlus imagePlusXZ = nuc.giftWrapping(imagePlusInput, semgemtationParameters);
+		ImagePlus imagePlusXZ = nuc.giftWrapping(imagePlusInput, segmentationParameters);
 		nuc.setAxes("yz");
-		ImagePlus imagePlusYZ = nuc.giftWrapping(imagePlusInput, semgemtationParameters);
+		ImagePlus imagePlusYZ = nuc.giftWrapping(imagePlusInput, segmentationParameters);
 		return imageMakingUnion(imagePlusInput, imagePlusXY, imagePlusXZ, imagePlusYZ);
 	}
 	

@@ -13,13 +13,13 @@ public class MulticropFilter {
 	
 	
 	public static void main(String[] args) throws Exception {
-		Directory directoryCoordonne =
+		Directory directoryCoordinates =
 				new Directory("/home/titus/Bureau/TEST_NJ/AUTOCROP/coordonneeProjection/coordonnee/");
 		Directory directoryTIF = new Directory("/home/titus/Bureau/TEST_NJ/AUTOCROP/coordonneeProjection/raw/");
-		directoryCoordonne.listAllFiles(directoryCoordonne.get_dirPath());
+		directoryCoordinates.listAllFiles(directoryCoordinates.get_dirPath());
 		directoryTIF.listAllFiles(directoryTIF.get_dirPath());
-		for (short i = 0; i < directoryCoordonne.getNumberFiles(); ++i) {
-			File coordinateFile = directoryCoordonne.getFile(i);
+		for (short i = 0; i < directoryCoordinates.getNumberFiles(); ++i) {
+			File coordinateFile = directoryCoordinates.getFile(i);
 			
 			// TODO FAIRE UNE FONCTION POUR CHOPER LE FICHIER IMAGE DANS LE DIR PEUT IMPORTE L EXTENSION !
 			File tifFile = directoryTIF.searchFileNameWithoutExention(coordinateFile.getName().split("\\.")[0]);
@@ -28,7 +28,7 @@ public class MulticropFilter {
 				
 				AutocropParameters autocropParameters =
 						new AutocropParameters(tifFile.getParent(), tifFile.getParent());
-				ArrayList<String> listOfBoxes = readCoordonnateTXT(coordinateFile);
+				ArrayList<String> listOfBoxes = readCoordinatesTXT(coordinateFile);
 				annotAutoCrop annotAutoCrop =
 						new annotAutoCrop(listOfBoxes, tifFile, tifFile.getAbsolutePath(), autocropParameters);
 				
@@ -38,7 +38,7 @@ public class MulticropFilter {
 		
 	}
 	
-	public static ArrayList<String> readCoordonnateTXT(File boxeFile) {
+	public static ArrayList<String> readCoordinatesTXT(File boxeFile) {
 		
 		ArrayList<String> boxLists = new ArrayList<>();
 		try {

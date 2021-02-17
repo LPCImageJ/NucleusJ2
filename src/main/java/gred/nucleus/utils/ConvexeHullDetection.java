@@ -97,7 +97,7 @@ public class ConvexeHullDetection {
 			for (int i = 0; i < lVoxelBoundary.size(); i++) {
 				//IJ.log("anglesSum " +lVoxelBoundary.get(i)._i + " "+lVoxelBoundary.get(i)._j + " "+lVoxelBoundary.get(i)._k + " ");
 				// IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" size "+lVoxelBoundary.size()+ " le i "+i);
-				if (voxelTest.compareCooridnatesTo(lVoxelBoundary.get(i)) == 1) {
+				if (voxelTest.compareCoordinatesTo(lVoxelBoundary.get(i)) == 1) {
 					VoxelRecord vectorCourant = new VoxelRecord();
 					vectorCourant.setLocation(lVoxelBoundary.get(i)._i - voxelTest._i,
 					                          lVoxelBoundary.get(i)._j - voxelTest._j,
@@ -149,7 +149,7 @@ public class ConvexeHullDetection {
 			lVoxelBoundary.remove(iMin);
 			
 			anglesSum += angleMin;
-			if (voxelMin.compareCooridnatesTo(_p0) == 0) {
+			if (voxelMin.compareCoordinatesTo(_p0) == 0) {
 				break;
 			}
 			
@@ -394,6 +394,6 @@ public class ConvexeHullDetection {
 		componentConnexe.setImageTable(i_c);
 		//IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" image  "+i_c.length+ " "+voxelRecord._i+ " "+voxelRecord._j + " " +image.length+ " "+image[0].length);
 		componentConnexe.computeLabelOfOneObject(1, voxelRecord);
-		return componentConnexe.getBoudaryVoxel(2);
+		return componentConnexe.getBoundaryVoxel(2);
 	}
 }

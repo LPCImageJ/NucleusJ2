@@ -10,9 +10,8 @@ import ij.plugin.PlugIn;
 import java.io.File;
 
 /**
- * Method to segment the nucleus on batch
- *
  * @author Tristan Dubos and Axel Poulet
+ * @deprecated Method to segment the nucleus on batch
  */
 public class NucleusSegmentationBatchPlugin_ implements PlugIn {
 	

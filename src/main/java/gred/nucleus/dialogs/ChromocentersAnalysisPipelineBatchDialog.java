@@ -27,37 +27,37 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements 
 	private final JFormattedTextField _jTextFieldYCalibration = new JFormattedTextField(Number.class);
 	private final JFormattedTextField _jTextFieldZCalibration = new JFormattedTextField(Number.class);
 	
-	private final JTextField _jTextFieldUnit          = new JTextField();
-	private final JTextField _jTextFieldWorkDirectory = new JTextField();
-	private final JTextField _jTextFieldRawData       = new JTextField();
-	private final JLabel _jLabelWorkDirectory;
-	private final ButtonGroup  _buttonGroupChoiceRhf = new ButtonGroup();
-	private final JRadioButton _jRadioButtonRhfV     = new JRadioButton("VolumeRHF");
-	private final JRadioButton _jRadioButtonRhfI     = new JRadioButton("IntensityRHF");
-	private final JRadioButton _jRadioButtonRhfIV    = new JRadioButton("VolumeRHF and IntensityRHF");
+	private final JTextField   _jTextFieldUnit           = new JTextField();
+	private final JTextField   _jTextFieldWorkDirectory  = new JTextField();
+	private final JTextField   _jTextFieldRawData        = new JTextField();
+	private final JLabel       _jLabelWorkDirectory;
+	private final ButtonGroup  _buttonGroupChoiceRhf     = new ButtonGroup();
+	private final JRadioButton _jRadioButtonRhfV         = new JRadioButton("VolumeRHF");
+	private final JRadioButton _jRadioButtonRhfI         = new JRadioButton("IntensityRHF");
+	private final JRadioButton _jRadioButtonRhfIV        = new JRadioButton("VolumeRHF and IntensityRHF");
 	private final ButtonGroup  buttonGroupChoiceAnalysis = new ButtonGroup();
 	private final JRadioButton _jRadioButtonNucCc        = new JRadioButton("Nucleus and chromocenter");
 	private final JRadioButton _jRadioButtonCc           = new JRadioButton("Chromocenter");
 	private final JRadioButton _jRadioButtonNuc          = new JRadioButton("Nucleus");
-	private final JPanel  Calib;
-	private final JTextPane unitRead = new JTextPane();
-	private final JLabel    unit     = new JLabel();
-	private final JLabel    calibx     = new JLabel();
-	private final JLabel    caliby     = new JLabel();
-	private final JLabel    calibz     = new JLabel();
-	private final JTextPane calibXRead = new JTextPane();
-	private final JTextPane calibYRead = new JTextPane();
-	private final JTextPane calibZRead = new JTextPane();
-	private final JCheckBox addCalibBox = new JCheckBox();
-	private       JLabel _jLabelXcalibration;
-	private       JLabel _jLabelYcalibration;
-	private       JLabel _jLabelZcalibration;
-	private       JLabel _jLabelUnit;
-	private       JLabel _jLabelAnalysis;
-	private       JLabel _jLabelCalibration;
-	private       String  _workDirectory;
-	private       String  _rawDataDirectory;
-	private       boolean _start = false;
+	private final JPanel       Calib;
+	private final JTextPane    unitRead                  = new JTextPane();
+	private final JLabel       unit                      = new JLabel();
+	private final JLabel       calibx                    = new JLabel();
+	private final JLabel       caliby                    = new JLabel();
+	private final JLabel       calibz                    = new JLabel();
+	private final JTextPane    calibXRead                = new JTextPane();
+	private final JTextPane    calibYRead                = new JTextPane();
+	private final JTextPane    calibZRead                = new JTextPane();
+	private final JCheckBox    addCalibBox               = new JCheckBox();
+	private       JLabel       _jLabelXcalibration;
+	private       JLabel       _jLabelYcalibration;
+	private       JLabel       _jLabelZcalibration;
+	private       JLabel       _jLabelUnit;
+	private       JLabel       _jLabelAnalysis;
+	private       JLabel       _jLabelCalibration;
+	private       String       _workDirectory;
+	private       String       _rawDataDirectory;
+	private       boolean      _start                    = false;
 	
 	/**
 	 * Architecture of the graphical windows
@@ -415,14 +415,6 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements 
 	}
 	
 	
-	/*******************************************************************************************************************************************
-	 Classes listener to interact with the several element of the window
-	 */
-	/********************************************************************************************************************************************
-	 /********************************************************************************************************************************************
-	 /********************************************************************************************************************************************
-	 /********************************************************************************************************************************************/
-	
 	public void itemStateChanged(ItemEvent e) {
 		if (e.getSource() == addCalibBox) {
 			if ((addCalibBox.isSelected())) {
@@ -499,8 +491,9 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements 
 		}
 	}
 	
+	
 	/**
-	 *
+	 * Classes listener to interact with the several elements of the window
 	 */
 	class StartListener implements ActionListener {
 		

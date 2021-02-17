@@ -28,7 +28,7 @@ public class rectangleIntersection {
 	
 	
 	/**
-	 * List of boxes Rectangle : xmin , ymin , width , heigth
+	 * List of boxes Rectangle : xmin , ymin , width , height
 	 */
 	ArrayList<Rectangle>      listRectangle      = new ArrayList<>();
 	/**
@@ -69,10 +69,10 @@ public class rectangleIntersection {
 		for (Map.Entry<Double, Box> entry : _boxes.entrySet()) {
 			Box box       = entry.getValue();
 			int boxWith   = box.getXMax() - box.getXMin();
-			int boxHeigth = box.getYMax() - box.getYMin();
+			int boxHeight = box.getYMax() - box.getYMin();
 			int boxSlice  = box.getZMax() - box.getZMin();
 			
-			this.listRectangle.add(new Rectangle(box.getXMin(), box.getYMin(), boxWith, boxHeigth));
+			this.listRectangle.add(new Rectangle(box.getXMin(), box.getYMin(), boxWith, boxHeight));
 			this.zSlices.add(box.getZMin() + "-" + boxSlice);
 		}
 	}
@@ -225,7 +225,7 @@ public class rectangleIntersection {
 			double   xMixNewRectangle = 0;
 			double   yMinNewRectangle = 0;
 			double   maxWidth         = 0;
-			double   maxHeigth        = 0;
+			double   maxHeight        = 0;
 			int      minZSlice        = 0;
 			int      maxZSlice        = 0;
 			if (splitlist2.length > 1) {
@@ -241,9 +241,9 @@ public class rectangleIntersection {
 					    (maxWidth == 0)) {
 						maxWidth = this.listRectangle.get(tmp).getX() + this.listRectangle.get(tmp).getWidth();
 					}
-					if (((this.listRectangle.get(tmp).getY() + this.listRectangle.get(tmp).getHeight()) > maxHeigth) ||
-					    (maxHeigth == 0)) {
-						maxHeigth = this.listRectangle.get(tmp).getY() + this.listRectangle.get(tmp).getHeight();
+					if (((this.listRectangle.get(tmp).getY() + this.listRectangle.get(tmp).getHeight()) > maxHeight) ||
+					    (maxHeight == 0)) {
+						maxHeight = this.listRectangle.get(tmp).getY() + this.listRectangle.get(tmp).getHeight();
 					}
 					
 					String[] zSliceTMP = this.zSlices.get(tmp).split("-");
@@ -263,11 +263,11 @@ public class rectangleIntersection {
 				maxZSlice = (int) maxZSlice - (int) minZSlice;
 				listOfRectangleZSliceToAdd.add((int) minZSlice + "-" + (int) maxZSlice);
 				maxWidth = (int) maxWidth - (int) xMixNewRectangle;
-				maxHeigth = (int) maxHeigth - (int) yMinNewRectangle;
+				maxHeight = (int) maxHeight - (int) yMinNewRectangle;
 				listOfRectangleToAdd.add(new Rectangle((int) xMixNewRectangle,
 				                                       (int) yMinNewRectangle,
 				                                       (int) maxWidth,
-				                                       (int) maxHeigth));
+				                                       (int) maxHeight));
 			}
 		}
 		

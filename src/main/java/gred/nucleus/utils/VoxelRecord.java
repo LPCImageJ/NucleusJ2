@@ -107,7 +107,7 @@ public class VoxelRecord {
 	 * @return results of comparaison
 	 */
 	
-	public int compareCooridnatesTo(Object object) {
+	public int compareCoordinatesTo(Object object) {
 		VoxelRecord voxelRecord = (VoxelRecord) object;
 		
 		if (_i == voxelRecord._i && _j == voxelRecord._j && _k == voxelRecord._k) {
@@ -128,14 +128,14 @@ public class VoxelRecord {
 	}
 	
 	/**
-	 * Multiplied the coordinates of voxel with a differnts factor for each coordinates
+	 * Multiplied the coordinates of voxel with a different factor for each coordinates
 	 *
 	 * @param a
 	 * @param b
 	 * @param c
 	 */
 	
-	public void Multiplie(double a, double b, double c) {
+	public void multiply(double a, double b, double c) {
 		this.setLocation(this._i * a, this._j * b, this._k * c);
 	}
 	
@@ -144,7 +144,7 @@ public class VoxelRecord {
 	 *
 	 * @param a
 	 */
-	public void Multiplie(double a) {
+	public void multiply(double a) {
 		this.setLocation(this._i * a, this._j * a, this._k * a);
 	}
 }

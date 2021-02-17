@@ -7,11 +7,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
 
-public class generateProjectionFromCoordonne {
+public class generateProjectionFromCoordinates {
 	
 	String m_pathToGIFTSeg;
 	String m_pathToZprojection;
-	String m_pathToCoordonnate;
+	String m_pathToCoordinates;
 	String m_pathToRaw;
 	
 	/**
@@ -19,27 +19,27 @@ public class generateProjectionFromCoordonne {
 	 *
 	 * @param pathToGIFTSeg     path to segmented image's folder
 	 * @param pathToZprojection path to Zprojection image's from autocrop
-	 * @param pathToCoordinnate path to coordinates files from autocrop
+	 * @param pathToCoordinates path to coordinates files from autocrop
 	 *
 	 * @throws Exception
 	 */
-	public generateProjectionFromCoordonne(String pathToCoordinnate, String pathToGIFTSeg, String pathToZprojection)
+	public generateProjectionFromCoordinates(String pathToCoordinates, String pathToGIFTSeg, String pathToZprojection)
 	throws Exception {
 		this.m_pathToGIFTSeg = pathToGIFTSeg;
 		this.m_pathToZprojection = pathToZprojection;
-		this.m_pathToCoordonnate = pathToCoordinnate;
+		this.m_pathToCoordinates = pathToCoordinates;
 	}
 	
 	/**
 	 * Constructor
 	 *
-	 * @param pathToCoordonnate path to segmented image's folder
+	 * @param pathToCoordinates path to segmented image's folder
 	 * @param pathToRaw         path to raw image
 	 *
 	 * @throws Exception
 	 */
-	public generateProjectionFromCoordonne(String pathToCoordonnate, String pathToRaw) throws Exception {
-		this.m_pathToCoordonnate = pathToCoordonnate;
+	public generateProjectionFromCoordinates(String pathToCoordinates, String pathToRaw) throws Exception {
+		this.m_pathToCoordinates = pathToCoordinates;
 		this.m_pathToRaw = pathToRaw;
 	}
 	
@@ -100,11 +100,11 @@ public class generateProjectionFromCoordonne {
 		Directory Zprojection = new Directory(this.m_pathToZprojection);
 		Zprojection.listImageFiles(this.m_pathToZprojection);
 		Zprojection.checkIfEmpty();
-		Directory Coordonnate = new Directory(this.m_pathToCoordonnate);
-		Coordonnate.listAllFiles(this.m_pathToCoordonnate);
-		Coordonnate.checkIfEmpty();
-		for (short i = 0; i < Coordonnate.getNumberFiles(); ++i) {
-			File                    coordinateFile        = Coordonnate.getFile(i);
+		Directory Coordinates = new Directory(this.m_pathToCoordinates);
+		Coordinates.listAllFiles(this.m_pathToCoordinates);
+		Coordinates.checkIfEmpty();
+		for (short i = 0; i < Coordinates.getNumberFiles(); ++i) {
+			File                    coordinateFile        = Coordinates.getFile(i);
 			HashMap<String, String> listOfBoxes           = readCoordinnateTXT(coordinateFile);
 			ArrayList<Integer>      boxNumber             = new ArrayList<>();
 			ArrayList<String>       boxListsNucleiNotPass = new ArrayList<>();
@@ -143,12 +143,12 @@ public class generateProjectionFromCoordonne {
 		Directory RawImage = new Directory(this.m_pathToRaw);
 		RawImage.listImageFiles(this.m_pathToRaw);
 		RawImage.checkIfEmpty();
-		Directory Coordonnate = new Directory(this.m_pathToCoordonnate);
-		Coordonnate.listAllFiles(this.m_pathToCoordonnate);
-		Coordonnate.checkIfEmpty();
+		Directory Coordinates = new Directory(this.m_pathToCoordinates);
+		Coordinates.listAllFiles(this.m_pathToCoordinates);
+		Coordinates.checkIfEmpty();
 		
-		for (short i = 0; i < Coordonnate.getNumberFiles(); ++i) {
-			File                    coordinateFile        = Coordonnate.getFile(i);
+		for (short i = 0; i < Coordinates.getNumberFiles(); ++i) {
+			File                    coordinateFile        = Coordinates.getFile(i);
 			HashMap<String, String> listOfBoxes           = readCoordinnateTXT(coordinateFile);
 			ArrayList<Integer>      boxNumber             = new ArrayList<>();
 			ArrayList<String>       boxListsNucleiNotPass = new ArrayList<>();

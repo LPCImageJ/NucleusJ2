@@ -10,8 +10,7 @@ import java.util.Calendar;
 
 public class TestSegmentationMethods {
 	/*
-	 
-	  @param img
+	 * @param img
 	 * @param vMin
 	 * @param vMax
 	 * @param outputImgString

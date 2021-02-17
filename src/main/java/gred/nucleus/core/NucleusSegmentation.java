@@ -50,7 +50,7 @@ public class NucleusSegmentation {
 	/**
 	 * Segmentation parameters for the analyse
 	 */
-	private final SegmentationParameters m_semgemtationParameters;
+	private final SegmentationParameters m_segmentationParameters;
 	/**
 	 * List of the 3D parameters computed associated to the segmented image
 	 */
@@ -99,18 +99,18 @@ public class NucleusSegmentation {
 	 * @param imgRaw                 raw image to analyse
 	 * @param vMin                   minimum volume of detected object
 	 * @param vMax                   maximum volume of detected object
-	 * @param semgemtationParameters list the parameters for the analyse
+	 * @param segmentationParameters list the parameters for the analyse
 	 *
 	 * @throws Exception
 	 */
 	public NucleusSegmentation(ImagePlus imgRaw,
 	                           int vMin,
 	                           int vMax,
-	                           SegmentationParameters semgemtationParameters)
+	                           SegmentationParameters segmentationParameters)
 	throws Exception {
 		this._vMin = vMin;
 		this._vMax = vMax;
-		this.m_semgemtationParameters = semgemtationParameters;
+		this.m_segmentationParameters = segmentationParameters;
 		this._imgRaw = imgRaw;
 		this._imgRaw = getImageChannel(0);
 		this._imgRawTransformed = this._imgRaw;
@@ -123,15 +123,15 @@ public class NucleusSegmentation {
 	 *
 	 * @param imageFile              Current image analysed
 	 * @param outputFilesPrefix      prefix for the output file
-	 * @param semgemtationParameters list the parameters for the analyse
+	 * @param segmentationParameters list the parameters for the analyse
 	 *
 	 * @throws Exception
 	 */
 	public NucleusSegmentation(File imageFile,
 	                           String outputFilesPrefix,
-	                           SegmentationParameters semgemtationParameters)
+	                           SegmentationParameters segmentationParameters)
 	throws Exception {
-		this.m_semgemtationParameters = semgemtationParameters;
+		this.m_segmentationParameters = segmentationParameters;
 		this.m_currentFile = imageFile;
 		this._imgRaw = getImageChannel(0);
 		// TODO ADD CHANNEL PARAMETERS (CASE OF CHANNELS UNSPLITED)
@@ -139,20 +139,20 @@ public class NucleusSegmentation {
 		this._imgRawTransformed = this._imgRaw.duplicate();
 		this._imgRawTransformed.setTitle(imageFile.getName());
 		Directory dirOutputOTSU = new Directory(
-				this.m_semgemtationParameters.getOutputFolder() + "OTSU");
+				this.m_segmentationParameters.getOutputFolder() + "OTSU");
 		dirOutputOTSU.CheckAndCreateDir();
-		if (this.m_semgemtationParameters.getGiftWrapping()) {
+		if (this.m_segmentationParameters.getGiftWrapping()) {
 			Directory dirOutputGIFT = new Directory(
-					this.m_semgemtationParameters.getOutputFolder() + "GIFT");
+					this.m_segmentationParameters.getOutputFolder() + "GIFT");
 			dirOutputGIFT.CheckAndCreateDir();
 		}
 	}
 	
 	public NucleusSegmentation(ImageContainer image,
-	                           SegmentationParameters semgemtationParameters,
+	                           SegmentationParameters segmentationParameters,
 	                           Client client)
 	throws Exception {
-		this.m_semgemtationParameters = semgemtationParameters;
+		this.m_segmentationParameters = segmentationParameters;
 		
 		int[] cBound = {0, 0};
 		
@@ -166,10 +166,10 @@ public class NucleusSegmentation {
 	public NucleusSegmentation(ImageContainer image,
 	                           ROIContainer roi,
 	                           int i,
-	                           SegmentationParameters semgemtationParameters,
+	                           SegmentationParameters segmentationParameters,
 	                           Client client)
 	throws Exception {
-		this.m_semgemtationParameters = semgemtationParameters;
+		this.m_segmentationParameters = segmentationParameters;
 		
 		List<ShapeData> shapes = roi.getShapes();
 		
@@ -282,14 +282,14 @@ public class NucleusSegmentation {
 			                                          26,
 			                                          32);
 			Calibration cal = this._imgRaw.getCalibration();
-			if (this.m_semgemtationParameters.getManualParameter()) {
+			if (this.m_segmentationParameters.getManualParameter()) {
 				//TODO AJOUTER LES UNITES
 				cal.setXUnit("µm");
-				cal.pixelWidth = this.m_semgemtationParameters.getXCal();
+				cal.pixelWidth = this.m_segmentationParameters.getXCal();
 				cal.setYUnit("µm");
-				cal.pixelHeight = this.m_semgemtationParameters.getYCal();
+				cal.pixelHeight = this.m_segmentationParameters.getYCal();
 				cal.setZUnit("µm");
-				cal.pixelDepth = this.m_semgemtationParameters.getZCal();
+				cal.pixelDepth = this.m_segmentationParameters.getZCal();
 			} else {
 				cal.setXUnit("µm");
 				cal.pixelWidth = this._imgRaw.getCalibration().pixelWidth;
@@ -314,8 +314,8 @@ public class NucleusSegmentation {
 			                                       255,
 			                                       tempSeg.getStackSize() - 1);
 			if (testRelativeObjectVolume(volume, imageVolume) &&
-			    volume >= this.m_semgemtationParameters.getM_minVolumeNucleus() &&
-			    volume <= this.m_semgemtationParameters.getM_maxVolumeNucleus() &&
+			    volume >= this.m_segmentationParameters.getM_minVolumeNucleus() &&
+			    volume <= this.m_segmentationParameters.getM_maxVolumeNucleus() &&
 			    !firstStack && !lastStack) {
 				
 				double sphericity = measure3D.computeSphericity(volume,
@@ -370,7 +370,7 @@ public class NucleusSegmentation {
 	 * @return
 	 *
 	 * @throws Exception
-	 * @deprecated Method to apply the semgentation to find the maximum sphericity.
+	 * @deprecated Method to apply the segmentation to find the maximum sphericity.
 	 */
 	
 	public ImagePlus applySegmentation(ImagePlus imagePlusInput)
@@ -701,8 +701,8 @@ public class NucleusSegmentation {
 	 */
 	public double getXcalibration() {
 		double xCal;
-		if (this.m_semgemtationParameters.m_manualParameter) {
-			xCal = this.m_semgemtationParameters.getXCal();
+		if (this.m_segmentationParameters.m_manualParameter) {
+			xCal = this.m_segmentationParameters.getXCal();
 		} else {
 			xCal = this._imgRawTransformed.getCalibration().pixelWidth;
 		}
@@ -717,8 +717,8 @@ public class NucleusSegmentation {
 	 */
 	public double getYcalibration() {
 		double yCal;
-		if (this.m_semgemtationParameters.m_manualParameter) {
-			yCal = this.m_semgemtationParameters.getYCal();
+		if (this.m_segmentationParameters.m_manualParameter) {
+			yCal = this.m_segmentationParameters.getYCal();
 		} else {
 			yCal = this._imgRawTransformed.getCalibration().pixelHeight;
 		}
@@ -733,8 +733,8 @@ public class NucleusSegmentation {
 	 */
 	public double getZcalibration() {
 		double zCal;
-		if (this.m_semgemtationParameters.getManualParameter()) {
-			zCal = this.m_semgemtationParameters.getZCal();
+		if (this.m_segmentationParameters.getManualParameter()) {
+			zCal = this.m_segmentationParameters.getZCal();
 		} else {
 			zCal = this._imgRawTransformed.getCalibration().pixelDepth;
 		}
@@ -749,8 +749,8 @@ public class NucleusSegmentation {
 	 */
 	public double getVoxelVolume() {
 		double calibration = 0;
-		if (this.m_semgemtationParameters.m_manualParameter) {
-			calibration = m_semgemtationParameters.getVoxelVolume();
+		if (this.m_segmentationParameters.m_manualParameter) {
+			calibration = m_segmentationParameters.getVoxelVolume();
 		} else {
 			Calibration cal = this._imgRawTransformed.getCalibration();
 			calibration = cal.pixelDepth * cal.pixelWidth * cal.pixelHeight;
@@ -826,7 +826,7 @@ public class NucleusSegmentation {
 	 */
 	public void saveOTSUSegmented() {
 		if (!getBadCrop() && getBestThreshold() != -1) {
-			String pathSegOTSU = this.m_semgemtationParameters.getOutputFolder() +
+			String pathSegOTSU = this.m_segmentationParameters.getOutputFolder() +
 			                     "OTSU" +
 			                     File.separator +
 			                     this.m_imageSeg[0].getTitle();
@@ -869,11 +869,11 @@ public class NucleusSegmentation {
 	public void saveGiftWrappingSeg() {
 		
 		if (!getBadCrop() && getBestThreshold() != -1
-		    && this.m_semgemtationParameters.getGiftWrapping()) {
+		    && this.m_segmentationParameters.getGiftWrapping()) {
 			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
 			this.m_imageSeg[0] = nuc.runGIFTWrapping(this.m_imageSeg[0]
-					, this.m_semgemtationParameters);
-			String pathSegGIFT = this.m_semgemtationParameters.getOutputFolder()
+					, this.m_segmentationParameters);
+			String pathSegGIFT = this.m_segmentationParameters.getOutputFolder()
 			                     + "GIFT" + File.separator
 			                     + this._imgRaw.getTitle();
 			this.m_imageSeg[0].setTitle(pathSegGIFT);
@@ -887,11 +887,11 @@ public class NucleusSegmentation {
 	public void saveGiftWrappingSegOmero(Client client, Long id)
 	throws Exception {
 		if (!getBadCrop() && getBestThreshold() != -1
-		    && this.m_semgemtationParameters.getGiftWrapping()) {
+		    && this.m_segmentationParameters.getGiftWrapping()) {
 			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
 			
 			this.m_imageSeg[0] = nuc.runGIFTWrapping(this.m_imageSeg[0]
-					, this.m_semgemtationParameters);
+					, this.m_segmentationParameters);
 			
 			String path = new java.io.File(".").getCanonicalPath() + "/" + this.m_imageSeg[0].getTitle();
 			saveFile(this.m_imageSeg[0], path);

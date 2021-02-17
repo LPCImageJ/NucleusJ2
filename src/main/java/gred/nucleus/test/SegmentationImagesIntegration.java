@@ -8,8 +8,7 @@ import java.io.IOException;
 public class SegmentationImagesIntegration {
 	
 	/*
-	 
-	  @param img
+	 * @param img
 	 * @param vMin
 	 * @param vMax
 	 * @param outputImgString

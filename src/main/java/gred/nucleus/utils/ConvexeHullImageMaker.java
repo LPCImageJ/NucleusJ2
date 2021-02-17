@@ -34,7 +34,7 @@ public class ConvexeHullImageMaker {
 	 *
 	 */
 	private       Calibration            _calibration;
-	private       SegmentationParameters m_semgemtationParameters;
+	private       SegmentationParameters m_segmentationParameters;
 	
 	/*
 	  Constructor
@@ -57,13 +57,13 @@ public class ConvexeHullImageMaker {
 	 *
 	 * @see gred.nucleus.core.ConvexHullSegmentation
 	 */
-	public ImagePlus giftWrapping(ImagePlus imagePlusBinary, SegmentationParameters semgemtationParameters) {
-		this.m_semgemtationParameters = semgemtationParameters;
+	public ImagePlus giftWrapping(ImagePlus imagePlusBinary, SegmentationParameters segmentationParameters) {
+		this.m_segmentationParameters = segmentationParameters;
 		_calibration = imagePlusBinary.getCalibration();
 		ImageStack imageStackInput = imagePlusBinary.getStack();
-		Measure3D mesure3d = new Measure3D(this.m_semgemtationParameters.getXCal(),
-		                                   this.m_semgemtationParameters.getYCal(),
-		                                   this.m_semgemtationParameters.getZCal());
+		Measure3D mesure3d = new Measure3D(this.m_segmentationParameters.getXCal(),
+		                                   this.m_segmentationParameters.getYCal(),
+		                                   this.m_segmentationParameters.getZCal());
 		
 		// Calcul du rayon : PQ 1/2 du rayon
 		double      equivalentSphericalRadius = (mesure3d.equivalentSphericalRadius(imagePlusBinary) / 2);
@@ -91,7 +91,7 @@ public class ConvexeHullImageMaker {
 			ImagePlus  ip    = imagePlusBlack.duplicate();
 			double[][] image = giveTable(imagePlusBinary, width, height, k);
 			if (_listLabel.size() == 1) {
-				ArrayList<VoxelRecord> lVoxelBoundary = detectVoxelBoudary(image, _listLabel.get(0), k);
+				ArrayList<VoxelRecord> lVoxelBoundary = detectVoxelBoundary(image, _listLabel.get(0), k);
 				if (lVoxelBoundary.size() > 5) {
 					ip = imageMaker(image, lVoxelBoundary, width, height, equivalentSphericalRadius);
 					
@@ -102,7 +102,7 @@ public class ConvexeHullImageMaker {
 			} else if (_listLabel.size() > 1) {
 				ImageStack imageStackIp = ip.getImageStack();
 				for (Double aDouble : _listLabel) {
-					ArrayList<VoxelRecord> lVoxelBoundary = detectVoxelBoudary(image, aDouble, k);
+					ArrayList<VoxelRecord> lVoxelBoundary = detectVoxelBoundary(image, aDouble, k);
 					if (lVoxelBoundary.size() > 5) {
 						//TODO THINKING ON AN OTHER WAY TO DEFINE equivalentSphericalRadius PARAMETER
 						ImageStack imageTempStack =
@@ -134,7 +134,7 @@ public class ConvexeHullImageMaker {
 	 *
 	 * @return
 	 */
-	ArrayList<VoxelRecord> detectVoxelBoudary(double[][] image, double label, int indice) {
+	ArrayList<VoxelRecord> detectVoxelBoundary(double[][] image, double label, int indice) {
 		ArrayList<VoxelRecord> lVoxelBoundary = new ArrayList<>();
 		_p0.setLocation(0, 0, 0);
 		//parcours de l'ensemble des pixel de l'image 2D

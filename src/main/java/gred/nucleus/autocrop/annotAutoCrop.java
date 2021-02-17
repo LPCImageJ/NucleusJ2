@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * This class create Z projection file of 3D stack (wide field image) and report boxes for each nucleus croped by the
+ * This class create Z projection file of 3D stack (wide field image) and report boxes for each nucleus cropped by the
  * Autocrop class. It takes the raw images imput crop and the list of boxes coordinate generate by the Autocrop class.
  *
  * @author Tristan Dubos and Axel Poulet
@@ -32,7 +32,7 @@ public class annotAutoCrop {
 	 */
 	private ImagePlus          m_zProjection;
 	/**
-	 * List of the coordinate boxes of croped nucleus
+	 * List of the coordinate boxes of cropped nucleus
 	 */
 	private ArrayList<String>  m_boxCoordinates;
 	/**
@@ -114,7 +114,7 @@ public class annotAutoCrop {
 	
 	
 	/**
-	 * Main method to generate Z projection of wide fild 3D image. Parameter use are max intensity projection
+	 * Main method to generate Z projection of wide field 3D image. Parameter use are max intensity projection
 	 * (projectionMax method) and contrast modification of 0,3.
 	 */
 	public void runAddBadCrop(ArrayList<Integer> _box) {
@@ -136,13 +136,13 @@ public class annotAutoCrop {
 	
 	
 	/**
-	 * Main method to generate Z projection of wide fild 3D image. Parameter use are max intensity projection
+	 * Main method to generate Z projection of wide field 3D image. Parameter use are max intensity projection
 	 * (projectionMax method) and contrast modification of 0,3.
 	 */
 	public void run() {
 		ZProjector zProjectionTmp = new ZProjector(this.m_zProjection);
 		this.m_zProjection = projectionMax(zProjectionTmp);
-		ajustContrast(0.3);
+		adjustContrast(0.3);
 		for (String m_boxCoordinate : this.m_boxCoordinates) {
 			String[] splitLine = m_boxCoordinate.split("\\t");
 			String[] fileName  = splitLine[0].split("\\/");
@@ -204,15 +204,15 @@ public class annotAutoCrop {
 		/* withBox calculation */
 		
 		int withBox = Math.abs(Integer.parseInt(currentBox[2])) - Math.abs(Integer.parseInt(currentBox[1]));
-		/* heigthBox calculation */
-		int heigthBox = Math.abs(Integer.parseInt(currentBox[4])) - Math.abs(Integer.parseInt(currentBox[3]));
+		/* heightBox calculation */
+		int heightBox = Math.abs(Integer.parseInt(currentBox[4])) - Math.abs(Integer.parseInt(currentBox[3]));
 		/* Line size parameter */
 		IJ.setForegroundColor(0, 0, 0);
 		IJ.run("Line Width...", "line=4");
 		/* Set draw current box*/
 		this.m_zProjection.setRoi(Integer.parseInt(currentBox[1]),
 		                          Integer.parseInt(currentBox[3]),
-		                          withBox, heigthBox);
+		                          withBox, heightBox);
 		IJ.run(this.m_zProjection, "Draw", "stack");
 		
 		
@@ -243,8 +243,8 @@ public class annotAutoCrop {
 		/* withBox calculation */
 		
 		int withBox = Math.abs(Integer.parseInt(currentBox[2])) - Math.abs(Integer.parseInt(currentBox[1]));
-		/* heigthBox calculation */
-		int heigthBox = Math.abs(Integer.parseInt(currentBox[4])) - Math.abs(Integer.parseInt(currentBox[3]));
+		/* heightBox calculation */
+		int heightBox = Math.abs(Integer.parseInt(currentBox[4])) - Math.abs(Integer.parseInt(currentBox[3]));
 		/* Line size parameter */
 		
 		/* !!!!!!!!!!! on contrast la projection sinon elle est en GRIS ?????? */
@@ -255,16 +255,14 @@ public class annotAutoCrop {
 		/* Set draw current box*/
 		this.m_zProjection.setRoi(Integer.parseInt(currentBox[1]),
 		                          Integer.parseInt(currentBox[3]),
-		                          withBox, heigthBox);
+		                          withBox, heightBox);
 		IJ.run(this.m_zProjection, "Draw", "stack");
 		
 		
 		/* Calculation of the coordinate to add nuclei Number */
 		int xBorder = Integer.parseInt(currentBox[1]) - 100;
-		int yBorder = Integer.parseInt(currentBox[3]) + ((
-				                                                 Integer.parseInt(currentBox[4])
-				                                                 - Integer.parseInt(currentBox[3])) / 2)
-		              - 20;
+		int yBorder = Integer.parseInt(currentBox[3]) +
+		              ((Integer.parseInt(currentBox[4]) - Integer.parseInt(currentBox[3])) / 2) - 20;
 		if (xBorder <= 40) {  // When the box is in left border the number need
 			// to be write on the right of the box
 			xBorder = Integer.parseInt(currentBox[2]) + 60;
@@ -288,7 +286,7 @@ public class annotAutoCrop {
 	 * @param contrast : double number for contrast
 	 */
 	
-	private void ajustContrast(double contrast) {
+	private void adjustContrast(double contrast) {
 		IJ.run(this.m_zProjection,
 		       "Enhance Contrast...",
 		       "saturated=" + contrast);

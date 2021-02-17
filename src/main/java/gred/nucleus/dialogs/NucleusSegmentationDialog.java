@@ -345,13 +345,8 @@ public class NucleusSegmentationDialog extends JFrame {
 		_jButtonStart.addActionListener(startListener);
 	}
 	
-	/*******************************************************************************************************************************************
-	 Classes listener to interact with the several element of the window
-	 */
-	/*******************************************************************************************************************************************/
-	
 	/**
-	 *
+	 * Classes listener to interact with the several elements of the window
 	 */
 	class StartListener implements ActionListener {
 		NucleusSegmentationDialog _nucleusSegmentationDialog;

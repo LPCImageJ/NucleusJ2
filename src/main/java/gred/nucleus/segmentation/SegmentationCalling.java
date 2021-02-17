@@ -42,20 +42,20 @@ public class SegmentationCalling {
 	/**
 	 * ImagePlus raw image
 	 */
-	private ImagePlus _imgInput = new ImagePlus();
+	private ImagePlus              _imgInput = new ImagePlus();
 	/**
 	 * ImagePlus segmented image
 	 */
-	private ImagePlus _imgSeg   = new ImagePlus();
+	private ImagePlus              _imgSeg   = new ImagePlus();
 	/**
 	 * String of of the path for the output files
 	 */
-	private String    _output;
+	private String                 _output;
 	/**
 	 * String of the input dir for several nuclei analysis
 	 */
-	private String    _inputDir = "";
-	private SegmentationParameters m_semgemtationParameters;
+	private String                 _inputDir = "";
+	private SegmentationParameters m_segmentationParameters;
 	
 	private String m_outputCropGeneralInfoOTSU;
 	private String m_outputCropGeneralInfoGIFT;
@@ -67,26 +67,21 @@ public class SegmentationCalling {
 	/**
 	 * Constructor for ImagePlus input
 	 *
-	 * @param semgemtationParameters : list of parameters in config file.
+	 * @param segmentationParameters : list of parameters in config file.
 	 */
 	
-	public SegmentationCalling(SegmentationParameters semgemtationParameters) {
-		
-		this.m_semgemtationParameters = semgemtationParameters;
-		this.m_outputCropGeneralInfoOTSU = this.m_semgemtationParameters.getAnalyseParameters() + getColnameResult();
-		this.m_outputCropGeneralInfoGIFT = this.m_semgemtationParameters.getAnalyseParameters() + getColnameResult();
-		
-		
+	public SegmentationCalling(SegmentationParameters segmentationParameters) {
+		this.m_segmentationParameters = segmentationParameters;
+		this.m_outputCropGeneralInfoOTSU = this.m_segmentationParameters.getAnalyseParameters() + getColnameResult();
+		this.m_outputCropGeneralInfoGIFT = this.m_segmentationParameters.getAnalyseParameters() + getColnameResult();
 	}
 	
 	
 	public SegmentationCalling(String inputDir, String outputDir) {
 		this._inputDir = inputDir;
 		this._output = outputDir;
-		this.m_outputCropGeneralInfoOTSU = this.m_semgemtationParameters.getAnalyseParameters() + getColnameResult();
-		this.m_outputCropGeneralInfoGIFT = this.m_semgemtationParameters.getAnalyseParameters() + getColnameResult();
-		
-		
+		this.m_outputCropGeneralInfoOTSU = this.m_segmentationParameters.getAnalyseParameters() + getColnameResult();
+		this.m_outputCropGeneralInfoGIFT = this.m_segmentationParameters.getAnalyseParameters() + getColnameResult();
 	}
 	
 	/**
@@ -98,8 +93,8 @@ public class SegmentationCalling {
 	 * @param outputImg String of of the path to save the img of the segmented nucleus.
 	 */
 	public SegmentationCalling(ImagePlus img, short vMin, int vMax, String outputImg) {
-		this.m_semgemtationParameters.setMinVolumeNucleus(vMin);
-		this.m_semgemtationParameters.setMaxVolumeNucleus(vMax);
+		this.m_segmentationParameters.setMinVolumeNucleus(vMin);
+		this.m_segmentationParameters.setMaxVolumeNucleus(vMax);
 		this._imgInput = img;
 		this._output = outputImg + File.separator + "Segmented" + this._imgInput.getTitle();
 	}
@@ -112,8 +107,8 @@ public class SegmentationCalling {
 	 * @param vMax volume max of the detected object
 	 */
 	public SegmentationCalling(ImagePlus img, short vMin, int vMax) {
-		this.m_semgemtationParameters.setMinVolumeNucleus(vMin);
-		this.m_semgemtationParameters.setMaxVolumeNucleus(vMax);
+		this.m_segmentationParameters.setMinVolumeNucleus(vMin);
+		this.m_segmentationParameters.setMaxVolumeNucleus(vMax);
 		this._imgInput = img;
 	}
 	
@@ -126,8 +121,8 @@ public class SegmentationCalling {
 	 * @param vMax      volume max of the detected object
 	 */
 	public SegmentationCalling(String inputDir, String outputDir, short vMin, int vMax) {
-		this.m_semgemtationParameters.setMinVolumeNucleus(vMin);
-		this.m_semgemtationParameters.setMaxVolumeNucleus(vMax);
+		this.m_segmentationParameters.setMinVolumeNucleus(vMin);
+		this.m_segmentationParameters.setMaxVolumeNucleus(vMax);
 		this._inputDir = inputDir;
 		this._output = outputDir;
 		Directory dirOutput = new Directory(this._output);
@@ -136,20 +131,20 @@ public class SegmentationCalling {
 	}
 	
 	/**
-	 * Method to run an ImagePlus input the method will call method in NucleusSegmentation and ConvexHullSegmentation to
-	 * segment the input nucleus. if the input boolean is true the gift wrapping will be use, if false the Otsu modified
-	 * method will be used. If a segmentation results is find the method will then computed the different parameters
-	 * with the NucleusAnalysis class, results will be print in the console. If no nucleus is detected a log message is
-	 * print in teh console
-	 *
 	 * @return ImagePlus the segmented nucleus
+	 *
+	 * @deprecated Method to run an ImagePlus input the method will call method in NucleusSegmentation and
+	 * ConvexHullSegmentation to segment the input nucleus. if the input boolean is true the gift wrapping will be use,
+	 * if false the Otsu modified method will be used. If a segmentation results is find the method will then computed
+	 * the different parameters with the NucleusAnalysis class, results will be print in the console. If no nucleus is
+	 * detected a log message is print in teh console
 	 */
 	public int runOneImage() throws Exception {
-		ImagePlus           imgSeg              = this._imgInput;
+		ImagePlus imgSeg = this._imgInput;
 		NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(imgSeg,
-		                                                                  this.m_semgemtationParameters.getM_minVolumeNucleus(),
-		                                                                  this.m_semgemtationParameters.getM_maxVolumeNucleus(),
-		                                                                  this.m_semgemtationParameters);
+		                                                                  this.m_segmentationParameters.getM_minVolumeNucleus(),
+		                                                                  this.m_segmentationParameters.getM_maxVolumeNucleus(),
+		                                                                  this.m_segmentationParameters);
 		
 		Calibration cal = imgSeg.getCalibration();
 		if (imgSeg.getType() == ImagePlus.GRAY16) {
@@ -159,21 +154,21 @@ public class SegmentationCalling {
 		imgSeg = nucleusSegmentation.applySegmentation(imgSeg);
 		if (nucleusSegmentation.getBestThreshold() == -1) {
 			System.out.println("Segmentation error: \nNo object is detected between " +
-			                   this.m_semgemtationParameters.getM_minVolumeNucleus() +
+			                   this.m_segmentationParameters.getM_minVolumeNucleus() +
 			                   "and" +
-			                   this.m_semgemtationParameters.getM_maxVolumeNucleus());
+			                   this.m_segmentationParameters.getM_maxVolumeNucleus());
 		} else {
 			System.out.println("otsu modif threshold: " + nucleusSegmentation.getBestThreshold() + "\n");
-			if (this.m_semgemtationParameters.getGiftWrapping()) {
+			if (this.m_segmentationParameters.getGiftWrapping()) {
 				ConvexHullSegmentation nuc = new ConvexHullSegmentation();
-				imgSeg = nuc.runGIFTWrapping(imgSeg, this.m_semgemtationParameters);
+				imgSeg = nuc.runGIFTWrapping(imgSeg, this.m_segmentationParameters);
 			}
 			imgSeg.setTitle(this._output);
 			if (!this._output.equals("")) {
 				saveFile(imgSeg, this._output);
 			}
 			NucleusAnalysis nucleusAnalysis =
-					new NucleusAnalysis(this._imgInput, imgSeg, this.m_semgemtationParameters);
+					new NucleusAnalysis(this._imgInput, imgSeg, this.m_segmentationParameters);
 			// System.out.println(nucleusAnalysis.nucleusParameter3D());
 		}
 		this._imgSeg = imgSeg;
@@ -208,8 +203,8 @@ public class SegmentationCalling {
 	
 	public String runSeveralImages2() throws Exception {
 		String    log            = "";
-		Directory directoryInput = new Directory(this.m_semgemtationParameters.getInputFolder());
-		directoryInput.listImageFiles(this.m_semgemtationParameters.getInputFolder());
+		Directory directoryInput = new Directory(this.m_segmentationParameters.getInputFolder());
+		directoryInput.listImageFiles(this.m_segmentationParameters.getInputFolder());
 		directoryInput.checkIfEmpty();
 		for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
 			File       currentFile      = directoryInput.getFile(i);
@@ -223,10 +218,10 @@ public class SegmentationCalling {
 			System.out.println("Start :" + timeStampStart);
 			
 			NucleusSegmentation nucleusSegmentation =
-					new NucleusSegmentation(currentFile, this._prefix, this.m_semgemtationParameters);
+					new NucleusSegmentation(currentFile, this._prefix, this.m_segmentationParameters);
 			nucleusSegmentation.preProcessImage();
 			nucleusSegmentation.findOTSUmaximisingSephericity();
-			nucleusSegmentation.checkBadCrop(this.m_semgemtationParameters.m_inputFolder);
+			nucleusSegmentation.checkBadCrop(this.m_segmentationParameters.m_inputFolder);
 			nucleusSegmentation.saveOTSUSegmented();
 			this.m_outputCropGeneralInfoOTSU =
 					this.m_outputCropGeneralInfoOTSU + nucleusSegmentation.getImageCropInfoOTSU();
@@ -238,14 +233,14 @@ public class SegmentationCalling {
 			System.out.println("Fin :" + timeStampStart);
 			
 		}
-		OutputTextFile resultFileOutputOTSU = new OutputTextFile(this.m_semgemtationParameters.getOutputFolder()
+		OutputTextFile resultFileOutputOTSU = new OutputTextFile(this.m_segmentationParameters.getOutputFolder()
 		                                                         + directoryInput.getSeparator()
 		                                                         + "OTSU"
 		                                                         + directoryInput.getSeparator()
 		                                                         + "result_Segmentation_Analyse_OTSU.csv");
 		resultFileOutputOTSU.SaveTextFile(this.m_outputCropGeneralInfoOTSU);
-		if (this.m_semgemtationParameters.getGiftWrapping()) {
-			OutputTextFile resultFileOutputGIFT = new OutputTextFile(this.m_semgemtationParameters.getOutputFolder()
+		if (this.m_segmentationParameters.getGiftWrapping()) {
+			OutputTextFile resultFileOutputGIFT = new OutputTextFile(this.m_segmentationParameters.getOutputFolder()
 			                                                         + directoryInput.getSeparator()
 			                                                         + "GIFT"
 			                                                         + directoryInput.getSeparator()
@@ -267,10 +262,10 @@ public class SegmentationCalling {
 		String timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
 		System.out.println("Start :" + timeStampStart);
 		NucleusSegmentation nucleusSegmentation =
-				new NucleusSegmentation(currentFile, this._prefix, this.m_semgemtationParameters);
+				new NucleusSegmentation(currentFile, this._prefix, this.m_segmentationParameters);
 		nucleusSegmentation.preProcessImage();
 		nucleusSegmentation.findOTSUmaximisingSephericity();
-		nucleusSegmentation.checkBadCrop(this.m_semgemtationParameters.m_inputFolder);
+		nucleusSegmentation.checkBadCrop(this.m_segmentationParameters.m_inputFolder);
 		nucleusSegmentation.saveOTSUSegmented();
 		this.m_outputCropGeneralInfoOTSU =
 				this.m_outputCropGeneralInfoOTSU + nucleusSegmentation.getImageCropInfoOTSU();
@@ -291,7 +286,7 @@ public class SegmentationCalling {
 		
 		String timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
 		System.out.println("Start :" + timeStampStart);
-		NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(image, this.m_semgemtationParameters, client);
+		NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(image, this.m_segmentationParameters, client);
 		nucleusSegmentation.preProcessImage();
 		nucleusSegmentation.findOTSUmaximisingSephericity();
 		nucleusSegmentation.checkBadCrop(image, client);
@@ -318,7 +313,7 @@ public class SegmentationCalling {
 		
 		DatasetContainer dataset = client.getProject(output).getDatasets("OTSU").get(0);
 		
-		String          path                 =
+		String path =
 				new java.io.File(".").getCanonicalPath() + dataset.getName() + "result_Segmentation_Analyse.csv";
 		OutputTexteFile resultFileOutputOTSU = new OutputTexteFile(path);
 		resultFileOutputOTSU.SaveTexteFile(this.m_outputCropGeneralInfoOTSU);
@@ -327,7 +322,7 @@ public class SegmentationCalling {
 		dataset.addFile(client, file);
 		file.delete();
 		
-		if (this.m_semgemtationParameters.getGiftWrapping()) {
+		if (this.m_segmentationParameters.getGiftWrapping()) {
 			dataset = client.getProject(output).getDatasets("GIFT").get(0);
 			OutputTexteFile resultFileOutputGIFT = new OutputTexteFile(path);
 			resultFileOutputGIFT.SaveTexteFile(this.m_outputCropGeneralInfoGIFT);
@@ -359,7 +354,7 @@ public class SegmentationCalling {
 			System.out.println("Current ROI in process : " + i);
 			
 			NucleusSegmentation nucleusSegmentation =
-					new NucleusSegmentation(image, roi, i, this.m_semgemtationParameters, client);
+					new NucleusSegmentation(image, roi, i, this.m_segmentationParameters, client);
 			nucleusSegmentation.preProcessImage();
 			nucleusSegmentation.findOTSUmaximisingSephericity();
 			nucleusSegmentation.checkBadCrop(roi, client);
@@ -379,17 +374,17 @@ public class SegmentationCalling {
 		timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
 		System.out.println("Fin :" + timeStampStart);
 		
-		DatasetContainer dataset              = client.getProject(output).getDatasets("OTSU").get(0);
-		String           path                 =
+		DatasetContainer dataset = client.getProject(output).getDatasets("OTSU").get(0);
+		String path =
 				new java.io.File(".").getCanonicalPath() + "result_Segmentation_Analyse.csv";
-		OutputTexteFile  resultFileOutputOTSU = new OutputTexteFile(path);
+		OutputTexteFile resultFileOutputOTSU = new OutputTexteFile(path);
 		resultFileOutputOTSU.SaveTexteFile(this.m_outputCropGeneralInfoOTSU);
 		
 		File file = new File(path);
 		dataset.addFile(client, file);
 		file.delete();
 		
-		if (this.m_semgemtationParameters.getGiftWrapping()) {
+		if (this.m_segmentationParameters.getGiftWrapping()) {
 			dataset = client.getProject(output).getDatasets("GIFT").get(0);
 			OutputTexteFile resultFileOutputGIFT = new OutputTexteFile(path);
 			resultFileOutputGIFT.SaveTexteFile(this.m_outputCropGeneralInfoGIFT);

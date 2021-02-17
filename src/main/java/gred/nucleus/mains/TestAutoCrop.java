@@ -2,7 +2,7 @@ package gred.nucleus.mains;
 
 import gred.nucleus.autocrop.AutoCropCalling;
 import gred.nucleus.autocrop.AutocropParameters;
-import gred.nucleus.autocrop.CropFromCoordonnate;
+import gred.nucleus.autocrop.CropFromCoordinates;
 
 import java.util.ArrayList;
 
@@ -50,10 +50,10 @@ public class TestAutoCrop {
 		autoCrop.runFile(imageSourceFile);
 	}
 	
-	public static void runCropFromCoordinates(String coordonnateDir) throws Exception {
+	public static void runCropFromCoordinates(String coordinateDir) throws Exception {
 		
-		CropFromCoordonnate test = new CropFromCoordonnate(coordonnateDir);
-		test.runCropFromCoordonnate();
+		CropFromCoordinates test = new CropFromCoordinates(coordinateDir);
+		test.runCropFromCoordinate();
 	}
 	
 	/**

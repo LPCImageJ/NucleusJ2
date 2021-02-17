@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-public class CropFromCoordonnate {
+public class CropFromCoordinates {
 	
 	
 	HashMap<String, String> coordinateToRawImage = new HashMap<>();
@@ -22,7 +22,7 @@ public class CropFromCoordonnate {
 	 *
 	 * @param linkCoordinateToRawImage tabulate file
 	 */
-	public CropFromCoordonnate(String linkCoordinateToRawImage)
+	public CropFromCoordinates(String linkCoordinateToRawImage)
 	throws IOException, FormatException, fileInOut, Exception {
 		File    coordinateFile = new File(linkCoordinateToRawImage);
 		Scanner scanner        = new Scanner(coordinateFile);
@@ -37,14 +37,14 @@ public class CropFromCoordonnate {
 		}
 	}
 	
-	public void runCropFromCoordonnate() throws IOException, FormatException, fileInOut, Exception {
+	public void runCropFromCoordinate() throws IOException, FormatException, fileInOut, Exception {
 		
 		for (Map.Entry<String, String> listOfFile : coordinateToRawImage.entrySet()) {
 			File                 coordinateFile     = new File(listOfFile.getKey());
 			File                 rawImage           = new File(listOfFile.getValue());
 			AutocropParameters   autocropParameters =
 					new AutocropParameters(rawImage.getParent(), rawImage.getParent());
-			HashMap<Double, Box> m_boxes            = readCoordonnateTXT(coordinateFile);
+			HashMap<Double, Box> m_boxes            = readCoordinatesTXT(coordinateFile);
 			FilesNames           outPutFilesNames   = new FilesNames(listOfFile.getValue());
 			String               _prefix            = outPutFilesNames.PrefixeNameFile();
 			AutoCrop             autoCrop           = new AutoCrop(rawImage, _prefix, autocropParameters, m_boxes);
@@ -53,7 +53,7 @@ public class CropFromCoordonnate {
 	}
 	
 	
-	public HashMap<Double, Box> readCoordonnateTXT(File boxeFile) {
+	public HashMap<Double, Box> readCoordinatesTXT(File boxeFile) {
 		
 		HashMap<Double, Box> boxLists = new HashMap<>();
 		double               count    = 0;

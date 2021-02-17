@@ -48,21 +48,21 @@ public class CLIRunAction {
 	}
 	
 	private void runCropFromCoordinates() throws Exception {
-		CropFromCoordonnate test = new CropFromCoordonnate(this.m_cmd.getOptionValue("input"));
-		test.runCropFromCoordonnate();
+		CropFromCoordinates test = new CropFromCoordinates(this.m_cmd.getOptionValue("input"));
+		test.runCropFromCoordinate();
 	}
 	
 	private void runProjectionFromCoordinates() throws Exception {
 		if (this.m_cmd.hasOption("coordinateFiltered")) {
-			generateProjectionFromCoordonne projection = new generateProjectionFromCoordonne(
-					this.m_cmd.getOptionValue("input")
-					, this.m_cmd.getOptionValue("input2"),
-					this.m_cmd.getOptionValue("input3"));
+			generateProjectionFromCoordinates projection =
+					new generateProjectionFromCoordinates(this.m_cmd.getOptionValue("input"),
+					                                      this.m_cmd.getOptionValue("input2"),
+					                                      this.m_cmd.getOptionValue("input3"));
 			projection.generateCoordinateFiltered();
 		} else {
-			generateProjectionFromCoordonne projection = new generateProjectionFromCoordonne(
-					this.m_cmd.getOptionValue("input")
-					, this.m_cmd.getOptionValue("input2"));
+			generateProjectionFromCoordinates projection =
+					new generateProjectionFromCoordinates(this.m_cmd.getOptionValue("input"),
+					                                      this.m_cmd.getOptionValue("input2"));
 			projection.generateCoordinate();
 		}
 	}
@@ -86,9 +86,8 @@ public class CLIRunAction {
 	}
 	
 	private void runSegmentation() throws Exception {
-		SegmentationParameters segmentationParameters = new SegmentationParameters(
-				this.m_cmd.getOptionValue("input")
-				, this.m_cmd.getOptionValue("output"));
+		SegmentationParameters segmentationParameters =
+				new SegmentationParameters(this.m_cmd.getOptionValue("input"), this.m_cmd.getOptionValue("output"));
 		if (this.m_cmd.hasOption("config")) {
 			segmentationParameters.addGeneralProperties(this.m_cmd.getOptionValue("config"));
 			segmentationParameters.addProperties(this.m_cmd.getOptionValue("config"));
@@ -97,9 +96,7 @@ public class CLIRunAction {
 			SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
 			try {
 				String log = otsuModif.runOneImage(this.m_cmd.getOptionValue("input"));
-				if (!(log.equals(""))) {
-					System.out.println("Nuclei which didn't pass the segmentation\n" + log);
-				}
+				if (!(log.equals(""))) System.out.println("Nuclei which didn't pass the segmentation\n" + log);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -107,9 +104,7 @@ public class CLIRunAction {
 			SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
 			try {
 				String log = otsuModif.runSeveralImages2();
-				if (!(log.equals(""))) {
-					System.out.println("Nuclei which didn't pass the segmentation\n" + log);
-				}
+				if (!(log.equals(""))) System.out.println("Nuclei which didn't pass the segmentation\n" + log);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -117,19 +112,15 @@ public class CLIRunAction {
 	}
 	
 	private void runComputeNucleiParameters() throws Exception {
-		ComputeNucleiParameters generateParameters = new ComputeNucleiParameters(
-				this.m_cmd.getOptionValue("input")
-				, this.m_cmd.getOptionValue("input2"));
-		if (this.m_cmd.hasOption("config")) {
-			generateParameters.addConfigParameters(this.m_cmd.getOptionValue("config"));
-		}
+		ComputeNucleiParameters generateParameters =
+				new ComputeNucleiParameters(this.m_cmd.getOptionValue("input"), this.m_cmd.getOptionValue("input2"));
+		if (this.m_cmd.hasOption("config")) generateParameters.addConfigParameters(this.m_cmd.getOptionValue("config"));
 		generateParameters.run();
 	}
 	
 	private void runComputeNucleiParametersDL() throws Exception {
-		ComputeNucleiParametersML computeParameters = new ComputeNucleiParametersML(
-				this.m_cmd.getOptionValue("input")
-				, this.m_cmd.getOptionValue("input2"));
+		ComputeNucleiParametersML computeParameters =
+				new ComputeNucleiParametersML(this.m_cmd.getOptionValue("input"), this.m_cmd.getOptionValue("input2"));
 		computeParameters.run();
 	}
 }

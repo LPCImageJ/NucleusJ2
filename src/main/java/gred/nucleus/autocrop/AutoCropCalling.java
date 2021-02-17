@@ -58,49 +58,42 @@ public class AutoCropCalling {
 	 * @throws FormatException Bioformat exception
 	 */
 	public void runFolder() throws Exception {
-		
-		Directory directoryInput = new Directory(
-				this.m_autocropParameters.getInputFolder());
+		Directory directoryInput = new Directory(this.m_autocropParameters.getInputFolder());
 		directoryInput.listImageFiles(this.m_autocropParameters.getInputFolder());
 		directoryInput.checkIfEmpty();
 		directoryInput.checkAndActualiseNDFiles();
 		for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
 			File currentFile = directoryInput.getFile(i);
-			System.out.println("Current file "
-			                   + currentFile.getAbsolutePath());
+			System.out.println("Current file " + currentFile.getAbsolutePath());
 			String     fileImg          = currentFile.toString();
 			FilesNames outPutFilesNames = new FilesNames(fileImg);
 			this._prefix = outPutFilesNames.PrefixeNameFile();
 			try {
-				AutoCrop autoCrop = new AutoCrop(currentFile, this._prefix,
-				                                 this.m_autocropParameters);
+				AutoCrop autoCrop = new AutoCrop(currentFile, this._prefix, this.m_autocropParameters);
 				autoCrop.thresholdKernels();
 				autoCrop.computeConnectcomponent();
 				autoCrop.componentBorderFilter();
 				autoCrop.componentSizeFilter();
 				autoCrop.computeBoxes2();
 				autoCrop.addCROP_parameter();
-				autoCrop.boxIntesection();
+				autoCrop.boxIntersection();
 				autoCrop.cropKernels2();
 				autoCrop.writeAnalyseInfo();
-				annotAutoCrop test = new annotAutoCrop(
-						autoCrop.getFileCoordinates(), currentFile,
-						this.m_autocropParameters.getOutputFolder()
-						, this._prefix, this.m_autocropParameters);
+				annotAutoCrop test = new annotAutoCrop(autoCrop.getFileCoordinates(),
+				                                       currentFile,
+				                                       this.m_autocropParameters.getOutputFolder(),
+				                                       this._prefix,
+				                                       this.m_autocropParameters);
 				test.run();
-				this.m_outputCropGeneralInfo = this.m_outputCropGeneralInfo
-				                               + autoCrop.getImageCropInfo();
+				this.m_outputCropGeneralInfo = this.m_outputCropGeneralInfo + autoCrop.getImageCropInfo();
 			} catch (Exception e) {
 				IJ.error("Cannot run autocrop on " + currentFile.getName());
 				e.printStackTrace();
 			}
-			
 		}
-		System.out.println(this.m_autocropParameters.getInputFolder()
-		                   + "result_Autocrop_Analyse");
-		OutputTextFile resultFileOutput = new OutputTextFile(
-				this.m_autocropParameters.getOutputFolder()
-				+ "result_Autocrop_Analyse.csv");
+		System.out.println(this.m_autocropParameters.getInputFolder() + "result_Autocrop_Analyse");
+		OutputTextFile resultFileOutput =
+				new OutputTextFile(this.m_autocropParameters.getOutputFolder() + "result_Autocrop_Analyse.csv");
 		resultFileOutput.SaveTextFile(this.m_outputCropGeneralInfo);
 	}
 	
@@ -119,30 +112,26 @@ public class AutoCropCalling {
 		String     fileImg          = currentFile.toString();
 		FilesNames outPutFilesNames = new FilesNames(fileImg);
 		this._prefix = outPutFilesNames.PrefixeNameFile();
-		AutoCrop autoCrop = new AutoCrop(currentFile, this._prefix,
-		                                 this.m_autocropParameters);
+		AutoCrop autoCrop = new AutoCrop(currentFile, this._prefix, this.m_autocropParameters);
 		autoCrop.thresholdKernels();
 		autoCrop.computeConnectcomponent();
 		autoCrop.componentBorderFilter();
 		autoCrop.componentSizeFilter();
 		autoCrop.computeBoxes2();
 		autoCrop.addCROP_parameter();
-		autoCrop.boxIntesection();
+		autoCrop.boxIntersection();
 		autoCrop.cropKernels2();
 		autoCrop.writeAnalyseInfo();
-		annotAutoCrop test = new annotAutoCrop(
-				autoCrop.getFileCoordinates(), currentFile,
-				this.m_autocropParameters.getOutputFolder() + currentFile.separator
-				, this._prefix, this.m_autocropParameters);
+		annotAutoCrop test = new annotAutoCrop(autoCrop.getFileCoordinates(),
+		                                       currentFile,
+		                                       this.m_autocropParameters.getOutputFolder() + currentFile.separator,
+		                                       this._prefix,
+		                                       this.m_autocropParameters);
 		test.run();
-		this.m_outputCropGeneralInfo = this.m_outputCropGeneralInfo
-		                               + autoCrop.getImageCropInfo();
+		this.m_outputCropGeneralInfo = this.m_outputCropGeneralInfo + autoCrop.getImageCropInfo();
 	}
 	
-	public void runImageOmero(ImageContainer image,
-	                          Long[] outputsDatImages,
-	                          Client client)
-	throws Exception {
+	public void runImageOmero(ImageContainer image, Long[] outputsDatImages, Client client) throws Exception {
 		String fileImg = image.getName();
 		System.out.println("Current file : " + fileImg);
 		FilesNames outPutFilesNames = new FilesNames(fileImg);
@@ -154,29 +143,21 @@ public class AutoCropCalling {
 		autoCrop.componentSizeFilter();
 		autoCrop.computeBoxes2();
 		autoCrop.addCROP_parameter();
-		autoCrop.boxIntesection();
+		autoCrop.boxIntersection();
 		autoCrop.cropKernelsOmero(image, outputsDatImages, client);
-		
 		autoCrop.writeAnalyseInfoOmero(outputsDatImages[this.m_autocropParameters.getChannelToComputeThreshold()],
 		                               client);
-		
-		this.m_outputCropGeneralInfo = this.m_outputCropGeneralInfo
-		                               + autoCrop.getImageCropInfo();
+		this.m_outputCropGeneralInfo = this.m_outputCropGeneralInfo + autoCrop.getImageCropInfo();
 	}
 	
-	public void runSeveralImageOmero(List<ImageContainer> images,
-	                                 Long[] outputsDatImages,
-	                                 Client client)
+	public void runSeveralImageOmero(List<ImageContainer> images, Long[] outputsDatImages, Client client)
 	throws Exception {
-		
-		for (ImageContainer image : images) {
-			runImageOmero(image, outputsDatImages, client);
-		}
+		for (ImageContainer image : images) runImageOmero(image, outputsDatImages, client);
 	}
 	
 	
 	/**
-	 * List of colunms name in csv coordinates output file.
+	 * List of columns name in csv coordinates output file.
 	 *
 	 * @return columns name
 	 */

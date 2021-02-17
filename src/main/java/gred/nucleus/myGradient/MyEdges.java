@@ -24,21 +24,32 @@ public class MyEdges {
 	public MyEdges() {
 	}
 	
-	/** Detects edges in images.
-	 
-	 @param image the input image in which edges are to be detected. If it is of type {@link FloatImage}, it will be used to store intermediate results. Otherwise it will be left unaltered. If the size of the image in the z-dimension equals {@code 1}, this method will compute, for every image element, the magnitude of the two-dimensional (2D) gradient vector. Otherwise it will compute for every image element the magnitude of the full three-dimensional (3D) gradient vector. These computations are performed on every x-y(-z) subimage in a 5D image.
-	 
-	 @param scale the smoothing scale at which the required image derivatives are computed. The scale is equal to the standard deviation of the Gaussian kernel used for differentiation and must be larger than {@code 0}. In order to enforce physical isotropy, for each dimension, the scale is divided by the size of the image elements (aspect-ratio value) in that dimension.
-	 
-	 @param nonmaxsup determines whether locally non-maximal gray-values are suppressed. To determine whether the gray-value of an image element is a local maximum, this method applies linear interpolation in the direction of the gradient vector to compute gray-values at approximately one sample distance on each side of the given element, which are subsequently compared to the gray-value of the given element.
-	 
-	 @return an image showing the locations of edges according to the algorithm. The returned image is always of type {@link FloatImage}.
-	 
-	 @exception IllegalArgumentException if {@code scale} is less than or equal to {@code 0}.
-	 
-	 @exception IllegalStateException if the size of the image elements (aspect-ratio value) is less than or equal to {@code 0} in the x-, y-, or z-dimension.
-	 
-	 @exception NullPointerException if {@code image} is {@code null}.
+	/**
+	 * Detects edges in images.
+	 *
+	 * @param image     the input image in which edges are to be detected. If it is of type {@link FloatImage}, it will
+	 *                  be used to store intermediate results. Otherwise it will be left unaltered. If the size of the
+	 *                  image in the z-dimension equals {@code 1}, this method will compute, for every image element,
+	 *                  the magnitude of the two-dimensional (2D) gradient vector. Otherwise it will compute for every
+	 *                  image element the magnitude of the full three-dimensional (3D) gradient vector. These
+	 *                  computations are performed on every x-y(-z) subimage in a 5D image.
+	 * @param scale     the smoothing scale at which the required image derivatives are computed. The scale is equal to
+	 *                  the standard deviation of the Gaussian kernel used for differentiation and must be larger than
+	 *                  {@code 0}. In order to enforce physical isotropy, for each dimension, the scale is divided by
+	 *                  the size of the image elements (aspect-ratio value) in that dimension.
+	 * @param nonmaxsup determines whether locally non-maximal gray-values are suppressed. To determine whether the
+	 *                  gray-value of an image element is a local maximum, this method applies linear interpolation in
+	 *                  the direction of the gradient vector to compute gray-values at approximately one sample distance
+	 *                  on each side of the given element, which are subsequently compared to the gray-value of the
+	 *                  given element.
+	 *
+	 * @return an image showing the locations of edges according to the algorithm. The returned image is always of type
+	 * {@link FloatImage}.
+	 *
+	 * @throws IllegalArgumentException if {@code scale} is less than or equal to {@code 0}.
+	 * @throws IllegalStateException    if the size of the image elements (aspect-ratio value) is less than or equal to
+	 *                                  {@code 0} in the x-, y-, or z-dimension.
+	 * @throws NullPointerException     if {@code image} is {@code null}.
 	 */
 	public Image run(final Image image, final double scale, final boolean nonmaxsup) {
 		

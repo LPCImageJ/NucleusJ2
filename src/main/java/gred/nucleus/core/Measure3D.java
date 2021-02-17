@@ -311,7 +311,7 @@ public class Measure3D {
 		sz /= count;
 		voxelRecordBarycenter.setLocation(sx, sy, sz);
 		if (unit) {
-			voxelRecordBarycenter.Multiplie(this._xCal, this._yCal, this._zCal);
+			voxelRecordBarycenter.multiply(this._xCal, this._yCal, this._zCal);
 		}
 		return voxelRecordBarycenter;
 	}

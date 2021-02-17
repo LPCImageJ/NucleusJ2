@@ -13,17 +13,19 @@ public class Gradient {
 	/**
 	 *
 	 */
-	private ArrayList<Double>[][][] _tableGradient = null;
+	private ArrayList<Double>[][][] _tableGradient;
 	/**
 	 *
 	 */
-	private ArrayList<Double>[][][] _tableUnitaire = null;
+	private ArrayList<Double>[][][] _tableUnitaire;
 	
+	@SuppressWarnings("unchecked")
 	public Gradient(ImagePlus imagePlusInput) {
-		_tableGradient =
-				new ArrayList[imagePlusInput.getWidth()][imagePlusInput.getHeight()][imagePlusInput.getStackSize()];
-		_tableUnitaire =
-				new ArrayList[imagePlusInput.getWidth()][imagePlusInput.getHeight()][imagePlusInput.getStackSize()];
+		int w = imagePlusInput.getWidth();
+		int h = imagePlusInput.getHeight();
+		int d = imagePlusInput.getStackSize();
+		_tableGradient = (ArrayList<Double>[][][]) new ArrayList[w][h][d];
+		_tableUnitaire = (ArrayList<Double>[][][]) new ArrayList[w][h][d];
 		computeGradient(imagePlusInput);
 	}
 	

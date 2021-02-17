@@ -1,11 +1,11 @@
-/*****************************************************************************\
- Copyright (C) 2016 by Rémy Malgouyres                                    *
- http://malgouyres.org                                                    *
- File: VoxelShort.java                                                    *
+/*
+ * Copyright (C) 2016 by Rémy Malgouyres
+ * http://malgouyres.org
+ * File: VoxelShort.java
  *
- The program is distributed under the terms of the GNU General Public License *
+ * The program is distributed under the terms of the GNU General Public License *
  *
- \******************************************************************************/
+ */
 
 package gred.nucleus.utils;
 
@@ -81,8 +81,8 @@ public class Voxel {
 	 * @return a reference to a clone copy of this instance.
 	 */
 	@Override
-	protected Object clone() throws UnsupportedOperationException {
-		throw new UnsupportedOperationException();
+	protected Object clone() throws CloneNotSupportedException {
+		throw new CloneNotSupportedException();
 	}
 	
 	/**
@@ -187,7 +187,7 @@ public class Voxel {
 	 * @param b factor on the second coordinate
 	 * @param c factor on the third coordinate
 	 */
-	public void multipliy(short a, short b, short c) {
+	public void multiply(short a, short b, short c) {
 		this.m_coordinates[0] *= a;
 		this.m_coordinates[1] *= b;
 		this.m_coordinates[2] *= c;
@@ -196,9 +196,9 @@ public class Voxel {
 	/**
 	 * Multiplied the coordinates of voxel with a same factor for each coordinates
 	 *
-	 * @param a
+	 * @param a factor for all the coordinates
 	 */
-	public void multiplie(short a) {
+	public void multiply(short a) {
 		this.m_coordinates[0] *= a;
 		this.m_coordinates[1] *= a;
 		this.m_coordinates[2] *= a;
@@ -212,5 +212,13 @@ public class Voxel {
 	@Override
 	public String toString() {
 		return "(" + this.m_coordinates[0] + ", " + this.m_coordinates[1] + ", " + this.m_coordinates[2] + ")";
+	}
+	
+	public short getValue() {
+		return m_value;
+	}
+	
+	public void setValue(short m_value) {
+		this.m_value = m_value;
 	}
 } // End of class

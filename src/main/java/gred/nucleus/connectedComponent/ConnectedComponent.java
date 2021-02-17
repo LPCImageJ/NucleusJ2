@@ -1,11 +1,11 @@
-/*****************************************************************************\
- Copyright (C) 2016 by Rémy Malgouyres                                    *
- http://malgouyres.org                                                    *
- File: ConnectedComponent.java                                            *
+/*
+ * Copyright (C) 2016 by Rémy Malgouyres
+ * http://malgouyres.org
+ * File: ConnectedComponent.java
  *
- The program is distributed under the terms of the GNU General Public License *
+ * The program is distributed under the terms of the GNU General Public License *
  *
- \******************************************************************************/
+ */
 
 package gred.nucleus.connectedComponent;
 
@@ -347,9 +347,9 @@ public abstract class ConnectedComponent {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Connected components of the image "+ this.m_inputImage.getTitle()+"\n");
+		builder.append("Connected components of the image ").append(this.m_inputImage.getTitle()).append("\n");
 		for (ComponentInfo compInfo : this.m_compInfo)
-			builder.append(compInfo + "\n");
+			builder.append(compInfo).append("\n");
 		return builder.toString();
 	}
 	

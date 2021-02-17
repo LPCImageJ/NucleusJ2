@@ -95,9 +95,7 @@ public class MyGradient {
 			newimp.setDisplayRange(min, max);
 		} catch (OutOfMemoryError e) {
 			FJ.error("Not enough memory for this operation");
-		} catch (IllegalArgumentException e) {
-			FJ.error(e.getMessage());
-		} catch (IllegalStateException e) {
+		} catch (IllegalArgumentException | IllegalStateException e) {
 			FJ.error(e.getMessage());
 		}
 		//catch (Throwable e) {	FJ.error("An unidentified error occurred while running the plugin");	}
