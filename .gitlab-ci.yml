@@ -18,8 +18,8 @@ compile:
   except:
     - tags
   script:
-      - mvn versions:set -DnewVersion=$VERSION
-      - mvn clean package
+    - mvn versions:set -DnewVersion=$VERSION
+    - mvn clean package
   artifacts:
     paths:
       - target

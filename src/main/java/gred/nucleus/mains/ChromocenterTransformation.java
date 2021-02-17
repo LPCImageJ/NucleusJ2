@@ -15,39 +15,40 @@ import java.io.File;
 import java.io.IOException;
 
 public class ChromocenterTransformation {
-
-    public static void main(String[] args) throws IOException, FormatException, fileInOut,Exception {
-        String input="/home/tridubos/Bureau/IMAGES_TEST_CICD/TEST_CC/SegmentedDataCc";
-        String output="/home/tridubos/Bureau/IMAGES_TEST_CICD/TEST_CC/out";
-
-
-        SegmentationParameters segmentationParameters = new SegmentationParameters(input,output);
-
-
-        Directory directoryInput = new Directory(input);
-        directoryInput.listImageFiles(input);
-        directoryInput.checkIfEmpty();
-        for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
-            File currentFile = directoryInput.getFile(i);
-            String fileImg = currentFile.toString();
-            FilesNames outPutFilesNames = new FilesNames(fileImg);
-            String prefix = outPutFilesNames.PrefixeNameFile();
-            NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(currentFile ,prefix,segmentationParameters);
-            ImagePlus[] currentImage = BF.openImagePlus(currentFile.getAbsolutePath());
-            ChannelSplitter splitter = new ChannelSplitter();
-            currentImage = splitter.split(currentImage[0]);
-            ImagePlus toto=currentImage[0];
-           ImagePlus out= nucleusSegmentation.generateSegmentedImage(toto,0);
-            saveFile( out,output+currentFile.separator+prefix);
-
-
-
-        }
-
-
-    }
-    public static void saveFile ( ImagePlus imagePlusInput, String pathFile) {
-        FileSaver fileSaver = new FileSaver(imagePlusInput);
-        fileSaver.saveAsTiffStack(pathFile);
-    }
+	
+	public static void main(String[] args) throws Exception {
+		String input  = "/home/tridubos/Bureau/IMAGES_TEST_CICD/TEST_CC/SegmentedDataCc";
+		String output = "/home/tridubos/Bureau/IMAGES_TEST_CICD/TEST_CC/out";
+		
+		
+		SegmentationParameters segmentationParameters = new SegmentationParameters(input, output);
+		
+		
+		Directory directoryInput = new Directory(input);
+		directoryInput.listImageFiles(input);
+		directoryInput.checkIfEmpty();
+		for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
+			File                currentFile         = directoryInput.getFile(i);
+			String              fileImg             = currentFile.toString();
+			FilesNames          outPutFilesNames    = new FilesNames(fileImg);
+			String              prefix              = outPutFilesNames.PrefixeNameFile();
+			NucleusSegmentation nucleusSegmentation =
+					new NucleusSegmentation(currentFile, prefix, segmentationParameters);
+			ImagePlus[]         currentImage        = BF.openImagePlus(currentFile.getAbsolutePath());
+			ChannelSplitter     splitter            = new ChannelSplitter();
+			currentImage = ChannelSplitter.split(currentImage[0]);
+			ImagePlus toto = currentImage[0];
+			ImagePlus out  = nucleusSegmentation.generateSegmentedImage(toto, 0);
+			saveFile(out, output + File.separator + prefix);
+			
+			
+		}
+		
+		
+	}
+	
+	public static void saveFile(ImagePlus imagePlusInput, String pathFile) {
+		FileSaver fileSaver = new FileSaver(imagePlusInput);
+		fileSaver.saveAsTiffStack(pathFile);
+	}
 }
