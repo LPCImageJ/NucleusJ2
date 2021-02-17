@@ -33,18 +33,18 @@ public class NucleusAnalysis {
         this.m_semgemtationParameters=semgemtationParameters;
     }
 
-    /**
-     * Compute the different 3D parameter and stock them in a String
-     * NucleusFileName
-     * Volume
-     * Flatness
-     * Elongation
-     * Sphericity => //TODO can be removed after test if the correction is OK
-     * Esr
-     * SurfaceArea => //TODO can be removed after test if the correction is OK
-     * SurfaceAreaCorrected => with surfel method
-     * SphericityCorrected => compute sphericty with SurfaceAreaCorrected
-     * @return String results of the 3D parameter
+    /*
+      Compute the different 3D parameter and stock them in a String
+      NucleusFileName
+      Volume
+      Flatness
+      Elongation
+      Sphericity => //TODO can be removed after test if the correction is OK
+      Esr
+      SurfaceArea => //TODO can be removed after test if the correction is OK
+      SurfaceAreaCorrected => with surfel method
+      SphericityCorrected => compute sphericty with SurfaceAreaCorrected
+      @return String results of the 3D parameter
      */
 
     /**

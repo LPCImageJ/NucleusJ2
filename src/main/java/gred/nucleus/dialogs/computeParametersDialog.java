@@ -18,24 +18,19 @@ public class computeParametersDialog extends JFrame implements ItemListener {
 	private final        JTextField _jTextFieldRawData       = new JTextField();
 	private final        JLabel     _jLabelWorkDirectory;
 	private final        JLabel     _jLabelCalibration;
-	private              String     _workDirectory;
-	private              String     _rawDataDirectory;
-	private              boolean    _start                   = false;
-	
 	private final JPanel Calib;
-	
 	private final JTextPane unitRead = new JTextPane();
 	private final JLabel    unit     = new JLabel();
-	
 	private final JLabel    calibx     = new JLabel();
 	private final JLabel    caliby     = new JLabel();
 	private final JLabel    calibz     = new JLabel();
 	private final JTextPane calibXRead = new JTextPane();
 	private final JTextPane calibYRead = new JTextPane();
 	private final JTextPane calibZRead = new JTextPane();
-	
-	
 	private final JCheckBox addCalibBox = new JCheckBox();
+	private              String     _workDirectory;
+	private              String     _rawDataDirectory;
+	private              boolean    _start                   = false;
 	
 	/**
 	 * Architecture of the graphical windows
@@ -327,8 +322,7 @@ public class computeParametersDialog extends JFrame implements ItemListener {
 				
 				validate();
 				repaint();
-			}
-			else {
+			} else {
 				calibx.setVisible(false);
 				caliby.setVisible(false);
 				calibz.setVisible(false);
@@ -360,7 +354,7 @@ public class computeParametersDialog extends JFrame implements ItemListener {
 		 *
 		 */
 		public void actionPerformed(ActionEvent actionEvent) {
-			if (_jTextFieldWorkDirectory.getText().isEmpty() || _jTextFieldRawData.getText().isEmpty())
+			if (_jTextFieldWorkDirectory.getText().isEmpty() || _jTextFieldRawData.getText().isEmpty()) {
 				JOptionPane.showMessageDialog
 						(
 								null,
@@ -368,7 +362,7 @@ public class computeParametersDialog extends JFrame implements ItemListener {
 								"Error",
 								JOptionPane.ERROR_MESSAGE
 						);
-			else {
+			} else {
 				_start = true;
 				_computeParametersDialog.dispose();
 			}

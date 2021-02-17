@@ -46,8 +46,9 @@ public class FileList {
 				File[] tTempBeforeElement = stockFileBefore(i, tFileDirectory);
 				File[] tTempAfterElement  = stockFileAfter(i, tFileDirectory);
 				File[] tTempFile          = repertoryFileList(tFileDirectory[i].toString());
-				if (tTempFile.length != 0)
+				if (tTempFile.length != 0) {
 					tFileDirectory = this.resize(tTempBeforeElement, tTempAfterElement, tTempFile, i);
+				}
 			}
 		}
 		return tFileDirectory;
@@ -68,15 +69,18 @@ public class FileList {
 		//element insertion in the file list
 		for (int j = 0; j < tFile.length; ++j) {
 			//list file before the directory :
-			if (j < indiceMax)
+			if (j < indiceMax) {
 				tFile[j] = tTempBeforeElement[j];
-				//listed file in the directory :
+			}
+			//listed file in the directory :
 			else {
-				if (j < indiceMax + tTempFile.length)
+				if (j < indiceMax + tTempFile.length) {
 					tFile[j] = tTempFile[j - indiceMax];
-					//listed files after directory :
-				else
+				}
+				//listed files after directory :
+				else {
 					tFile[j] = tTempAfterElement[j - indiceMax - tTempFile.length];
+				}
 			}
 		}
 		return tFile;
@@ -120,8 +124,8 @@ public class FileList {
 	 */
 	public boolean isInDirectory(String filePathway, File[] tableFile) {
 		boolean testFile = false;
-		for (int i = 0; i < tableFile.length; ++i) {
-			if (tableFile[i].toString().equals(filePathway)) {
+		for (File file : tableFile) {
+			if (file.toString().equals(filePathway)) {
 				testFile = true;
 				break;
 			}
@@ -142,9 +146,9 @@ public class FileList {
 			regex = regex.replace(as, das);
 		}
 		String file = null;
-		for (int i = 0; i < tFile.length; ++i) {
-			if (tFile[i].toString().matches((regex))) {
-				file = tFile[i].toString();
+		for (File value : tFile) {
+			if (value.toString().matches((regex))) {
+				file = value.toString();
 				break;
 			}
 		}
@@ -165,8 +169,8 @@ public class FileList {
 			regex = regex.replace(as, das);
 		}
 		boolean testFile = false;
-		for (int i = 0; i < tFile.length; ++i) {
-			if (tFile[i].toString().matches((regex))) {
+		for (File file : tFile) {
+			if (file.toString().matches((regex))) {
 				testFile = true;
 				break;
 			}
@@ -184,10 +188,10 @@ public class FileList {
 	public String[] getDirectoryFiles(String directory, File[] tFile) {
 		String[]                 tRef            = directory.split("\\" + File.separator);
 		String[]                 tTemp           = new String[0];
-		ArrayList<String>        arrayList       = new ArrayList<String>();
-		HashMap<String, Integer> hasMapDirectory = new HashMap<String, Integer>();
-		for (int i = 0; i < tFile.length; ++i) {
-			String[] temp = tFile[i].toString().split("\\" + File.separator);
+		ArrayList<String>        arrayList       = new ArrayList<>();
+		HashMap<String, Integer> hasMapDirectory = new HashMap<>();
+		for (File file : tFile) {
+			String[] temp = file.toString().split("\\" + File.separator);
 			if (temp.length > tRef.length + 1) {
 				if (!hasMapDirectory.containsKey(temp[tRef.length])) {
 					hasMapDirectory.put(temp[tRef.length], 1);
@@ -217,10 +221,11 @@ public class FileList {
 			String das = "\\\\";
 			regex = regex.replace(as, das);
 		}
-		ArrayList<String> arrayListFile = new ArrayList<String>();
-		for (int i = 0; i < tFile.length; ++i) {
-			if (tFile[i].toString().matches((regex)))
-				arrayListFile.add(tFile[i].toString());
+		ArrayList<String> arrayListFile = new ArrayList<>();
+		for (File file : tFile) {
+			if (file.toString().matches((regex))) {
+				arrayListFile.add(file.toString());
+			}
 		}
 		return arrayListFile;
 	}

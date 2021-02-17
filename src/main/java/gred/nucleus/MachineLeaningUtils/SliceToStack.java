@@ -31,7 +31,7 @@ public class SliceToStack {
      * @throws Exception
      */
     public  void run() throws Exception {
-        HashMap<String, Integer> test = new HashMap();
+        HashMap<String, Integer> test = new HashMap<>();
         Directory directoryOutput = new Directory(this.m_pathToOutputDir);
         Directory directoryInput = new Directory(this.m_pathToSliceDir);
         directoryInput.listImageFiles(this.m_pathToSliceDir);

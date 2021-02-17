@@ -2,15 +2,12 @@ package gred.nucleus.mains;
 
 import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.FilesInputOutput.OutputTextFile;
-import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.plugins.PluginParameters;
 import gred.nucleus.utils.Histogram;
 import ij.ImagePlus;
 import ij.ImageStack;
-import loci.formats.FormatException;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -32,12 +29,11 @@ public class noiseComputing {
 		directoryInput.checkIfEmpty();
 		ArrayList<File> segImages   = directoryInput.m_listeOfFiles;
 		String          ResultNoise = "NucleusFileName\tMeanNoise\n";
-		for (short i = 0; i < segImages.size(); ++i) {
-			File currentFile = segImages.get(i);
+		for (File currentFile : segImages) {
 			System.out.println("current File " + currentFile.getName());
-			ImagePlus Raw       = new ImagePlus(pluginParameters.getInputFolder() +
-			                                    directoryInput.getSeparator() +
-			                                    currentFile.getName());
+			ImagePlus Raw = new ImagePlus(pluginParameters.getInputFolder() +
+			                              directoryInput.getSeparator() +
+			                              currentFile.getName());
 			ImagePlus Segmented = new ImagePlus(pluginParameters.getOutputFolder() + currentFile.getName());
 			
 			// TODO TRANSFORMATION FACTORISABLE AVEC METHODE DU DESSUS !!!!!

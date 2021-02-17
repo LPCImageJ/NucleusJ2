@@ -28,10 +28,11 @@ public class FillingHoles {
 			for (int i = 0; i < imageStackCorrected.getWidth(); ++i) {
 				for (int j = 0; j < imageStackCorrected.getHeight(); ++j) {
 					double voxelCurrent = imageStackCorrected.getVoxel(i, j, k);
-					if (voxelCurrent > 0)
+					if (voxelCurrent > 0) {
 						imageStackCorrected.setVoxel(i, j, k, 0);
-					else
+					} else {
 						imageStackCorrected.setVoxel(i, j, k, 255);
+					}
 				}
 			}
 		}
@@ -77,10 +78,11 @@ public class FillingHoles {
 			for (int i = 0; i < imageStackCorrected.getWidth(); ++i) {
 				for (int j = 0; j < imageStackCorrected.getHeight(); ++j) {
 					label = (int) imageStackCorrected.getVoxel(i, j, k);
-					if (label == 0 || tEdgeFlags[label] == false)
+					if (label == 0 || !tEdgeFlags[label]) {
 						imageStackCorrected.setVoxel(i, j, k, 255);
-					else
+					} else {
 						imageStackCorrected.setVoxel(i, j, k, 0);
+					}
 				}
 			}
 		}
@@ -96,17 +98,18 @@ public class FillingHoles {
 		ImagePlus  imagePlusCorrected  = imagePlusInput;
 		ImageStack imageStackCorrected = imagePlusCorrected.getStack();
 		double     voxelValue;
-		ImageStack imageStackOutput    =
+		ImageStack imageStackOutput =
 				new ImageStack(imageStackCorrected.getWidth(), imageStackCorrected.getHeight());
 		for (int k = 1; k <= imageStackCorrected.getSize(); ++k) {
 			ImageProcessor imageProcessorLabellised = imageStackCorrected.getProcessor(k);
 			for (int i = 0; i < imageStackCorrected.getWidth(); ++i) {
 				for (int j = 0; j < imageStackCorrected.getHeight(); ++j) {
 					voxelValue = imageProcessorLabellised.getPixel(i, j);
-					if (voxelValue > 0)
+					if (voxelValue > 0) {
 						imageProcessorLabellised.putPixelValue(i, j, 0);
-					else
+					} else {
 						imageProcessorLabellised.putPixelValue(i, j, 255);
+					}
 				}
 			}
 			imageProcessorLabellised = BinaryImages.componentsLabeling(imageProcessorLabellised, 26, 32);
@@ -133,10 +136,11 @@ public class FillingHoles {
 			for (int i = 0; i < imageStackCorrected.getWidth(); ++i) {
 				for (int j = 0; j < imageStackCorrected.getHeight(); ++j) {
 					label = (int) imageProcessorLabellised.getf(i, j);
-					if (label == 0 || tEdgeFlags[label] == false)
+					if (label == 0 || !tEdgeFlags[label]) {
 						imageProcessorLabellised.putPixelValue(i, j, 255);
-					else
+					} else {
 						imageProcessorLabellised.putPixelValue(i, j, 0);
+					}
 				}
 			}
 			imageStackOutput.addSlice(imageProcessorLabellised);

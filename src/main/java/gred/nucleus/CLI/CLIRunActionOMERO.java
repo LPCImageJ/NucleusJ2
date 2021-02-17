@@ -79,8 +79,7 @@ public class CLIRunActionOMERO {
 				}
 				
 				autoCrop.runImageOmero(image, outputsDat, client);
-			}
-			else {
+			} else {
 				Long                 id     = Long.parseLong(param[1]);
 				List<ImageContainer> images = null;
 				
@@ -93,15 +92,12 @@ public class CLIRunActionOMERO {
 					
 					if (param.length == 4 && param[2].equals("tag")) {
 						images = dataset.getImagesTagged(client, Long.parseLong(param[3]));
-					}
-					else {
+					} else {
 						images = dataset.getImages(client);
 					}
-				}
-				else if (param[0].equals("tag")) {
+				} else if (param[0].equals("tag")) {
 					images = client.getImagesTagged(id);
-				}
-				else {
+				} else {
 					throw new IllegalArgumentException();
 				}
 				
@@ -117,8 +113,7 @@ public class CLIRunActionOMERO {
 				
 				autoCrop.runSeveralImageOmero(images, outputsDat, client);
 			}
-		}
-		else {
+		} else {
 			throw new IllegalArgumentException("Wrong input parameter : "
 			                                   + inputDirectory + "\n\n\n"
 			                                   + "Exemple format expected:\n"
@@ -127,9 +122,9 @@ public class CLIRunActionOMERO {
 	}
 	
 	public void getOMEROPassword() {
-		if (this.m_cmd.hasOption("password"))
+		if (this.m_cmd.hasOption("password")) {
 			this.m_mdp = this.m_cmd.getOptionValue("password");
-		else {
+		} else {
 			System.out.println("Enter password ");
 			Console con = System.console();
 			this.m_mdp = String.valueOf(con.readPassword());
@@ -195,63 +190,60 @@ public class CLIRunActionOMERO {
 					String log;
 					if (param.length == 3 && param[2].equals("ROI")) {
 						log = otsuModif.runOneImageOmeroROI(image, Long.parseLong(outputDirectory), client);
-					}
-					else {
+					} else {
 						log = otsuModif.runOneImageOmero(image, Long.parseLong(outputDirectory), client);
 					}
-					if (!(log.equals("")))
+					if (!(log.equals(""))) {
 						System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			}
-			else {
+			} else {
 				Long                 id     = Long.parseLong(param[1]);
 				List<ImageContainer> images = null;
 				
-				if (param[0].equals("dataset")) {
-					DatasetContainer dataset = client.getDataset(id);
-					
-					if (param.length == 4 && param[2].equals("tag")) {
-						images = dataset.getImagesTagged(client, Long.parseLong(param[3]));
-					}
-					else {
-						images = dataset.getImages(client);
-					}
-				}
-				else if (param[0].equals("project")) {
-					ProjectContainer project = client.getProject(id);
-					
-					if (param.length == 4 && param[2].equals("tag")) {
-						images = project.getImagesTagged(client, Long.parseLong(param[3]));
-					}
-					else {
-						images = project.getImages(client);
-					}
-				}
-				else if (param[0].equals("tag")) {
-					images = client.getImagesTagged(id);
-				}
-				else {
-					throw new IllegalArgumentException();
+				switch (param[0]) {
+					case "dataset":
+						DatasetContainer dataset = client.getDataset(id);
+						
+						if (param.length == 4 && param[2].equals("tag")) {
+							images = dataset.getImagesTagged(client, Long.parseLong(param[3]));
+						} else {
+							images = dataset.getImages(client);
+						}
+						break;
+					case "project":
+						ProjectContainer project = client.getProject(id);
+						
+						if (param.length == 4 && param[2].equals("tag")) {
+							images = project.getImagesTagged(client, Long.parseLong(param[3]));
+						} else {
+							images = project.getImages(client);
+						}
+						break;
+					case "tag":
+						images = client.getImagesTagged(id);
+						break;
+					default:
+						throw new IllegalArgumentException();
 				}
 				try {
 					String log;
 					if ((param.length == 3 && param[2].equals("ROI")) ||
 					    (param.length == 5 && param[4].equals("ROI"))) {
 						log = otsuModif.runSeveralImageOmeroROI(images, Long.parseLong(outputDirectory), client);
-					}
-					else {
+					} else {
 						log = otsuModif.runSeveralImageOmero(images, Long.parseLong(outputDirectory), client);
 					}
-					if (!(log.equals("")))
+					if (!(log.equals(""))) {
 						System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
-		}
-		else {
+		} else {
 			throw new IllegalArgumentException();
 		}
 	}

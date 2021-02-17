@@ -21,8 +21,7 @@ public class CLIHelper {
 	public CLIHelper(String[] args) throws Exception {
 		if (args.length == 2) {
 			specificAction(args[1]);
-		}
-		else {
+		} else {
 			CmdHelpFull();
 		}
 	}

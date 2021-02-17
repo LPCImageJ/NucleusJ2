@@ -1,11 +1,11 @@
-/******************************************************************************\
-*     Copyright (C) 2016 by Rémy Malgouyres                                    * 
-*     http://malgouyres.org                                                    * 
-*     File: ConnectedComponent.java                                            * 
-*                                                                              * 
-* The program is distributed under the terms of the GNU General Public License * 
-*                                                                              * 
-\******************************************************************************/ 
+/*****************************************************************************\
+ Copyright (C) 2016 by Rémy Malgouyres                                    *
+ http://malgouyres.org                                                    *
+ File: ConnectedComponent.java                                            *
+ *
+ The program is distributed under the terms of the GNU General Public License *
+ *
+ \******************************************************************************/
 
 package gred.nucleus.connectedComponent;
 
@@ -81,7 +81,7 @@ public abstract class ConnectedComponent {
 				}
 			}
 		}
-		this.m_compInfo = new ArrayList<ComponentInfo>();    
+		this.m_compInfo = new ArrayList<>();
 	}
 
 	/**
@@ -210,7 +210,7 @@ public abstract class ConnectedComponent {
 	 * @return the array of voxel representatives of components
 	 */
 	public ArrayList<Voxel> getVoxelRepresentants() {
-		ArrayList<Voxel> tabVoxels = new ArrayList<Voxel>();
+		ArrayList<Voxel> tabVoxels = new ArrayList<>();
 		for (ComponentInfo ci : this.m_compInfo) {
 			if (ci.getnumberOfPoints() > 0)
 				tabVoxels.add(ci.getRepresentant());
@@ -257,9 +257,9 @@ public abstract class ConnectedComponent {
 			ComponentRemovalPredicate removalPredicate, boolean keepPredicate, boolean setRandomColors) {
 		System.out.println("La on des compO : "+this.m_voxelVolume );
 
-		ArrayList<Boolean> existsVoxelSatisfyingPredicate = new ArrayList<Boolean>();
+		ArrayList<Boolean> existsVoxelSatisfyingPredicate = new ArrayList<>();
 		for (int i = 0 ; i < this.m_compInfo.size() ; ++i)
-			existsVoxelSatisfyingPredicate.add(Boolean.valueOf(false));
+			existsVoxelSatisfyingPredicate.add(Boolean.FALSE);
 
 				// Check the predicate
 		Voxel voxelToTest = new Voxel();
@@ -272,7 +272,7 @@ public abstract class ConnectedComponent {
 						ComponentInfo ci = this.m_compInfo.get(label-1);
 						// test the predicate
 						if(removalPredicate.keepVoxelComponent(voxelToTest, ci))
-							existsVoxelSatisfyingPredicate.set(label-1, Boolean.valueOf(true));
+							existsVoxelSatisfyingPredicate.set(label-1, Boolean.TRUE);
 					}
 				}
 			}
@@ -286,14 +286,14 @@ public abstract class ConnectedComponent {
 		// and we should keep only
 		// the components with a voxel satisfying removalPredicate 
 		for (int i = 0 ; i < this.m_compInfo.size() ; ++i) {
-			if (((!existsVoxelSatisfyingPredicate.get(i).booleanValue()) && keepPredicate) || (existsVoxelSatisfyingPredicate.get(i).booleanValue() && !keepPredicate))
+			if (((!existsVoxelSatisfyingPredicate.get(i)) && keepPredicate) || (existsVoxelSatisfyingPredicate.get(i) && !keepPredicate))
 				// remove the component
 				this.m_compInfo.get(i).setNumberOfPoints(0);
 		}
 
 		int thresholdNVoxel = (int)(thresholdComponentVolume/this.m_voxelVolume);
-		ArrayList<Integer> newLabels = new ArrayList<Integer>(this.m_compInfo.size());
-		ArrayList<ComponentInfo> newTabComponents = new ArrayList<ComponentInfo>();
+		ArrayList<Integer> newLabels = new ArrayList<>(this.m_compInfo.size());
+		ArrayList<ComponentInfo> newTabComponents = new ArrayList<>();
 		short componentsCount = 0;
 		// For each label
 		for (int label=1 ; label<=this.m_compInfo.size() ; label++) {
@@ -302,18 +302,18 @@ public abstract class ConnectedComponent {
 			if (ci != null && ci.getnumberOfPoints() > 0 &&	ci.getnumberOfPoints() >= thresholdNVoxel && ((!removeBorderComponent) || !ci.isOnTheeBorder())) {
 				componentsCount++;
 				// old label/new label correspondence
-				newLabels.add(new Integer(componentsCount));
+				newLabels.add((int) componentsCount);
 				// register the component in the final array
 				newTabComponents.add(ci);
 			}
 			else{
 				ci.setNumberOfPoints(0);
-				newLabels.add(new Integer(0));
+				newLabels.add(0);
 			}
 		}
-		ArrayList<Double> componentsColors = new ArrayList<Double>(newTabComponents.size());
+		ArrayList<Double> componentsColors = new ArrayList<>(newTabComponents.size());
 		for (int i=0 ; i<newTabComponents.size() ; i++)
-			componentsColors.add(new Double(100 + Math.random()*(255 - 100)));
+			componentsColors.add(100 + Math.random() * (255 - 100));
 		ImageStack imgP = m_inputImage.getStack();
 		for (int i = 0; i < this.m_inputImage.getWidth(); ++i ) {
 			for (int j = 0; j < this.m_inputImage.getHeight(); ++j) {

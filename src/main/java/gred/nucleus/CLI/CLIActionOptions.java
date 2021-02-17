@@ -15,42 +15,44 @@ public class CLIActionOptions {
 	 * Path to input folder
 	 */
 	public               Option m_inputFolder = Option.builder("in")
-	                                            .longOpt("input")
-	                                            .required()
-	                                            .type(String.class)
-	                                            .numberOfArgs(1)
-	                                            .build();
+	                                                  .longOpt("input")
+	                                                  .required()
+	                                                  .type(String.class)
+	                                                  .numberOfArgs(1)
+	                                                  .build();
 	/**
 	 * Path to config file
 	 */
-	public         Option m_configFile  = Option.builder("c")
-	                                            .longOpt("config")
-	                                            .type(String.class)
-	                                            .desc("Path to config file\n" +
-	                                                  "To generate config file example in current folder:\n" +
-	                                                  "java -jar NucleusJ_2-" + NJversion + ".jar -h configFileExample")
-	                                            .numberOfArgs(1)
-	                                            .build();
+	public               Option m_configFile  = Option.builder("c")
+	                                                  .longOpt("config")
+	                                                  .type(String.class)
+	                                                  .desc("Path to config file\n" +
+	                                                        "To generate config file example in current folder:\n" +
+	                                                        "java -jar NucleusJ_2-" +
+	                                                        NJversion +
+	                                                        ".jar -h configFileExample")
+	                                                  .numberOfArgs(1)
+	                                                  .build();
 	/**
 	 * List of available actions
 	 */
-	public         Option m_action      = Option.builder("a")
-	                                            .longOpt("action")
-	                                            .required()
-	                                            .type(String.class)
-	                                            .desc("Action available:\n" +
-	                                                  "autocrop : crop wide field images\n" +
-	                                                  "segmentation : nucleus segmentation\n")
-	                                            .numberOfArgs(1)
-	                                            .build();
+	public               Option m_action      = Option.builder("a")
+	                                                  .longOpt("action")
+	                                                  .required()
+	                                                  .type(String.class)
+	                                                  .desc("Action available:\n" +
+	                                                        "autocrop : crop wide field images\n" +
+	                                                        "segmentation : nucleus segmentation\n")
+	                                                  .numberOfArgs(1)
+	                                                  .build();
 	/**
 	 * OMERO activate
 	 */
-	public Option m_omero = Option.builder("ome")
-	                              .longOpt("omero")
-	                              .type(boolean.class)
-	                              .desc("Use of NucleuJ2.0 in OMERO\n")
-	                              .build();
+	public               Option m_omero       = Option.builder("ome")
+	                                                  .longOpt("omero")
+	                                                  .type(boolean.class)
+	                                                  .desc("Use of NucleuJ2.0 in OMERO\n")
+	                                                  .build();
 	/**
 	 * List of options
 	 */

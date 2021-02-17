@@ -59,8 +59,7 @@ public class CLIRunAction {
 					, this.m_cmd.getOptionValue("input2"),
 					this.m_cmd.getOptionValue("input3"));
 			projection.generateCoordinateFiltered();
-		}
-		else {
+		} else {
 			generateProjectionFromCoordonne projection = new generateProjectionFromCoordonne(
 					this.m_cmd.getOptionValue("input")
 					, this.m_cmd.getOptionValue("input2"));
@@ -80,8 +79,7 @@ public class CLIRunAction {
 		if (this.m_cmd.hasOption("file")) {
 			AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
 			autoCrop.runFile(this.m_cmd.getOptionValue("file"));
-		}
-		else {
+		} else {
 			AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
 			autoCrop.runFolder();
 		}
@@ -99,18 +97,19 @@ public class CLIRunAction {
 			SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
 			try {
 				String log = otsuModif.runOneImage(this.m_cmd.getOptionValue("input"));
-				if (!(log.equals("")))
+				if (!(log.equals(""))) {
 					System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		}
-		else {
+		} else {
 			SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
 			try {
 				String log = otsuModif.runSeveralImages2();
-				if (!(log.equals("")))
+				if (!(log.equals(""))) {
 					System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

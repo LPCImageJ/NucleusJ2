@@ -39,8 +39,8 @@ public class Measure3D {
 	double _yCal;
 	double _zCal;
 	
-	HashMap<Double, Integer> _segmentedNucleusHisto = new HashMap<Double, Integer>();
-	HashMap<Double, Integer> _backgroundHisto       = new HashMap<Double, Integer>();
+	HashMap<Double, Integer> _segmentedNucleusHisto = new HashMap<>();
+	HashMap<Double, Integer> _backgroundHisto       = new HashMap<>();
 	
 	
 	public Measure3D() {
@@ -82,18 +82,21 @@ public class Measure3D {
 					if (voxelValue == label) {
 						for (int kk = k - 1; kk <= k + 1; kk += 2) {
 							neighborVoxelValue = imageStackInput.getVoxel(i, j, kk);
-							if (voxelValue != neighborVoxelValue)
+							if (voxelValue != neighborVoxelValue) {
 								surfaceArea = surfaceArea + this._xCal * this._yCal;
+							}
 						}
 						for (int ii = i - 1; ii <= i + 1; ii += 2) {
 							neighborVoxelValue = imageStackInput.getVoxel(ii, j, k);
-							if (voxelValue != neighborVoxelValue)
+							if (voxelValue != neighborVoxelValue) {
 								surfaceArea = surfaceArea + this._yCal * this._zCal;
+							}
 						}
 						for (int jj = j - 1; jj <= j + 1; jj += 2) {
 							neighborVoxelValue = imageStackInput.getVoxel(i, jj, k);
-							if (voxelValue != neighborVoxelValue)
+							if (voxelValue != neighborVoxelValue) {
 								surfaceArea = surfaceArea + this._xCal * this._zCal;
+							}
 						}
 					}
 				}
@@ -307,8 +310,9 @@ public class Measure3D {
 		sy /= count;
 		sz /= count;
 		voxelRecordBarycenter.setLocation(sx, sy, sz);
-		if (unit)
+		if (unit) {
 			voxelRecordBarycenter.Multiplie(this._xCal, this._yCal, this._zCal);
+		}
 		return voxelRecordBarycenter;
 	}
 	
@@ -360,8 +364,9 @@ public class Measure3D {
 							imageStackChromocenter.getVoxel(i, j, k);
 					
 					if (voxelValueSegmented > 0) {
-						if (voxelValueChromocenter > 0)
+						if (voxelValueChromocenter > 0) {
 							chromocenterIntensity += voxelValueInput;
+						}
 						nucleusIntensity += voxelValueInput;
 					}
 				}
@@ -384,8 +389,8 @@ public class Measure3D {
 		double volumeCc = 0;
 		double[] tVolumeChromocenter =
 				computeVolumeofAllObjects(imagePlusChomocenters);
-		for (int i = 0; i < tVolumeChromocenter.length; ++i) {
-			volumeCc += tVolumeChromocenter[i];
+		for (double v : tVolumeChromocenter) {
+			volumeCc += v;
 		}
 		double[] tVolumeSegmented =
 				computeVolumeofAllObjects(imagePlusSegmented);
@@ -609,21 +614,18 @@ public class Measure3D {
 								imageStackRaw.getVoxel(i, j, k))) {
 							this._segmentedNucleusHisto.put(
 									imageStackRaw.getVoxel(i, j, k), 1);
-						}
-						else {
+						} else {
 							this._segmentedNucleusHisto.put(
 									imageStackRaw.getVoxel(i, j, k),
 									this._segmentedNucleusHisto.get(
 											imageStackRaw.getVoxel(i, j, k)) + 1);
 						}
-					}
-					else {
+					} else {
 						if (!this._backgroundHisto.containsKey(
 								imageStackRaw.getVoxel(i, j, k))) {
 							this._backgroundHisto.put(
 									imageStackRaw.getVoxel(i, j, k), 1);
-						}
-						else {
+						} else {
 							this._backgroundHisto.put(
 									imageStackRaw.getVoxel(i, j, k),
 									this._backgroundHisto.get(
@@ -755,9 +757,9 @@ public class Measure3D {
 		Histogram histogram        = new Histogram();
 		histogram.run(this._rawImage);
 		HashMap<Double, Integer> _segmentedNucleusHisto = histogram.getHistogram();
-		int                      medianElementStop      =
+		int medianElementStop =
 				(this._rawImage.getHeight() * this._rawImage.getWidth() * this._rawImage.getNSlices()) / 2;
-		int                      increment              = 0;
+		int increment = 0;
 		for (HashMap.Entry<Double, Integer> entry : _segmentedNucleusHisto.entrySet()) {
 			increment += entry.getValue();
 			if (increment > medianElementStop) {

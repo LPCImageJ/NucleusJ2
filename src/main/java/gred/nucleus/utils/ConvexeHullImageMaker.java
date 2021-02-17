@@ -21,24 +21,24 @@ public class ConvexeHullImageMaker {
 	/**
 	 *
 	 */
+	private final VoxelRecord            _p0       = new VoxelRecord();
+	/**
+	 *
+	 */
 	ArrayList<Double> _listLabel;
 	/**
 	 *
 	 */
-	private final VoxelRecord _p0       = new VoxelRecord();
+	private       String                 _axesName = "";
 	/**
 	 *
 	 */
-	private       String      _axesName = "";
-	/**
-	 *
-	 */
-	private Calibration _calibration;
-	private SegmentationParameters m_semgemtationParameters;
+	private       Calibration            _calibration;
+	private       SegmentationParameters m_semgemtationParameters;
 	
-	/**
-	 * Constructor
-	 * @see VoxelRecord
+	/*
+	  Constructor
+	  @see VoxelRecord
 	 * @see ConvexeHullImageMaker#setAxes(String)
 	 
 	 * calibration
@@ -61,9 +61,9 @@ public class ConvexeHullImageMaker {
 		this.m_semgemtationParameters = semgemtationParameters;
 		_calibration = imagePlusBinary.getCalibration();
 		ImageStack imageStackInput = imagePlusBinary.getStack();
-		Measure3D  mesure3d        = new Measure3D(this.m_semgemtationParameters.getXCal(),
-		                                           this.m_semgemtationParameters.getYCal(),
-		                                           this.m_semgemtationParameters.getZCal());
+		Measure3D mesure3d = new Measure3D(this.m_semgemtationParameters.getXCal(),
+		                                   this.m_semgemtationParameters.getYCal(),
+		                                   this.m_semgemtationParameters.getZCal());
 		
 		// Calcul du rayon : PQ 1/2 du rayon
 		double      equivalentSphericalRadius = (mesure3d.equivalentSphericalRadius(imagePlusBinary) / 2);
@@ -75,13 +75,11 @@ public class ConvexeHullImageMaker {
 			width = imagePlusBinary.getWidth();
 			height = imagePlusBinary.getHeight();
 			indice = imagePlusBinary.getNSlices();
-		}
-		else if (_axesName == "xz") {
+		} else if (_axesName == "xz") {
 			width = imagePlusBinary.getWidth();
 			height = imagePlusBinary.getNSlices();
 			indice = imagePlusBinary.getHeight();
-		}
-		else {
+		} else {
 			width = imagePlusBinary.getHeight();
 			height = imagePlusBinary.getNSlices();
 			indice = imagePlusBinary.getWidth();
@@ -97,31 +95,30 @@ public class ConvexeHullImageMaker {
 				if (lVoxelBoundary.size() > 5) {
 					ip = imageMaker(image, lVoxelBoundary, width, height, equivalentSphericalRadius);
 					
-				}
-				else {
+				} else {
 					ip = imagePlusBlack.duplicate();
 					
 				}
-			}
-			else if (_listLabel.size() > 1) {
+			} else if (_listLabel.size() > 1) {
 				ImageStack imageStackIp = ip.getImageStack();
-				for (int i = 0; i < _listLabel.size(); ++i) {
-					ArrayList<VoxelRecord> lVoxelBoundary = detectVoxelBoudary(image, _listLabel.get(i), k);
+				for (Double aDouble : _listLabel) {
+					ArrayList<VoxelRecord> lVoxelBoundary = detectVoxelBoudary(image, aDouble, k);
 					if (lVoxelBoundary.size() > 5) {
 						//TODO THINKING ON AN OTHER WAY TO DEFINE equivalentSphericalRadius PARAMETER
 						ImageStack imageTempStack =
 								imageMaker(image, lVoxelBoundary, width, height, equivalentSphericalRadius).getStack();
 						for (int l = 0; l < width; ++l) {
 							for (int m = 0; m < height; ++m) {
-								if (imageTempStack.getVoxel(l, m, 0) > 0)
+								if (imageTempStack.getVoxel(l, m, 0) > 0) {
 									imageStackIp.setVoxel(l, m, 0, 255);
+								}
 							}
 						}
 					}
 				}
-			}
-			else
+			} else {
 				ip = imagePlusBlack.duplicate();
+			}
 			imageStackOutput.addSlice(ip.getProcessor());
 		}
 		imagePlusCorrected.setStack(imageStackOutput);
@@ -138,7 +135,7 @@ public class ConvexeHullImageMaker {
 	 * @return
 	 */
 	ArrayList<VoxelRecord> detectVoxelBoudary(double[][] image, double label, int indice) {
-		ArrayList<VoxelRecord> lVoxelBoundary = new ArrayList<VoxelRecord>();
+		ArrayList<VoxelRecord> lVoxelBoundary = new ArrayList<>();
 		_p0.setLocation(0, 0, 0);
 		//parcours de l'ensemble des pixel de l'image 2D
 		for (int i = 1; i < image.length; ++i) {
@@ -146,35 +143,37 @@ public class ConvexeHullImageMaker {
 				if (image[i][j] == label) {
 					if (image[i - 1][j] == 0 || image[i + 1][j] == 0 || image[i][j - 1] == 0 || image[i][j + 1] == 0) {
 						VoxelRecord voxelTest = new VoxelRecord();
-						if (_axesName == "xy")
+						if (_axesName == "xy") {
 							voxelTest.setLocation(i, j, indice);
-						else if (_axesName == "xz")
+						} else if (_axesName == "xz") {
 							voxelTest.setLocation(i, indice, j);
-						else
+						} else {
 							voxelTest.setLocation(indice, i, j);
+						}
 						lVoxelBoundary.add(voxelTest);
 						if (_axesName == "xy") {
-							if (j > _p0._j)
+							if (j > _p0._j) {
 								_p0.setLocation(i, j, indice);
-							else if (j == _p0._j) {
-								if (i > _p0._i)
+							} else if (j == _p0._j) {
+								if (i > _p0._i) {
 									_p0.setLocation(i, j, indice);
+								}
 							}
-						}
-						else if (_axesName == "xz") {
-							if (j > _p0._k)
+						} else if (_axesName == "xz") {
+							if (j > _p0._k) {
 								_p0.setLocation(i, indice, j);
-							else if (j == _p0._k) {
-								if (i > _p0._i)
+							} else if (j == _p0._k) {
+								if (i > _p0._i) {
 									_p0.setLocation(i, indice, j);
+								}
 							}
-						}
-						else {
-							if (j > _p0._k)
+						} else {
+							if (j > _p0._k) {
 								_p0.setLocation(indice, i, j);
-							else if (j == _p0._k) {
-								if (i > _p0._j)
+							} else if (j == _p0._k) {
+								if (i > _p0._j) {
 									_p0.setLocation(indice, i, j);
+								}
 							}
 						}
 					}
@@ -197,13 +196,14 @@ public class ConvexeHullImageMaker {
 	                            int width,
 	                            int height,
 	                            double equivalentSphericalRadius) {
-		ArrayList<VoxelRecord> convexHull = new ArrayList<VoxelRecord>();
+		ArrayList<VoxelRecord> convexHull = new ArrayList<>();
 		convexHull.add(_p0);
 		VoxelRecord vectorTest = new VoxelRecord();
-		if (_axesName == "xy" || _axesName == "xz")
+		if (_axesName == "xy" || _axesName == "xz") {
 			vectorTest.setLocation(-10, 0, 0);
-		else if (_axesName == "yz")
+		} else if (_axesName == "yz") {
 			vectorTest.setLocation(0, -10, 0);
+		}
 		
 		ConvexeHullDetection convexHullDetection = new ConvexeHullDetection();
 		convexHullDetection.setInitialVoxel(_p0);
@@ -234,12 +234,10 @@ public class ConvexeHullImageMaker {
 			if (_axesName == "xy") {
 				tableWidth[i] = (int) convexHull.get(i)._i;
 				tableHeight[i] = (int) convexHull.get(i)._j;
-			}
-			else if (_axesName == "xz") {
+			} else if (_axesName == "xz") {
 				tableWidth[i] = (int) convexHull.get(i)._i;
 				tableHeight[i] = (int) convexHull.get(i)._k;
-			}
-			else if (_axesName == "yz") {
+			} else if (_axesName == "yz") {
 				tableWidth[i] = (int) convexHull.get(i)._j;
 				tableHeight[i] = (int) convexHull.get(i)._k;
 			}
@@ -248,12 +246,10 @@ public class ConvexeHullImageMaker {
 		if (_axesName == "xy") {
 			tableWidth[convexHull.size()] = (int) convexHull.get(0)._i;
 			tableHeight[convexHull.size()] = (int) convexHull.get(0)._j;
-		}
-		else if (_axesName == "xz") {
+		} else if (_axesName == "xz") {
 			tableWidth[convexHull.size()] = (int) convexHull.get(0)._i;
 			tableHeight[convexHull.size()] = (int) convexHull.get(0)._k;
-		}
-		else if (_axesName == "yz") {
+		} else if (_axesName == "yz") {
 			tableWidth[convexHull.size()] = (int) convexHull.get(0)._j;
 			tableHeight[convexHull.size()] = (int) convexHull.get(0)._k;
 		}
@@ -285,12 +281,13 @@ public class ConvexeHullImageMaker {
 		double[][] image           = new double[width][height];
 		for (int i = 0; i < width; ++i) {
 			for (int j = 0; j < height; ++j) {
-				if (_axesName == "xy")
+				if (_axesName == "xy") {
 					image[i][j] = imageStackInput.getVoxel(i, j, indice);
-				else if (_axesName == "xz")
+				} else if (_axesName == "xz") {
 					image[i][j] = imageStackInput.getVoxel(i, indice, j);
-				else
+				} else {
 					image[i][j] = imageStackInput.getVoxel(indice, i, j);
+				}
 			}
 		}
 		ComponentConnexe componentConnexe = new ComponentConnexe();

@@ -15,15 +15,14 @@ public class SegmentationConfigDialog extends JFrame implements ItemListener {
 	private final JTextField yCalibration   = new JTextField();
 	private final JTextField zCalibration   = new JTextField();
 	private final JCheckBox  addCalibBox    = new JCheckBox();
-	private       Boolean    isGiftWrapping = true;
 	private final Container  _container;
 	private final JButton    buttonOK       = new JButton("Done");
 	private final JPanel     volumePane;
+	private final SegmentationDialog caller;
+	private       Boolean    isGiftWrapping = true;
 	private       JPanel     XCalib;
 	private       JPanel     YCalib;
 	private       JPanel     ZCalib;
-	
-	private final SegmentationDialog caller;
 	
 	public SegmentationConfigDialog(SegmentationDialog caller) {
 		this.caller = caller;
@@ -165,9 +164,9 @@ public class SegmentationConfigDialog extends JFrame implements ItemListener {
 	
 	@Override
 	public void itemStateChanged(ItemEvent e) {
-		if (e.getSource() == giftWrapping)
+		if (e.getSource() == giftWrapping) {
 			isGiftWrapping = giftWrapping.isSelected();
-		else if (e.getSource() == addCalibBox) {
+		} else if (e.getSource() == addCalibBox) {
 			if (addCalibBox.isSelected()) {
 				
 				XCalib = new JPanel();
@@ -205,8 +204,7 @@ public class SegmentationConfigDialog extends JFrame implements ItemListener {
 				volumePane.add(YCalib);
 				volumePane.add(ZCalib);
 				volumePane.add(buttonOK);
-			}
-			else {
+			} else {
 				try {
 					volumePane.remove(buttonOK);
 					volumePane.remove(XCalib);

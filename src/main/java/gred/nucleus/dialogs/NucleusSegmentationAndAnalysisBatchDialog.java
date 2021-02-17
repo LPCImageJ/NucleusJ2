@@ -532,10 +532,10 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 	}
 	
 	
-	/********************************************************************************************************************************************
-	 * 	Classes listener to interact with the several element of the window
+	/*******************************************************************************************************************************************
+	 Classes listener to interact with the several element of the window
 	 */
-	/********************************************************************************************************************************************
+	/*******************************************************************************************************************************************
 	 /********************************************************************************************************************************************
 	 /********************************************************************************************************************************************
 	 /********************************************************************************************************************************************/
@@ -570,7 +570,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		 *
 		 */
 		public void actionPerformed(ActionEvent actionEvent) {
-			if (_jTextFieldWorkDirectory.getText().isEmpty() || _jTextFieldRawData.getText().isEmpty())
+			if (_jTextFieldWorkDirectory.getText().isEmpty() || _jTextFieldRawData.getText().isEmpty()) {
 				JOptionPane.showMessageDialog
 						(
 								null,
@@ -578,7 +578,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 								"Error",
 								JOptionPane.ERROR_MESSAGE
 						);
-			else {
+			} else {
 				_start = true;
 				_nucleusSegmentationAndAnalysisBatchDialog.dispose();
 			}

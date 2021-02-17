@@ -1,14 +1,11 @@
 package gred.nucleus.mains;
 
 import gred.nucleus.FilesInputOutput.Directory;
-import gred.nucleus.exceptions.fileInOut;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
-import loci.formats.FormatException;
 
 import java.io.File;
-import java.io.IOException;
 
 public class bitsConvert {
 	

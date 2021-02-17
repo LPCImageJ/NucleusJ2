@@ -64,8 +64,9 @@ public class ConvexHullSegmentation {
 					if (imageStackXY.getVoxel(i, j, k) != 0 ||
 					    imageStackYZ.getVoxel(j, k, i) != 0 ||
 					    imageStackXZ.getVoxel(i, k, j) != 0) {
-						if (imageStackOutput.getVoxel(i, j, k) == 0)
+						if (imageStackOutput.getVoxel(i, j, k) == 0) {
 							imageStackOutput.setVoxel(i, j, k, 255);
+						}
 					}
 				}
 			}

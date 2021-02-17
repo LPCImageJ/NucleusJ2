@@ -1,4 +1,5 @@
 package gred.nucleus.myGradient;
+
 import ij.CompositeImage;
 import ij.IJ;
 import ij.ImagePlus;
@@ -10,27 +11,33 @@ import imagescience.utility.ImageScience;
 
 public final class FJ {
 	
-	private static final String NAME = "FeatureJ";
-	private static final String VERSION = "1.6.0";
+	static final int SINGLEIMAGE = 1, IMAGESTACK = 2, HYPERSTACK = 3, COMPOSITEIMAGE = 4, IMAGE5D = 5;
+	private static final String NAME         = "FeatureJ";
+	private static final String VERSION      = "1.6.0";
 	private static final String MINIJVERSION = "1.44a";
 	private static final String MINISVERSION = "2.4.0";
 	
-	public static String name() { return NAME; }
+	public static String name() {
+		return NAME;
+	}
 	
-	public static String version() { return VERSION; }
+	public static String version() {
+		return VERSION;
+	}
 	
 	static boolean libcheck() {
 		
 		if (IJ.getVersion().compareTo(MINIJVERSION) < 0) {
-			error("This plugin requires ImageJ version "+MINIJVERSION+" or higher");
+			error("This plugin requires ImageJ version " + MINIJVERSION + " or higher");
 			return false;
 		}
 		
 		try {
-			if (ImageScience.version().compareTo(MINISVERSION) < 0)
-			throw new IllegalStateException();
+			if (ImageScience.version().compareTo(MINISVERSION) < 0) {
+				throw new IllegalStateException();
+			}
 		} catch (Throwable e) {
-			error("This plugin requires ImageScience version "+MINISVERSION+" or higher");
+			error("This plugin requires ImageScience version " + MINISVERSION + " or higher");
 			return false;
 		}
 		
@@ -40,7 +47,7 @@ public final class FJ {
 	static ImagePlus imageplus() {
 		
 		final ImagePlus imp = WindowManager.getCurrentImage();
-		if (imp == null)  {
+		if (imp == null) {
 			error("There are no images open");
 			return null;
 		}
@@ -59,16 +66,16 @@ public final class FJ {
 		ImagePlus newimp = img.imageplus();
 		newimp.setCalibration(imp.getCalibration());
 		final double[] minmax = img.extrema();
-		final double min = minmax[0], max = minmax[1];
-		newimp.setDisplayRange(min,max);
+		final double   min    = minmax[0], max = minmax[1];
+		newimp.setDisplayRange(min, max);
 		
 		switch (type(imp)) {
 			
 			case IMAGE5D: {
-				newimp = I5DResource.convert(newimp,true);
-				I5DResource.transfer(imp,newimp);
-				I5DResource.minmax(newimp,min,max);
-				I5DResource.mode(newimp,I5DResource.GRAY);
+				newimp = I5DResource.convert(newimp, true);
+				I5DResource.transfer(imp, newimp);
+				I5DResource.minmax(newimp, min, max);
+				I5DResource.mode(newimp, I5DResource.GRAY);
 				break;
 			}
 			case COMPOSITEIMAGE: {
@@ -76,9 +83,10 @@ public final class FJ {
 				newcimp.copyLuts(imp);
 				newcimp.setMode(CompositeImage.GRAYSCALE);
 				final int nc = newcimp.getNChannels();
-				for (int c=1; c<=nc; ++c) {
+				for (int c = 1; c <= nc; ++c) {
 					final LUT lut = newcimp.getChannelLut(c);
-					lut.min = min; lut.max = max;
+					lut.min = min;
+					lut.max = max;
 				}
 				newimp = newcimp;
 				break;
@@ -103,23 +111,29 @@ public final class FJ {
 		}
 	}
 	
-	static final int SINGLEIMAGE=1, IMAGESTACK=2, HYPERSTACK=3, COMPOSITEIMAGE=4, IMAGE5D=5;
-	
 	static int type(final ImagePlus imp) {
 		
-		int type = SINGLEIMAGE;
+		int     type     = SINGLEIMAGE;
 		boolean i5dexist = false;
-		try { Class.forName("i5d.Image5D"); i5dexist = true; } catch (Throwable e) { }
-		if (i5dexist && I5DResource.instance(imp)) type = IMAGE5D;
-		else if (imp.isComposite()) type = COMPOSITEIMAGE;
-		else if (imp.isHyperStack()) type = HYPERSTACK;
-		else if (imp.getImageStackSize() > 1) type = IMAGESTACK;
+		try {
+			Class.forName("i5d.Image5D");
+			i5dexist = true;
+		} catch (Throwable e) {
+			e.printStackTrace();
+		}
+		if (i5dexist && I5DResource.instance(imp)) {
+			type = IMAGE5D;
+		} else if (imp.isComposite()) {
+			type = COMPOSITEIMAGE;
+		} else if (imp.isHyperStack()) {
+			type = HYPERSTACK;
+		} else if (imp.getImageStackSize() > 1) type = IMAGESTACK;
 		return type;
 	}
 	
 	static void error(final String message) {
 		
-		IJ.showMessage(NAME+": Error",message+".");
+		IJ.showMessage(NAME + ": Error", message + ".");
 		IJ.showProgress(1);
 		IJ.showStatus("");
 	}

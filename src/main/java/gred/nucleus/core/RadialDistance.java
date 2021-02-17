@@ -63,8 +63,9 @@ public class RadialDistance {
 						voxelValue = imageStackDistanceMap.getVoxel(i, j, k);
 						if (voxelValue < voxelValueMin &&
 						    tLabel[l] ==
-						    imageStackChromocenter.getVoxel(i, j, k))
+						    imageStackChromocenter.getVoxel(i, j, k)) {
 							voxelValueMin = voxelValue;
+						}
 					}
 				}
 			}

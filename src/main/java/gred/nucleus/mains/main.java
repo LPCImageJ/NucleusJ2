@@ -107,8 +107,7 @@ public class main {
 				}
 				
 				autoCrop.runImageOmero(image, outputsDat, client);
-			}
-			else {
+			} else {
 				Long                 id     = Long.parseLong(param[1]);
 				List<ImageContainer> images = null;
 				
@@ -121,15 +120,12 @@ public class main {
 					
 					if (param.length == 4 && param[2].equals("tag")) {
 						images = dataset.getImagesTagged(client, Long.parseLong(param[3]));
-					}
-					else {
+					} else {
 						images = dataset.getImages(client);
 					}
-				}
-				else if (param[0].equals("tag")) {
+				} else if (param[0].equals("tag")) {
 					images = client.getImagesTagged(id);
-				}
-				else {
+				} else {
 					throw new IllegalArgumentException();
 				}
 				
@@ -145,8 +141,7 @@ public class main {
 				
 				autoCrop.runSeveralImageOmero(images, outputsDat, client);
 			}
-		}
-		else {
+		} else {
 			throw new IllegalArgumentException();
 		}
 	}
@@ -186,8 +181,9 @@ public class main {
 		SegmentationCalling    otsuModif              = new SegmentationCalling(segmentationParameters);
 		try {
 			String log = otsuModif.runSeveralImages2();
-			if (!(log.equals("")))
+			if (!(log.equals(""))) {
 				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -206,11 +202,12 @@ public class main {
 	throws Exception {
 		SegmentationParameters segmentationParameters =
 				new SegmentationParameters(inputDirectory, outputDirectory, config);
-		SegmentationCalling    otsuModif              = new SegmentationCalling(segmentationParameters);
+		SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
 		try {
 			String log = otsuModif.runSeveralImages2();
-			if (!(log.equals("")))
+			if (!(log.equals(""))) {
 				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -230,8 +227,9 @@ public class main {
 		SegmentationCalling    otsuModif              = new SegmentationCalling(segmentationParameters);
 		try {
 			String log = otsuModif.runOneImage(inputDirectory);
-			if (!(log.equals("")))
+			if (!(log.equals(""))) {
 				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -252,63 +250,60 @@ public class main {
 					String log;
 					if (param.length == 3 && param[2].equals("ROI")) {
 						log = otsuModif.runOneImageOmeroROI(image, Long.parseLong(outputDirectory), client);
-					}
-					else {
+					} else {
 						log = otsuModif.runOneImageOmero(image, Long.parseLong(outputDirectory), client);
 					}
-					if (!(log.equals("")))
+					if (!(log.equals(""))) {
 						System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			}
-			else {
+			} else {
 				Long                 id     = Long.parseLong(param[1]);
 				List<ImageContainer> images = null;
 				
-				if (param[0].equals("dataset")) {
-					DatasetContainer dataset = client.getDataset(id);
-					
-					if (param.length == 4 && param[2].equals("tag")) {
-						images = dataset.getImagesTagged(client, Long.parseLong(param[3]));
-					}
-					else {
-						images = dataset.getImages(client);
-					}
-				}
-				else if (param[0].equals("project")) {
-					ProjectContainer project = client.getProject(id);
-					
-					if (param.length == 4 && param[2].equals("tag")) {
-						images = project.getImagesTagged(client, Long.parseLong(param[3]));
-					}
-					else {
-						images = project.getImages(client);
-					}
-				}
-				else if (param[0].equals("tag")) {
-					images = client.getImagesTagged(id);
-				}
-				else {
-					throw new IllegalArgumentException();
+				switch (param[0]) {
+					case "dataset":
+						DatasetContainer dataset = client.getDataset(id);
+						
+						if (param.length == 4 && param[2].equals("tag")) {
+							images = dataset.getImagesTagged(client, Long.parseLong(param[3]));
+						} else {
+							images = dataset.getImages(client);
+						}
+						break;
+					case "project":
+						ProjectContainer project = client.getProject(id);
+						
+						if (param.length == 4 && param[2].equals("tag")) {
+							images = project.getImagesTagged(client, Long.parseLong(param[3]));
+						} else {
+							images = project.getImages(client);
+						}
+						break;
+					case "tag":
+						images = client.getImagesTagged(id);
+						break;
+					default:
+						throw new IllegalArgumentException();
 				}
 				try {
 					String log;
 					if ((param.length == 3 && param[2].equals("ROI")) ||
 					    (param.length == 5 && param[4].equals("ROI"))) {
 						log = otsuModif.runSeveralImageOmeroROI(images, Long.parseLong(outputDirectory), client);
-					}
-					else {
+					} else {
 						log = otsuModif.runSeveralImageOmero(images, Long.parseLong(outputDirectory), client);
 					}
-					if (!(log.equals("")))
+					if (!(log.equals(""))) {
 						System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
-		}
-		else {
+		} else {
 			throw new IllegalArgumentException();
 		}
 	}
@@ -487,12 +482,10 @@ public class main {
 		
 		if (listArgs.contains("-h") || listArgs.contains("-help")) {
 			CLIHelper command = new CLIHelper(args);
-		}
-		else if ((listArgs.contains("-ome")) || (listArgs.contains("-omero"))) {
+		} else if ((listArgs.contains("-ome")) || (listArgs.contains("-omero"))) {
 			CLIActionOptionOMERO command        = new CLIActionOptionOMERO(args);
 			CLIRunActionOMERO    runActionOMERO = new CLIRunActionOMERO(command.getCmd());
-		}
-		else {
+		} else {
 			CLIActionOptionCmdLine command = new CLIActionOptionCmdLine(args);
 			CLIRunAction           runCmd  = new CLIRunAction(command.getCmd());
 		}
@@ -535,140 +528,130 @@ public class main {
 		cmd.getOptionValue("action");
 		
 		
-		if (cmd.getOptionValue("action").equals("autocrop")) {
-			System.out.println("start autocrop");
-			
-			if (cmd.hasOption("omero")) {
-				Client client = new Client();
-				String mdp;
+		switch (cmd.getOptionValue("action")) {
+			case "autocrop":
+				System.out.println("start autocrop");
 				
-				if (cmd.hasOption("password"))
-					mdp = cmd.getOptionValue("password");
-				else {
-					System.out.println("Enter password ");
-					mdp = String.valueOf(con.readPassword());
-				}
-				
-				
-				client.connect(cmd.getOptionValue("hostname"),
-				               Integer.parseInt(cmd.getOptionValue("port")),
-				               cmd.getOptionValue("username"),
-				               mdp,
-				               Long.valueOf(cmd.getOptionValue("group")));
-				
-				if (cmd.hasOption("config")) {
-					runAutoCropOmero(cmd.getOptionValue("input"),
-					                 cmd.getOptionValue("output"),
-					                 cmd.getOptionValue("config"),
-					                 client);
-				}
-				else {
-					runAutoCropOmero(cmd.getOptionValue("input"),
-					                 cmd.getOptionValue("output"),
-					                 client);
-				}
-			}
-			else {
-				if (cmd.hasOption("config")) {
-					runAutoCropFolder(cmd.getOptionValue("input"),
-					                  cmd.getOptionValue("output"),
-					                  cmd.getOptionValue("config"));
+				if (cmd.hasOption("omero")) {
+					Client client = new Client();
+					String mdp;
 					
-				}
-				else if (cmd.hasOption("file")) {
-					runAutoCropFile(cmd.getOptionValue("input"),
-					                cmd.getOptionValue("output"));
-				}
-				else {
-					runAutoCropFolder(cmd.getOptionValue("input"),
-					                  cmd.getOptionValue("output"));
-				}
-			}
-		}
-		else if (cmd.getOptionValue("action").equals("segmentation")) {
-			System.out.println("start " + "segmentation");
-			
-			if (cmd.hasOption("omero")) {
-				Client client = new Client();
-				String mdp;
-				
-				if (cmd.hasOption("password"))
-					mdp = cmd.getOptionValue("password");
-				else {
-					System.out.println("Enter password: ");
-					mdp = String.valueOf(con.readPassword());
-				}
-				
-				client.connect(cmd.getOptionValue("hostname"),
-				               Integer.parseInt(cmd.getOptionValue("port")),
-				               cmd.getOptionValue("username"),
-				               mdp,
-				               Long.valueOf(cmd.getOptionValue("group")));
-				
-				if (cmd.hasOption("config")) {
-					segmentationOmero(cmd.getOptionValue("input"),
-					                  cmd.getOptionValue("output"),
-					                  cmd.getOptionValue("config"),
-					                  client);
-				}
-				else {
-					segmentationOmero(cmd.getOptionValue("input"),
-					                  cmd.getOptionValue("output"),
-					                  client);
-				}
-			}
-			else {
-				if (cmd.hasOption("config")) {
-					segmentationFolder(cmd.getOptionValue("input"),
-					                   cmd.getOptionValue("output"),
-					                   cmd.getOptionValue("config"));
+					if (cmd.hasOption("password")) {
+						mdp = cmd.getOptionValue("password");
+					} else {
+						System.out.println("Enter password ");
+						mdp = String.valueOf(con.readPassword());
+					}
 					
+					client.connect(cmd.getOptionValue("hostname"),
+					               Integer.parseInt(cmd.getOptionValue("port")),
+					               cmd.getOptionValue("username"),
+					               mdp,
+					               Long.valueOf(cmd.getOptionValue("group")));
+					
+					if (cmd.hasOption("config")) {
+						runAutoCropOmero(cmd.getOptionValue("input"),
+						                 cmd.getOptionValue("output"),
+						                 cmd.getOptionValue("config"),
+						                 client);
+					} else {
+						runAutoCropOmero(cmd.getOptionValue("input"),
+						                 cmd.getOptionValue("output"),
+						                 client);
+					}
+				} else {
+					if (cmd.hasOption("config")) {
+						runAutoCropFolder(cmd.getOptionValue("input"),
+						                  cmd.getOptionValue("output"),
+						                  cmd.getOptionValue("config"));
+						
+					} else if (cmd.hasOption("file")) {
+						runAutoCropFile(cmd.getOptionValue("input"),
+						                cmd.getOptionValue("output"));
+					} else {
+						runAutoCropFolder(cmd.getOptionValue("input"),
+						                  cmd.getOptionValue("output"));
+					}
 				}
-				else if (cmd.hasOption("file")) {
-					segmentationOneImage(cmd.getOptionValue("input"),
-					                     cmd.getOptionValue("output"));
+				break;
+			case "segmentation":
+				System.out.println("start " + "segmentation");
+				
+				if (cmd.hasOption("omero")) {
+					Client client = new Client();
+					String mdp;
+					
+					if (cmd.hasOption("password")) {
+						mdp = cmd.getOptionValue("password");
+					} else {
+						System.out.println("Enter password: ");
+						mdp = String.valueOf(con.readPassword());
+					}
+					
+					client.connect(cmd.getOptionValue("hostname"),
+					               Integer.parseInt(cmd.getOptionValue("port")),
+					               cmd.getOptionValue("username"),
+					               mdp,
+					               Long.valueOf(cmd.getOptionValue("group")));
+					
+					if (cmd.hasOption("config")) {
+						segmentationOmero(cmd.getOptionValue("input"),
+						                  cmd.getOptionValue("output"),
+						                  cmd.getOptionValue("config"),
+						                  client);
+					} else {
+						segmentationOmero(cmd.getOptionValue("input"),
+						                  cmd.getOptionValue("output"),
+						                  client);
+					}
+				} else {
+					if (cmd.hasOption("config")) {
+						segmentationFolder(cmd.getOptionValue("input"),
+						                   cmd.getOptionValue("output"),
+						                   cmd.getOptionValue("config"));
+						
+					} else if (cmd.hasOption("file")) {
+						segmentationOneImage(cmd.getOptionValue("input"),
+						                     cmd.getOptionValue("output"));
+					} else {
+						segmentationFolder(cmd.getOptionValue("input"),
+						                   cmd.getOptionValue("output"));
+					}
 				}
-				else {
-					segmentationFolder(cmd.getOptionValue("input"),
-					                   cmd.getOptionValue("output"));
+				break;
+			case "computeParameters":
+				//else if(args[0].equals("computeParameters")){
+				if ((cmd.hasOption("config"))) {
+					computeNucleusParameters(cmd.getOptionValue("input"),
+					                         cmd.getOptionValue("output"),
+					                         cmd.getOptionValue("config"));
+				} else {
+					computeNucleusParameters(cmd.getOptionValue("input"),
+					                         cmd.getOptionValue("output"));
 				}
-			}
-		}
-		else if (cmd.getOptionValue("action").equals("computeParameters")) {
-			//else if(args[0].equals("computeParameters")){
-			if ((cmd.hasOption("config"))) {
-				computeNucleusParameters(cmd.getOptionValue("input"),
-				                         cmd.getOptionValue("output"),
-				                         cmd.getOptionValue("config"));
-			}
-			else {
-				computeNucleusParameters(cmd.getOptionValue("input"),
-				                         cmd.getOptionValue("output"));
-			}
-		}
-		else if (cmd.getOptionValue("action").equals("computeParametersDL")) {
-			computeNucleusParametersDL(cmd.getOptionValue("input"),
-			                           cmd.getOptionValue("output"));
-		}
-		else if (cmd.getOptionValue("action").equals("generateProjection")) {
-			if (cmd.hasOption("config")) {
-				generateProjectionFromCoordinates(cmd.getOptionValue("input"),
-				                                  cmd.getOptionValue("output"),
-				                                  cmd.getOptionValue("config"));
-			}
-			else {
-				generateProjectionFromCoordinates(cmd.getOptionValue("input"),
-				                                  cmd.getOptionValue("output"));
-			}
-		}
-		else if (cmd.getOptionValue("action").equals("CropFromCoordinate")) {
-			cropFromCoordinates(cmd.getOptionValue("input"));
-		}
-		else if (cmd.getOptionValue("action").equals("GenerateOverlay")) {
-			genereOV(cmd.getOptionValue("input"));
-		}
-		else {
-			formatter.printHelp("NucleusJ2.0", options, true);
+				break;
+			case "computeParametersDL":
+				computeNucleusParametersDL(cmd.getOptionValue("input"),
+				                           cmd.getOptionValue("output"));
+				break;
+			case "generateProjection":
+				if (cmd.hasOption("config")) {
+					generateProjectionFromCoordinates(cmd.getOptionValue("input"),
+					                                  cmd.getOptionValue("output"),
+					                                  cmd.getOptionValue("config"));
+				} else {
+					generateProjectionFromCoordinates(cmd.getOptionValue("input"),
+					                                  cmd.getOptionValue("output"));
+				}
+				break;
+			case "CropFromCoordinate":
+				cropFromCoordinates(cmd.getOptionValue("input"));
+				break;
+			case "GenerateOverlay":
+				genereOV(cmd.getOptionValue("input"));
+				break;
+			default:
+				formatter.printHelp("NucleusJ2.0", options, true);
 /*
             System.out.println("Argument le premier argument doit être   autocrop  ou   segmentation ou computeParameters");
             System.out.println("\nExemples :");
@@ -676,6 +659,7 @@ public class main {
             System.out.println("\njava NucleusJ_giftwrapping.jar segmentation dossier/raw/ dossier/out/");
             System.out.println("\n\n");
             */
+				break;
 		}
 		System.out.println("Fin du programme");
 	}

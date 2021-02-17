@@ -16,45 +16,45 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 	/**
 	 * Host name server
 	 */
-	private final Option m_hostname = Option.builder("ho")
-	                                        .longOpt("hostname")
-	                                        .required()
-	                                        .type(String.class)
-	                                        .desc("Hostname of the OMERO serveur")
-	                                        .numberOfArgs(1)
-	                                        .build();
+	private final Option m_hostname     = Option.builder("ho")
+	                                            .longOpt("hostname")
+	                                            .required()
+	                                            .type(String.class)
+	                                            .desc("Hostname of the OMERO serveur")
+	                                            .numberOfArgs(1)
+	                                            .build();
 	/**
 	 * Server port connexion
 	 */
-	private final Option m_port     = Option.builder("pt")
-	                                        .longOpt("port")
-	                                        .required()
-	                                        .type(Conversion.Int.class)
-	                                        .desc("Port used by OMERO")
-	                                        .numberOfArgs(1)
-	                                        .build();
+	private final Option m_port         = Option.builder("pt")
+	                                            .longOpt("port")
+	                                            .required()
+	                                            .type(Conversion.Int.class)
+	                                            .desc("Port used by OMERO")
+	                                            .numberOfArgs(1)
+	                                            .build();
 	/**
 	 * username connexion
 	 */
-	private final Option m_username = Option.builder("u")
-	                                        .longOpt("username")
-	                                        .type(String.class)
-	                                        .desc("Username in OMERO")
-	                                        .numberOfArgs(1)
-	                                        .build();
+	private final Option m_username     = Option.builder("u")
+	                                            .longOpt("username")
+	                                            .type(String.class)
+	                                            .desc("Username in OMERO")
+	                                            .numberOfArgs(1)
+	                                            .build();
 	/**
 	 * OMERO password connexion
 	 */
-	private final Option m_password = Option.builder("p")
-	                                        .longOpt("password")
-	                                        .type(String.class)
-	                                        .desc("Password in OMERO")
-	                                        .numberOfArgs(1)
-	                                        .build();
+	private final Option m_password     = Option.builder("p")
+	                                            .longOpt("password")
+	                                            .type(String.class)
+	                                            .desc("Password in OMERO")
+	                                            .numberOfArgs(1)
+	                                            .build();
 	/**
 	 * Group user connexion
 	 */
-	private final Option m_group    = Option.builder("g")
+	private final Option m_group        = Option.builder("g")
 	                                            .longOpt("group")
 	                                            .required()
 	                                            .type(String.class)

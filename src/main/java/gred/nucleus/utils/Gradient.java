@@ -42,7 +42,7 @@ public class Gradient {
 		for (int k = 1; k < imagePlusInput.getStackSize() - 1; ++k) {
 			for (int i = 1; i < imagePlusInput.getWidth() - 1; ++i) {
 				for (int j = 1; j < imagePlusInput.getHeight() - 1; ++j) {
-					ArrayList<Double> list = new ArrayList();
+					ArrayList<Double> list = new ArrayList<>();
 					double            dx   = 0;
 					double            dy   = 0;
 					double            dz   = 0;
@@ -67,7 +67,7 @@ public class Gradient {
 						ny = dy / norme;
 						nz = dz / norme;
 					}
-					ArrayList<Double> listN = new ArrayList();
+					ArrayList<Double> listN = new ArrayList<>();
 					listN.add(nx);
 					listN.add(ny);
 					listN.add(nz);

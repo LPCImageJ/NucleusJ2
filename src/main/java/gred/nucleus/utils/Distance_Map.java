@@ -56,10 +56,10 @@ may be forthcoming.
 
 */
 public class Distance_Map implements PlugInFilter {
-	public  byte[][]  data;
-	public  int       w, h, d;
-	public int     thresh  = 126;
-	public boolean inverse = false;
+	public byte[][] data;
+	public int      w, h, d;
+	public  int       thresh  = 126;
+	public  boolean   inverse = false;
 	private ImagePlus imp;
 	
 	public int setup(String arg, ImagePlus imp) {
@@ -148,8 +148,7 @@ public class Distance_Map implements PlugInFilter {
 			for (int ind = 0; ind < wh; ind++) {
 				if (((data[k][ind] & 255) < thresh) ^ inverse) {
 					sk[ind] = 0;
-				}
-				else {
+				} else {
 					dist = (float) Math.sqrt(sk[ind]);
 					sk[ind] = dist;
 					distMax = (dist > distMax) ? dist : distMax;
@@ -169,8 +168,9 @@ public class Distance_Map implements PlugInFilter {
 	String stripExtension(String name) {
 		if (name != null) {
 			int dotIndex = name.lastIndexOf(".");
-			if (dotIndex >= 0)
+			if (dotIndex >= 0) {
 				name = name.substring(0, dotIndex);
+			}
 		}
 		return name;
 	}

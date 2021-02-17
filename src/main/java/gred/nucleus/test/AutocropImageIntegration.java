@@ -2,10 +2,7 @@ package gred.nucleus.test;
 
 import gred.nucleus.autocrop.AutoCropCalling;
 import gred.nucleus.autocrop.AutocropParameters;
-import gred.nucleus.exceptions.fileInOut;
-import loci.formats.FormatException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class AutocropImageIntegration {
@@ -32,7 +29,7 @@ public class AutocropImageIntegration {
 		//AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
 		AutocropParameters autocropParameters =
 				new AutocropParameters(imageSourceFile, output, 40, 40, 20, 0, 20, 0, 1, 1000000000);
-		AutoCropCalling    autoCrop           = new AutoCropCalling(autocropParameters);
+		AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
 		autoCrop.runFolder();
 	}
 	

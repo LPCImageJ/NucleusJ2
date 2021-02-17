@@ -40,23 +40,28 @@ public class ComputeNucleiParametersML {
         directoryInput.checkIfEmpty();
         ArrayList<File> segImages =directoryInput.m_listeOfFiles;
         String outputCropGeneralInfoOTSU=pluginParameters.getAnalyseParameters()+getColnameResult();
-        for (short i = 0; i < segImages.size(); ++i) {
-            File currentFile = segImages.get(i);
-            System.out.println("current File "+currentFile.getName());
-            ImagePlus Raw = new ImagePlus(pluginParameters.getInputFolder()+directoryInput.getSeparator()+currentFile.getName());
-            ImagePlus[] Segmented = BF.openImagePlus(pluginParameters.getOutputFolder()+currentFile.getName());
-            // TODO TRANSFORMATION FACTORISABLE AVEC METHODE DU DESSUS !!!!!
-            Segmented[0]=generateSegmentedImage(Segmented[0],1);
-            Segmented[0] = BinaryImages.componentsLabeling(Segmented[0], 26,32);
-            LabelImages.removeBorderLabels(Segmented[0]);
-            Segmented[0]=generateSegmentedImage(Segmented[0],1);
-            Histogram histogram = new Histogram ();
-            histogram.run(Segmented[0]);
-            if (histogram.getNbLabels() > 0) {
-                Measure3D mesure3D = new Measure3D(Segmented, Raw, pluginParameters.getXcalibration(Raw), pluginParameters.getYcalibration(Raw), pluginParameters.getZcalibration(Raw));
-                outputCropGeneralInfoOTSU += mesure3D.nucleusParameter3D() + "\n";
-            }
-        }
+	    for (File currentFile : segImages) {
+		    System.out.println("current File " + currentFile.getName());
+		    ImagePlus   Raw       = new ImagePlus(pluginParameters.getInputFolder() +
+		                                          directoryInput.getSeparator() +
+		                                          currentFile.getName());
+		    ImagePlus[] Segmented = BF.openImagePlus(pluginParameters.getOutputFolder() + currentFile.getName());
+		    // TODO TRANSFORMATION FACTORISABLE AVEC METHODE DU DESSUS !!!!!
+		    Segmented[0] = generateSegmentedImage(Segmented[0], 1);
+		    Segmented[0] = BinaryImages.componentsLabeling(Segmented[0], 26, 32);
+		    LabelImages.removeBorderLabels(Segmented[0]);
+		    Segmented[0] = generateSegmentedImage(Segmented[0], 1);
+		    Histogram histogram = new Histogram();
+		    histogram.run(Segmented[0]);
+		    if (histogram.getNbLabels() > 0) {
+			    Measure3D mesure3D = new Measure3D(Segmented,
+			                                       Raw,
+			                                       pluginParameters.getXcalibration(Raw),
+			                                       pluginParameters.getYcalibration(Raw),
+			                                       pluginParameters.getZcalibration(Raw));
+			    outputCropGeneralInfoOTSU += mesure3D.nucleusParameter3D() + "\n";
+		    }
+	    }
 
         OutputTextFile resultFileOutputOTSU=new OutputTextFile(pluginParameters.getOutputFolder()
                 +directoryInput.getSeparator()

@@ -10,41 +10,38 @@ import java.io.File;
 
 public class AutocropDialog extends JFrame implements ActionListener, ItemListener {
 	
-	private static final long       serialVersionUID    = 1L;
-	static private final String     newline             = "\n";
-	private final        JButton    _jButtonStart       = new JButton("Start");
-	private final        JButton    _jButtonQuit        = new JButton("Quit");
-	private final        JButton    _jButtonConfig      = new JButton("Config");
-	private final        Container  _container;
-	private final        JLabel     _jLabelOutput;
-	private final        JLabel     _jLabelConfig;
-	private final        JLabel     _jLabelInput;
-	private final        JTextField _jInputFileChooser  = new JTextField();
-	private final        JTextField _jOutputFileChooser = new JTextField();
-	private final        JTextField _jConfigFileChooser = new JTextField();
-	private              boolean    _start              = false;
+	private static final long         serialVersionUID    = 1L;
+	static private final String       newline             = "\n";
+	private final        JButton      _jButtonStart       = new JButton("Start");
+	private final        JButton      _jButtonQuit        = new JButton("Quit");
+	private final        JButton      _jButtonConfig      = new JButton("Config");
+	private final        Container    _container;
+	private final        JLabel       _jLabelOutput;
+	private final        JLabel       _jLabelConfig;
+	private final        JLabel       _jLabelInput;
+	private final        JTextField   _jInputFileChooser  = new JTextField();
+	private final        JTextField   _jOutputFileChooser = new JTextField();
+	private final        JTextField   _jConfigFileChooser = new JTextField();
 	private final        JFileChooser fc                  = new JFileChooser();
 	private final        JCheckBox    addConfigBox        = new JCheckBox();
 	private final        JButton      sourceButton;
 	private final        JButton      destButton;
-	private              JButton      confButton;
 	private final        JLabel       defConf             = new JLabel("Default configuration");
-	
-	private       int                  configMode   = 0;
-	private       boolean              manualConfig = false;
 	private final AutocropConfigDialog autocropConfigFileDialog;
-	
 	private final ButtonGroup  buttonGroup        = new ButtonGroup();
 	private final JRadioButton rdoDefault         = new JRadioButton();
 	private final JRadioButton rdoAddConfigFile   = new JRadioButton();
 	private final JRadioButton rdoAddConfigDialog = new JRadioButton();
-	
-	private       File   selectedInput;
-	private       File   selectedOutput;
-	private       File   selectedConfig;
 	private final String inputChooserName  = "inputChooser";
 	private final String outputChooserName = "outputChooser";
 	private final String configChooserName = "configChooser";
+	private              boolean      _start              = false;
+	private              JButton      confButton;
+	private       int                  configMode   = 0;
+	private       boolean              manualConfig = false;
+	private       File   selectedInput;
+	private       File   selectedOutput;
+	private       File   selectedConfig;
 	
 	
 	/**
@@ -183,29 +180,33 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		if (((JButton) e.getSource()).getName().equals(inputChooserName)) {
-			fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-		}
-		else if (((JButton) e.getSource()).getName().equals(outputChooserName)) {
-			fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		}
-		else if (((JButton) e.getSource()).getName().equals(configChooserName)) {
-			fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		switch (((JButton) e.getSource()).getName()) {
+			case inputChooserName:
+				fc.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+				break;
+			case outputChooserName:
+				fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				break;
+			case configChooserName:
+				fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				break;
 		}
 		fc.setAcceptAllFileFilterUsed(false);
 		
 		if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-			if (((JButton) e.getSource()).getName().equals(inputChooserName)) {
-				selectedInput = fc.getSelectedFile();
-				_jInputFileChooser.setText(selectedInput.getPath());
-			}
-			else if (((JButton) e.getSource()).getName().equals(outputChooserName)) {
-				selectedOutput = fc.getSelectedFile();
-				_jOutputFileChooser.setText(selectedOutput.getPath());
-			}
-			else if (((JButton) e.getSource()).getName().equals(configChooserName)) {
-				selectedConfig = fc.getSelectedFile();
-				_jConfigFileChooser.setText(selectedConfig.getPath());
+			switch (((JButton) e.getSource()).getName()) {
+				case inputChooserName:
+					selectedInput = fc.getSelectedFile();
+					_jInputFileChooser.setText(selectedInput.getPath());
+					break;
+				case outputChooserName:
+					selectedOutput = fc.getSelectedFile();
+					_jOutputFileChooser.setText(selectedOutput.getPath());
+					break;
+				case configChooserName:
+					selectedConfig = fc.getSelectedFile();
+					_jConfigFileChooser.setText(selectedConfig.getPath());
+					break;
 			}
 		}
 		fc.setSelectedFile(null);
@@ -213,14 +214,14 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 	
 	@Override
 	public void itemStateChanged(ItemEvent e) {
-		if (configMode == 0)
+		if (configMode == 0) {
 			_container.remove(defConf);
-		else if (configMode == 1) {
+		} else if (configMode == 1) {
 			_container.remove(_jButtonConfig);
-			if (autocropConfigFileDialog.isVisible())
+			if (autocropConfigFileDialog.isVisible()) {
 				autocropConfigFileDialog.setVisible(false);
-		}
-		else if (configMode == 2) {
+			}
+		} else if (configMode == 2) {
 			_container.remove(_jConfigFileChooser);
 			_container.remove(confButton);
 		}
@@ -232,15 +233,13 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 			                                               new Insets(40, 10, 0, 0), 0, 0));
 			configMode = 0;
 			manualConfig = false;
-		}
-		else if (source == rdoAddConfigDialog) {
+		} else if (source == rdoAddConfigDialog) {
 			_container.add(_jButtonConfig, new GridBagConstraints(0, 2, 0, 0, 0.0, 0.0,
 			                                                      GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
 			                                                      new Insets(40, 10, 0, 0), 0, 0));
 			manualConfig = true;
 			configMode = 1;
-		}
-		else if (source == rdoAddConfigFile) {
+		} else if (source == rdoAddConfigFile) {
 			_container.add(_jConfigFileChooser, new GridBagConstraints(0,
 			                                                           2,
 			                                                           0,
@@ -286,8 +285,8 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 		repaint();
 	}
 	
-	/********************************************************************************************************************************************
-	 * 	Classes listener to interact with the several element of the window
+	/*******************************************************************************************************************************************
+	 Classes listener to interact with the several element of the window
 	 */
 	/********************************************************************************************************************************************
 	 /********************************************************************************************************************************************

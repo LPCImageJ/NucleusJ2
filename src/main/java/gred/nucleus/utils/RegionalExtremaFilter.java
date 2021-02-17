@@ -67,7 +67,7 @@ public class RegionalExtremaFilter implements PlugInFilter {
 		int                    jj;
 		int                    kk;
 		VoxelRecord            voxelRecord    = new VoxelRecord();
-		ArrayList<VoxelRecord> arrayListVoxel = new ArrayList<VoxelRecord>();
+		ArrayList<VoxelRecord> arrayListVoxel = new ArrayList<>();
 		computeImageMoreOne();
 		ImagePlus  imageOutput      = _imagePlusInput.duplicate();
 		ImageStack imageStackOutput = imageOutput.getStack();

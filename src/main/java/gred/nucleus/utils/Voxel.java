@@ -1,10 +1,10 @@
-/******************************************************************************\
- *     Copyright (C) 2016 by Rémy Malgouyres                                    *
- *     http://malgouyres.org                                                    *
- *     File: VoxelShort.java                                                    *
- *                                                                              *
- * The program is distributed under the terms of the GNU General Public License *
- *                                                                              *
+/*****************************************************************************\
+ Copyright (C) 2016 by Rémy Malgouyres                                    *
+ http://malgouyres.org                                                    *
+ File: VoxelShort.java                                                    *
+ *
+ The program is distributed under the terms of the GNU General Public License *
+ *
  \******************************************************************************/
 
 package gred.nucleus.utils;

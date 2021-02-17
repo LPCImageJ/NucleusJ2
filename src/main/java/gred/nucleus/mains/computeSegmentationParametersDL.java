@@ -3,7 +3,6 @@ package gred.nucleus.mains;
 import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.FilesInputOutput.OutputTextFile;
 import gred.nucleus.core.Measure3D;
-import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.plugins.PluginParameters;
 import gred.nucleus.utils.Histogram;
 import ij.ImagePlus;
@@ -12,11 +11,9 @@ import ij.io.FileSaver;
 import inra.ijpb.binary.BinaryImages;
 import inra.ijpb.label.LabelImages;
 import loci.common.DebugTools;
-import loci.formats.FormatException;
 import loci.plugins.BF;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class computeSegmentationParametersDL {
@@ -27,14 +24,13 @@ public class computeSegmentationParametersDL {
 	throws Exception {
 		PluginParameters pluginParameters =
 				new PluginParameters(RawImageSourceFile, SegmentedImagesSourceFile, pathToConfig);
-		Directory        directoryInput   = new Directory(pluginParameters.getInputFolder());
+		Directory directoryInput = new Directory(pluginParameters.getInputFolder());
 		directoryInput.listImageFiles(pluginParameters.getInputFolder());
 		directoryInput.checkIfEmpty();
 		ArrayList<File> rawImages                 = directoryInput.m_listeOfFiles;
 		String          outputCropGeneralInfoOTSU = pluginParameters.getAnalyseParameters() + getColnameResult();
-		for (short i = 0; i < rawImages.size(); ++i) {
-			File      currentFile = rawImages.get(i);
-			ImagePlus Raw         = new ImagePlus(currentFile.getAbsolutePath());
+		for (File currentFile : rawImages) {
+			ImagePlus Raw = new ImagePlus(currentFile.getAbsolutePath());
 			System.out.println("current File " + currentFile.getName());
 			
 			ImagePlus[] Segmented = BF.openImagePlus(pluginParameters.getOutputFolder() + currentFile.getName());
@@ -62,12 +58,11 @@ public class computeSegmentationParametersDL {
 		directoryInput.checkIfEmpty();
 		ArrayList<File> segImages                 = directoryInput.m_listeOfFiles;
 		String          outputCropGeneralInfoOTSU = pluginParameters.getAnalyseParameters() + getColnameResult();
-		for (short i = 0; i < segImages.size(); ++i) {
-			File currentFile = segImages.get(i);
+		for (File currentFile : segImages) {
 			System.out.println("current File " + currentFile.getName());
-			ImagePlus   Raw       = new ImagePlus(pluginParameters.getInputFolder() +
-			                                      directoryInput.getSeparator() +
-			                                      currentFile.getName());
+			ImagePlus Raw = new ImagePlus(pluginParameters.getInputFolder() +
+			                              directoryInput.getSeparator() +
+			                              currentFile.getName());
 			ImagePlus[] Segmented = BF.openImagePlus(pluginParameters.getOutputFolder() + currentFile.getName());
 			// TODO TRANSFORMATION FACTORISABLE AVEC METHODE DU DESSUS !!!!!
 			Segmented[0] = generateSegmentedImage(Segmented[0], 1);
@@ -125,8 +120,7 @@ public class computeSegmentationParametersDL {
 						imageStackSegmented.setVoxel(i, j, k, 255);
 						imageStackInput.getVoxel(i, j, k);
 						
-					}
-					else {
+					} else {
 						imageStackSegmented.setVoxel(i, j, k, 0);
 					}
 				}

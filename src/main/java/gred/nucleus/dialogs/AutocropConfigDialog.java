@@ -8,29 +8,28 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 public class AutocropConfigDialog extends JFrame implements ItemListener {
-	private final JTextField xCropBoxSize              = new JTextField();
-	private final JTextField yCropBoxSize              = new JTextField();
-	private final JTextField zCropBoxSize              = new JTextField();
-	private final JTextField xCalibration              = new JTextField();
-	private final JTextField yCalibration              = new JTextField();
-	private final JTextField zCalibration              = new JTextField();
-	private final JTextField minVolume                 = new JTextField();
-	private final JTextField maxVolume                 = new JTextField();
-	private final JTextField thresholdOTSUComputing    = new JTextField();
-	private final JTextField channelToComputeThreshold = new JTextField();
-	private final JTextField slicesOTSUcomputing       = new JTextField();
+	private final JTextField xCropBoxSize                = new JTextField();
+	private final JTextField yCropBoxSize                = new JTextField();
+	private final JTextField zCropBoxSize                = new JTextField();
+	private final JTextField xCalibration                = new JTextField();
+	private final JTextField yCalibration                = new JTextField();
+	private final JTextField zCalibration                = new JTextField();
+	private final JTextField minVolume                   = new JTextField();
+	private final JTextField maxVolume                   = new JTextField();
+	private final JTextField thresholdOTSUComputing      = new JTextField();
+	private final JTextField channelToComputeThreshold   = new JTextField();
+	private final JTextField slicesOTSUcomputing         = new JTextField();
 	private final JTextField boxesPercentSurfaceToFilter = new JTextField();
 	private final JCheckBox  boxesRegroupement           = new JCheckBox();
 	private final JCheckBox  addCalibBox                 = new JCheckBox();
-	private       Boolean    isBoxesRegroupementSelected = true;
 	private final Container  _container;
 	private final JButton    buttonOK                    = new JButton("Done");
 	private final JPanel     cropBoxPane;
+	private final AutocropDialog caller;
+	private       Boolean    isBoxesRegroupementSelected = true;
 	private       JPanel     XCalib;
 	private       JPanel     YCalib;
 	private       JPanel     ZCalib;
-	
-	private final AutocropDialog caller;
 	
 	public AutocropConfigDialog(AutocropDialog caller) {
 		this.caller = caller;
@@ -315,9 +314,9 @@ public class AutocropConfigDialog extends JFrame implements ItemListener {
 	
 	@Override
 	public void itemStateChanged(ItemEvent e) {
-		if (e.getSource() == boxesRegroupement)
+		if (e.getSource() == boxesRegroupement) {
 			isBoxesRegroupementSelected = boxesRegroupement.isSelected();
-		else if (e.getSource() == addCalibBox) {
+		} else if (e.getSource() == addCalibBox) {
 			if (addCalibBox.isSelected()) {
 				
 				XCalib = new JPanel();
@@ -353,8 +352,7 @@ public class AutocropConfigDialog extends JFrame implements ItemListener {
 				cropBoxPane.add(XCalib);
 				cropBoxPane.add(YCalib);
 				cropBoxPane.add(ZCalib);
-			}
-			else {
+			} else {
 				try {
 					cropBoxPane.remove(XCalib);
 					cropBoxPane.remove(YCalib);

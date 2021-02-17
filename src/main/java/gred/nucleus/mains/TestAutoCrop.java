@@ -3,10 +3,7 @@ package gred.nucleus.mains;
 import gred.nucleus.autocrop.AutoCropCalling;
 import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.autocrop.CropFromCoordonnate;
-import gred.nucleus.exceptions.fileInOut;
-import loci.formats.FormatException;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 

@@ -9,14 +9,14 @@ import java.io.IOException;
 public class SegmentationImageIntegrationCheck {
 	
 	
-	/**
-	 *
-	 * @param img
+	/*
+	 
+	  @param img
 	 * @param vMin
 	 * @param vMax
 	 * @param outputImgString
 	 */
-/**
+/*
  public static void testStupid(ImagePlus img, short vMin, int vMax, String outputImgString ) throws FormatException {
  SegmentationParameters segmentationParameters = new SegmentationParameters();
  SegmentationCalling otsuModif = new SegmentationCalling(img, vMin, vMax, outputImgString);
@@ -32,8 +32,9 @@ public class SegmentationImageIntegrationCheck {
 		SegmentationCalling    otsuModif              = new SegmentationCalling(segmentationParameters);
 		try {
 			String log = otsuModif.runSeveralImages2();
-			if (!(log.equals("")))
+			if (!(log.equals(""))) {
 				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -44,8 +45,9 @@ public class SegmentationImageIntegrationCheck {
 		SegmentationCalling    otsuModif              = new SegmentationCalling(segmentationParameters);
 		try {
 			String log = otsuModif.runSeveralImages2();
-			if (!(log.equals("")))
+			if (!(log.equals(""))) {
 				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -60,7 +62,7 @@ public class SegmentationImageIntegrationCheck {
 		String pathToTest     = "/home/tridubos/Bureau/IMAGES_TEST/SEGMENTATION_IMAGES/SEGMENTATION_VERIF";
 		String pathToExpected = "/home/tridubos/Bureau/IMAGES_TEST/SEGMENTATION_IMAGES/SEGMENTATION";
 		
-		/**
+		/*
 		 testStupidSeveralImages(pathToTest+"/Gros_Nucleols",
 		 pathToTest+"/SEGMENTATION_RESULTS/Gros_Nucleols");
 		 testStupidSeveralImages(pathToTest+"/Noyaux_Calib_1_1_1",

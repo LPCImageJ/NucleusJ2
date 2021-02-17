@@ -15,7 +15,7 @@ public class Histogram {
 	/**
 	 * HashMap which stock the diffents value voxel and the number of voxel for each value present on the image
 	 */
-	private final HashMap<Double, Integer> _hHistogram = new HashMap<Double, Integer>();
+	private final HashMap<Double, Integer> _hHistogram = new HashMap<>();
 	/**
 	 * All the value present on the image
 	 */
@@ -23,11 +23,11 @@ public class Histogram {
 	/**
 	 *
 	 */
-	private double                   _labelMax   = -1;
+	private       double                   _labelMax   = -1;
 	/**
 	 *
 	 */
-	private int                      _nbLabel    = 0;
+	private       int                      _nbLabel    = 0;
 	
 	/**
 	 *
@@ -45,8 +45,9 @@ public class Histogram {
 			_label[i] = Double.parseDouble(tTemp[i].toString());
 		}
 		Arrays.sort(_label);
-		if (_nbLabel > 0)
+		if (_nbLabel > 0) {
 			_labelMax = _label[_label.length - 1];
+		}
 	}
 	
 	/**
@@ -68,8 +69,7 @@ public class Histogram {
 							int nbVoxel = _hHistogram.get(voxelValue);
 							++nbVoxel;
 							_hHistogram.put(voxelValue, nbVoxel);
-						}
-						else {
+						} else {
 							_hHistogram.put(voxelValue, 1);
 							++_nbLabel;
 						}

@@ -1,11 +1,11 @@
 package gred.nucleus.dialogs;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import javax.swing.*;
 
 /**
  * Class to construct graphical interface for the chromocenter segmentation pipeline in batch
@@ -54,16 +54,6 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 	
 	
 	private JCheckBox addCalibBox = new JCheckBox();
-	
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		ChromocenterSegmentationPipelineBatchDialog chromocenterSegmentationPipelineBatchDialog =
-				new ChromocenterSegmentationPipelineBatchDialog();
-		chromocenterSegmentationPipelineBatchDialog.setLocationRelativeTo(null);
-	}
-	
 	
 	/**
 	 * Architecture of the graphical windows
@@ -255,6 +245,15 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 		_jButtonStart.addActionListener(startListener);
 	}
 	
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		ChromocenterSegmentationPipelineBatchDialog chromocenterSegmentationPipelineBatchDialog =
+				new ChromocenterSegmentationPipelineBatchDialog();
+		chromocenterSegmentationPipelineBatchDialog.setLocationRelativeTo(null);
+	}
+	
 	public double getXCalibration() {
 		String xCal = calibXRead.getText();
 		return Double.parseDouble(xCal.replaceAll(",", "."));
@@ -290,15 +289,93 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 		return _start;
 	}
 	
-	;
-	
-	/********************************************************************************************************************************************
-	 * 	Classes listener to interact with the several element of the window
+	/*******************************************************************************************************************************************
+	 Classes listener to interact with the several element of the window
 	 */
-	/********************************************************************************************************************************************
+	/*******************************************************************************************************************************************
 	 /********************************************************************************************************************************************
 	 /********************************************************************************************************************************************
 	 /********************************************************************************************************************************************/
+	
+	public String getxCalibration2() {
+		return xCalibration.getText();
+	}
+	
+	public void itemStateChanged(ItemEvent e) {
+		if (e.getSource() == addCalibBox) {
+			if ((addCalibBox.isSelected())) {
+				
+				GridBagConstraints gc = new GridBagConstraints();
+				gc.insets = new Insets(0, 0, 5, 0);
+				
+				unit.setText("Unit :");
+				gc.gridx = 0;
+				gc.gridy = 1;
+				Calib.add(unit, gc);
+				unitRead.setPreferredSize(new Dimension(100, 20));
+				unitRead.setText("µm");
+				gc.gridx = 1;
+				gc.gridy = 1;
+				Calib.add(unitRead, gc);
+				unit.setVisible(true);
+				unitRead.setVisible(true);
+				
+				calibx.setText("X :");
+				gc.gridx = 0;
+				gc.gridy = 2;
+				Calib.add(calibx, gc);
+				calibXRead.setPreferredSize(new Dimension(100, 20));
+				calibXRead.setText("1");
+				gc.gridx = 1;
+				gc.gridy = 2;
+				Calib.add(calibXRead, gc);
+				calibx.setVisible(true);
+				calibXRead.setVisible(true);
+				
+				caliby.setText("Y :");
+				gc.gridx = 0;
+				gc.gridy = 3;
+				Calib.add(caliby, gc);
+				calibYRead.setPreferredSize(new Dimension(100, 20));
+				calibYRead.setText("1");
+				gc.gridx = 1;
+				gc.gridy = 3;
+				Calib.add(calibYRead, gc);
+				caliby.setVisible(true);
+				calibYRead.setVisible(true);
+				
+				calibz.setText("Z :");
+				gc.gridx = 0;
+				gc.gridy = 4;
+				Calib.add(calibz, gc);
+				calibZRead.setPreferredSize(new Dimension(100, 20));
+				calibZRead.setText("1");
+				gc.gridx = 1;
+				gc.gridy = 4;
+				Calib.add(calibZRead, gc);
+				calibz.setVisible(true);
+				calibZRead.setVisible(true);
+				
+				validate();
+				//pack();
+				
+				repaint();
+			} else {
+				calibx.setVisible(false);
+				caliby.setVisible(false);
+				calibz.setVisible(false);
+				unit.setVisible(false);
+				
+				calibXRead.setVisible(false);
+				calibYRead.setVisible(false);
+				calibZRead.setVisible(false);
+				unitRead.setVisible(false);
+				
+				validate();
+				repaint();
+			}
+		}
+	}
 	
 	/**
 	 *
@@ -317,7 +394,7 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 		 *
 		 */
 		public void actionPerformed(ActionEvent actionEvent) {
-			if (_jTextFieldWorkDirectory.getText().isEmpty() || _jTextFieldRawData.getText().isEmpty())
+			if (_jTextFieldWorkDirectory.getText().isEmpty() || _jTextFieldRawData.getText().isEmpty()) {
 				JOptionPane.showMessageDialog
 						(
 								null,
@@ -325,7 +402,7 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 								"Error",
 								JOptionPane.ERROR_MESSAGE
 						);
-			else {
+			} else {
 				_start = true;
 				_chromocenterSegmentationPipelineBatchDialog.dispose();
 			}
@@ -394,94 +471,6 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 				_jTextFieldRawData.setText(_rawDataDirectory);
 			}
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-		}
-	}
-	
-	
-	public String getxCalibration2() {
-		return xCalibration.getText();
-	}
-	
-	
-	public void itemStateChanged(ItemEvent e) {
-		if (e.getSource() == addCalibBox) {
-			if ((addCalibBox.isSelected())) {
-				
-				GridBagConstraints gc = new GridBagConstraints();
-				gc.insets = new Insets(0, 0, 5, 0);
-				
-				unit.setText("Unit :");
-				gc.gridx = 0;
-				gc.gridy = 1;
-				Calib.add(unit, gc);
-				unitRead.setPreferredSize(new Dimension(100, 20));
-				unitRead.setText("µm");
-				gc.gridx = 1;
-				gc.gridy = 1;
-				Calib.add(unitRead, gc);
-				unit.setVisible(true);
-				unitRead.setVisible(true);
-				
-				calibx.setText("X :");
-				gc.gridx = 0;
-				gc.gridy = 2;
-				Calib.add(calibx, gc);
-				calibXRead.setPreferredSize(new Dimension(100, 20));
-				calibXRead.setText("1");
-				gc.gridx = 1;
-				gc.gridy = 2;
-				Calib.add(calibXRead, gc);
-				calibx.setVisible(true);
-				calibXRead.setVisible(true);
-				
-				caliby.setText("Y :");
-				gc.gridx = 0;
-				gc.gridy = 3;
-				Calib.add(caliby, gc);
-				calibYRead.setPreferredSize(new Dimension(100, 20));
-				calibYRead.setText("1");
-				gc.gridx = 1;
-				gc.gridy = 3;
-				Calib.add(calibYRead, gc);
-				caliby.setVisible(true);
-				calibYRead.setVisible(true);
-				
-				calibz.setText("Z :");
-				gc.gridx = 0;
-				gc.gridy = 4;
-				Calib.add(calibz, gc);
-				calibZRead.setPreferredSize(new Dimension(100, 20));
-				calibZRead.setText("1");
-				gc.gridx = 1;
-				gc.gridy = 4;
-				Calib.add(calibZRead, gc);
-				calibz.setVisible(true);
-				calibZRead.setVisible(true);
-				
-				validate();
-				//pack();
-				
-				repaint();
-			}
-			else {
-				calibx.setVisible(false);
-				caliby.setVisible(false);
-				calibz.setVisible(false);
-				unit.setVisible(false);
-				
-				calibXRead.setVisible(false);
-				calibYRead.setVisible(false);
-				calibZRead.setVisible(false);
-				unitRead.setVisible(false);
-				
-				validate();
-				repaint();
-				try {
-				
-				} catch (NullPointerException nullPointerException) {
-					// Do nothing
-				}
-			}
 		}
 	}
 	

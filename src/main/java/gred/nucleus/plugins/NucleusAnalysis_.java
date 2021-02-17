@@ -11,20 +11,23 @@ import ij.plugin.PlugIn;
 /**
  * @author Tristan Dubos and Axel Poulet
  */
-public class NucleusAnalysis_ implements PlugIn  {
-	/** image to process*/
+public class NucleusAnalysis_ implements PlugIn {
+	/**
+	 * image to process
+	 */
 	ImagePlus _imagePlusInput;
-
-    /**
-     *	// TODO INTEGRATION CLASS NEW MEASURE 3D
-     * @param arg
-     */
+	
+	/**
+	 * // TODO INTEGRATION CLASS NEW MEASURE 3D
+	 *
+	 * @param arg
+	 */
 	public void run(String arg) {
-		int indiceRawImage = 0;
-		int indiceSementedImage = 0;
-		double xCalibration = 1,yCalibration = 1,zCalibration = 1;
-		String unit = "pixel";
-		int[] wList = WindowManager.getIDList();
+		int    indiceRawImage      = 0;
+		int    indiceSementedImage = 0;
+		double xCalibration        = 1, yCalibration = 1, zCalibration = 1;
+		String unit                = "pixel";
+		int[]  wList               = WindowManager.getIDList();
 		if (wList == null) {
 			IJ.noImage();
 			return;
@@ -36,28 +39,29 @@ public class NucleusAnalysis_ implements PlugIn  {
 				if (i == 0) {
 					Calibration cal = imagePlus.getCalibration();
 					xCalibration = cal.pixelWidth;
-					yCalibration= cal.pixelHeight;
-					zCalibration= cal.pixelDepth;
+					yCalibration = cal.pixelHeight;
+					zCalibration = cal.pixelDepth;
 					unit = cal.getUnit();
 				}
 				titles[i] = imagePlus.getTitle();
-			}
-			else
+			} else {
 				titles[i] = "";
+			}
 		}
 		
 		GenericDialog genericDialog = new GenericDialog("Chromocenter Segmentation", IJ.getInstance());
-		genericDialog.addChoice("Raw image",titles,titles[indiceRawImage]);
-		genericDialog.addChoice("Nucleus segmeneted image",titles,titles[indiceSementedImage]);
-		genericDialog.addNumericField("x calibartion", xCalibration,3);
+		genericDialog.addChoice("Raw image", titles, titles[indiceRawImage]);
+		genericDialog.addChoice("Nucleus segmeneted image", titles, titles[indiceSementedImage]);
+		genericDialog.addNumericField("x calibartion", xCalibration, 3);
 		genericDialog.addNumericField("y calibration", yCalibration, 3);
-		genericDialog.addNumericField("z calibration",zCalibration, 3);
-		genericDialog.addStringField("Unit",unit,10);
+		genericDialog.addNumericField("z calibration", zCalibration, 3);
+		genericDialog.addStringField("Unit", unit, 10);
 		genericDialog.showDialog();
-		if (genericDialog.wasCanceled()) 
+		if (genericDialog.wasCanceled()) {
 			return;
-		ImagePlus imagePlusInput =  WindowManager.getImage(wList[genericDialog.getNextChoiceIndex()]);
-		ImagePlus imagePlusSegmented =  WindowManager.getImage(wList[genericDialog.getNextChoiceIndex()]);
+		}
+		ImagePlus imagePlusInput     = WindowManager.getImage(wList[genericDialog.getNextChoiceIndex()]);
+		ImagePlus imagePlusSegmented = WindowManager.getImage(wList[genericDialog.getNextChoiceIndex()]);
 		xCalibration = genericDialog.getNextNumber();
 		yCalibration = genericDialog.getNextNumber();
 		zCalibration = genericDialog.getNextNumber();

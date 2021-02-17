@@ -1,11 +1,11 @@
-/******************************************************************************\
-*     Copyright (C) 2016 by Rémy Malgouyres                                    * 
-*     http://malgouyres.org                                                    * 
-*     File: ConnectedComponent2D.java                                          * 
-*                                                                              * 
-* The program is distributed under the terms of the GNU General Public License * 
-*                                                                              * 
-\******************************************************************************/ 
+/*****************************************************************************\
+ Copyright (C) 2016 by Rémy Malgouyres                                    *
+ http://malgouyres.org                                                    *
+ File: ConnectedComponent2D.java                                          *
+ *
+ The program is distributed under the terms of the GNU General Public License *
+ *
+ \******************************************************************************/
 
 package gred.nucleus.connectedComponent;
 
@@ -53,7 +53,7 @@ public class ConnectedComponent2D extends ConnectedComponent {
 		// FIFO for the Breadth First Search algorithm
 		// LinkedList is more efficient than ArrayList 
 		// because poll() (alias Remove(0)) is constant time !!!
-		LinkedList<Voxel> voxelFifo =  new LinkedList<Voxel>();
+		LinkedList<Voxel> voxelFifo = new LinkedList<>();
 
 		// add initial voxel to the FIFO
 		voxelFifo.add(voxelShort);

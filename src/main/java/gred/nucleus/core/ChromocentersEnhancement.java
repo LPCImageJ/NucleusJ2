@@ -29,9 +29,9 @@ public class ChromocentersEnhancement {
 	public static void saveFile(ImagePlus imagePlus, String pathFile) {
 		FileSaver fileSaver = new FileSaver(imagePlus);
 		File      file      = new File(pathFile);
-		if (file.exists())
+		if (file.exists()) {
 			fileSaver.saveAsTiffStack(pathFile + File.separator + imagePlus.getTitle());
-		else {
+		} else {
 			file.mkdir();
 			fileSaver.saveAsTiffStack(pathFile + File.separator + imagePlus.getTitle());
 		}
@@ -51,8 +51,8 @@ public class ChromocentersEnhancement {
 		ImagePlus             imagePlusGradient     = myGradient.run();
 		RegionalExtremaFilter regionalExtremaFilter = new RegionalExtremaFilter();
 		regionalExtremaFilter.setMask(imagePlusSegmented);
-		ImagePlus imagePlusExtrema   = regionalExtremaFilter.applyWithMask(imagePlusGradient);
-		ImagePlus imagePlusLabels    = BinaryImages.componentsLabeling(imagePlusExtrema, 26, 32);
+		ImagePlus imagePlusExtrema = regionalExtremaFilter.applyWithMask(imagePlusGradient);
+		ImagePlus imagePlusLabels  = BinaryImages.componentsLabeling(imagePlusExtrema, 26, 32);
 		ImagePlus imagePlusWatershed =
 				Watershed.computeWatershed(imagePlusGradient, imagePlusLabels, imagePlusSegmented, 26, false, false);
 		// Change -1 value in 0
@@ -72,13 +72,13 @@ public class ChromocentersEnhancement {
 	private double[][] getRegionAdjacencyGraph(ImagePlus imagePlusWatershed) {
 		int             voxelValue;
 		int             neighborVoxelValue;
-		ImageStatistics imageStatistics       = new StackStatistics(imagePlusWatershed);
-		double[][]      tRegionAdjacencyGraph =
+		ImageStatistics imageStatistics = new StackStatistics(imagePlusWatershed);
+		double[][] tRegionAdjacencyGraph =
 				new double[(int) imageStatistics.histMax + 1][(int) imageStatistics.histMax + 1];
-		Calibration     calibration           = imagePlusWatershed.getCalibration();
-		double          volumeVoxel           =
+		Calibration calibration = imagePlusWatershed.getCalibration();
+		double volumeVoxel =
 				calibration.pixelWidth * calibration.pixelHeight * calibration.pixelDepth;
-		ImageStack      imageStackWatershed   = imagePlusWatershed.getStack();
+		ImageStack imageStackWatershed = imagePlusWatershed.getStack();
 		for (int k = 1; k < imagePlusWatershed.getNSlices() - 1; ++k) {
 			for (int i = 1; i < imagePlusWatershed.getWidth() - 1; ++i) {
 				for (int j = 1; j < imagePlusWatershed.getHeight() - 1; ++j) {
@@ -86,18 +86,21 @@ public class ChromocentersEnhancement {
 					for (int kk = k - 1; kk <= k + 1; kk += 2) {
 						neighborVoxelValue = (int) imageStackWatershed.getVoxel(i, j, kk);
 						
-						if (neighborVoxelValue > 0 && voxelValue != neighborVoxelValue)
+						if (neighborVoxelValue > 0 && voxelValue != neighborVoxelValue) {
 							tRegionAdjacencyGraph[voxelValue][neighborVoxelValue] += volumeVoxel;
+						}
 					}
 					for (int jj = j - 1; jj <= j + 1; jj += 2) {
 						neighborVoxelValue = (int) imageStackWatershed.getVoxel(i, jj, k);
-						if (neighborVoxelValue > 0 && voxelValue != neighborVoxelValue)
+						if (neighborVoxelValue > 0 && voxelValue != neighborVoxelValue) {
 							tRegionAdjacencyGraph[voxelValue][neighborVoxelValue] += volumeVoxel;
+						}
 					}
 					for (int ii = i - 1; ii <= i + 1; ii += 2) {
 						neighborVoxelValue = (int) imageStackWatershed.getVoxel(ii, j, k);
-						if (neighborVoxelValue > 0 && voxelValue != neighborVoxelValue)
+						if (neighborVoxelValue > 0 && voxelValue != neighborVoxelValue) {
 							tRegionAdjacencyGraph[voxelValue][neighborVoxelValue] += volumeVoxel;
+						}
 					}
 				}
 			}
@@ -127,10 +130,11 @@ public class ChromocentersEnhancement {
 					neighborVolumeTotal += tRegionAdjacencyGraph[i][j];
 				}
 			}
-			if (tContrast[i] <= 0)
+			if (tContrast[i] <= 0) {
 				tContrast[i] = 0;
-			else
+			} else {
 				tContrast[i] = tContrast[i] / neighborVolumeTotal;
+			}
 		}
 		return tContrast;
 	}
@@ -186,8 +190,9 @@ public class ChromocentersEnhancement {
 			for (int i = 0; i < imagePlusContrast.getWidth(); ++i) {
 				for (int j = 0; j < imagePlusContrast.getHeight(); ++j) {
 					voxelValue = imageStackConstrast.getVoxel(i, j, k);
-					if (voxelValue > 0)
+					if (voxelValue > 0) {
 						imageStackConstrast.setVoxel(i, j, k, tVoxelValue[(int) voxelValue]);
+					}
 				}
 			}
 		}

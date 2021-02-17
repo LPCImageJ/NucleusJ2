@@ -9,14 +9,14 @@ import java.util.Calendar;
 
 
 public class TestSegmentationMethods {
-	/**
-	 *
-	 * @param img
+	/*
+	 
+	  @param img
 	 * @param vMin
 	 * @param vMax
 	 * @param outputImgString
 	 */
-/**
+/*
  public static void testStupid(ImagePlus img, short vMin, int vMax, String outputImgString ) throws FormatException {
  SegmentationParameters segmentationParameters = new SegmentationParameters();
  SegmentationCalling otsuModif = new SegmentationCalling(img, vMin, vMax, outputImgString);
@@ -32,8 +32,9 @@ public class TestSegmentationMethods {
 		SegmentationCalling    otsuModif              = new SegmentationCalling(segmentationParameters);
 		try {
 			String log = otsuModif.runSeveralImages2();
-			if (!(log.equals("")))
+			if (!(log.equals(""))) {
 				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -44,8 +45,9 @@ public class TestSegmentationMethods {
 		SegmentationCalling    otsuModif              = new SegmentationCalling(segmentationParameters);
 		try {
 			String log = otsuModif.runSeveralImages2();
-			if (!(log.equals("")))
+			if (!(log.equals(""))) {
 				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -61,12 +63,12 @@ public class TestSegmentationMethods {
 		String timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
 		
 		
-		String ExpectedResult        =
+		String ExpectedResult =
 				"/home/tridubos/Bureau/TEST_SEG/Results_checked/Z_Col_cot21&17&22__w11 DAPI SIM_s3/";
 		String ExpectedResultOutOTSU =
 				"/home/tridubos/Bureau/TEST_SEG/Results_checked/Z_Col_cot21&17&22__w11 DAPI SIM_s3/OTSU/";
 		
-		String inputTristan      =
+		String inputTristan =
 				"/media/tridubos/DATA1/SPERMATO/Manipe_1_57_images_input/Segmentation/Analyse_Segmentation/NucleusPB";
 		String outputTristanGift =
 				"/home/tridubos/Bureau/TEST_SEG/Test_analysis/Z_Col_cot21&17&22__w11 DAPI SIM_s3/GIFT/";
@@ -83,7 +85,7 @@ public class TestSegmentationMethods {
 		                   (maxMemory == Long.MAX_VALUE ? "no limit" : maxMemory * 1e-9) +
 		                   " " +
 		                   Runtime.getRuntime().freeMemory() * 1e-9);
-		/**
+		/*
 		 testStupidSeveralImages("/media/tridubos/DATA1/DATA_ANALYSE/MANIP_MANU_KAKU/ANALYSE_OCTOBRE_2019/images_PROBLEMS",
 		 "/media/tridubos/DATA1/DATA_ANALYSE/MANIP_MANU_KAKU/ANALYSE_OCTOBRE_2019/SEG_IMAGE_PB");
 		 

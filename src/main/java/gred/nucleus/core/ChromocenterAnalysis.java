@@ -35,9 +35,9 @@ public class ChromocenterAnalysis {
 		IJ.log("CHROMOCENTER PARAMETERS");
 		IJ.log("Titre Volume BorderToBorderDistance BarycenterToBorderDistance BarycenterToBorderDistanceNucleus ");
 		if (histogram.getNbLabels() > 0) {
-			double[] tBorderToBorderDistanceTable            =
+			double[] tBorderToBorderDistanceTable =
 					radialDistance.computeBorderToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
-			double[] tBarycenterToBorderDistanceTable        =
+			double[] tBarycenterToBorderDistanceTable =
 					radialDistance.computeBarycenterToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
 			double[] tBarycenterToBorderDistanceTableNucleus =
 					radialDistance.computeBarycenterToBorderDistances(imagePlusSegmented, imagePlusSegmented);
@@ -78,18 +78,19 @@ public class ChromocenterAnalysis {
 			Measure3D measure3D = new Measure3D(imagePlusChromocenter.getCalibration().pixelWidth,
 			                                    imagePlusChromocenter.getCalibration().pixelHeight,
 			                                    imagePlusChromocenter.getCalibration().pixelDepth);
-			double[]       tVolume                                 =
+			double[] tVolume =
 					measure3D.computeVolumeofAllObjects(imagePlusChromocenter);
-			RadialDistance radialDistance                          = new RadialDistance();
-			double[]       tBorderToBorderDistanceTable            =
+			RadialDistance radialDistance = new RadialDistance();
+			double[] tBorderToBorderDistanceTable =
 					radialDistance.computeBorderToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
-			double[]       tBarycenterToBorderDistanceTableCc      =
+			double[] tBarycenterToBorderDistanceTableCc =
 					radialDistance.computeBarycenterToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
-			double[]       tBarycenterToBorderDistanceTableNucleus =
+			double[] tBarycenterToBorderDistanceTableNucleus =
 					radialDistance.computeBarycenterToBorderDistances(imagePlusSegmented, imagePlusSegmented);
-			if (!exist)
+			if (!exist) {
 				bufferedWriterOutput.write(
 						"Titre\tVolume\tBorderToBorderDistance\tBarycenterToBorderDistance\tBarycenterToBorderDistanceNucleus\n");
+			}
 			for (int i = 0; i < tBorderToBorderDistanceTable.length; ++i) {
 				bufferedWriterOutput.write(
 						imagePlusChromocenter.getTitle() + "_" + i + "\t"

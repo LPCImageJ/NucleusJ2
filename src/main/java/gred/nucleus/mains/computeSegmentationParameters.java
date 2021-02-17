@@ -3,16 +3,13 @@ package gred.nucleus.mains;
 import gred.nucleus.FilesInputOutput.Directory;
 import gred.nucleus.FilesInputOutput.OutputTextFile;
 import gred.nucleus.core.Measure3D;
-import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.plugins.PluginParameters;
 import ij.ImagePlus;
 import ij.ImageStack;
 import loci.common.DebugTools;
-import loci.formats.FormatException;
 import loci.plugins.BF;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class computeSegmentationParameters {
@@ -23,15 +20,14 @@ public class computeSegmentationParameters {
 	throws Exception {
 		PluginParameters pluginParameters =
 				new PluginParameters(RawImageSourceFile, SegmentedImagesSourceFile, pathToConfig);
-		Directory        directoryInput   = new Directory(pluginParameters.getInputFolder());
+		Directory directoryInput = new Directory(pluginParameters.getInputFolder());
 		directoryInput.listImageFiles(pluginParameters.getInputFolder());
 		directoryInput.checkIfEmpty();
 		ArrayList<File> rawImages                 = directoryInput.m_listeOfFiles;
 		String          outputCropGeneralInfoOTSU = pluginParameters.getAnalyseParameters() + getColnameResult();
-		for (short i = 0; i < rawImages.size(); ++i) {
-			File        currentFile = rawImages.get(i);
-			ImagePlus   Raw         = new ImagePlus(currentFile.getAbsolutePath());
-			ImagePlus[] Segmented   = BF.openImagePlus(pluginParameters.getOutputFolder() + currentFile.getName());
+		for (File currentFile : rawImages) {
+			ImagePlus   Raw       = new ImagePlus(currentFile.getAbsolutePath());
+			ImagePlus[] Segmented = BF.openImagePlus(pluginParameters.getOutputFolder() + currentFile.getName());
 			
 			
 			Measure3D mesure3D = new Measure3D(Segmented,
@@ -57,8 +53,7 @@ public class computeSegmentationParameters {
 		directoryInput.checkIfEmpty();
 		ArrayList<File> rawImages                 = directoryInput.m_listeOfFiles;
 		String          outputCropGeneralInfoOTSU = pluginParameters.getAnalyseParameters() + getColnameResult();
-		for (short i = 0; i < rawImages.size(); ++i) {
-			File currentFile = rawImages.get(i);
+		for (File currentFile : rawImages) {
 			System.out.println("current File " + currentFile.getName());
 			
 			ImagePlus   Raw       = new ImagePlus(currentFile.getAbsolutePath());

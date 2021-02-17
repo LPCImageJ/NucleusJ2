@@ -15,16 +15,16 @@ import java.awt.event.ActionListener;
 
 public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 	
-	private static final long                serialVersionUID        = 1L;
-	private final        JButton             _jButtonStart           = new JButton("Start");
-	private final        JButton             _jButtonQuit            = new JButton("Quit");
+	private static final long                serialVersionUID          = 1L;
+	private final        JButton             _jButtonStart             = new JButton("Start");
+	private final        JButton             _jButtonQuit              = new JButton("Quit");
 	private final        Container           _container;
-	private final        JFormattedTextField _jTextFieldXCalibration = new JFormattedTextField(Number.class);
-	private final        JFormattedTextField _jTextFieldYCalibration = new JFormattedTextField(Number.class);
-	private final        JFormattedTextField _jTextFieldZCalibration = new JFormattedTextField(Number.class);
-	private final        JFormattedTextField _jTextFieldMax          = new JFormattedTextField(Number.class);
-	private final        JFormattedTextField _jTextFieldMin          = new JFormattedTextField(Number.class);
-	private final        JTextField          _jTextFieldUnit         = new JTextField();
+	private final        JFormattedTextField _jTextFieldXCalibration   = new JFormattedTextField(Number.class);
+	private final        JFormattedTextField _jTextFieldYCalibration   = new JFormattedTextField(Number.class);
+	private final        JFormattedTextField _jTextFieldZCalibration   = new JFormattedTextField(Number.class);
+	private final        JFormattedTextField _jTextFieldMax            = new JFormattedTextField(Number.class);
+	private final        JFormattedTextField _jTextFieldMin            = new JFormattedTextField(Number.class);
+	private final        JTextField          _jTextFieldUnit           = new JTextField();
 	private final        JLabel              _jLabelXcalibration;
 	private final        JLabel              _jLabelYcalibration;
 	private final        JLabel              _jLabelZcalibration;
@@ -34,12 +34,12 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 	private final        JLabel              _jLabelVolumeMax;
 	private final        JLabel              _jLabelAnalysis;
 	private final        JLabel              _JLabelCalibration;
-	private              JLabel              _jLabelUnitTexte;
 	private final        ButtonGroup         buttonGroupChoiceAnalysis = new ButtonGroup();
-	private final JRadioButton        _jRadioButton2D           = new JRadioButton("2D");
-	private final JRadioButton        _jRadioButton3D           = new JRadioButton("3D");
-	private final JRadioButton        _jRadioButton2D3D         = new JRadioButton("2D and 3D");
-	private       boolean             _start                    = false;
+	private final        JRadioButton        _jRadioButton2D           = new JRadioButton("2D");
+	private final        JRadioButton        _jRadioButton3D           = new JRadioButton("3D");
+	private final        JRadioButton        _jRadioButton2D3D         = new JRadioButton("2D and 3D");
+	private              JLabel              _jLabelUnitTexte;
+	private              boolean             _start                    = false;
 	
 	
 	/**
@@ -415,10 +415,10 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 		return _jRadioButton3D.isSelected();
 	}
 	
-	/********************************************************************************************************************************************
-	 * 	Classes listener to interact with the several element of the window
+	/*******************************************************************************************************************************************
+	 Classes listener to interact with the several element of the window
 	 */
-	/********************************************************************************************************************************************
+	/*******************************************************************************************************************************************
 	 /********************************************************************************************************************************************
 	 /********************************************************************************************************************************************
 	 /********************************************************************************************************************************************/

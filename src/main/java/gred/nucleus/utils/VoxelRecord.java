@@ -78,12 +78,12 @@ public class VoxelRecord {
 		this._value = value;
 	}
 	
-	/**
-	 * Compare the values of two voxel
-	 * 0 if same voxel value
-	 * -1 if value of voxel input > value voxel
-	 * 1 if value of voxel input < value voxel
-	 * @param object a voxel
+	/*
+	  Compare the values of two voxel
+	  0 if same voxel value
+	  -1 if value of voxel input > value voxel
+	  1 if value of voxel input < value voxel
+	  @param object a voxel
 	 * @return results of comparaison
 	 */
 
@@ -110,10 +110,11 @@ public class VoxelRecord {
 	public int compareCooridnatesTo(Object object) {
 		VoxelRecord voxelRecord = (VoxelRecord) object;
 		
-		if (_i == voxelRecord._i && _j == voxelRecord._j && _k == voxelRecord._k)
+		if (_i == voxelRecord._i && _j == voxelRecord._j && _k == voxelRecord._k) {
 			return 0;
-		else
+		} else {
 			return 1;
+		}
 	}
 	
 	/**

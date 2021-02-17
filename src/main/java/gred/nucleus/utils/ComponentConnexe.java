@@ -3,10 +3,9 @@ package gred.nucleus.utils;
 import java.util.ArrayList;
 
 public class ComponentConnexe {
+	private final ArrayList<Double> _listLabel = new ArrayList<>();
 	private       double[][]        _image;
 	private       String            _axesName;
-	private final ArrayList<Double> _listLabel = new ArrayList<Double>();
-	
 	
 	/**
 	 * Parcour de l'image pixel par pixel et recherche ces composantes connexes
@@ -55,8 +54,7 @@ public class ComponentConnexe {
 								voxel.setLocation(ii, jj, 0);
 								voxelBoundary.add(0, voxel);
 							}
-						}
-						else if (ii == 0) {
+						} else if (ii == 0) {
 							if (jj == 0) {
 								if (_image[ii][jj] == labelIni &&
 								    (_image[ii + 1][jj] == currentLabel || _image[ii][jj + 1] == currentLabel)) {
@@ -65,8 +63,7 @@ public class ComponentConnexe {
 									voxel.setLocation(ii, jj, 0);
 									voxelBoundary.add(0, voxel);
 								}
-							}
-							else if (jj == _image[0].length - 1) {
+							} else if (jj == _image[0].length - 1) {
 								if (_image[ii][jj] == labelIni &&
 								    (_image[ii + 1][jj] == currentLabel || _image[ii][jj - 1] == currentLabel)) {
 									_image[ii][jj] = currentLabel;
@@ -74,8 +71,7 @@ public class ComponentConnexe {
 									voxel.setLocation(ii, jj, 0);
 									voxelBoundary.add(0, voxel);
 								}
-							}
-							else {
+							} else {
 								if (_image[ii][jj] == labelIni &&
 								    (_image[ii + 1][jj] == currentLabel ||
 								     _image[ii][jj - 1] == currentLabel ||
@@ -86,8 +82,7 @@ public class ComponentConnexe {
 									voxelBoundary.add(0, voxel);
 								}
 							}
-						}
-						else if (ii == _image.length - 1) {
+						} else if (ii == _image.length - 1) {
 							if (jj == 0) {
 								if (_image[ii][jj] == labelIni &&
 								    (_image[ii - 1][jj] == currentLabel || _image[ii][jj + 1] == currentLabel)) {
@@ -96,8 +91,7 @@ public class ComponentConnexe {
 									voxel.setLocation(ii, jj, 0);
 									voxelBoundary.add(0, voxel);
 								}
-							}
-							else if (jj == _image[0].length - 1) {
+							} else if (jj == _image[0].length - 1) {
 								if (_image[ii][jj] == labelIni &&
 								    (_image[ii - 1][jj] == currentLabel || _image[ii][jj - 1] == currentLabel)) {
 									_image[ii][jj] = currentLabel;
@@ -105,8 +99,7 @@ public class ComponentConnexe {
 									voxel.setLocation(ii, jj, 0);
 									voxelBoundary.add(0, voxel);
 								}
-							}
-							else {
+							} else {
 								if (_image[ii][jj] == labelIni &&
 								    (_image[ii - 1][jj] == currentLabel ||
 								     _image[ii][jj - 1] == currentLabel ||
@@ -117,8 +110,7 @@ public class ComponentConnexe {
 									voxelBoundary.add(0, voxel);
 								}
 							}
-						}
-						else if (jj == 0) {
+						} else if (jj == 0) {
 							if (_image[ii][jj] == labelIni &&
 							    (_image[ii - 1][jj] == currentLabel ||
 							     _image[ii + 1][jj] == currentLabel ||
@@ -128,8 +120,7 @@ public class ComponentConnexe {
 								voxel.setLocation(ii, jj, 0);
 								voxelBoundary.add(0, voxel);
 							}
-						}
-						else if (jj == _image[0].length - 1) {
+						} else if (jj == _image[0].length - 1) {
 							if (_image[ii][jj] == labelIni &&
 							    (_image[ii - 1][jj] == currentLabel ||
 							     _image[ii + 1][jj] == currentLabel ||
@@ -152,7 +143,7 @@ public class ComponentConnexe {
 	 * @return
 	 */
 	private ArrayList<VoxelRecord> detectVoxelBoudary(double label) {
-		ArrayList<VoxelRecord> lVoxelBoundary = new ArrayList<VoxelRecord>();
+		ArrayList<VoxelRecord> lVoxelBoundary = new ArrayList<>();
 		for (int i = 0; i < _image.length; ++i) {
 			for (int j = 0; j < _image[i].length; ++j) {
 				if (_image[i][j] == label) {
@@ -165,61 +156,53 @@ public class ComponentConnexe {
 							voxelTest.setLocation(i, j, 0);
 							lVoxelBoundary.add(voxelTest);
 						}
-					}
-					else if (i == 0) {
+					} else if (i == 0) {
 						if (j == 0) {
 							if (_image[i + 1][j] == 0 || _image[i][j + 1] == 0) {
 								VoxelRecord voxelTest = new VoxelRecord();
 								voxelTest.setLocation(i, j, 0);
 								lVoxelBoundary.add(voxelTest);
 							}
-						}
-						else if (j == _image[0].length - 1) {
+						} else if (j == _image[0].length - 1) {
 							if (_image[i + 1][j] == 0 || _image[i][j - 1] == 0) {
 								VoxelRecord voxelTest = new VoxelRecord();
 								voxelTest.setLocation(i, j, 0);
 								lVoxelBoundary.add(voxelTest);
 							}
-						}
-						else {
+						} else {
 							if (_image[i + 1][j] == 0 || _image[i][j - 1] == 0 || _image[i][j + 1] == 0) {
 								VoxelRecord voxelTest = new VoxelRecord();
 								voxelTest.setLocation(i, j, 0);
 								lVoxelBoundary.add(voxelTest);
 							}
 						}
-					}
-					else if (i == _image.length - 1) {
+					} else if (i == _image.length - 1) {
 						if (j == 0) {
 							if (_image[i - 1][j] == 0 || _image[i][j + 1] == 0) {
 								VoxelRecord voxelTest = new VoxelRecord();
 								voxelTest.setLocation(i, j, 0);
 								lVoxelBoundary.add(voxelTest);
 							}
-						}
-						else if (j == _image[0].length - 1) {
+						} else if (j == _image[0].length - 1) {
 							if (_image[i - 1][j] == 0 || _image[i][j - 1] == 0) {
 								VoxelRecord voxelTest = new VoxelRecord();
 								voxelTest.setLocation(i, j, 0);
 								lVoxelBoundary.add(voxelTest);
 							}
-						}
-						else {
+						} else {
 							if (_image[i - 1][j] == 0 || _image[i][j - 1] == 0 || _image[i][j + 1] == 0) {
 								VoxelRecord voxelTest = new VoxelRecord();
 								voxelTest.setLocation(i, j, 0);
 								lVoxelBoundary.add(voxelTest);
 							}
 						}
-					}
-					else if (j == 0) {
+					} else if (j == 0) {
 						if (_image[i - 1][j] == 0 || _image[i + 1][j] == 0 || _image[i][j + 1] == 0) {
 							VoxelRecord voxelTest = new VoxelRecord();
 							voxelTest.setLocation(i, j, 0);
 							lVoxelBoundary.add(voxelTest);
 						}
-					}
-					else if (j == _image[0].length - 1) {
+					} else if (j == _image[0].length - 1) {
 						if (_image[i - 1][j] == 0 || _image[i + 1][j] == 0 || _image[i][j - 1] == 0) {
 							VoxelRecord voxelTest = new VoxelRecord();
 							voxelTest.setLocation(i, j, 0);

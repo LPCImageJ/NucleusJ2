@@ -7,14 +7,14 @@ import java.io.IOException;
 
 public class SegmentationImagesIntegration {
 	
-	/**
-	 *
-	 * @param img
+	/*
+	 
+	  @param img
 	 * @param vMin
 	 * @param vMax
 	 * @param outputImgString
 	 */
-/**
+/*
  public static void testStupid(ImagePlus img, short vMin, int vMax, String outputImgString ) throws FormatException {
  SegmentationParameters segmentationParameters = new SegmentationParameters();
  SegmentationCalling otsuModif = new SegmentationCalling(img, vMin, vMax, outputImgString);
@@ -30,8 +30,9 @@ public class SegmentationImagesIntegration {
 		SegmentationCalling    otsuModif              = new SegmentationCalling(segmentationParameters);
 		try {
 			String log = otsuModif.runSeveralImages2();
-			if (!(log.equals("")))
+			if (!(log.equals(""))) {
 				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -42,8 +43,9 @@ public class SegmentationImagesIntegration {
 		SegmentationCalling    otsuModif              = new SegmentationCalling(segmentationParameters);
 		try {
 			String log = otsuModif.runSeveralImages2();
-			if (!(log.equals("")))
+			if (!(log.equals(""))) {
 				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
