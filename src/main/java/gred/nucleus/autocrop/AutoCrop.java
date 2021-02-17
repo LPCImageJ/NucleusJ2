@@ -421,10 +421,10 @@ public class AutoCrop {
 						+ "_" + box.getZMin();
 
 				if (xmin <= 0)
-					xmin = 0;
+					xmin = 1;
 				if (ymin <= 0) { ymin = 1;}
 				if (zmin <= 0)
-					zmin = 0;
+					zmin = 1;
 				int width = box.getXMax()
 						+ (2 * this.m_autocropParameters.getxCropBoxSize())
 						- box.getXMin();
