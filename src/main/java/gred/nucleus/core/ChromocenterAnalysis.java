@@ -72,7 +72,9 @@ public class ChromocenterAnalysis
 			BufferedWriter bufferedWriterOutput;	
 			FileWriter fileWriter = new FileWriter(fileResults, true);
 			bufferedWriterOutput = new BufferedWriter(fileWriter);
-			Measure3D measure3D = new Measure3D();
+			Measure3D measure3D = new Measure3D(imagePlusChromocenter.getCalibration().pixelWidth,
+					imagePlusChromocenter.getCalibration().pixelHeight,
+					imagePlusChromocenter.getCalibration().pixelDepth);
 			double [] tVolume =  measure3D.computeVolumeofAllObjects(imagePlusChromocenter);
 			RadialDistance radialDistance = new RadialDistance();
 			double [] tBorderToBorderDistanceTable = radialDistance.computeBorderToBorderDistances(imagePlusSegmented,imagePlusChromocenter);
