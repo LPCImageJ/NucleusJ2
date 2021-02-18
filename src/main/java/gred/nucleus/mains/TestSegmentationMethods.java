@@ -74,7 +74,7 @@ public class TestSegmentationMethods {
 		String outputTristanOtsu =
 				"/media/tridubos/DATA1/SPERMATO/Manipe_1_57_images_input/Segmentation/Analyse_Segmentation/Segmented";
         /*
-        OuputFileVerification fw = new OuputFileVerification(ExpectedResult,inputTristan);
+        OutputFileVerification fw = new OutputFileVerification(ExpectedResult,inputTristan);
         fw.GetFileResultExpeted(ExpectedResult);
         fw.GetFilesOutputFolder(inputTristan);
         */
@@ -126,7 +126,7 @@ public class TestSegmentationMethods {
 		// testStupidSeveralImages(ExpectedResult, ExpectedResult, (short)6.0, 300000000,true);
         /*fw.GetFilesResultingOfAnalysis(inputTristan);
         fw.CompareAnalysisResult();
-        OuputFileVerification fw = new OuputFileVerification();
+        OutputFileVerification fw = new OutputFileVerification();
         fw.GetFileResultExpeted(ExpectedResult);
         fw.GetFilesOutputFolder(outputTristan);
         fw.GetFilesResultingOfAnalysis(outputTristan);

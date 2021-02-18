@@ -4,10 +4,10 @@ import fr.igred.omero.Client;
 import fr.igred.omero.ImageContainer;
 import fr.igred.omero.metadata.ROIContainer;
 import fr.igred.omero.repository.DatasetContainer;
-import gred.nucleus.FilesInputOutput.Directory;
-import gred.nucleus.FilesInputOutput.OutputTextFile;
-import gred.nucleus.FilesInputOutput.OutputTexteFile;
-import gred.nucleus.FilesInputOutput.OutputTiff;
+import gred.nucleus.filesInputOutput.Directory;
+import gred.nucleus.filesInputOutput.OutputTextFile;
+import gred.nucleus.filesInputOutput.OutputTexteFile;
+import gred.nucleus.filesInputOutput.OutputTiff;
 import gred.nucleus.exceptions.fileInOut;
 import gred.nucleus.imageProcess.Thresholding;
 import gred.nucleus.utils.Histogram;
@@ -53,69 +53,37 @@ import java.util.concurrent.ExecutionException;
  * crop from the file name before file extension you can see C0 for channel 0 for example.
  */
 public class AutoCrop {
-	/**
-	 * File to process (Image input)
-	 */
-	        File                 m_currentFile;
-	/**
-	 * Raw image
-	 */
+	/** File to process (Image input) */
+	File m_currentFile;
+	/** Raw image */
 	private ImagePlus            m_rawImg;
-	/**
-	 * Segmented image
-	 */
+	/** Segmented image */
 	private ImagePlus            m_imageSeg;
-	/**
-	 * Segmented image connect component labelled
-	 */
+	/** Segmented image connect component labelled */
 	private ImagePlus            m_imageSeg_labelled;
-	/**
-	 * The path of the image to be processed
-	 */
+	/** The path of the image to be processed */
 	private String               m_imageFilePath;
-	/**
-	 * the path of the directory where are saved the crop of the object
-	 */
+	/** the path of the directory where are saved the crop of the object */
 	private String               m_outputDirPath;
-	/**
-	 * The prefix of the names of the output cropped images, which are automatically numbered
-	 */
+	/** The prefix of the names of the output cropped images, which are automatically numbered */
 	private String               m_outputFilesPrefix;
-	/**
-	 * List of the path of the output files created by the cropKernels method
-	 */
+	/** List of the path of the output files created by the cropKernels method */
 	private ArrayList<String>    m_outputFile       = new ArrayList<>();
-	/**
-	 * List of boxes coordinates
-	 */
+	/** List of boxes coordinates */
 	private ArrayList<String>    m_boxCoordinates   = new ArrayList<>();
-	/**
-	 * Number of channels in current image
-	 */
+	/** Number of channels in current image */
 	private int                  m_channelNumbers   = 1;
-	/**
-	 * Get current info inmage analyse
-	 */
+	/** Get current info image analyse */
 	private String               m_infoImageAnalyse;
-	/**
-	 * Parameters crop analyse
-	 */
+	/** Parameters crop analyse */
 	private AutocropParameters   m_autocropParameters;
-	/**
-	 * OTSU threshold  used to compute segmented image
-	 */
+	/** OTSU threshold  used to compute segmented image */
 	private int                  OTSUthreshold;
-	/**
-	 * Slice start to compute OTSU
-	 */
+	/** Slice start to compute OTSU */
 	private String               sliceUsedForOTSU;
-	/**
-	 * Default threshold
-	 */
+	/** Default threshold */
 	private boolean              m_defaultThreshold = false;
-	/**
-	 * List of boxes  to crop link to label value
-	 */
+	/** List of boxes  to crop link to label value */
 	private HashMap<Double, Box> m_boxes            = new HashMap<>();
 	
 	/**
@@ -186,7 +154,7 @@ public class AutoCrop {
 	 * @return image of specific channel
 	 */
 	public ImagePlus getImageChannel(int channelNumber) throws Exception {
-		DebugTools.enableLogging("OFF");    /* DEBUG INFO BIOFORMAT OFF*/
+		DebugTools.enableLogging("OFF");    /* DEBUG INFO BIO-FORMATS OFF*/
 		ImagePlus[]     currentImage = BF.openImagePlus(this.m_imageFilePath);
 		ChannelSplitter splitter     = new ChannelSplitter();
 		currentImage = splitter.split(currentImage[0]);
@@ -204,7 +172,7 @@ public class AutoCrop {
 	 * @throws Exception
 	 */
 	public void setChannelNumbers() throws Exception {
-		DebugTools.enableLogging("OFF");      /* DEBUG INFO BIOFORMAT OFF*/
+		DebugTools.enableLogging("OFF");      /* DEBUG INFO BIO-FORMATS OFF*/
 		ImagePlus[]     currentImage    = BF.openImagePlus(this.m_imageFilePath);
 		ChannelSplitter channelSplitter = new ChannelSplitter();
 		currentImage = channelSplitter.split(currentImage[0]);
@@ -215,7 +183,7 @@ public class AutoCrop {
 	}
 	
 	public void setChannelNumbersOmero(ImageContainer image, Client client) throws Exception {
-		DebugTools.enableLogging("OFF");      /* DEBUG INFO BIOFORMAT OFF*/
+		DebugTools.enableLogging("OFF");      /* DEBUG INFO BIO-FORMATS OFF*/
 		int[] cBound = {this.m_autocropParameters.getChannelToComputeThreshold(),
 		                this.m_autocropParameters.getChannelToComputeThreshold()};
 		this.m_rawImg = image.toImagePlus(client, null, null, cBound, null, null);
@@ -266,9 +234,7 @@ public class AutoCrop {
 		this.m_imageSeg = this.generateSegmentedImage(this.m_imageSeg, thresh);
 	}
 	
-	/**
-	 * MorpholibJ Method computing connect component using OTSU segmented image
-	 */
+	/** MorpholibJ Method computing connect component using OTSU segmented image */
 	public void computeConnectcomponent() {
 		this.m_imageSeg_labelled = BinaryImages.componentsLabeling(this.m_imageSeg, 26, 32);
 	}
@@ -299,19 +265,17 @@ public class AutoCrop {
 		getNumberOfBox();
 	}
 	
-	/**
-	 * MorpholibJ Method filtering border connect component
-	 */
+	/** MorpholibJ Method filtering border connect component */
 	public void componentBorderFilter() {
 		LabelImages.removeBorderLabels(this.m_imageSeg_labelled);
 	}
 	
 	/**
 	 * Detection of the of the bounding box for each object of the image. A Connected component detection is do on the
-	 * m_imageThresholding and all the object on the border and under or upper threshold volume. are removed. The
+	 * m_imageThresholding and all the object on the border and under or upper threshold volume are removed. The
 	 * coordinates allow the implementation of the box objects which define the bounding box, and these objects are
 	 * stocked in a ArrayList. In order to use with a grey-level image, use either @see # thresholdKernels() or your own
-	 * binarisation method.
+	 * binarization method.
 	 */
 	public void computeBoxes2() {
 		try {
@@ -351,7 +315,7 @@ public class AutoCrop {
 	 * Method to add X voxels in x y z arround the connected component. X by default is 20 in x y z. Parameter can be
 	 * modified in autocrop parameters : -m_xCropBoxSize -m_yCropBoxSize -m_zCropBoxSize
 	 */
-	public void addCROP_parameter() throws Exception {
+	public void addCROP_parameter() {
 		for (int y = 0; y < this.m_channelNumbers; y++) {
 			int i = 0;
 			for (Map.Entry<Double, Box> entry : this.m_boxes.entrySet()) {
@@ -441,22 +405,14 @@ public class AutoCrop {
 				                          "_C" +
 				                          c +
 				                          ".tif\t" +
-				                          c +
-				                          "\t" +
-				                          i +
-				                          "\t" +
-				                          xmin +
-				                          "\t" +
-				                          ymin +
-				                          "\t" +
-				                          zmin +
-				                          "\t" +
-				                          width +
-				                          "\t" +
-				                          height +
-				                          "\t" +
-				                          depth +
-				                          "\n";
+				                          c + "\t" +
+				                          i + "\t" +
+				                          xmin + "\t" +
+				                          ymin + "\t" +
+				                          zmin + "\t" +
+				                          width + "\t" +
+				                          height + "\t" +
+				                          depth + "\n";
 				fileOutput.SaveImage(imgResu);
 				this.m_outputFile.add(this.m_outputDirPath +
 				                      File.separator +
@@ -475,18 +431,12 @@ public class AutoCrop {
 					                          this.m_outputFilesPrefix +
 					                          "_" +
 					                          i +
-					                          "_C0" +
-					                          "\t" +
-					                          xmin +
-					                          "\t" +
-					                          xmax +
-					                          "\t" +
-					                          ymin +
-					                          "\t" +
-					                          ymax +
-					                          "\t" +
-					                          zmin +
-					                          "\t" +
+					                          "_C0" + "\t" +
+					                          xmin + "\t" +
+					                          xmax + "\t" +
+					                          ymin + "\t" +
+					                          ymax + "\t" +
+					                          zmin + "\t" +
 					                          zmax);
 					//xmin, ymin,zmin, width,height, depth,y
 				}
@@ -539,22 +489,14 @@ public class AutoCrop {
 				                          "_" +
 				                          i +
 				                          ".tif\t" +
-				                          c +
-				                          "\t" +
-				                          i +
-				                          "\t" +
-				                          xmin +
-				                          "\t" +
-				                          ymin +
-				                          "\t" +
-				                          zmin +
-				                          "\t" +
-				                          width +
-				                          "\t" +
-				                          height +
-				                          "\t" +
-				                          depth +
-				                          "\n";
+				                          c + "\t" +
+				                          i + "\t" +
+				                          xmin + "\t" +
+				                          ymin + "\t" +
+				                          zmin + "\t" +
+				                          width + "\t" +
+				                          height + "\t" +
+				                          depth + "\n";
 				fileOutput.SaveImage(imgResu);
 				this.m_outputFile.add(this.m_outputFilesPrefix + "_" + i + ".tif");
 				dataset.importImages(client, path);
@@ -569,18 +511,12 @@ public class AutoCrop {
 					                          this.m_outputFilesPrefix +
 					                          "_" +
 					                          coord +
-					                          i +
-					                          "\t" +
-					                          xmin +
-					                          "\t" +
-					                          xmax +
-					                          "\t" +
-					                          ymin +
-					                          "\t" +
-					                          ymax +
-					                          "\t" +
-					                          zmin +
-					                          "\t" +
+					                          i + "\t" +
+					                          xmin + "\t" +
+					                          xmax + "\t" +
+					                          ymin + "\t" +
+					                          ymax + "\t" +
+					                          zmin + "\t" +
 					                          zmax);
 					//xmin, ymin,zmin, width,height, depth,y
 				}
@@ -588,9 +524,7 @@ public class AutoCrop {
 		}
 	}
 	
-	/**
-	 * Method crops a box of interest, from coordinate files.
-	 */
+	/** Method crops a box of interest, from coordinate files. */
 	public void cropKernels3() throws Exception {
 		Directory dirOutput = new Directory(this.m_outputDirPath + File.separator + "Nuclei");
 		dirOutput.CheckAndCreateDir();
@@ -631,22 +565,14 @@ public class AutoCrop {
 				                          "_C" +
 				                          c +
 				                          ".tif\t" +
-				                          c +
-				                          "\t" +
-				                          i +
-				                          "\t" +
-				                          xmin +
-				                          "\t" +
-				                          ymin +
-				                          "\t" +
-				                          zmin +
-				                          "\t" +
-				                          width +
-				                          "\t" +
-				                          height +
-				                          "\t" +
-				                          depth +
-				                          "\n";
+				                          c + "\t" +
+				                          i + "\t" +
+				                          xmin + "\t" +
+				                          ymin + "\t" +
+				                          zmin + "\t" +
+				                          width + "\t" +
+				                          height + "\t" +
+				                          depth + "\n";
 				fileOutput.SaveImage(imgResu);
 				this.m_outputFile.add(this.m_outputDirPath +
 				                      File.separator +
@@ -664,18 +590,12 @@ public class AutoCrop {
 					                          File.separator +
 					                          this.m_outputFilesPrefix +
 					                          "_" +
-					                          i +
-					                          "\t" +
-					                          xmin +
-					                          "\t" +
-					                          xmax +
-					                          "\t" +
-					                          ymin +
-					                          "\t" +
-					                          ymax +
-					                          "\t" +
-					                          zmin +
-					                          "\t" +
+					                          i + "\t" +
+					                          xmin + "\t" +
+					                          xmax + "\t" +
+					                          ymin + "\t" +
+					                          ymax + "\t" +
+					                          zmin + "\t" +
 					                          zmax);
 					//xmin, ymin,zmin, width,height, depth,y
 				}
@@ -684,7 +604,7 @@ public class AutoCrop {
 	}
 	
 	/**
-	 * Getter for the m_outoutFiel ArrayList
+	 * Getter for the m_outputFiel ArrayList
 	 *
 	 * @return m_outputFile: ArrayList of String for the path of the output files created.
 	 */
@@ -779,15 +699,15 @@ public class AutoCrop {
 	}
 	
 	/**
-	 * Getter of the number of nuclei contained in the input image @return int the nb of nuclei
+	 * Getter of the number of nuclei contained in the input image
+	 *
+	 * @return int the nb of nuclei
 	 */
 	public int getNbOfNuc() {
 		return this.m_boxes.size();
 	}
 	
-	/**
-	 * @return Header current image info analyse
-	 */
+	/** @return Header current image info analyse */
 	public String getSpecificImageInfo() {
 		Calibration cal = this.m_rawImg.getCalibration();
 		return "#Image: " +
@@ -800,7 +720,9 @@ public class AutoCrop {
 	}
 	
 	/**
-	 * Getter column name for the tab delimited file @return columns name for output text file
+	 * Getter column name for the tab delimited file
+	 *
+	 * @return columns name for output text file
 	 */
 	public String getColumnName() {
 		String columnName = "FileName\tChannelNumber\tCropNumber\tXStart\tYStart\tZStart\twidth\theight\tdepth\n";
@@ -840,7 +762,9 @@ public class AutoCrop {
 	}
 	
 	/**
-	 * Getter number of crop @return number of object detected
+	 * Getter number of crop
+	 *
+	 * @return number of object detected
 	 */
 	public String getImageCropInfo() {
 		return this.m_imageFilePath +
@@ -858,7 +782,9 @@ public class AutoCrop {
 	}
 	
 	/**
-	 * Compute volume voxel of current image analysed @return voxel volume
+	 * Compute volume voxel of current image analysed
+	 *
+	 * @return voxel volume
 	 */
 	public double getVoxelVolume() {
 		double calibration;
@@ -871,9 +797,7 @@ public class AutoCrop {
 		return calibration;
 	}
 	
-	/**
-	 * Compute boxes merging if intersecting
-	 */
+	/** Compute boxes merging if intersecting */
 	public void boxIntersection() {
 		if (this.m_autocropParameters.getboxesRegroupement()) {
 			rectangleIntersection recompute = new rectangleIntersection(this.m_boxes, this.m_autocropParameters);

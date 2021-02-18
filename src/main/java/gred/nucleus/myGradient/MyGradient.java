@@ -14,7 +14,6 @@ import imagescience.utility.Progressor;
  *
  * @author poulet axel
  */
-
 public class MyGradient {
 	
 	private static boolean compute  = true;

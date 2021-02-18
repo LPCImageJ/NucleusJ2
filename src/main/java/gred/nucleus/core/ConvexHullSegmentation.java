@@ -12,7 +12,6 @@ import ij.ImageStack;
  *
  * @author Tristan Dubos and Axel Poulet
  */
-
 public class ConvexHullSegmentation {
 	
 	
@@ -47,7 +46,6 @@ public class ConvexHullSegmentation {
 	 *
 	 * @see ConvexHullSegmentation#
 	 */
-	
 	private ImagePlus imageMakingUnion(ImagePlus imagePlusInput,
 	                                   ImagePlus imagePlusXY,
 	                                   ImagePlus imagePlusXZ,

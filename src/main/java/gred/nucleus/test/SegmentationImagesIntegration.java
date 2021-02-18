@@ -70,7 +70,7 @@ public class SegmentationImagesIntegration {
 		// testStupidSeveralImages(ExpectedResult, ExpectedResult, (short)6.0, 300000000,true);
         /*fw.GetFilesResultingOfAnalysis(inputTristan);
         fw.CompareAnalysisResult();
-        OuputFileVerification fw = new OuputFileVerification();
+        OutputFileVerification fw = new OutputFileVerification();
         fw.GetFileResultExpeted(ExpectedResult);
         fw.GetFilesOutputFolder(outputTristan);
         fw.GetFilesResultingOfAnalysis(outputTristan);
@@ -78,6 +78,4 @@ public class SegmentationImagesIntegration {
         */
 		System.err.println("The program ended normally.");
 	}
-	
-	
 }

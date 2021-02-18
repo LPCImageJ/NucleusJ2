@@ -10,17 +10,11 @@ import java.io.InputStream;
 import java.util.Properties;
 
 public class SegmentationParameters extends PluginParameters {
-	/**
-	 * GIFT wrapping option
-	 */
+	/** GIFT wrapping option */
 	boolean m_giftVrapping     = true;
-	/**
-	 * Minimal object volume to segment
-	 */
+	/** Minimal object volume to segment */
 	int     m_minVolumeNucleus = 1;
-	/**
-	 * Maximal object volume to segment
-	 */
+	/** Maximal object volume to segment */
 	int     m_maxVolumeNucleus = 3000000;
 	
 	

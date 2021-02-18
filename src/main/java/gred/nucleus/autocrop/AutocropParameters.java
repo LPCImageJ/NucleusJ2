@@ -8,50 +8,27 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-/**
- * This class extend plugin parameters and contain the list of specific parameters available for Autocrop function.
- */
-
+/** This class extend plugin parameters and contain the list of specific parameters available for Autocrop function. */
 public class AutocropParameters extends PluginParameters {
-	/**
-	 * Minimal object volume to crop
-	 */
+	/** Minimal object volume to crop */
 	int m_minVolumeNucleus = 1;
-	/**
-	 * Maximal object volume to crop
-	 */
+	/** Maximal object volume to crop */
 	int m_maxVolumeNucleus = 2147483647;
-	/**
-	 * Number of pixels take plus object size in x
-	 */
+	/** Number of pixels take plus object size in x */
 	private int m_xCropBoxSize = 40;
-	/**
-	 * Number of pixels take plus object size in y
-	 */
+	/** Number of pixels take plus object size in y */
 	private int m_yCropBoxSize = 40;
-	/**
-	 * Number of slice take plus object in y
-	 */
+	/** Number of slice take plus object in y */
 	private int m_zCropBoxSize = 20;
-	/**
-	 * Minimal default OTSU threshold
-	 */
+	/** Minimal default OTSU threshold */
 	private int     m_thresholdOTSUcomputing      = 20;
-	/**
-	 * Channel to compute OTSU threshold
-	 */
+	/** Channel to compute OTSU threshold */
 	private int     m_channelToComputeThreshold   = 0;
-	/**
-	 * Slice start to compute OTSU threshold
-	 */
+	/** Slice start to compute OTSU threshold */
 	private int     m_slicesOTSUcomputing         = 0;
-	/**
-	 * Surface percent of boxes to groups them
-	 */
+	/** Surface percent of boxes to groups them */
 	private int     m_boxesPercentSurfaceToFilter = 50;
-	/**
-	 * Activation of boxes regroupement
-	 */
+	/** Activation of boxes regroupement */
 	private boolean m_boxesRegroupement           = true;
 	
 	

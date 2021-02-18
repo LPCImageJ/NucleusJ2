@@ -2,9 +2,9 @@ package gred.nucleus.autocrop;
 
 import fr.igred.omero.Client;
 import fr.igred.omero.ImageContainer;
-import gred.nucleus.FilesInputOutput.Directory;
-import gred.nucleus.FilesInputOutput.FilesNames;
-import gred.nucleus.FilesInputOutput.OutputTextFile;
+import gred.nucleus.filesInputOutput.Directory;
+import gred.nucleus.filesInputOutput.FilesNames;
+import gred.nucleus.filesInputOutput.OutputTextFile;
 import ij.IJ;
 import loci.formats.FormatException;
 
@@ -19,43 +19,32 @@ import java.util.List;
  *
  * @author Tristan Dubos and Axel Poulet
  */
-
 public class AutoCropCalling {
 	
 	
-	/**
-	 * image prefix name
-	 */
+	/** image prefix name */
 	private String             _prefix                 = "";
-	/**
-	 * Get general information of cropping analyse
-	 */
+	/** Get general information of cropping analyse */
 	private String             m_outputCropGeneralInfo = "#HEADER\n";
-	/**
-	 * Parameters crop analyse
-	 */
+	/** Parameters crop analyse */
 	private AutocropParameters m_autocropParameters;
 	
-	/**
-	 * Constructor Create the output directory if he isn't existed.
-	 */
+	/** Constructor Create the output directory if it doesn't exist. */
 	public AutoCropCalling() {
-	
 	}
 	
 	public AutoCropCalling(AutocropParameters autocropParameters) {
 		this.m_autocropParameters = autocropParameters;
-		this.m_outputCropGeneralInfo = autocropParameters.getAnalyseParameters()
-		                               + getColnameResult();
+		this.m_outputCropGeneralInfo = autocropParameters.getAnalyseParameters() + getColnameResult();
 	}
 	
 	/**
-	 * Run auto crop on image's folder: -If input is a file: open the image with bioformat plugin to obtain the metadata
-	 * then run the auto crop. -If input is directory, listed the file, foreach tif file loaded file with bioformat, run
+	 * Run auto crop on image's folder: -If input is a file: open the image with bio-formats plugin to obtain the metadata
+	 * then run the auto crop. -If input is directory, listed the file, foreach tif file loaded file with bio-formats, run
 	 * the auto crop.
 	 *
 	 * @throws IOException     if file problem
-	 * @throws FormatException Bioformat exception
+	 * @throws FormatException Bio-formats exception
 	 */
 	public void runFolder() throws Exception {
 		Directory directoryInput = new Directory(this.m_autocropParameters.getInputFolder());
@@ -99,8 +88,8 @@ public class AutoCropCalling {
 	
 	
 	/**
-	 * Run auto crop on one image : -If input is a file: open the image with bioformat plugin to obtain the metadata
-	 * then run the auto crop. -If input is directory, listed the file, foreach tif file loaded file with bioformat, run
+	 * Run auto crop on one image : -If input is a file: open the image with bio-formats plugin to obtain the metadata
+	 * then run the auto crop. -If input is directory, listed the file, foreach tif file loaded file with bio-formats, run
 	 * the auto crop.
 	 *
 	 * @param file
@@ -161,7 +150,6 @@ public class AutoCropCalling {
 	 *
 	 * @return columns name
 	 */
-	
 	public String getColnameResult() {
 		return "FileName\tNumberOfCrop\tOTSUThreshold\tDefaultOTSUThreshold\n";
 	}

@@ -28,7 +28,6 @@ import java.util.Map;
  *
  * @author Tristan Dubos and Axel Poulet
  */
-
 public class Measure3D {
 	
 	ImagePlus[] _imageSeg;
@@ -71,7 +70,6 @@ public class Measure3D {
 	 *
 	 * @return the surface
 	 */
-	
 	public double computeSurfaceObject(double label) {
 		ImageStack imageStackInput = this._imageSeg[0].getStack();
 		double     surfaceArea     = 0, voxelValue, neighborVoxelValue;
@@ -218,7 +216,6 @@ public class Measure3D {
 	 *
 	 * @return double table containing the 3 eigen values
 	 */
-	
 	public double[] computeEigenValue3D(double label) {
 		ImageStack  imageStackInput = this._imageSeg[0].getImageStack();
 		VoxelRecord barycenter      = computeBarycenter3D(true, this._imageSeg[0], label);
@@ -383,7 +380,6 @@ public class Measure3D {
 	 *
 	 * @return double Relative Heterochromatin Fraction compute on the Volume ratio
 	 */
-	
 	public double computeVolumeRHF(ImagePlus imagePlusSegmented
 			, ImagePlus imagePlusChomocenters) {
 		double volumeCc = 0;
@@ -599,7 +595,6 @@ public class Measure3D {
 	 * <p>
 	 * If voxels ==255 in seg image add Hashmap (Voxels intensity ,+1)
 	 */
-	
 	private void histogramSegmentedNucleus() {
 		ImageStack imageStackRaw = this._rawImage.getStack();
 		ImageStack imageStackSeg = this._imageSeg[0].getStack();
@@ -610,32 +605,26 @@ public class Measure3D {
 				for (int j = 0; j < this._rawImage.getHeight(); ++j) {
 					double voxelValue = imageStackSeg.getVoxel(i, j, k);
 					if (voxelValue == 255) {
-						if (!this._segmentedNucleusHisto.containsKey(
-								imageStackRaw.getVoxel(i, j, k))) {
-							this._segmentedNucleusHisto.put(
-									imageStackRaw.getVoxel(i, j, k), 1);
+						if (!this._segmentedNucleusHisto.containsKey(imageStackRaw.getVoxel(i, j, k))) {
+							this._segmentedNucleusHisto.put(imageStackRaw.getVoxel(i, j, k), 1);
 						} else {
-							this._segmentedNucleusHisto.put(
-									imageStackRaw.getVoxel(i, j, k),
-									this._segmentedNucleusHisto.get(
-											imageStackRaw.getVoxel(i, j, k)) + 1);
+							this._segmentedNucleusHisto.put(imageStackRaw.getVoxel(i, j, k),
+							                                this._segmentedNucleusHisto.get(imageStackRaw.getVoxel(i,
+							                                                                                       j,
+							                                                                                       k)) +
+							                                1);
 						}
 					} else {
-						if (!this._backgroundHisto.containsKey(
-								imageStackRaw.getVoxel(i, j, k))) {
-							this._backgroundHisto.put(
-									imageStackRaw.getVoxel(i, j, k), 1);
+						if (!this._backgroundHisto.containsKey(imageStackRaw.getVoxel(i, j, k))) {
+							this._backgroundHisto.put(imageStackRaw.getVoxel(i, j, k), 1);
 						} else {
-							this._backgroundHisto.put(
-									imageStackRaw.getVoxel(i, j, k),
-									this._backgroundHisto.get(
-											imageStackRaw.getVoxel(i, j, k)) + 1);
+							this._backgroundHisto.put(imageStackRaw.getVoxel(i, j, k),
+							                          this._backgroundHisto.get(imageStackRaw.getVoxel(i, j, k)) + 1);
 						}
 					}
 				}
 			}
 		}
-		
 	}
 	
 	
@@ -645,7 +634,6 @@ public class Measure3D {
 	 *
 	 * @return mean intensity of segmented object
 	 */
-	
 	private double meanIntensity() {
 		int    numberOfVoxel = 0;
 		double mean          = 0;
@@ -663,7 +651,6 @@ public class Measure3D {
 	 *
 	 * @return mean intensity of background
 	 */
-	
 	private double meanIntensityBackground() {
 		double     meanIntensity = 0;
 		int        voxelCounted  = 0;
@@ -693,7 +680,6 @@ public class Measure3D {
 	 *
 	 * @see Measure3D#meanIntensity()
 	 */
-	
 	private double standardDeviationIntensity(Double mean) {
 		int    numberOfVoxel = 0;
 		double std           = 0;
@@ -715,7 +701,6 @@ public class Measure3D {
 	 *
 	 * @return the maximum intensity voxel of segmented object
 	 */
-	
 	private double maxIntensity() {
 		double maxIntensity = 0;
 		for (Map.Entry<Double, Integer> entry :
@@ -733,7 +718,6 @@ public class Measure3D {
 	 *
 	 * @return the minimum intensity voxel of segmented object
 	 */
-	
 	private double minIntensity() {
 		double minIntensity = 0;
 		for (Map.Entry<Double, Integer> entry :
@@ -751,7 +735,6 @@ public class Measure3D {
 	 *
 	 * @return median intensity value of raw image voxel
 	 */
-	
 	public double medianComputingImage() {
 		double    voxelMedianValue = 0;
 		Histogram histogram        = new Histogram();
@@ -820,7 +803,6 @@ public class Measure3D {
 	 *
 	 * @return list of parameters compute in this method returned in tabulated format
 	 */
-	
 	public String nucleusParameter3D() {
 		String resu = "";
 		histogramSegmentedNucleus();

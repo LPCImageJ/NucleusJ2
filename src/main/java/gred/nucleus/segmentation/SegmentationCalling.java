@@ -4,10 +4,10 @@ import fr.igred.omero.Client;
 import fr.igred.omero.ImageContainer;
 import fr.igred.omero.metadata.ROIContainer;
 import fr.igred.omero.repository.DatasetContainer;
-import gred.nucleus.FilesInputOutput.Directory;
-import gred.nucleus.FilesInputOutput.FilesNames;
-import gred.nucleus.FilesInputOutput.OutputTextFile;
-import gred.nucleus.FilesInputOutput.OutputTexteFile;
+import gred.nucleus.filesInputOutput.Directory;
+import gred.nucleus.filesInputOutput.FilesNames;
+import gred.nucleus.filesInputOutput.OutputTextFile;
+import gred.nucleus.filesInputOutput.OutputTexteFile;
 import gred.nucleus.core.ConvexHullSegmentation;
 import gred.nucleus.core.NucleusSegmentation;
 import gred.nucleus.nucleusCaracterisations.NucleusAnalysis;
@@ -39,22 +39,15 @@ import java.util.List;
  */
 public class SegmentationCalling {
 	String _prefix = "";
-	/**
-	 * ImagePlus raw image
-	 */
-	private ImagePlus              _imgInput = new ImagePlus();
-	/**
-	 * ImagePlus segmented image
-	 */
-	private ImagePlus              _imgSeg   = new ImagePlus();
-	/**
-	 * String of of the path for the output files
-	 */
-	private String                 _output;
-	/**
-	 * String of the input dir for several nuclei analysis
-	 */
-	private String                 _inputDir = "";
+	/** ImagePlus raw image */
+	private ImagePlus _imgInput = new ImagePlus();
+	/** ImagePlus segmented image */
+	private ImagePlus _imgSeg   = new ImagePlus();
+	/** String of of the path for the output files */
+	private String    _output;
+	/** String of the input dir for several nuclei analysis */
+	private String    _inputDir = "";
+	
 	private SegmentationParameters m_segmentationParameters;
 	
 	private String m_outputCropGeneralInfoOTSU;
@@ -69,7 +62,6 @@ public class SegmentationCalling {
 	 *
 	 * @param segmentationParameters : list of parameters in config file.
 	 */
-	
 	public SegmentationCalling(SegmentationParameters segmentationParameters) {
 		this.m_segmentationParameters = segmentationParameters;
 		this.m_outputCropGeneralInfoOTSU = this.m_segmentationParameters.getAnalyseParameters() + getColnameResult();
@@ -193,14 +185,13 @@ public class SegmentationCalling {
 	 * parameters with the NucleusAnalysis class, and save in file in the outputDir. If no nucleus is detected a log
 	 * message is print in the console
 	 * <p>
-	 * Open the image with bioformat plugin to obtain the metadata: ImagePlus[] imgTab = BF.openImagePlus(fileImg);
+	 * Open the image with bio-formats plugin to obtain the metadata: ImagePlus[] imgTab = BF.openImagePlus(fileImg);
 	 *
 	 * @return String with the name files which failed in the segmentation step
 	 *
 	 * @throws IOException     if file doesn't existed
-	 * @throws FormatException Bioformat exception
+	 * @throws FormatException Bio-formats exception
 	 */
-	
 	public String runSeveralImages2() throws Exception {
 		String    log            = "";
 		Directory directoryInput = new Directory(this.m_segmentationParameters.getInputFolder());

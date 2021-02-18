@@ -1,11 +1,9 @@
 package gred.nucleus.autocrop;
 
-import gred.nucleus.FilesInputOutput.Directory;
-import gred.nucleus.exceptions.fileInOut;
+import gred.nucleus.filesInputOutput.Directory;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
-import loci.formats.FormatException;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,8 +15,7 @@ public class GenerateOverlay {
 	
 	HashMap<String, String> linkOverlayProjection = new HashMap<>();
 	
-	
-	public GenerateOverlay(String linkOverlayProjection) throws IOException, FormatException, fileInOut, Exception {
+	public GenerateOverlay(String linkOverlayProjection) throws IOException, Exception {
 		File    overlayProjection = new File(linkOverlayProjection);
 		Scanner scanner           = new Scanner(overlayProjection);
 		while (scanner.hasNextLine()) {

@@ -5,9 +5,7 @@ import ij.measure.Calibration;
 
 import java.util.ArrayList;
 
-/**
- * @author Tristan Dubos and Axel Poulet
- */
+/** @author Tristan Dubos and Axel Poulet */
 public class ConvexeHullDetection {
 	
 	private final double      _pi       = Math.PI;
@@ -66,7 +64,6 @@ public class ConvexeHullDetection {
 	 *
 	 * @return List of voxels composing the convexe Hull
 	 */
-	
 	public ArrayList<VoxelRecord> findConvexeHull(double[][] image,
 	                                              ArrayList<VoxelRecord> convexHull,
 	                                              ArrayList<VoxelRecord> lVoxelBoundary,
@@ -236,23 +233,17 @@ public class ConvexeHullDetection {
 		return Integer.signum(turn);
 	}
 	
-	/**
-	 * @return
-	 */
+	/** @return */
 	public String getAxes() {
 		return _axesName;
 	}
 	
-	/**
-	 * @param axes
-	 */
+	/** @param axes */
 	public void setAxes(String axes) {
 		_axesName = axes;
 	}
 	
-	/**
-	 * @param voxelRecord
-	 */
+	/** @param voxelRecord */
 	public void setInitialVoxel(VoxelRecord voxelRecord) {
 		_p0 = voxelRecord;
 	}

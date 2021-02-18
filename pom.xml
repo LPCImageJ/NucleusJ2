@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>igred</groupId>
 	<artifactId>NucleusJ_2</artifactId>
-	<version>1.2.1</version>
+	<version>1.2.2</version>
 
 	<name>NucleusJ</name>
 	<description>Ensemble of ImageJ plugins for nuclear analysis</description>
@@ -44,7 +44,6 @@
 			<artifactId>commons-cli</artifactId>
 			<version>1.4</version>
 		</dependency>
-
 
 		<dependency>
 			<groupId>ome</groupId>

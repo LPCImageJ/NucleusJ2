@@ -14,9 +14,7 @@ public class NucleusSegmentationAndAnalysisBatchPlugin_ implements PlugIn {
 	NucleusSegmentationAndAnalysisBatchDialog _nucleusPipelineBatchDialog =
 			new NucleusSegmentationAndAnalysisBatchDialog();
 	
-	/**
-	 * TODO CHANGER LES METHODES APPELER !!!!!!!
-	 */
+	/** TODO CHANGER LES METHODES APPELER !!!!!!! */
 	public void run(String arg) {
 		while (_nucleusPipelineBatchDialog.isShowing()) {
 			try {
@@ -43,72 +41,52 @@ public class NucleusSegmentationAndAnalysisBatchPlugin_ implements PlugIn {
 		}
 	}
 	
-	/**
-	 * @return
-	 */
+	/** @return */
 	public int getNbCpu() {
 		return _nucleusPipelineBatchDialog.getNbCpu();
 	}
 	
-	/**
-	 * @return
-	 */
+	/** @return */
 	public double getZCalibration() {
 		return _nucleusPipelineBatchDialog.getZCalibration();
 	}
 	
-	/**
-	 * @return
-	 */
+	/** @return */
 	public double getXCalibration() {
 		return _nucleusPipelineBatchDialog.getXCalibration();
 	}
 	
-	/**
-	 * @return
-	 */
+	/** @return */
 	public double getYCalibration() {
 		return _nucleusPipelineBatchDialog.getYCalibration();
 	}
 	
-	/**
-	 * @return
-	 */
+	/** @return */
 	public String getUnit() {
 		return _nucleusPipelineBatchDialog.getUnit();
 	}
 	
-	/**
-	 * @return
-	 */
+	/** @return */
 	public double getMinVolume() {
 		return _nucleusPipelineBatchDialog.getMinVolume();
 	}
 	
-	/**
-	 * @return
-	 */
+	/** @return */
 	public double getMaxVolume() {
 		return _nucleusPipelineBatchDialog.getMaxVolume();
 	}
 	
-	/**
-	 * @return
-	 */
+	/** @return */
 	public String getWorkDirectory() {
 		return _nucleusPipelineBatchDialog.getWorkDirectory();
 	}
 	
-	/**
-	 * @return
-	 */
+	/** @return */
 	public boolean is2D3DAnalysis() {
 		return _nucleusPipelineBatchDialog.is2D3DAnalysis();
 	}
 	
-	/**
-	 * @return
-	 */
+	/** @return */
 	public boolean is3DAnalysis() {
 		return _nucleusPipelineBatchDialog.is3D();
 	}

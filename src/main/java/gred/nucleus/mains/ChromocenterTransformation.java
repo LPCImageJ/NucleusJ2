@@ -1,7 +1,7 @@
 package gred.nucleus.mains;
 
-import gred.nucleus.FilesInputOutput.Directory;
-import gred.nucleus.FilesInputOutput.FilesNames;
+import gred.nucleus.filesInputOutput.Directory;
+import gred.nucleus.filesInputOutput.FilesNames;
 import gred.nucleus.core.NucleusSegmentation;
 import gred.nucleus.segmentation.SegmentationParameters;
 import ij.ImagePlus;

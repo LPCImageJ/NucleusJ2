@@ -1,6 +1,6 @@
 package gred.nucleus.test;
 
-import gred.nucleus.AnalyseTest.OuputFileVerification;
+import gred.nucleus.analyseTest.OutputFileVerification;
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
 
@@ -58,32 +58,31 @@ public class SegmentationImageIntegrationCheck {
 	 *
 	 * @param args
 	 */
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws IOException {
 		String pathToTest     = "/home/tridubos/Bureau/IMAGES_TEST/SEGMENTATION_IMAGES/SEGMENTATION_VERIF";
 		String pathToExpected = "/home/tridubos/Bureau/IMAGES_TEST/SEGMENTATION_IMAGES/SEGMENTATION";
 		
 		/*
-		 testStupidSeveralImages(pathToTest+"/Gros_Nucleols",
-		 pathToTest+"/SEGMENTATION_RESULTS/Gros_Nucleols");
-		 testStupidSeveralImages(pathToTest+"/Noyaux_Calib_1_1_1",
-		 pathToTest+"/SEGMENTATION_RESULTS/Noyaux_Calib_1_1_1",
-		 pathToTest+"/Noyaux_Calib_1_1_1/config_calibration.txt");
-		 testStupidSeveralImages(pathToTest+"/PB_RADIUS_CONVEXHULL",
-		 pathToTest+"/SEGMENTATION_RESULTS/PB_RADIUS_CONVEXHULL");
-		 
-		 */
-		OuputFileVerification fw = new OuputFileVerification(pathToExpected, pathToTest);
-		fw.GetFileResultExpeted(pathToExpected);
+		testStupidSeveralImages(pathToTest+"/Gros_Nucleols",
+		pathToTest+"/SEGMENTATION_RESULTS/Gros_Nucleols");
+		testStupidSeveralImages(pathToTest+"/Noyaux_Calib_1_1_1",
+		pathToTest+"/SEGMENTATION_RESULTS/Noyaux_Calib_1_1_1",
+		pathToTest+"/Noyaux_Calib_1_1_1/config_calibration.txt");
+		testStupidSeveralImages(pathToTest+"/PB_RADIUS_CONVEXHULL",
+		pathToTest+"/SEGMENTATION_RESULTS/PB_RADIUS_CONVEXHULL");
+		*/
+		OutputFileVerification fw = new OutputFileVerification(pathToExpected, pathToTest);
+		fw.GetFileResultExpected(pathToExpected);
 		//fw.GetFilesOutputFolder(pathToTest);
 		fw.GetFilesResultingOfAnalysis(pathToTest);
 		fw.CompareAnalysisResult();
-            /*
-            OuputFileVerification fw = new OuputFileVerification();
-            fw.GetFileResultExpeted(ExpectedResult);
-            fw.GetFilesOutputFolder(outputTristan);
-            fw.GetFilesResultingOfAnalysis(outputTristan);
-             fw.CompareAnalysisResult();
-             */
+        /*
+        OutputFileVerification fw = new OutputFileVerification();
+        fw.GetFileResultExpeted(ExpectedResult);
+        fw.GetFilesOutputFolder(outputTristan);
+        fw.GetFilesResultingOfAnalysis(outputTristan);
+        fw.CompareAnalysisResult();
+        */
 		System.err.println("The program ended normally.");
 	}
 	

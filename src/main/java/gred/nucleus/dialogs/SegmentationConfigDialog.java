@@ -224,9 +224,7 @@ public class SegmentationConfigDialog extends JFrame implements ItemListener {
 	class StartListener implements ActionListener {
 		SegmentationConfigDialog _segmentationDialog;
 		
-		/**
-		 * @param segmentationDialog
-		 */
+		/** @param segmentationDialog */
 		public StartListener(SegmentationConfigDialog segmentationDialog) {
 			_segmentationDialog = segmentationDialog;
 		}

@@ -84,7 +84,6 @@ public class RadialDistance {
 	 *
 	 * @return
 	 */
-	
 	public double[] computeBarycenterToBorderDistances(
 			ImagePlus imagePlusSegmented,
 			ImagePlus imagePlusChromocenter) {

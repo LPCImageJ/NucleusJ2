@@ -1,4 +1,4 @@
-package gred.nucleus.AnalyseTest;
+package gred.nucleus.analyseTest;
 
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -10,42 +10,33 @@ import java.util.Map;
 
 
 /**
- * This class is used to check results after structural code modification which not affect results and specifically :
- * -Images formats handling -Analysis results (3D parameters computation)
- * <p>
- * The method use a folder with images analysed at a specific version "under control" (expected results). A second
- * folder where the same images are analysed with of a new version of the code which should not affect results. Here we
- * use md5sum to check changes between files. The class produce a report with the list of file changed.
- * <p>
- * TODO Create class to produce a report TODO Complete the description TODO May be remove this class after GIT
- * integration
+ * This class is used to check results after structural code modification which not affect results and specifically:
+ *  -Images formats handling
+ *  -Analysis results (3D parameters computation)
+ *
+ * The method use a folder with images analysed at a specific version "under control" (expected results).
+ * A second folder where the same images are analysed with of a new version of the code which should not affect results.
+ * Here we use md5sum to check changes between files. The class produce a report with the list of file changed.
+ *
+ * TODO Create class to produce a report
+ * TODO Complete the description
+ * TODO May be remove this class after GIT integration
  *
  * @author Tristan Dubos
  */
-
-public class OuputFileVerification {
+public class OutputFileVerification {
 	
-	/**
-	 * Key of files expected in the result directory
-	 */
+	/** Key of files expected in the result directory */
 	Map<String, String> _myMapInitialFilesInputFolder = new HashMap<>();
-	/**
-	 * Key of files produce by the analysis
-	 */
+	/** Key of files produce by the analysis */
 	Map<String, String> _myMapInitialFileOutputFolder = new HashMap<>();
-	/**
-	 * list of files produce by the analysis
-	 */
-	Map<String, String> _myMapFilesProduceByAnlaysis  = new HashMap<>();
+	/** list of files produce by the analysis */
+	Map<String, String> _myMapFilesProduceByAnalysis  = new HashMap<>();
 	
 	
-	/**
-	 * Path output analysis files
-	 */
+	/** Path output analysis files */
 	String _rawPathOutPut;
-	/**
-	 * Raw path expected files
-	 */
+	/** Raw path expected files */
 	String _rawPathExpectedResult;
 	
 	/**
@@ -54,7 +45,7 @@ public class OuputFileVerification {
 	 * @param PathExpectedResult : Path of expected result (version under control)
 	 * @param PathOutPut         : Path of out results new version
 	 */
-	public OuputFileVerification(String PathExpectedResult, String PathOutPut) {
+	public OutputFileVerification(String PathExpectedResult, String PathOutPut) {
 		this._rawPathExpectedResult = PathExpectedResult;
 		this._rawPathOutPut = PathOutPut;
 	}
@@ -64,22 +55,16 @@ public class OuputFileVerification {
 	 *
 	 * @param path : path of folder which contains files expected
 	 */
-	
-	public void GetFileResultExpeted(String path) {
+	public void GetFileResultExpected(String path) throws IOException {
 		File   root = new File(path);
 		File[] list = root.listFiles();
 		for (File f : list) {
 			if (f.isDirectory()) {
-				GetFileResultExpeted(f.getAbsolutePath());
+				GetFileResultExpected(f.getAbsolutePath());
 			} else {
-				try {
-					String temps = f.getPath().replace(
-							this._rawPathExpectedResult, "");
-					this._myMapInitialFilesInputFolder.put(temps, md5(
-							f.getPath()));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				String temps = f.getPath().replace(
+						this._rawPathExpectedResult, "");
+				this._myMapInitialFilesInputFolder.put(temps, md5(f.getPath()));
 			}
 		}
 		
@@ -90,22 +75,16 @@ public class OuputFileVerification {
 	 *
 	 * @param path : path of folder which contains files expected
 	 */
-	
-	public void GetFilesOutputFolder(String path) {
+	public void GetFilesOutputFolder(String path) throws IOException {
 		File   root = new File(path);
 		File[] list = root.listFiles();
 		for (File f : list) {
 			if (f.isDirectory()) {
 				GetFilesOutputFolder(f.getAbsolutePath());
 			} else {
-				try {
-					String temps = f.getPath().replace(this._rawPathOutPut,
-					                                   "");
-					this._myMapInitialFileOutputFolder.put(temps,
-					                                       md5(f.getPath()));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				String temps = f.getPath().replace(this._rawPathOutPut,
+				                                   "");
+				this._myMapInitialFileOutputFolder.put(temps, md5(f.getPath()));
 			}
 		}
 		
@@ -116,43 +95,36 @@ public class OuputFileVerification {
 	 *
 	 * @param path : path of folder which contains files expected
 	 */
-	public void GetFilesResultingOfAnalysis(String path) {
+	public void GetFilesResultingOfAnalysis(String path) throws IOException {
 		File   root = new File(path);
 		File[] list = root.listFiles();
 		for (File f : list) {
 			if (f.isDirectory()) {
 				GetFilesResultingOfAnalysis(f.getAbsolutePath());
 			} else {
-				try {
-					String temps = f.getPath().replace(this._rawPathOutPut
-							, "");
-					System.out.println(temps);
-					this._myMapFilesProduceByAnlaysis.put(temps
-							, md5(f.getPath()));
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				String temps = f.getPath().replace(this._rawPathOutPut
+						, "");
+				System.out.println(temps);
+				this._myMapFilesProduceByAnalysis.put(temps, md5(f.getPath()));
 			}
 		}
 		
 	}
 	
-	/**
-	 * Method to compare md5sum of files from output analysis with expected results
-	 */
+	/** Method to compare md5sum of files from output analysis with expected results */
 	public void CompareAnalysisResult() {
 		for (Map.Entry<String, String> entry :
 				this._myMapInitialFilesInputFolder.entrySet()) {
 			String fileName = entry.getKey();
 			String hashCode = entry.getValue();
 			if (hashCode.equals(
-					this._myMapFilesProduceByAnlaysis.get(fileName))) {
+					this._myMapFilesProduceByAnalysis.get(fileName))) {
 				System.out.println("Terrible du cul " + fileName);
 			} else {
 				System.out.println("le fichier n'existe pas ou diff hash "
 				                   + fileName + "\n"
 				                   + hashCode + "\n"
-				                   + this._myMapFilesProduceByAnlaysis.get(fileName) + "\n");
+				                   + this._myMapFilesProduceByAnalysis.get(fileName) + "\n");
 			}
 			
 		}
@@ -167,7 +139,6 @@ public class OuputFileVerification {
 	 *
 	 * @throws IOException
 	 */
-	
 	public String md5(String path) throws IOException {
 		String checksumMD5 = "Na";
 		try {

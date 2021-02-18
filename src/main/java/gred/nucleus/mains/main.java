@@ -4,8 +4,8 @@ import fr.igred.omero.Client;
 import fr.igred.omero.ImageContainer;
 import fr.igred.omero.repository.DatasetContainer;
 import fr.igred.omero.repository.ProjectContainer;
-import gred.nucleus.CLI.*;
-import gred.nucleus.MachineLeaningUtils.ComputeNucleiParametersML;
+import gred.nucleus.cli.*;
+import gred.nucleus.machineLeaningUtils.ComputeNucleiParametersML;
 import gred.nucleus.autocrop.*;
 import gred.nucleus.core.ComputeNucleiParameters;
 import gred.nucleus.exceptions.fileInOut;
@@ -76,7 +76,6 @@ public class main {
 	 * @throws fileInOut
 	 * @throws Exception
 	 */
-	
 	public static void runAutoCropFile(String inputDirectory, String outputDirectory)
 	throws IOException, fileInOut, Exception {
 		//AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
@@ -174,7 +173,6 @@ public class main {
 	 *
 	 * @throws Exception
 	 */
-	
 	public static void segmentationFolder(String inputDirectory, String outputDirectory) throws Exception {
 		System.out.println("test " + inputDirectory);
 		SegmentationParameters segmentationParameters = new SegmentationParameters(inputDirectory, outputDirectory);
@@ -221,7 +219,6 @@ public class main {
 	 *
 	 * @throws Exception
 	 */
-	
 	public static void segmentationOneImage(String inputDirectory, String outputDirectory) throws Exception {
 		SegmentationParameters segmentationParameters = new SegmentationParameters(inputDirectory, outputDirectory);
 		SegmentationCalling    otsuModif              = new SegmentationCalling(segmentationParameters);
@@ -336,7 +333,6 @@ public class main {
 	 * @throws fileInOut
 	 * @throws Exception
 	 */
-	
 	public static void computeNucleusParameters(String rawImagesInputDirectory,
 	                                            String segmentedImagesDirectory,
 	                                            String pathToConfig)
@@ -359,7 +355,6 @@ public class main {
 	 * @throws fileInOut
 	 * @throws Exception
 	 */
-	
 	public static void computeNucleusParameters(String rawImagesInputDirectory, String segmentedImagesDirectory)
 	throws IOException, FormatException, fileInOut, Exception {
 		ComputeNucleiParameters generateParameters =
@@ -381,7 +376,6 @@ public class main {
 	 * @throws fileInOut
 	 * @throws Exception
 	 */
-	
 	public static void computeNucleusParametersDL(String rawImagesInputFolder, String segmentedImagesFolder)
 	throws IOException, FormatException, fileInOut, Exception {
 		ComputeNucleiParametersML computeParameters =
@@ -444,7 +438,6 @@ public class main {
 	 *
 	 * @throws Exception
 	 */
-	
 	public static void cropFromCoordinates(String coordinatesDir) throws Exception {
 		
 		CropFromCoordinates test = new CropFromCoordinates(coordinatesDir);

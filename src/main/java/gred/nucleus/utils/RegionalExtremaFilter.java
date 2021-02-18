@@ -8,22 +8,13 @@ import ij.process.ImageProcessor;
 import java.util.ArrayList;
 
 
-/**
- * @author Philippe Andrey, Tristan Dubos and Axel Poulet
- */
-
+/** @author Philippe Andrey, Tristan Dubos and Axel Poulet */
 public class RegionalExtremaFilter implements PlugInFilter {
-	/**
-	 * image to process
-	 */
+	/** image to process */
 	private ImagePlus    _imagePlusInput;
-	/**
-	 * table to stock the values of the local minima their coordinates x, y, z
-	 */
+	/** table to stock the values of the local minima their coordinates x, y, z */
 	private double[][][] _localMinValues = null;
-	/**
-	 * table to stock the binary mask if is necessary
-	 */
+	/** table to stock the binary mask if is necessary */
 	private double[][][] _tabMask        = null;
 	
 	/**
@@ -115,10 +106,7 @@ public class RegionalExtremaFilter implements PlugInFilter {
 	}
 	
 	
-	/**
-	 * Adds one at all the voxel values of a given image
-	 */
-	
+	/** Adds one at all the voxel values of a given image */
 	public void computeImageMoreOne() {
 		double     width           = _imagePlusInput.getWidth();
 		double     height          = _imagePlusInput.getHeight();
@@ -133,9 +121,7 @@ public class RegionalExtremaFilter implements PlugInFilter {
 		}
 	}
 	
-	/**
-	 * Filter minimum in 3D with a neighboring 3
-	 */
+	/** Filter minimum in 3D with a neighboring 3 */
 	
 	void filterMin3DWithMask() {
 		int        size1           = _imagePlusInput.getWidth();
@@ -179,7 +165,6 @@ public class RegionalExtremaFilter implements PlugInFilter {
 	 *
 	 * @param tab binary mask
 	 */
-	
 	public void setMask(double[][][] tab) {
 		_tabMask = tab;
 	}

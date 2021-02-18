@@ -1,6 +1,6 @@
-package gred.nucleus.CLI;
+package gred.nucleus.cli;
 
-import gred.nucleus.MachineLeaningUtils.ComputeNucleiParametersML;
+import gred.nucleus.machineLeaningUtils.ComputeNucleiParametersML;
 import gred.nucleus.autocrop.*;
 import gred.nucleus.core.ComputeNucleiParameters;
 import gred.nucleus.segmentation.SegmentationCalling;
@@ -10,9 +10,7 @@ import org.apache.commons.cli.CommandLine;
 import java.io.IOException;
 
 public class CLIRunAction {
-	/**
-	 * Command line
-	 */
+	/** Command line */
 	private final CommandLine m_cmd;
 	
 	public CLIRunAction(CommandLine cmd) throws Exception {
@@ -66,7 +64,6 @@ public class CLIRunAction {
 			projection.generateCoordinate();
 		}
 	}
-	
 	
 	private void runAutocrop() throws Exception {
 		AutocropParameters autocropParameters = new AutocropParameters(
@@ -123,4 +120,5 @@ public class CLIRunAction {
 				new ComputeNucleiParametersML(this.m_cmd.getOptionValue("input"), this.m_cmd.getOptionValue("input2"));
 		computeParameters.run();
 	}
+	
 }

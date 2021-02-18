@@ -1,6 +1,6 @@
-package gred.nucleus.MachineLeaningUtils;
+package gred.nucleus.machineLeaningUtils;
 
-import gred.nucleus.FilesInputOutput.Directory;
+import gred.nucleus.filesInputOutput.Directory;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
@@ -17,9 +17,8 @@ public class SliceToStack {
      * Constructor
      * @param pathToSliceDir path to slice directory to merge to stack
      * @param pathToOutputDir path to stack image output
-     * @throws Exception
      */
-    public SliceToStack(String pathToSliceDir, String pathToOutputDir) throws Exception{
+    public SliceToStack(String pathToSliceDir, String pathToOutputDir) {
          this.m_pathToSliceDir=pathToSliceDir;
          this.m_pathToOutputDir=pathToOutputDir;
     }
@@ -28,9 +27,8 @@ public class SliceToStack {
      * Merge slice to stack :
      *  - images shall have this file name format :
      *          CommonNameOfImageToMerge_NumberOfSlice
-     * @throws Exception
      */
-    public  void run() throws Exception {
+    public  void run() {
         HashMap<String, Integer> test = new HashMap<>();
         Directory directoryOutput = new Directory(this.m_pathToOutputDir);
         Directory directoryInput = new Directory(this.m_pathToSliceDir);

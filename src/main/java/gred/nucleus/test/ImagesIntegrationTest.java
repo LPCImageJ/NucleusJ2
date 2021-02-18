@@ -6,13 +6,13 @@ public class ImagesIntegrationTest {
 	 args[0]="/home/titus/Bureau/data/Test_Image_Reproductibilite/IMAGE_TEST_NJ/";
 	 AUTOCROP_RAW/RAW_BIOFORMATS
 	 
-	 OuputFileVerification fw = new OuputFileVerification(ExpectedResult,inputTristan);
+	 OutputFileVerification fw = new OutputFileVerification(ExpectedResult,inputTristan);
 	 
 	 fw.GetFilesResultingOfAnalysis(inputTristan);
 	 fw.CompareAnalysisResult();
 	 
 	 
-	 OuputFileVerification fw = new OuputFileVerification();
+	 OutputFileVerification fw = new OutputFileVerification();
 	 fw.GetFileResultExpeted(ExpectedResult);
 	 fw.GetFilesOutputFolder(outputTristan);
 	 fw.GetFilesResultingOfAnalysis(outputTristan);

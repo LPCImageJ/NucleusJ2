@@ -66,7 +66,7 @@ public class AutocropImageIntegration {
 		
 		//String outputTristan = "/home/tridubos/Bureau/TEST_AUTOCROP/out_test_Version";
 		
-		//OuputFileVerification fw = new OuputFileVerification();
+		//OutputFileVerification fw = new OutputFileVerification();
 		//fw.GetFileResultExpeted(ExpectedResult);
 		//fw.GetFilesOutputFolder(outputTristan);
 		//testStupid(inputOneImageTristan, outputTristan);

@@ -1,4 +1,4 @@
-package gred.nucleus.CLI;
+package gred.nucleus.cli;
 
 import ome.model.units.Conversion;
 import org.apache.commons.cli.Option;
@@ -9,13 +9,9 @@ import java.util.ArrayList;
 import static org.apache.commons.lang.Validate.isTrue;
 
 
-/**
- * Herited class to handle OMERO command line option
- */
+/** Herited class to handle OMERO command line option */
 public class CLIActionOptionOMERO extends CLIActionOptions {
-	/**
-	 * Host name server
-	 */
+	/** Host name server */
 	private final Option m_hostname     = Option.builder("ho")
 	                                            .longOpt("hostname")
 	                                            .required()
@@ -23,9 +19,7 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 	                                            .desc("Hostname of the OMERO serveur")
 	                                            .numberOfArgs(1)
 	                                            .build();
-	/**
-	 * Server port connexion
-	 */
+	/** Server port connexion */
 	private final Option m_port         = Option.builder("pt")
 	                                            .longOpt("port")
 	                                            .required()
@@ -33,27 +27,21 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 	                                            .desc("Port used by OMERO")
 	                                            .numberOfArgs(1)
 	                                            .build();
-	/**
-	 * username connexion
-	 */
+	/** username connexion */
 	private final Option m_username     = Option.builder("u")
 	                                            .longOpt("username")
 	                                            .type(String.class)
 	                                            .desc("Username in OMERO")
 	                                            .numberOfArgs(1)
 	                                            .build();
-	/**
-	 * OMERO password connexion
-	 */
+	/** OMERO password connexion */
 	private final Option m_password     = Option.builder("p")
 	                                            .longOpt("password")
 	                                            .type(String.class)
 	                                            .desc("Password in OMERO")
 	                                            .numberOfArgs(1)
 	                                            .build();
-	/**
-	 * Group user connexion
-	 */
+	/** Group user connexion */
 	private final Option m_group        = Option.builder("g")
 	                                            .longOpt("group")
 	                                            .required()
@@ -61,9 +49,7 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 	                                            .desc("Group in OMERO")
 	                                            .numberOfArgs(1)
 	                                            .build();
-	/**
-	 * Path to output folder
-	 */
+	/** Path to output folder */
 	private final Option m_outputFolder = Option.builder("out")
 	                                            .longOpt("output")
 	                                            .type(String.class)
@@ -149,6 +135,7 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 	private Option getOutputFolder() {
 		return this.m_outputFolder;
 	}
+	
 }
 
 //        if(cmd.getOptionValue("action").equals("autocrop")) {
@@ -161,5 +148,4 @@ ArrayList<String> actionList = new ArrayList<>();
         actionList.add("generateProjection");
         actionList.add("CropFromCoordinate");
         actionList.add("GenerateOverlay");
-
  */

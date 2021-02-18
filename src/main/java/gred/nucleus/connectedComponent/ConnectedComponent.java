@@ -18,7 +18,6 @@ import ij.ImageStack;
 import ij.measure.Calibration;
 import gred.nucleus.componentRemoval.ComponentRemovalNone;
 import gred.nucleus.componentRemoval.ComponentRemovalPredicate;
-import gred.nucleus.connectedComponent.ComponentInfo;
 
 
 /**
@@ -41,24 +40,16 @@ public abstract class ConnectedComponent {
 	 */
 	protected ImagePlus m_inputImage;
 
-	/**
-	 * Color of the foreground in the input binary image
-	 */
+	/** Color of the foreground in the input binary image */
 	protected int m_foregroundColor;
 
-	/**
-	 * Components Information (cardinality, label, voxel representative, etc.)
-	 */
+	/** Components Information (cardinality, label, voxel representative, etc.) */
 	protected ArrayList<ComponentInfo> m_compInfo;
 	
-	/**
-	 * Array containing the label of each voxel
-	 */
+	/** Array containing the label of each voxel */
 	protected int[][][] m_labels;
 	
-	/**
-	 * Volume of a voxel (used for component size thresholding)
-	 */
+	/** Volume of a voxel (used for component size thresholding) */
 	protected double m_voxelVolume;
 
 	/**
@@ -299,7 +290,7 @@ public abstract class ConnectedComponent {
 		for (int label=1 ; label<=this.m_compInfo.size() ; label++) {
 			ComponentInfo ci = this.m_compInfo.get(label-1);
 			// If the component survives the filtering criteria
-			if (ci != null && ci.getnumberOfPoints() > 0 &&	ci.getnumberOfPoints() >= thresholdNVoxel && ((!removeBorderComponent) || !ci.isOnTheeBorder())) {
+			if (ci != null && ci.getnumberOfPoints() > 0 &&	ci.getnumberOfPoints() >= thresholdNVoxel && ((!removeBorderComponent) || !ci.isOnTheBorder())) {
 				componentsCount++;
 				// old label/new label correspondence
 				newLabels.add((int) componentsCount);
@@ -357,7 +348,6 @@ public abstract class ConnectedComponent {
 	 * retrieves the number of components (after calling doComponents)
 	 * @return the number of components detected.
 	 */
-	
 	public int getNumberOfComponents() {
 		return this.m_compInfo.size();
 	}

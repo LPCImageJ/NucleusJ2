@@ -1,28 +1,20 @@
-package gred.nucleus.CLI;
+package gred.nucleus.cli;
 
 import org.apache.commons.cli.*;
 
-/**
- * Generic class to handle command line option
- */
+/** Generic class to handle command line option */
 public class CLIActionOptions {
 	
-	/**
-	 * NucleusJ version
-	 */
-	private static final String NJversion     = "1.1.0";
-	/**
-	 * Path to input folder
-	 */
+	/** NucleusJ version */
+	private static final String NJversion     = "1.2.2";
+	/** Path to input folder */
 	public               Option m_inputFolder = Option.builder("in")
 	                                                  .longOpt("input")
 	                                                  .required()
 	                                                  .type(String.class)
 	                                                  .numberOfArgs(1)
 	                                                  .build();
-	/**
-	 * Path to config file
-	 */
+	/** Path to config file */
 	public               Option m_configFile  = Option.builder("c")
 	                                                  .longOpt("config")
 	                                                  .type(String.class)
@@ -33,9 +25,7 @@ public class CLIActionOptions {
 	                                                        ".jar -h configFileExample")
 	                                                  .numberOfArgs(1)
 	                                                  .build();
-	/**
-	 * List of available actions
-	 */
+	/** List of available actions */
 	public               Option m_action      = Option.builder("a")
 	                                                  .longOpt("action")
 	                                                  .required()
@@ -45,25 +35,17 @@ public class CLIActionOptions {
 	                                                        "segmentation : nucleus segmentation\n")
 	                                                  .numberOfArgs(1)
 	                                                  .build();
-	/**
-	 * OMERO activate
-	 */
+	/** OMERO activate */
 	public               Option m_omero       = Option.builder("ome")
 	                                                  .longOpt("omero")
 	                                                  .type(boolean.class)
 	                                                  .desc("Use of NucleuJ2.0 in OMERO\n")
 	                                                  .build();
-	/**
-	 * List of options
-	 */
+	/** List of options */
 	Options           m_options = new Options();
-	/**
-	 * Command line
-	 */
+	/** Command line */
 	CommandLine       m_cmd;
-	/**
-	 * Command line parser
-	 */
+	/** Command line parser */
 	CommandLineParser m_parser  = new DefaultParser();
 	
 	
@@ -72,9 +54,8 @@ public class CLIActionOptions {
 	 *
 	 * @param argument : list of command line argument
 	 *
-	 * @throws Exception ParseException
 	 */
-	public CLIActionOptions(String[] argument) throws Exception {
+	public CLIActionOptions(String[] argument) {
 		this.m_options.addOption(this.m_inputFolder);
 		this.m_options.addOption(this.m_configFile);
 		this.m_options.addOption(this.m_action);
@@ -88,9 +69,7 @@ public class CLIActionOptions {
 		}
 	}
 	
-	/**
-	 * @return : helper info
-	 */
+	/** @return : helper info */
 	public String getHelperInfos() {
 		return "More details for available actions:\n" +
 		       "java -jar NucleusJ_2-" + NJversion + ".jar -h \n" +
@@ -100,9 +79,7 @@ public class CLIActionOptions {
 		       "java -jar NucleusJ_2-" + NJversion + ".jar -help <action>";
 	}
 	
-	/**
-	 * @return list of options
-	 */
+	/** @return list of options */
 	public Options getM_options() {
 		return this.m_options;
 	}

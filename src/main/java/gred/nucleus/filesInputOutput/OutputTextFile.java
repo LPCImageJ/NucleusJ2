@@ -1,4 +1,4 @@
-package gred.nucleus.FilesInputOutput;
+package gred.nucleus.filesInputOutput;
 
 import ij.IJ;
 import org.apache.commons.io.FilenameUtils;
@@ -14,10 +14,8 @@ public class OutputTextFile extends FilesNames {
 		super(filePath);
 	}
 	
-	/**
-	 * Method to save file with verification if file already exists TODO(@DesTristus) ADD ERROR IN LOG FILE
-	 */
-	public void SaveTextFile(String text) throws Exception {
+	/** Method to save file with verification if file already exists TODO(@DesTristus) ADD ERROR IN LOG FILE */
+	public void SaveTextFile(String text) {
 		try {
 			int i = 0;
 			while (is_fileExist()) {

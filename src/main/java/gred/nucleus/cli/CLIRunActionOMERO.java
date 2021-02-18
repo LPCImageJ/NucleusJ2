@@ -1,4 +1,4 @@
-package gred.nucleus.CLI;
+package gred.nucleus.cli;
 
 import fr.igred.omero.Client;
 import fr.igred.omero.ImageContainer;
@@ -16,27 +16,17 @@ import java.io.IOException;
 import java.util.List;
 
 public class CLIRunActionOMERO {
-	/**
-	 * List of options
-	 */
+	/** List of options */
 	Options     m_options = new Options();
-	/**
-	 * Command line
-	 */
+	/** Command line */
 	CommandLine m_cmd;
-	/**
-	 * OMERO client information see fr.igred.omero.Client
-	 */
+	/** OMERO client information see fr.igred.omero.Client */
 	Client      m_client  = new Client();
 	
-	/**
-	 * OMERO password connexion
-	 */
+	/** OMERO password connexion */
 	String m_mdp;
 	
-	/**
-	 * OMERO type of data to analyse : image data dataset tag
-	 */
+	/** OMERO type of data to analyse : image data dataset tag */
 	String m_dataType;
 	
 	
@@ -53,8 +43,6 @@ public class CLIRunActionOMERO {
 				break;
 		}
 		this.m_client.disconnect();
-		
-		
 	}
 	
 	public static void autoCropOmero(String inputDirectory,
@@ -64,8 +52,8 @@ public class CLIRunActionOMERO {
 		String[] param = inputDirectory.split("/");
 		
 		if (param.length >= 2) {
+			Long id = Long.parseLong(param[1]);
 			if (param[0].equals("image")) {
-				Long           id    = Long.parseLong(param[1]);
 				ImageContainer image = client.getImage(id);
 				
 				int sizeC = image.getPixels().getSizeC();
@@ -80,7 +68,6 @@ public class CLIRunActionOMERO {
 				
 				autoCrop.runImageOmero(image, outputsDat, client);
 			} else {
-				Long                 id     = Long.parseLong(param[1]);
 				List<ImageContainer> images = null;
 				
 				String name = "";
@@ -132,7 +119,7 @@ public class CLIRunActionOMERO {
 		
 	}
 	
-	public void checkOMEROConnexion() throws Exception {
+	public void checkOMEROConnexion() {
 		try {
 			m_client.connect(this.m_cmd.getOptionValue("hostname"),
 			                 Integer.parseInt(this.m_cmd.getOptionValue("port")),
@@ -154,8 +141,10 @@ public class CLIRunActionOMERO {
 		}
 		AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
 		try {
-			autoCropOmero(this.m_cmd.getOptionValue("input")
-					, this.m_cmd.getOptionValue("output"), this.m_client, autoCrop);
+			autoCropOmero(this.m_cmd.getOptionValue("input"),
+			              this.m_cmd.getOptionValue("output"),
+			              this.m_client,
+			              autoCrop);
 		} catch (IllegalArgumentException exp) {
 			System.out.println(exp.getMessage());
 			System.exit(1);
@@ -169,10 +158,10 @@ public class CLIRunActionOMERO {
 			segmentationParameters.addProperties(this.m_cmd.getOptionValue("config"));
 		}
 		SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
-		segmentationOmero(this.m_cmd.getOptionValue("input")
-				, this.m_cmd.getOptionValue("output"), this.m_client, otsuModif);
-		
-		
+		segmentationOmero(this.m_cmd.getOptionValue("input"),
+		                  this.m_cmd.getOptionValue("output"),
+		                  this.m_client,
+		                  otsuModif);
 	}
 	
 	public void segmentationOmero(String inputDirectory,
@@ -182,8 +171,8 @@ public class CLIRunActionOMERO {
 		String[] param = inputDirectory.split("/");
 		
 		if (param.length >= 2) {
+			Long id = Long.parseLong(param[1]);
 			if (param[0].equals("image")) {
-				Long           id    = Long.parseLong(param[1]);
 				ImageContainer image = client.getImage(id);
 				
 				try {
@@ -200,7 +189,6 @@ public class CLIRunActionOMERO {
 					e.printStackTrace();
 				}
 			} else {
-				Long                 id     = Long.parseLong(param[1]);
 				List<ImageContainer> images = null;
 				
 				switch (param[0]) {

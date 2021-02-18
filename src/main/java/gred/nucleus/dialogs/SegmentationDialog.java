@@ -50,10 +50,7 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 	private       File   selectedOutput;
 	private       File   selectedConfig;
 	
-	/**
-	 * Architecture of the graphical windows
-	 */
-	
+	/** Architecture of the graphical windows */
 	public SegmentationDialog() {
 		this.setTitle("Segmentation NucleusJ2");
 		this.setSize(500, 300);
@@ -268,15 +265,11 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 	}
 	
 	
-	/**
-	 * Classes listener to interact with the several elements of the window
-	 */
+	/** Classes listener to interact with the several elements of the window */
 	class StartListener implements ActionListener {
 		SegmentationDialog _segmentationDialog;
 		
-		/**
-		 * @param autocropDialog
-		 */
+		/** @param autocropDialog */
 		public StartListener(SegmentationDialog autocropDialog) {
 			_segmentationDialog = autocropDialog;
 		}
@@ -293,9 +286,7 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 	class QuitListener implements ActionListener {
 		SegmentationDialog _segmentationDialog;
 		
-		/**
-		 * @param segmentationDialog
-		 */
+		/** @param segmentationDialog */
 		public QuitListener(SegmentationDialog segmentationDialog) {
 			_segmentationDialog = segmentationDialog;
 		}
@@ -308,9 +299,7 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 	class ConfigListener implements ActionListener {
 		SegmentationDialog _segmentationDialog;
 		
-		/**
-		 * @param segmentationDialog
-		 */
+		/** @param segmentationDialog */
 		public ConfigListener(SegmentationDialog segmentationDialog) {
 			_segmentationDialog = segmentationDialog;
 		}

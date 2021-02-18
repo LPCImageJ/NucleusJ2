@@ -13,7 +13,6 @@ import java.awt.event.ItemListener;
  *
  * @author pouletaxel
  */
-
 public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements ItemListener {
 	private static final long    serialVersionUID      = 1L;
 	private final        JButton _jButtonWorkDirectory = new JButton("Output Directory");
@@ -59,10 +58,7 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements 
 	private       String       _rawDataDirectory;
 	private       boolean      _start                    = false;
 	
-	/**
-	 * Architecture of the graphical windows
-	 */
-	
+	/** Architecture of the graphical windows */
 	public ChromocentersAnalysisPipelineBatchDialog() {
 		this.setTitle("Chromocenters Analysis Pipeline (Batch)");
 		this.setSize(500, 600);
@@ -346,9 +342,7 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements 
 		this.setVisible(true);
 	}
 	
-	/**
-	 * @param args
-	 */
+	/** @param args */
 	public static void main(String[] args) {
 		ChromocentersAnalysisPipelineBatchDialog chromocentersAnalysisPipelineBatchDialog =
 				new ChromocentersAnalysisPipelineBatchDialog();
@@ -492,16 +486,12 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements 
 	}
 	
 	
-	/**
-	 * Classes listener to interact with the several elements of the window
-	 */
+	/** Classes listener to interact with the several elements of the window */
 	class StartListener implements ActionListener {
 		
 		ChromocentersAnalysisPipelineBatchDialog _chromocentersAnalysisPipelineBatchDialog;
 		
-		/**
-		 * @param chromocentersAnalysisPipelineBatchDialog
-		 */
+		/** @param chromocentersAnalysisPipelineBatchDialog */
 		public StartListener(ChromocentersAnalysisPipelineBatchDialog chromocentersAnalysisPipelineBatchDialog) {
 			_chromocentersAnalysisPipelineBatchDialog = chromocentersAnalysisPipelineBatchDialog;
 		}
@@ -531,9 +521,7 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements 
 	class QuitListener implements ActionListener {
 		ChromocentersAnalysisPipelineBatchDialog _chromocentersAnalysisPipelineBatchDialog;
 		
-		/**
-		 * @param chromocentersAnalysisPipelineBatchDialog
-		 */
+		/** @param chromocentersAnalysisPipelineBatchDialog */
 		public QuitListener(ChromocentersAnalysisPipelineBatchDialog chromocentersAnalysisPipelineBatchDialog) {
 			_chromocentersAnalysisPipelineBatchDialog = chromocentersAnalysisPipelineBatchDialog;
 		}

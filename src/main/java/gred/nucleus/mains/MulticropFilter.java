@@ -1,6 +1,6 @@
 package gred.nucleus.mains;
 
-import gred.nucleus.FilesInputOutput.Directory;
+import gred.nucleus.filesInputOutput.Directory;
 import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.autocrop.annotAutoCrop;
 
@@ -22,7 +22,7 @@ public class MulticropFilter {
 			File coordinateFile = directoryCoordinates.getFile(i);
 			
 			// TODO FAIRE UNE FONCTION POUR CHOPER LE FICHIER IMAGE DANS LE DIR PEUT IMPORTE L EXTENSION !
-			File tifFile = directoryTIF.searchFileNameWithoutExention(coordinateFile.getName().split("\\.")[0]);
+			File tifFile = directoryTIF.searchFileNameWithoutExtension(coordinateFile.getName().split("\\.")[0]);
 			if (tifFile != null) {
 				System.out.println("Dedand");
 				

@@ -1,7 +1,7 @@
-package gred.nucleus.MachineLeaningUtils;
+package gred.nucleus.machineLeaningUtils;
 
-import gred.nucleus.FilesInputOutput.Directory;
-import gred.nucleus.FilesInputOutput.OutputTextFile;
+import gred.nucleus.filesInputOutput.Directory;
+import gred.nucleus.filesInputOutput.OutputTextFile;
 import gred.nucleus.core.Measure3D;
 import gred.nucleus.plugins.PluginParameters;
 import gred.nucleus.utils.Histogram;
@@ -22,9 +22,8 @@ public class ComputeNucleiParametersML {
      * Constructor
      * @param rawImagesInputDirectory path to raw images
      * @param segmentedImagesDirectory path to list of segmented images from machine learning associated to raw
-     * @throws Exception
      */
-    public ComputeNucleiParametersML(String rawImagesInputDirectory, String segmentedImagesDirectory) throws  Exception{
+    public ComputeNucleiParametersML(String rawImagesInputDirectory, String segmentedImagesDirectory) {
         this.m_rawImagesInputDirectory=rawImagesInputDirectory;
         this.m_segmentedImagesDirectory=segmentedImagesDirectory;
     }

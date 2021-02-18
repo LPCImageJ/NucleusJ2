@@ -44,10 +44,7 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 	private       File   selectedConfig;
 	
 	
-	/**
-	 * Architecture of the graphical windows
-	 */
-	
+	/** Architecture of the graphical windows */
 	public AutocropDialog() {
 		this.setTitle("Autocrop NucleusJ2");
 		this.setSize(500, 300);
@@ -285,16 +282,12 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 		repaint();
 	}
 	
-	/**
-	 * Classes listener to interact with the several elements of the window
-	 */
+	/** Classes listener to interact with the several elements of the window */
 	
 	class StartListener implements ActionListener {
 		AutocropDialog _autocropDialog;
 		
-		/**
-		 * @param autocropDialog
-		 */
+		/** @param autocropDialog */
 		public StartListener(AutocropDialog autocropDialog) {
 			_autocropDialog = autocropDialog;
 		}
@@ -309,9 +302,7 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 	class QuitListener implements ActionListener {
 		AutocropDialog _autocropDialog;
 		
-		/**
-		 * @param autocropDialog
-		 */
+		/** @param autocropDialog */
 		public QuitListener(AutocropDialog autocropDialog) {
 			_autocropDialog = autocropDialog;
 		}
@@ -325,9 +316,7 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 	class ConfigListener implements ActionListener {
 		AutocropDialog _autocropDialog;
 		
-		/**
-		 * @param autocropDialog
-		 */
+		/** @param autocropDialog */
 		public ConfigListener(AutocropDialog autocropDialog) {
 			_autocropDialog = autocropDialog;
 		}

@@ -1,6 +1,6 @@
 package gred.nucleus.plugins;
 
-import gred.nucleus.FilesInputOutput.Directory;
+import gred.nucleus.filesInputOutput.Directory;
 import ij.IJ;
 import ij.ImagePlus;
 
@@ -11,38 +11,22 @@ import java.util.Properties;
 
 public class PluginParameters {
 	
-	/**
-	 * Activation of manual calibration parameter
-	 */
+	/** Activation of manual calibration parameter */
 	public boolean m_manualParameter = false;
-	/**
-	 * X calibration plugin parameter
-	 */
+	/** X calibration plugin parameter */
 	public double  m_xCal            = 1;
-	/**
-	 * y calibration plugin parameter
-	 */
+	/** y calibration plugin parameter */
 	public double  m_yCal            = 1;
-	/**
-	 * z calibration plugin parameter
-	 */
+	/** z calibration plugin parameter */
 	public double  m_zCal            = 1;
-	/**
-	 * Input folder
-	 */
+	/** Input folder */
 	public String  m_inputFolder;
-	/**
-	 * Output folder
-	 */
+	/** Output folder */
 	public String  m_outputFolder;
-	/**
-	 * Autocrop parameters information
-	 */
+	/** Autocrop parameters information */
 	public String  m_headerInfo;
 	
-	/**
-	 * Constructor with default parameter
-	 */
+	/** Constructor with default parameter */
 	public PluginParameters() {
 	}
 	
@@ -89,7 +73,6 @@ public class PluginParameters {
 	 * @param outputFolder     : path folder output analyse
 	 * @param pathToConfigFile : path to the config file
 	 */
-	
 	public PluginParameters(String inputFolder, String outputFolder, String pathToConfigFile) {
 		checkInputPaths(inputFolder, outputFolder);
 		Directory dirOutput = new Directory(outputFolder);

@@ -20,12 +20,9 @@ import java.util.ArrayList;
  *
  * @author Tristan Dubos and Axel Poulet
  */
-
 public class ChromocentersAnalysisBatchPlugin_ implements PlugIn {
 	
-	/**
-	 * Run the the analyse, call the graphical windows
-	 */
+	/** Run the the analyse, call the graphical windows */
 	public void run(String arg) {
 		ChromocentersAnalysisPipelineBatchDialog chromocentersPipelineBatchDialog =
 				new ChromocentersAnalysisPipelineBatchDialog();

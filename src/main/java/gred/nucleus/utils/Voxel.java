@@ -18,16 +18,12 @@ package gred.nucleus.utils;
  */
 public class Voxel {
 	
-	/**
-	 * Integer valued coordinates of the voxel
-	 */
+	/** Integer valued coordinates of the voxel */
 	private final short[] m_coordinates;
 	private       short   m_value;
 	
 	
-	/**
-	 * Creates an uninitialized voxel
-	 */
+	/** Creates an uninitialized voxel */
 	public Voxel() {
 		this.m_coordinates = new short[3];
 	}

@@ -25,7 +25,7 @@ public class ComponentRemovalBoundary implements ComponentRemovalPredicate {
 	 */
 	@Override
 	public boolean keepVoxelComponent(Voxel voxel, ComponentInfo componentInfo) {
-		return !componentInfo.isOnTheeBorder();
+		return !componentInfo.isOnTheBorder();
 	}
 	
 }

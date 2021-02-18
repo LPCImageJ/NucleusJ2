@@ -6,9 +6,7 @@ import ij.measure.Calibration;
 
 import java.util.ArrayList;
 
-/**
- * @author Tristan Dubos and Axel Poulet
- */
+/** @author Tristan Dubos and Axel Poulet */
 public class Gradient {
 	/**
 	 *
@@ -34,7 +32,6 @@ public class Gradient {
 	 *
 	 * @return
 	 */
-	
 	private void computeGradient(ImagePlus imagePlusInput) {
 		Calibration calibration     = imagePlusInput.getCalibration();
 		ImageStack  imageStackInput = imagePlusInput.getStack();
@@ -80,16 +77,12 @@ public class Gradient {
 		// IJ.log("fin Gradient");
 	}
 	
-	/**
-	 * @return
-	 */
+	/** @return */
 	public ArrayList<Double>[][][] getUnitaire() {
 		return _tableUnitaire;
 	}
 	
-	/**
-	 * @return
-	 */
+	/** @return */
 	public ArrayList<Double>[][][] getGradient() {
 		return _tableGradient;
 	}

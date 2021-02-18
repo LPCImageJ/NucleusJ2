@@ -32,10 +32,7 @@ public class computeParametersDialog extends JFrame implements ItemListener {
 	private              String     _rawDataDirectory;
 	private              boolean    _start                   = false;
 	
-	/**
-	 * Architecture of the graphical windows
-	 */
-	
+	/** Architecture of the graphical windows */
 	public computeParametersDialog() {
 		this.setTitle("Compute morphological parameters");
 		this.setSize(500, 500);
@@ -343,9 +340,7 @@ public class computeParametersDialog extends JFrame implements ItemListener {
 	class StartListener implements ActionListener {
 		computeParametersDialog _computeParametersDialog;
 		
-		/**
-		 * @param computeParametersDialog Dialog parameters
-		 */
+		/** @param computeParametersDialog Dialog parameters */
 		public StartListener(computeParametersDialog computeParametersDialog) {
 			_computeParametersDialog = computeParametersDialog;
 		}
@@ -375,9 +370,7 @@ public class computeParametersDialog extends JFrame implements ItemListener {
 	class QuitListener implements ActionListener {
 		computeParametersDialog _computeParametersDialog;
 		
-		/**
-		 * @param computeParametersDialog Dialog parameters
-		 */
+		/** @param computeParametersDialog Dialog parameters */
 		public QuitListener(computeParametersDialog computeParametersDialog) {
 			_computeParametersDialog = computeParametersDialog;
 		}

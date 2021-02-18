@@ -1,6 +1,6 @@
 package gred.nucleus.autocrop;
 
-import gred.nucleus.FilesInputOutput.FilesNames;
+import gred.nucleus.filesInputOutput.FilesNames;
 import gred.nucleus.exceptions.fileInOut;
 import loci.formats.FormatException;
 
@@ -13,9 +13,7 @@ import java.util.Scanner;
 
 public class CropFromCoordinates {
 	
-	
 	HashMap<String, String> coordinateToRawImage = new HashMap<>();
-	
 	
 	/**
 	 * Method to crop image with coordinate in tab file : tabulate file : pathToCoordinateFile pathToRawImageAssociate
@@ -23,7 +21,7 @@ public class CropFromCoordinates {
 	 * @param linkCoordinateToRawImage tabulate file
 	 */
 	public CropFromCoordinates(String linkCoordinateToRawImage)
-	throws IOException, FormatException, fileInOut, Exception {
+	throws IOException, Exception {
 		File    coordinateFile = new File(linkCoordinateToRawImage);
 		Scanner scanner        = new Scanner(coordinateFile);
 		while (scanner.hasNextLine()) {
@@ -51,7 +49,6 @@ public class CropFromCoordinates {
 			autoCrop.cropKernels3();
 		}
 	}
-	
 	
 	public HashMap<Double, Box> readCoordinatesTXT(File boxeFile) {
 		
@@ -86,5 +83,4 @@ public class CropFromCoordinates {
 		}
 		return boxLists;
 	}
-	
 }

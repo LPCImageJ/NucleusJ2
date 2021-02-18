@@ -55,10 +55,7 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 	
 	private JCheckBox addCalibBox = new JCheckBox();
 	
-	/**
-	 * Architecture of the graphical windows
-	 */
-	
+	/** Architecture of the graphical windows */
 	public ChromocenterSegmentationPipelineBatchDialog() {
 		this.setTitle("Chromocenters segmentation pipeline (Batch)");
 		this.setSize(500, 500);
@@ -245,9 +242,7 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 		_jButtonStart.addActionListener(startListener);
 	}
 	
-	/**
-	 * @param args
-	 */
+	/** @param args */
 	public static void main(String[] args) {
 		ChromocenterSegmentationPipelineBatchDialog chromocenterSegmentationPipelineBatchDialog =
 				new ChromocenterSegmentationPipelineBatchDialog();
@@ -371,15 +366,11 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 	}
 	
 	
-	/**
-	 * Classes listener to interact with the several elements of the window
-	 */
+	/** Classes listener to interact with the several elements of the window */
 	class StartListener implements ActionListener {
 		ChromocenterSegmentationPipelineBatchDialog _chromocenterSegmentationPipelineBatchDialog;
 		
-		/**
-		 * @param chromocenterSegmentationPipelineBatchDialog
-		 */
+		/** @param chromocenterSegmentationPipelineBatchDialog */
 		public StartListener(ChromocenterSegmentationPipelineBatchDialog chromocenterSegmentationPipelineBatchDialog) {
 			_chromocenterSegmentationPipelineBatchDialog = chromocenterSegmentationPipelineBatchDialog;
 		}
@@ -409,9 +400,7 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 	class QuitListener implements ActionListener {
 		ChromocenterSegmentationPipelineBatchDialog _chromocenterSegmentationPipelineBatchDialog;
 		
-		/**
-		 * @param chromocenterSegmentationPipelineBatchDialog
-		 */
+		/** @param chromocenterSegmentationPipelineBatchDialog */
 		public QuitListener(ChromocenterSegmentationPipelineBatchDialog chromocenterSegmentationPipelineBatchDialog) {
 			_chromocenterSegmentationPipelineBatchDialog = chromocenterSegmentationPipelineBatchDialog;
 		}

@@ -45,7 +45,6 @@ public class ChromocentersEnhancement {
 	 *
 	 * @return image of the cotrasted region
 	 */
-	
 	public ImagePlus applyEnhanceChromocenters(ImagePlus imagePlusRaw, ImagePlus imagePlusSegmented) {
 		MyGradient            myGradient            = new MyGradient(imagePlusRaw, imagePlusSegmented);
 		ImagePlus             imagePlusGradient     = myGradient.run();
@@ -116,7 +115,6 @@ public class ChromocentersEnhancement {
 	 *
 	 * @return table of contrast
 	 */
-	
 	private double[] computeContrast(ImagePlus imagePlusRaw, ImagePlus imagePlusRegions) {
 		double[][] tRegionAdjacencyGraph = getRegionAdjacencyGraph(imagePlusRegions);
 		double[]   tMean                 = computeMeanIntensity(imagePlusRaw, imagePlusRegions);
@@ -148,7 +146,6 @@ public class ChromocentersEnhancement {
 	 *
 	 * @return table of double of average intensity for each watershed label
 	 */
-	
 	private double[] computeMeanIntensity(ImagePlus imagePlusInput, ImagePlus imagePlusWatershed) {
 		ImageStatistics imageStatistics      = new StackStatistics(imagePlusWatershed);
 		ImageStack      imageStackWatershed  = imagePlusWatershed.getStack();

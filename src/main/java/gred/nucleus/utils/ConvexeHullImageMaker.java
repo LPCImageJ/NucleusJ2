@@ -36,17 +36,10 @@ public class ConvexeHullImageMaker {
 	private       Calibration            _calibration;
 	private       SegmentationParameters m_segmentationParameters;
 	
-	/*
-	  Constructor
-	  @see VoxelRecord
-	 * @see ConvexeHullImageMaker#setAxes(String)
-	 
-	 * calibration
-	 * Calibration of the current image analysed
-	 
-	 * @param _listLabel
-	 * list of voxels of the connexe component of the current stack analysed (initialised by giveTable method)
-	 
+	/* Constructor
+	 * @see VoxelRecord
+	 * @see ConvexeHullImageMaker#setAxes(String) calibration Calibration of the current image analysed
+	 * @param _listLabel list of voxels of the connected component of the current stack analysed (initialised by giveTable method)
 	 */
 	
 	

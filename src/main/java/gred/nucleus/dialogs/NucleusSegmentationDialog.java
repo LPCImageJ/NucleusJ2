@@ -36,10 +36,7 @@ public class NucleusSegmentationDialog extends JFrame {
 	private              boolean             _start                  = false;
 	
 	
-	/**
-	 * Architecture of the graphical windows
-	 */
-	
+	/** Architecture of the graphical windows */
 	public NucleusSegmentationDialog(Calibration cal) {
 		this.setTitle("Nucleus segmentation");
 		this.setSize(500, 350);
@@ -345,15 +342,11 @@ public class NucleusSegmentationDialog extends JFrame {
 		_jButtonStart.addActionListener(startListener);
 	}
 	
-	/**
-	 * Classes listener to interact with the several elements of the window
-	 */
+	/** Classes listener to interact with the several elements of the window */
 	class StartListener implements ActionListener {
 		NucleusSegmentationDialog _nucleusSegmentationDialog;
 		
-		/**
-		 * @param nucleusSegmentationDialog
-		 */
+		/** @param nucleusSegmentationDialog */
 		public StartListener(NucleusSegmentationDialog nucleusSegmentationDialog) {
 			_nucleusSegmentationDialog = nucleusSegmentationDialog;
 		}

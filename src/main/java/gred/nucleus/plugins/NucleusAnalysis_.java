@@ -8,13 +8,9 @@ import ij.gui.GenericDialog;
 import ij.measure.Calibration;
 import ij.plugin.PlugIn;
 
-/**
- * @author Tristan Dubos and Axel Poulet
- */
+/** @author Tristan Dubos and Axel Poulet */
 public class NucleusAnalysis_ implements PlugIn {
-	/**
-	 * image to process
-	 */
+	/** image to process */
 	ImagePlus _imagePlusInput;
 	
 	/**

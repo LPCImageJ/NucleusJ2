@@ -1,6 +1,6 @@
 package gred.nucleus.autocrop;
 
-import gred.nucleus.FilesInputOutput.Directory;
+import gred.nucleus.filesInputOutput.Directory;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.TextRoi;
@@ -20,32 +20,19 @@ import java.util.ArrayList;
  *
  * @author Tristan Dubos and Axel Poulet
  */
-
 public class annotAutoCrop {
 	
-	/**
-	 * File to process (Image input)
-	 */
+	/** File to process (Image input) */
 	File m_currentFile;
-	/**
-	 * ImagePlus of the Z projection
-	 */
+	/** ImagePlus of the Z projection */
 	private ImagePlus          m_zProjection;
-	/**
-	 * List of the coordinate boxes of cropped nucleus
-	 */
+	/** List of the coordinate boxes of cropped nucleus */
 	private ArrayList<String>  m_boxCoordinates;
-	/**
-	 * the path of the directory where image with boxes is saved
-	 */
+	/** the path of the directory where image with boxes is saved */
 	private String             m_outputDirPath;
-	/**
-	 * Parameters crop analyse
-	 */
+	/** Parameters crop analyse */
 	private AutocropParameters m_autocropParameters;
-	/**
-	 * The prefix of the names of the output cropped images, which are automatically numbered
-	 */
+	/** The prefix of the names of the output cropped images, which are automatically numbered */
 	private String             m_outputFilesPrefix;
 	
 	/**
@@ -60,7 +47,6 @@ public class annotAutoCrop {
 	 * @throws IOException
 	 * @throws FormatException
 	 */
-	
 	public annotAutoCrop(ArrayList<String> ListBox,
 	                     File imageFile,
 	                     String outputDirPath,
@@ -93,7 +79,6 @@ public class annotAutoCrop {
 	 * @throws IOException
 	 * @throws FormatException
 	 */
-	
 	public annotAutoCrop(ArrayList<String> ListBox,
 	                     File imageFile,
 	                     String outputDirPath,
@@ -198,7 +183,6 @@ public class annotAutoCrop {
 	 * @param coordinateList : list of coordinate of the current box of nucleus crop
 	 * @param boxNumber      : number of the crop in the list (used in the output of nucleus crop)
 	 */
-	
 	private void addBoxCropToZProjection(String coordinateList, int boxNumber) {
 		String[] currentBox = coordinateList.split("\t");
 		/* withBox calculation */
@@ -285,7 +269,6 @@ public class annotAutoCrop {
 	 *
 	 * @param contrast : double number for contrast
 	 */
-	
 	private void adjustContrast(double contrast) {
 		IJ.run(this.m_zProjection,
 		       "Enhance Contrast...",

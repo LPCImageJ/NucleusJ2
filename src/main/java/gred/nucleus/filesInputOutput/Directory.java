@@ -1,4 +1,4 @@
-package gred.nucleus.FilesInputOutput;
+package gred.nucleus.filesInputOutput;
 
 import ij.IJ;
 import org.apache.commons.io.FilenameUtils;
@@ -6,32 +6,20 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 import java.util.ArrayList;
 
-/**
- * Class get to list directory and sub directory.
- */
+/** Class get to list directory and sub directory. */
 
 
 public class Directory {
 	
-	/**
-	 * Directory path
-	 */
+	/** Directory path */
 	public File            m_directory;
-	/**
-	 * Directory path
-	 */
+	/** Directory path */
 	public String          m_dirPath        = "";
-	/**
-	 * List of files in current forlder + recursive folder
-	 */
+	/** List of files in current forlder + recursive folder */
 	public ArrayList<File> m_listeOfFiles   = new ArrayList<>();
-	/**
-	 * Check if directory contain nd files
-	 */
+	/** Check if directory contain nd files */
 	public Boolean         m_containNdFile  = false;
-	/**
-	 * List of nd files
-	 */
+	/** List of nd files */
 	public ArrayList<File> m_listeOfFilesND = new ArrayList<>();
 	/**
 	 *
@@ -54,18 +42,14 @@ public class Directory {
 		}
 	}
 	
-	/**
-	 * Method to check if directory and create if doesn't
-	 */
+	/** Method to check if directory and create if doesn't */
 	public void CheckAndCreateDir() {
 		ChekSeparatorEndPath();
 		CreateDire();
 		
 	}
 	
-	/**
-	 * Check if separator exist
-	 */
+	/** Check if separator exist */
 	private void ChekSeparatorEndPath() {
 		if (!(this.m_dirPath.endsWith("/"))) {
 			this.m_dirPath = this.m_dirPath + this.m_directory.separator;
@@ -73,9 +57,7 @@ public class Directory {
 		
 	}
 	
-	/**
-	 * Method creating folder if doesn't exist.
-	 */
+	/** Method creating folder if doesn't exist. */
 	private void CreateDire() {
 		File dir = new File(this.m_dirPath);
 		if (!dir.exists()) {
@@ -89,9 +71,7 @@ public class Directory {
 		}
 	}
 	
-	/**
-	 * @return path current directory
-	 */
+	/** @return path current directory */
 	public String get_dirPath() {
 		return this.m_dirPath;
 	}
@@ -138,18 +118,14 @@ public class Directory {
 		}
 	}
 	
-	/**
-	 * Replace list files if ND files have been listed.
-	 */
+	/** Replace list files if ND files have been listed. */
 	public void checkAndActualiseNDFiles() {
 		if (this.m_containNdFile) {
 			this.m_listeOfFiles = this.m_listeOfFilesND;
 		}
 	}
 	
-	/**
-	 * check if input directory is empty
-	 */
+	/** check if input directory is empty */
 	public void checkIfEmpty() {
 		if (this.m_listeOfFiles.isEmpty()) {
 			System.err.println("Folder " + this.m_dirPath + " is empty");
@@ -157,9 +133,7 @@ public class Directory {
 		
 	}
 	
-	/**
-	 * @return list of files
-	 */
+	/** @return list of files */
 	public ArrayList<File> ListFiles() {
 		return this.m_listeOfFiles;
 	}
@@ -173,10 +147,7 @@ public class Directory {
 		return this.m_listeOfFiles.get(indice);
 	}
 	
-	/**
-	 * @return number of file listed
-	 */
-	
+	/** @return number of file listed */
 	public int getNumberFiles() {
 		return this.m_listeOfFiles.size();
 	}
@@ -193,7 +164,7 @@ public class Directory {
 	 * search a file in a list file without extension.
 	 * Use to compare 2 lists of files
 	 */
-	public File searchFileNameWithoutExention(String fileName) {
+	public File searchFileNameWithoutExtension(String fileName) {
 		File fileToReturn = null;
 		
 		for (File f : this.m_listeOfFiles) {

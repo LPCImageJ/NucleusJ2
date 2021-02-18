@@ -1,7 +1,7 @@
 package gred.nucleus.mains;
 
-import gred.nucleus.FilesInputOutput.Directory;
-import gred.nucleus.FilesInputOutput.OutputTextFile;
+import gred.nucleus.filesInputOutput.Directory;
+import gred.nucleus.filesInputOutput.OutputTextFile;
 import gred.nucleus.core.Measure3D;
 import gred.nucleus.plugins.PluginParameters;
 import ij.ImagePlus;

@@ -1,4 +1,4 @@
-package gred.nucleus.FilesInputOutput;
+package gred.nucleus.filesInputOutput;
 
 import org.apache.commons.io.FilenameUtils;
 
@@ -6,17 +6,11 @@ import java.io.File;
 
 
 public class FilesNames {
-	/**
-	 * Path file input
-	 */
+	/** Path file input */
 	String _pathFile     = new String();
-	/**
-	 * File name
-	 */
+	/** File name */
 	String _fileName     = new String();
-	/**
-	 * Complete pathFile
-	 */
+	/** Complete pathFile */
 	String _fullPathFile = new String();
 	
 	boolean _fileExist = true;
@@ -24,9 +18,7 @@ public class FilesNames {
 	public FilesNames() {
 	}
 	
-	/**
-	 * Constructor to create file object
-	 */
+	/** Constructor to create file object */
 	public FilesNames(String filePath) {
 		this._fullPathFile = filePath;
 		File file = new File(filePath);
@@ -39,9 +31,7 @@ public class FilesNames {
 		return FilenameUtils.removeExtension(this._fileName);
 	}
 	
-	/**
-	 * Method to check if file exists
-	 */
+	/** Method to check if file exists */
 	public void CheckExistFile() {
 		File file = new File(this._fullPathFile);
 		if (!file.exists()) {
@@ -50,17 +40,12 @@ public class FilesNames {
 		
 	}
 	
-	/**
-	 * return boolean true for existing file
-	 */
-	
+	/** return boolean true for existing file */
 	public boolean is_fileExist() {
 		return _fileExist;
 	}
 	
-	/**
-	 * return path to file
-	 */
+	/** return path to file */
 	public String get_pathFile() {
 		return this._pathFile;
 	}

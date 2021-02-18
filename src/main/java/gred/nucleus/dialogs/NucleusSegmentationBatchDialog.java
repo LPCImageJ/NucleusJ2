@@ -10,7 +10,9 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 
 /**
- * Class to construct graphical interface for the nucleus segmentation in batch @author pouletaxel
+ * Class to construct graphical interface for the nucleus segmentation in batch
+ *
+ * @author pouletaxel
  */
 public class NucleusSegmentationBatchDialog extends JFrame {
 	private static final long                serialVersionUID         = 1L;
@@ -19,8 +21,7 @@ public class NucleusSegmentationBatchDialog extends JFrame {
 	private final        JButton             _jButtonQuit             = new JButton("Quit");
 	private final        JButton             _jButtonRawData          = new JButton("Raw Data");
 	private final        Container           _container;
-	@SuppressWarnings("rawtypes")
-	private final        JComboBox           _comboBoxCpu             = new JComboBox();
+	private final        JComboBox<Integer>  _comboBoxCpu             = new JComboBox<>();
 	private final        JFormattedTextField _jTextFieldXCalibration  = new JFormattedTextField(Number.class);
 	private final        JFormattedTextField _jTextFieldYCalibration  = new JFormattedTextField(Number.class);
 	private final        JFormattedTextField _jTextFieldZCalibration  = new JFormattedTextField(Number.class);
@@ -44,9 +45,7 @@ public class NucleusSegmentationBatchDialog extends JFrame {
 	private              boolean             _start                   = false;
 	private              int                 _nbCpuChosen             = 1;
 	
-	/**
-	 * Architecture of the graphical windows
-	 */
+	/** Architecture of the graphical windows */
 	public NucleusSegmentationBatchDialog() {
 		this.setTitle("Nucleus segmentation (batch)");
 		this.setSize(500, 450);
@@ -398,9 +397,7 @@ public class NucleusSegmentationBatchDialog extends JFrame {
 		_jButtonStart.addActionListener(startListener);
 	}
 	
-	/**
-	 * @param args
-	 */
+	/** @param args  */
 	public static void main(String[] args) {
 		NucleusSegmentationBatchDialog nucleusSegmentationBatchDialog = new NucleusSegmentationBatchDialog();
 		nucleusSegmentationBatchDialog.setLocationRelativeTo(null);
@@ -453,9 +450,7 @@ public class NucleusSegmentationBatchDialog extends JFrame {
 		return _start;
 	}
 	
-	/**
-	 * Classes listener to interact with the several elements of the window
-	 */
+	/** Classes listener to interact with the several elements of the window */
 	class ItemState implements ItemListener {
 		/**
 		 *
@@ -471,9 +466,7 @@ public class NucleusSegmentationBatchDialog extends JFrame {
 	class StartListener implements ActionListener {
 		NucleusSegmentationBatchDialog _nucleusSegmentationBatchDialog;
 		
-		/**
-		 * @param nucleusSegmeentationBatchDialog
-		 */
+		/** @param nucleusSegmeentationBatchDialog  */
 		public StartListener(NucleusSegmentationBatchDialog nucleusSegmeentationBatchDialog) {
 			_nucleusSegmentationBatchDialog = nucleusSegmeentationBatchDialog;
 		}
@@ -500,9 +493,7 @@ public class NucleusSegmentationBatchDialog extends JFrame {
 	class QuitListener implements ActionListener {
 		NucleusSegmentationBatchDialog _nucleusSegmentationBatchDialog;
 		
-		/**
-		 * @param nucleusSegmentationBatchDialog
-		 */
+		/** @param nucleusSegmentationBatchDialog  */
 		public QuitListener(NucleusSegmentationBatchDialog nucleusSegmentationBatchDialog) {
 			_nucleusSegmentationBatchDialog = nucleusSegmentationBatchDialog;
 		}

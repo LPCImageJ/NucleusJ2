@@ -1,7 +1,7 @@
 package gred.nucleus.autocrop;
 
-import gred.nucleus.FilesInputOutput.Directory;
-import gred.nucleus.FilesInputOutput.FilesNames;
+import gred.nucleus.filesInputOutput.Directory;
+import gred.nucleus.filesInputOutput.FilesNames;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,10 +21,8 @@ public class generateProjectionFromCoordinates {
 	 * @param pathToZprojection path to Zprojection image's from autocrop
 	 * @param pathToCoordinates path to coordinates files from autocrop
 	 *
-	 * @throws Exception
 	 */
-	public generateProjectionFromCoordinates(String pathToCoordinates, String pathToGIFTSeg, String pathToZprojection)
-	throws Exception {
+	public generateProjectionFromCoordinates(String pathToCoordinates, String pathToGIFTSeg, String pathToZprojection) {
 		this.m_pathToGIFTSeg = pathToGIFTSeg;
 		this.m_pathToZprojection = pathToZprojection;
 		this.m_pathToCoordinates = pathToCoordinates;
@@ -36,9 +34,8 @@ public class generateProjectionFromCoordinates {
 	 * @param pathToCoordinates path to segmented image's folder
 	 * @param pathToRaw         path to raw image
 	 *
-	 * @throws Exception
 	 */
-	public generateProjectionFromCoordinates(String pathToCoordinates, String pathToRaw) throws Exception {
+	public generateProjectionFromCoordinates(String pathToCoordinates, String pathToRaw) {
 		this.m_pathToCoordinates = pathToCoordinates;
 		this.m_pathToRaw = pathToRaw;
 	}
@@ -115,12 +112,13 @@ public class generateProjectionFromCoordinates {
 					System.out.println("add " + entry.getValue());
 				}
 			}
-			File CurrentZprojection = Zprojection.searchFileNameWithoutExention(coordinateFile.getName()
-			                                                                                  .substring(0,
-			                                                                                             coordinateFile.getName()
-			                                                                                                           .lastIndexOf(
-					                                                                                                           '.')) +
-			                                                                    "_Zprojection");
+			File CurrentZprojection = Zprojection.searchFileNameWithoutExtension(coordinateFile.getName()
+			                                                                                   .substring(0,
+			                                                                                              coordinateFile
+					                                                                                              .getName()
+					                                                                                              .lastIndexOf(
+							                                                                                              '.')) +
+			                                                                     "_Zprojection");
 			AutocropParameters autocropParameters = new AutocropParameters(CurrentZprojection.getParent(),
 			                                                               CurrentZprojection.getParent() +
 			                                                               Zprojection.getSeparator());
@@ -158,8 +156,8 @@ public class generateProjectionFromCoordinates {
 			}
 			System.out.println(coordinateFile.getName());
 			
-			File       CurrentRaw       = RawImage.searchFileNameWithoutExention(coordinateFile.getName()
-			                                                                                   .substring(0,
+			File       CurrentRaw       = RawImage.searchFileNameWithoutExtension(coordinateFile.getName()
+			                                                                                    .substring(0,
 			                                                                                              coordinateFile
 					                                                                                              .getName()
 					                                                                                              .lastIndexOf(

@@ -224,16 +224,12 @@ public class ComponentConnexe {
 		return _listLabel;
 	}
 	
-	/**
-	 * @return
-	 */
+	/** @return */
 	public double[][] getImageTable() {
 		return _image;
 	}
 	
-	/**
-	 * @param _image
-	 */
+	/** @param _image */
 	public void setImageTable(double[][] _image) {
 		this._image = _image;
 	}

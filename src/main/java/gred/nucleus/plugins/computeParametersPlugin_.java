@@ -7,10 +7,7 @@ import ij.plugin.PlugIn;
 
 
 public class computeParametersPlugin_ implements PlugIn {
-	/**
-	 * Run computing parameters method.
-	 */
-	
+	/** Run computing parameters method. */
 	public void run(String arg) {
 		computeParametersDialog _computeParametersDialog = new computeParametersDialog();
 		

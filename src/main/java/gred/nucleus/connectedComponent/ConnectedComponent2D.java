@@ -46,9 +46,8 @@ public class ConnectedComponent2D extends ConnectedComponent {
 	 * 
 	 * @param voxelShort initial voxel of the connected component
 	 * @param currentLabel label to set for the voxels of the component
-	 * @throws Exception if the FIFO's size exceeds the number of preallocated voxels
 	 */
-	protected void breadthFirstSearch(	Voxel voxelShort, short currentLabel, ComponentInfo componentInfo) throws Exception {
+	protected void breadthFirstSearch(	Voxel voxelShort, short currentLabel, ComponentInfo componentInfo) {
 
 		// FIFO for the Breadth First Search algorithm
 		// LinkedList is more efficient than ArrayList 
@@ -102,18 +101,18 @@ public class ConnectedComponent2D extends ConnectedComponent {
 					// If the neighbor (different from VoxelRecordShort) is a 1 and not labeled
 					if ((getLabel(ii, jj, 0) == 0) && (imgProc.get(ii, jj) == this.m_foregroundColor)) {
 						// Set the voxel's label
-						setLabel(ii, jj, 0, currentLabel); 
-						componentInfo.incrementNumberOfPoints(); // increment component's cardinality					
-						voxelFifo.add(new Voxel(ii, jj, (short)0)); // add to FIFO
+						setLabel(ii, jj, 0, currentLabel);
+						// Increment component's cardinality
+						componentInfo.incrementNumberOfPoints();
+						// Add to FIFO
+						voxelFifo.add(new Voxel(ii, jj, (short)0));
 					}
 				}
 			}
 		}
 	}
 
-	/**
-	 *  labels the connected components of the input image (attribute m_ip)
-	 */ 
+	/** labels the connected components of the input image (attribute m_ip) */
 	@Override
 	public void doLabelConnectedComponent() {
 		short currentLabel = 0;

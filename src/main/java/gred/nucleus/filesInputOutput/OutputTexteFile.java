@@ -1,4 +1,4 @@
-package gred.nucleus.FilesInputOutput;
+package gred.nucleus.filesInputOutput;
 
 import ij.IJ;
 
@@ -13,10 +13,8 @@ public class OutputTexteFile extends FilesNames {
 		super(filePath);
 	}
 	
-	/**
-	 * Method to save file with verification if file already exists TODO(@DesTristus) ADD ERROR IN LOG FILE
-	 */
-	public void SaveTexteFile(String text) throws IOException {
+	/** Method to save file with verification if file already exists TODO(@DesTristus) ADD ERROR IN LOG FILE */
+	public void SaveTexteFile(String text) {
 		try {
 			BufferedWriter writer;
 			writer = new BufferedWriter(new FileWriter(new File(this._fullPathFile)));

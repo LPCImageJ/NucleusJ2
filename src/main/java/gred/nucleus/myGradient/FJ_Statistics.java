@@ -65,9 +65,9 @@ public class FJ_Statistics implements PlugIn, ItemListener, WindowListener {
 	private static boolean time    = false;
 	private static boolean slice   = false;
 	
-	private static int decimals = 3;
-	private static Point pos = new Point(-1, -1);
-	private Checkbox channelbox, timebox, slicebox;
+	private static int      decimals = 3;
+	private static Point    pos      = new Point(-1, -1);
+	private        Checkbox channelbox, timebox, slicebox;
 	
 	@SuppressWarnings("rawtypes")
 	public void run(String arg) {
@@ -122,7 +122,6 @@ public class FJ_Statistics implements PlugIn, ItemListener, WindowListener {
 	}
 	
 	public void itemStateChanged(final ItemEvent e) {
-		
 		if (e.getSource() == slicebox) {
 			if (slicebox.getState()) {
 				timebox.setState(true);
@@ -146,7 +145,6 @@ public class FJ_Statistics implements PlugIn, ItemListener, WindowListener {
 	}
 	
 	public void windowClosed(final WindowEvent e) {
-		
 		pos.x = e.getWindow().getX();
 		pos.y = e.getWindow().getY();
 	}
@@ -169,22 +167,21 @@ public class FJ_Statistics implements PlugIn, ItemListener, WindowListener {
 }
 
 class FJStatistics {
+	private static int        number = 0;
+	private final  Statistics stats  = new Statistics();
 	
-	private static int number   = 0;
-	private final Statistics stats = new Statistics();
+	private final Formatter fmt = new Formatter();
 	
-	private final Formatter  fmt   = new Formatter();
-	
-	private boolean[] values = null;
+	private boolean[] values  = null;
 	@SuppressWarnings("unused")
-	private boolean clear   = false;
-	private boolean name    = true;
-	private boolean channel = false;
-	private boolean time    = false;
+	private boolean   clear   = false;
+	private boolean   name    = true;
+	private boolean   channel = false;
+	private boolean   time    = false;
 	
-	private boolean slice   = false;
+	private boolean slice    = false;
 	@SuppressWarnings("unused")
-	private        int decimals = 3;
+	private int     decimals = 3;
 	
 	void run(
 			final ImagePlus imp,
@@ -269,12 +266,9 @@ class FJStatistics {
 						for (cmin.z = cmax.z = 0; cmin.z < dims.z; ++cmin.z, ++cmax.z) {
 							stats.run(img, cmin, cmax, mask);
 							final String prelude = (++number) +
-							                       nameprelude +
-							                       "\t" +
-							                       (cmin.c + 1) +
-							                       "\t" +
-							                       (cmin.t + 1) +
-							                       "\t" +
+							                       nameprelude + "\t" +
+							                       (cmin.c + 1) + "\t" +
+							                       (cmin.t + 1) + "\t" +
 							                       (cmin.z + 1);
 							textpanel.append(prelude + results());
 							pgs.step();

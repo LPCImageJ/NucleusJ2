@@ -165,15 +165,11 @@ public class CropFromCoodinateDialog extends JFrame implements ActionListener {
 	}
 	
 	
-	/**
-	 * Classes listener to interact with the several elements of the window
-	 */
+	/** Classes listener to interact with the several elements of the window */
 	class StartListener implements ActionListener {
 		CropFromCoodinateDialog _autocropDialog;
 		
-		/**
-		 * @param autocropDialog
-		 */
+		/** @param autocropDialog */
 		public StartListener(CropFromCoodinateDialog autocropDialog) {
 			_autocropDialog = autocropDialog;
 		}
@@ -187,9 +183,7 @@ public class CropFromCoodinateDialog extends JFrame implements ActionListener {
 	class QuitListener implements ActionListener {
 		CropFromCoodinateDialog _autocropDialog;
 		
-		/**
-		 * @param autocropDialog
-		 */
+		/** @param autocropDialog */
 		public QuitListener(CropFromCoodinateDialog autocropDialog) {
 			_autocropDialog = autocropDialog;
 		}

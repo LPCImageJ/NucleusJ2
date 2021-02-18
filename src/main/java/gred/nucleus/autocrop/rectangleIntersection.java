@@ -27,33 +27,19 @@ import java.util.Map;
 public class rectangleIntersection {
 	
 	
-	/**
-	 * List of boxes Rectangle : xmin , ymin , width , height
-	 */
+	/** List of boxes Rectangle : xmin , ymin , width , height */
 	ArrayList<Rectangle>      listRectangle      = new ArrayList<>();
-	/**
-	 * Slice coordinate associated to the rectangles(boxes)
-	 */
+	/** Slice coordinate associated to the rectangles(boxes) */
 	ArrayList<String>         zSlices            = new ArrayList<>();
-	/**
-	 * List of rectangle intersected detected
-	 */
+	/** List of rectangle intersected detected */
 	ArrayList<String>         rectangleIntersect = new ArrayList<>();
-	/**
-	 * Number of intersections per rectangles
-	 */
+	/** Number of intersections per rectangles */
 	HashMap<Integer, Integer> countIntersect     = new HashMap<>();
-	/**
-	 * Final list of rectangles after re rectangle computations
-	 */
+	/** Final list of rectangles after re rectangle computations */
 	ArrayList<String>         finalListRectange  = new ArrayList<>();
-	/**
-	 * Boolean to check if new rectangles are computed
-	 */
+	/** Boolean to check if new rectangles are computed */
 	boolean                   newBoxesAdded      = false;
-	/**
-	 * Autocrop parameter
-	 */
+	/** Autocrop parameter */
 	AutocropParameters        autocropParameters;
 	
 	/**
@@ -63,7 +49,6 @@ public class rectangleIntersection {
 	 * @param _boxes               : list of boxes
 	 * @param m_autocropParameters : autocrop parameters
 	 */
-	
 	public rectangleIntersection(HashMap<Double, Box> _boxes, AutocropParameters m_autocropParameters) {
 		autocropParameters = m_autocropParameters;
 		for (Map.Entry<Double, Box> entry : _boxes.entrySet()) {
@@ -85,7 +70,6 @@ public class rectangleIntersection {
 	 *
 	 * @return percent of overlap of r1
 	 */
-	
 	public static double perceOf2Rect(Rectangle2D r1, Rectangle2D r2) {
 		Rectangle2D r = new Rectangle2D.Double();
 		Rectangle2D.intersect(r1, r2, r);
@@ -98,7 +82,6 @@ public class rectangleIntersection {
 	 * Class to run the boxes merge process : Step 1 : detecting boxes intersections Step 2 : group rectangle
 	 * intersecting Step 3 : compile new rectangle
 	 */
-	
 	public void runRectangleRecompilation() {
 		this.newBoxesAdded = true;
 		int tours = 0;
@@ -111,10 +94,7 @@ public class rectangleIntersection {
 		
 	}
 	
-	/**
-	 * Regroup list of rectangles intersecting
-	 */
-	
+	/** Regroup list of rectangles intersecting */
 	public void computeIntersection() {
 		this.rectangleIntersect.clear();
 		
@@ -146,9 +126,7 @@ public class rectangleIntersection {
 		}
 	}
 	
-	/**
-	 * Regroup of rectangle intersecting recursively
-	 */
+	/** Regroup of rectangle intersecting recursively */
 	public void rectangleRegroupement() {
 		this.finalListRectange.clear();
 		for (Map.Entry<Integer, Integer> entry : this.countIntersect.entrySet()) {
@@ -211,10 +189,7 @@ public class rectangleIntersection {
 		}
 	}
 	
-	/**
-	 * Compile of new rectangle by getting extreme coordinate of a group of rectangles.
-	 */
-	
+	/** Compile of new rectangle by getting extreme coordinate of a group of rectangles. */
 	public void recompileRectangle() {
 		this.newBoxesAdded = false;
 		ArrayList<Rectangle> listOfRectangleToAdd       = new ArrayList<>();
@@ -290,7 +265,6 @@ public class rectangleIntersection {
 	 *
 	 * @return list of new boxes
 	 */
-	
 	public HashMap<Double, Box> getNewBoxes() {
 		HashMap<Double, Box> boxes = new HashMap<>();
 		

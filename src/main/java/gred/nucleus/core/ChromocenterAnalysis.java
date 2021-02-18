@@ -25,7 +25,6 @@ public class ChromocenterAnalysis {
 	 * @param imagePlusSegmented    image of the segmented nucleus
 	 * @param imagePlusChromocenter image of the segmented chromocenter
 	 */
-	
 	public void computeParametersChromocenter(ImagePlus imagePlusSegmented, ImagePlus imagePlusChromocenter) {
 		Histogram histogram = new Histogram();
 		histogram.run(imagePlusChromocenter);
@@ -63,7 +62,6 @@ public class ChromocenterAnalysis {
 	 *
 	 * @throws IOException if file doesn't exist catch the exception
 	 */
-	
 	public void computeParametersChromocenter(String pathResultsFile,
 	                                          ImagePlus imagePlusSegmented,
 	                                          ImagePlus imagePlusChromocenter) throws IOException {

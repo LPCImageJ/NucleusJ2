@@ -23,9 +23,8 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 	private final        JButton _jButtonQuit          = new JButton("Quit");
 	private final        JButton _jButtonRawData       = new JButton("Raw Data");
 	
-	private final Container _container;
-	@SuppressWarnings("rawtypes")
-	private final JComboBox _comboBoxCpu = new JComboBox();
+	private final Container          _container;
+	private final JComboBox<Integer> _comboBoxCpu = new JComboBox<>();
 	
 	private final JFormattedTextField _jTextFieldXCalibration = new JFormattedTextField(Number.class);
 	private final JFormattedTextField _jTextFieldYCalibration = new JFormattedTextField(Number.class);
@@ -59,10 +58,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 	private boolean _start       = false;
 	private int     _nbCpuChosen = 1;
 	
-	/**
-	 * Architecture of the graphical windows
-	 */
-	
+	/** Architecture of the graphical windows */
 	public NucleusSegmentationAndAnalysisBatchDialog() {
 		this.setTitle("Nucleus segmentation & analysis (batch)");
 		this.setSize(500, 500);
@@ -490,9 +486,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		_jButtonStart.addActionListener(startListener);
 	}
 	
-	/**
-	 * @param args
-	 */
+	/** @param args  */
 	public static void main(String[] args) {
 		NucleusSegmentationAndAnalysisBatchDialog nucleusSegmentationAndAnalysisBatchDialog =
 				new NucleusSegmentationAndAnalysisBatchDialog();
@@ -559,9 +553,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 	}
 	
 	
-	/**
-	 * Classes listener to interact with the several elements of the window
-	 */
+	/** Classes listener to interact with the several elements of the window */
 	class ItemState implements ItemListener {
 		/**
 		 *
@@ -578,9 +570,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		
 		NucleusSegmentationAndAnalysisBatchDialog _nucleusSegmentationAndAnalysisBatchDialog;
 		
-		/**
-		 * @param nucleusSegmentationAndAnalysisBatchDialog
-		 */
+		/** @param nucleusSegmentationAndAnalysisBatchDialog  */
 		public StartListener(NucleusSegmentationAndAnalysisBatchDialog nucleusSegmentationAndAnalysisBatchDialog) {
 			_nucleusSegmentationAndAnalysisBatchDialog = nucleusSegmentationAndAnalysisBatchDialog;
 		}
@@ -607,9 +597,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 	class QuitListener implements ActionListener {
 		NucleusSegmentationAndAnalysisBatchDialog _nucleusSegmentationAndAnalysisBatchDialog;
 		
-		/**
-		 * @param nucleusSegmentationAndAnalysisBatchDialog
-		 */
+		/** @param nucleusSegmentationAndAnalysisBatchDialog  */
 		public QuitListener(NucleusSegmentationAndAnalysisBatchDialog nucleusSegmentationAndAnalysisBatchDialog) {
 			_nucleusSegmentationAndAnalysisBatchDialog = nucleusSegmentationAndAnalysisBatchDialog;
 		}

@@ -40,9 +40,8 @@ public class ConnectedComponent3D extends ConnectedComponent{
 	 * 
 	 * @param voxelShort initial voxel of the connected component
 	 * @param currentLabel label to set for the voxels of the component
-	 * @throws Exception if the FIFO's size exceeds the number of preallocated voxels
 	 */
-	protected void breadthFirstSearch( Voxel voxelShort, short currentLabel, ComponentInfo componentInfo) throws Exception {
+	protected void breadthFirstSearch( Voxel voxelShort, short currentLabel, ComponentInfo componentInfo) {
 		// FIFO for the Breadth First Search algorithm
 		// LinkedList is more efficient than ArrayList 
 		// because poll() (alias Remove(0)) is constant time !!!

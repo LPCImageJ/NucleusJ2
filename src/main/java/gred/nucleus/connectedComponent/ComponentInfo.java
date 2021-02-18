@@ -16,12 +16,9 @@ import gred.nucleus.utils.Voxel;
  *
  * @author Remy Malgouyres, Tristan Dubos and Axel Poulet
  */
-
 public class ComponentInfo {
 	
-	/**
-	 * Label (ID) of the connected component (i.e. color in the labels image array)
-	 */
+	/** Label (ID) of the connected component (i.e. color in the labels image array) */
 	private int m_label;
 	
 	/**
@@ -85,9 +82,7 @@ public class ComponentInfo {
 		return this.m_numberOfPoints;
 	}
 	
-	/**
-	 * Increments the cardinality
-	 */
+	/** Increments the cardinality */
 	public void incrementNumberOfPoints() {
 		this.m_numberOfPoints++;
 	}
@@ -106,7 +101,7 @@ public class ComponentInfo {
 	 *
 	 * @return returns the component's flag indicating whether the component is on the border.
 	 */
-	public boolean isOnTheeBorder() {
+	public boolean isOnTheBorder() {
 		return this.m_componentOnTheBorder;
 	}
 	
@@ -119,9 +114,7 @@ public class ComponentInfo {
 		return this.m_voxelRepresentant;
 	}
 	
-	/**
-	 * Sets to true the flag indicating whether the component is on the border.
-	 */
+	/** Sets to true the flag indicating whether the component is on the border. */
 	public void setOnTheeBorder() {
 		this.m_componentOnTheBorder = true;
 	}

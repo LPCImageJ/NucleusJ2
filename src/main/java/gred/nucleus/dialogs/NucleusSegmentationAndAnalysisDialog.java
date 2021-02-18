@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
  *
  * @author Poulet Axel
  */
-
 public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 	
 	private static final long                serialVersionUID          = 1L;
@@ -42,10 +41,7 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 	private              boolean             _start                    = false;
 	
 	
-	/**
-	 * Architecture of the graphical windows
-	 */
-	
+	/** Architecture of the graphical windows */
 	public NucleusSegmentationAndAnalysisDialog(Calibration cal) {
 		this.setTitle("Nucleus segmentation & analysis");
 		this.setSize(500, 350);
@@ -415,16 +411,12 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 		return _jRadioButton3D.isSelected();
 	}
 	
-	/**
-	 * Classes listener to interact with the several elements of the window
-	 */
+	/** Classes listener to interact with the several elements of the window */
 	class StartListener implements ActionListener {
 		
 		NucleusSegmentationAndAnalysisDialog _nucleusSegmentationAndAnalysisDialog;
 		
-		/**
-		 * @param nucleusSegmentationAndAnalysisDialog
-		 */
+		/** @param nucleusSegmentationAndAnalysisDialog */
 		public StartListener(NucleusSegmentationAndAnalysisDialog nucleusSegmentationAndAnalysisDialog) {
 			_nucleusSegmentationAndAnalysisDialog = nucleusSegmentationAndAnalysisDialog;
 		}
@@ -444,9 +436,7 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 	class QuitListener implements ActionListener {
 		NucleusSegmentationAndAnalysisDialog _nucleusSegmentationAndAnalysisDialog;
 		
-		/**
-		 * @param nucleusSegmentationAndAnalysisDialog
-		 */
+		/** @param nucleusSegmentationAndAnalysisDialog */
 		public QuitListener(NucleusSegmentationAndAnalysisDialog nucleusSegmentationAndAnalysisDialog) {
 			_nucleusSegmentationAndAnalysisDialog = nucleusSegmentationAndAnalysisDialog;
 		}

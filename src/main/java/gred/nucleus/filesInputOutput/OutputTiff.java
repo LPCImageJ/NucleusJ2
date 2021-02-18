@@ -1,4 +1,4 @@
-package gred.nucleus.FilesInputOutput;
+package gred.nucleus.filesInputOutput;
 
 import ij.IJ;
 import ij.ImagePlus;
@@ -8,16 +8,12 @@ import java.io.File;
 
 public class OutputTiff extends FilesNames {
 	
-	/**
-	 * Constructor to create file to output
-	 */
+	/** Constructor to create file to output */
 	public OutputTiff(String filePath) {
 		super(filePath);
 	}
 	
-	/**
-	 * Method to save file with verification if file already exists TODO ADD ERROR IN LOG FILE
-	 */
+	/** Method to save file with verification if file already exists TODO ADD ERROR IN LOG FILE */
 	public void SaveImage(ImagePlus imageToSave) {
 		try {
 			if (!is_fileExist()) {

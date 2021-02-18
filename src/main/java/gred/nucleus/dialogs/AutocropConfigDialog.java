@@ -370,9 +370,7 @@ public class AutocropConfigDialog extends JFrame implements ItemListener {
 	class StartListener implements ActionListener {
 		AutocropConfigDialog _autocropDialog;
 		
-		/**
-		 * @param autocropDialog
-		 */
+		/** @param autocropDialog */
 		public StartListener(AutocropConfigDialog autocropDialog) {
 			_autocropDialog = autocropDialog;
 		}

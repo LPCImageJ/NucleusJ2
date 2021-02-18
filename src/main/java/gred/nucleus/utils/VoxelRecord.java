@@ -5,15 +5,10 @@ package gred.nucleus.utils;
  *
  * @author Philippe Andrey, Tristan and Axel Poulet
  */
-@SuppressWarnings("rawtypes")
 public class VoxelRecord {
-	/**
-	 * Coordinates voxel
-	 */
+	/** Coordinates voxel */
 	public double _i, _j, _k;
-	/**
-	 * Voxel value
-	 */
+	/** Voxel value */
 	double _value;
 	
 	/**
@@ -43,7 +38,6 @@ public class VoxelRecord {
 	 *
 	 * @return
 	 */
-	
 	public double getJ() {
 		return _j;
 	}
@@ -53,7 +47,6 @@ public class VoxelRecord {
 	 *
 	 * @return
 	 */
-	
 	public double getK() {
 		return _k;
 	}
@@ -63,7 +56,6 @@ public class VoxelRecord {
 	 *
 	 * @return
 	 */
-	
 	public double getValue() {
 		return _value;
 	}
@@ -73,7 +65,6 @@ public class VoxelRecord {
 	 *
 	 * @param value
 	 */
-	
 	public void setValue(double value) {
 		this._value = value;
 	}
@@ -106,7 +97,6 @@ public class VoxelRecord {
 	 *
 	 * @return results of comparaison
 	 */
-	
 	public int compareCoordinatesTo(Object object) {
 		VoxelRecord voxelRecord = (VoxelRecord) object;
 		
@@ -122,7 +112,6 @@ public class VoxelRecord {
 	 *
 	 * @param p a VoxelRecord
 	 */
-	
 	public void shiftCoordinates(VoxelRecord p) {
 		this.setLocation(this._i + p._i, this._j + p._j, this._k + p._k);
 	}
@@ -134,7 +123,6 @@ public class VoxelRecord {
 	 * @param b
 	 * @param c
 	 */
-	
 	public void multiply(double a, double b, double c) {
 		this.setLocation(this._i * a, this._j * b, this._k * c);
 	}

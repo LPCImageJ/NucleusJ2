@@ -1,7 +1,7 @@
 package gred.nucleus.core;
 
-import gred.nucleus.FilesInputOutput.Directory;
-import gred.nucleus.FilesInputOutput.OutputTextFile;
+import gred.nucleus.filesInputOutput.Directory;
+import gred.nucleus.filesInputOutput.OutputTextFile;
 import gred.nucleus.plugins.PluginParameters;
 import ij.ImagePlus;
 import ij.measure.Calibration;
@@ -99,14 +99,12 @@ public class ComputeNucleiParameters {
 		
 	}
 	
-	public void addConfigParameters(String pathToconfig) throws Exception {
+	public void addConfigParameters(String pathToconfig) {
 		this.m_pluginParameters.addGeneralProperties(pathToconfig);
 		
 	}
 	
-	/**
-	 * @return columns names for results
-	 */
+	/** @return columns names for results */
 	private String getColNameResult() {
 		return "NucleusFileName\t" +
 		       "Volume\t" +

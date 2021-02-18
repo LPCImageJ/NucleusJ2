@@ -20,9 +20,7 @@ import gred.nucleus.utils.Voxel;
  * @author Remy Malgouyres, Tristan Dubos and Axel Poulet
  */
 public class ComponentRemovalNone implements ComponentRemovalPredicate {
-	/**
-	 * @return true
-	 */
+	/** @return true */
 	@Override
 	public boolean keepVoxelComponent(Voxel voxel, ComponentInfo componentInfo) {
 		return true;

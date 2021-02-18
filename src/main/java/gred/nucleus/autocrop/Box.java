@@ -8,29 +8,17 @@ package gred.nucleus.autocrop;
  * @author Tristan Dubos and Axel Poulet
  */
 public class Box {
-	/**
-	 * The coordinate x min of the Box
-	 */
+	/** The coordinate x min of the Box */
 	private short m_xMin = 0;
-	/**
-	 * The coordinate x max of the Box
-	 */
+	/** The coordinate x max of the Box */
 	private short m_xMax = 0;
-	/**
-	 * The coordinate y min of the Box
-	 */
+	/** The coordinate y min of the Box */
 	private short m_yMin = 0;
-	/**
-	 * The coordinate y max of the Box
-	 */
+	/** The coordinate y max of the Box */
 	private short m_yMax = 0;
-	/**
-	 * The coordinate z min of the Box
-	 */
+	/** The coordinate z min of the Box */
 	private short m_zMin;
-	/**
-	 * The coordinate z max of the Box
-	 */
+	/** The coordinate z max of the Box */
 	private short m_zMax = 0;
 	
 	/**
@@ -62,9 +50,7 @@ public class Box {
 		return this.m_xMin;
 	}
 	
-	/**
-	 * @param xMin the m_xMin to set
-	 */
+	/** @param xMin the m_xMin to set */
 	public void setXMin(short xMin) {
 		this.m_xMin = xMin;
 	}
@@ -78,9 +64,7 @@ public class Box {
 		return this.m_xMax;
 	}
 	
-	/**
-	 * @param xMax the m_xMax to set
-	 */
+	/** @param xMax the m_xMax to set */
 	public void setXMax(short xMax) {
 		this.m_xMax = xMax;
 	}
@@ -94,9 +78,7 @@ public class Box {
 		return this.m_yMin;
 	}
 	
-	/**
-	 * @param yMin the m_yMin to set
-	 */
+	/** @param yMin the m_yMin to set */
 	public void setYMin(short yMin) {
 		this.m_yMin = yMin;
 	}
@@ -110,9 +92,7 @@ public class Box {
 		return this.m_yMax;
 	}
 	
-	/**
-	 * @param yMax the m_yMax to set
-	 */
+	/** @param yMax the m_yMax to set */
 	public void setYMax(short yMax) {
 		this.m_yMax = yMax;
 	}
@@ -126,9 +106,7 @@ public class Box {
 		return this.m_zMin;
 	}
 	
-	/**
-	 * @param zMin the m_zMin to set
-	 */
+	/** @param zMin the m_zMin to set */
 	public void setZMin(short zMin) {
 		this.m_zMin = zMin;
 	}
@@ -142,9 +120,7 @@ public class Box {
 		return this.m_zMax;
 	}
 	
-	/**
-	 * @param zMax the m_zMax to set
-	 */
+	/** @param zMax the m_zMax to set */
 	public void setZMax(short zMax) {
 		this.m_zMax = zMax;
 	}
