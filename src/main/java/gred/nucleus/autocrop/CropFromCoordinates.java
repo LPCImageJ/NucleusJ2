@@ -1,12 +1,9 @@
 package gred.nucleus.autocrop;
 
 import gred.nucleus.filesInputOutput.FilesNames;
-import gred.nucleus.exceptions.fileInOut;
-import loci.formats.FormatException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -21,7 +18,7 @@ public class CropFromCoordinates {
 	 * @param linkCoordinateToRawImage tabulate file
 	 */
 	public CropFromCoordinates(String linkCoordinateToRawImage)
-	throws IOException, Exception {
+	throws Exception {
 		File    coordinateFile = new File(linkCoordinateToRawImage);
 		Scanner scanner        = new Scanner(coordinateFile);
 		while (scanner.hasNextLine()) {
@@ -35,27 +32,29 @@ public class CropFromCoordinates {
 		}
 	}
 	
-	public void runCropFromCoordinate() throws IOException, FormatException, fileInOut, Exception {
+	
+	public void runCropFromCoordinate() throws Exception {
 		
 		for (Map.Entry<String, String> listOfFile : coordinateToRawImage.entrySet()) {
-			File                 coordinateFile     = new File(listOfFile.getKey());
-			File                 rawImage           = new File(listOfFile.getValue());
-			AutocropParameters   autocropParameters =
+			File coordinateFile = new File(listOfFile.getKey());
+			File rawImage       = new File(listOfFile.getValue());
+			AutocropParameters autocropParameters =
 					new AutocropParameters(rawImage.getParent(), rawImage.getParent());
-			HashMap<Double, Box> m_boxes            = readCoordinatesTXT(coordinateFile);
-			FilesNames           outPutFilesNames   = new FilesNames(listOfFile.getValue());
-			String               _prefix            = outPutFilesNames.PrefixeNameFile();
-			AutoCrop             autoCrop           = new AutoCrop(rawImage, _prefix, autocropParameters, m_boxes);
+			HashMap<Double, Box> m_boxes          = readCoordinatesTXT(coordinateFile);
+			FilesNames           outPutFilesNames = new FilesNames(listOfFile.getValue());
+			String               _prefix          = outPutFilesNames.prefixNameFile();
+			AutoCrop             autoCrop         = new AutoCrop(rawImage, _prefix, autocropParameters, m_boxes);
 			autoCrop.cropKernels3();
 		}
 	}
 	
-	public HashMap<Double, Box> readCoordinatesTXT(File boxeFile) {
+	
+	public HashMap<Double, Box> readCoordinatesTXT(File boxesFile) {
 		
 		HashMap<Double, Box> boxLists = new HashMap<>();
 		double               count    = 0;
 		try {
-			Scanner scanner = new Scanner(boxeFile);
+			Scanner scanner = new Scanner(boxesFile);
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();
 				

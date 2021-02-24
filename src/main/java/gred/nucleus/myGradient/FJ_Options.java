@@ -20,7 +20,7 @@ public class FJ_Options implements PlugIn, WindowListener {
 	
 	public void run(String arg) {
 		
-		if (!FJ.libcheck()) return;
+		if (!FJ.libCheck()) return;
 		
 		FJ.log(FJ.name() + " " + FJ.version() + ": Options");
 		
@@ -87,8 +87,10 @@ public class FJ_Options implements PlugIn, WindowListener {
 		}
 	}
 	
+	
 	public void windowActivated(final WindowEvent e) {
 	}
+	
 	
 	public void windowClosed(final WindowEvent e) {
 		
@@ -96,19 +98,23 @@ public class FJ_Options implements PlugIn, WindowListener {
 		pos.y = e.getWindow().getY();
 	}
 	
+	
 	public void windowClosing(final WindowEvent e) {
 	}
+	
 	
 	public void windowDeactivated(final WindowEvent e) {
 	}
 	
+	
 	public void windowDeiconified(final WindowEvent e) {
 	}
+	
 	
 	public void windowIconified(final WindowEvent e) {
 	}
 	
+	
 	public void windowOpened(final WindowEvent e) {
 	}
-	
 }

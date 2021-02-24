@@ -3,6 +3,8 @@ package gred.nucleus.utils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
+import java.util.regex.Pattern;
 
 /**
  * @author Tristan Dubos and Axel Poulet
@@ -10,7 +12,7 @@ import java.util.HashMap;
  * Several method on the file
  */
 public class FileList {
-	boolean _windows = false;
+	boolean _windows;
 	
 	/**
 	 *
@@ -19,29 +21,31 @@ public class FileList {
 		_windows = System.getProperty("os.name").startsWith("Windows");
 	}
 	
-	/**
-	 * run the methods to list all the file in one input directory
-	 *
-	 * @param repertoire
-	 *
-	 * @return Liste of file
-	 */
-	public File[] run(String repertoire) {
-		return repertoryFileList(repertoire);
-	}
 	
 	/**
-	 * method to list all the file in one input directory
+	 * run the methods to list all the files in one input directory
 	 *
-	 * @param directory
+	 * @param directory input directory
+	 *
+	 * @return List of files
+	 */
+	public File[] run(String directory) {
+		return repertoryFileList(directory);
+	}
+	
+	
+	/**
+	 * method to list all the files in one input directory
+	 *
+	 * @param directory input directory
 	 *
 	 * @return list file
 	 */
 	public File[] repertoryFileList(String directory) {
 		File   directoryToScan = new File(directory);
-		File[] tFileDirectory  = null;
+		File[] tFileDirectory;
 		tFileDirectory = directoryToScan.listFiles();
-		for (int i = 0; i < tFileDirectory.length; ++i) {
+		for (int i = 0; i < Objects.requireNonNull(tFileDirectory).length; ++i) {
 			if (tFileDirectory[i].isDirectory()) {
 				File[] tTempBeforeElement = stockFileBefore(i, tFileDirectory);
 				File[] tTempAfterElement  = stockFileAfter(i, tFileDirectory);
@@ -54,65 +58,69 @@ public class FileList {
 		return tFileDirectory;
 	}
 	
+	
 	/**
 	 * methode to list on subdirectory
 	 *
 	 * @param tTempBeforeElement
 	 * @param tTempAfterElement
 	 * @param tTempFile
-	 * @param indiceMax
+	 * @param indexMax
 	 *
 	 * @return
 	 */
-	public File[] resize(File[] tTempBeforeElement, File[] tTempAfterElement, File[] tTempFile, int indiceMax) {
+	public File[] resize(File[] tTempBeforeElement, File[] tTempAfterElement, File[] tTempFile, int indexMax) {
 		File[] tFile = new File[tTempBeforeElement.length + tTempFile.length + tTempAfterElement.length - 1];
 		//element insertion in the file list
 		for (int j = 0; j < tFile.length; ++j) {
 			//list file before the directory :
-			if (j < indiceMax) {
+			if (j < indexMax) {
 				tFile[j] = tTempBeforeElement[j];
 			}
 			//listed file in the directory :
 			else {
-				if (j < indiceMax + tTempFile.length) {
-					tFile[j] = tTempFile[j - indiceMax];
+				if (j < indexMax + tTempFile.length) {
+					tFile[j] = tTempFile[j - indexMax];
 				}
 				//listed files after directory :
 				else {
-					tFile[j] = tTempAfterElement[j - indiceMax - tTempFile.length];
+					tFile[j] = tTempAfterElement[j - indexMax - tTempFile.length];
 				}
 			}
 		}
 		return tFile;
 	}
 	
+	
 	/**
-	 * @param indiceMax
+	 * @param indexMax
 	 * @param tFile
 	 *
 	 * @return
 	 */
-	public File[] stockFileBefore(int indiceMax, File[] tFile) {
-		File[] tTempBeforeElement = new File[indiceMax];
-		if (indiceMax >= 0) System.arraycopy(tFile, 0, tTempBeforeElement, 0, indiceMax);
+	public File[] stockFileBefore(int indexMax, File[] tFile) {
+		File[] tTempBeforeElement = new File[indexMax];
+		if (indexMax >= 0) System.arraycopy(tFile, 0, tTempBeforeElement, 0, indexMax);
 		return tTempBeforeElement;
 	}
 	
+	
 	/**
-	 * @param indiceMax
+	 * @param indexMax
 	 * @param tFile
 	 *
 	 * @return
 	 */
-	public File[] stockFileAfter(int indiceMax, File[] tFile) {
-		File[] tTempAfterElement = new File[tFile.length - indiceMax];
+	public File[] stockFileAfter(int indexMax, File[] tFile) {
+		File[] tTempAfterElement = new File[tFile.length - indexMax];
 		int    j                 = 0;
-		for (int k = (indiceMax + 1); k < tFile.length; ++k) {
+		for (int k = (indexMax + 1); k < tFile.length; ++k) {
 			tTempAfterElement[j] = tFile[k];
 			++j;
 		}
 		return tTempAfterElement;
 	}
+	
 	
 	/**
 	 * @param filePathway
@@ -130,6 +138,7 @@ public class FileList {
 		}
 		return testFile;
 	}
+	
 	
 	/**
 	 * @param regex
@@ -184,12 +193,12 @@ public class FileList {
 	 * @return
 	 */
 	public String[] getDirectoryFiles(String directory, File[] tFile) {
-		String[]                 tRef            = directory.split("\\" + File.separator);
+		String[]                 tRef            = directory.split(Pattern.quote(File.separator));
 		String[]                 tTemp           = new String[0];
 		ArrayList<String>        arrayList       = new ArrayList<>();
 		HashMap<String, Integer> hasMapDirectory = new HashMap<>();
 		for (File file : tFile) {
-			String[] temp = file.toString().split("\\" + File.separator);
+			String[] temp = file.toString().split(Pattern.quote(File.separator));
 			if (temp.length > tRef.length + 1) {
 				if (!hasMapDirectory.containsKey(temp[tRef.length])) {
 					hasMapDirectory.put(temp[tRef.length], 1);
@@ -221,7 +230,7 @@ public class FileList {
 		}
 		ArrayList<String> arrayListFile = new ArrayList<>();
 		for (File file : tFile) {
-			if (file.toString().matches((regex))) {
+			if (file.toString().matches(regex)) {
 				arrayListFile.add(file.toString());
 			}
 		}

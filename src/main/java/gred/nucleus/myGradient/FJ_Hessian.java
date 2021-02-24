@@ -28,7 +28,7 @@ public class FJ_Hessian implements PlugIn, WindowListener {
 	
 	public void run(String arg) {
 		
-		if (!FJ.libcheck()) return;
+		if (!FJ.libCheck()) return;
 		final ImagePlus imp = FJ.imageplus();
 		if (imp == null) return;
 		
@@ -63,8 +63,10 @@ public class FJ_Hessian implements PlugIn, WindowListener {
 		(new FJHessian()).run(imp, largest, middle, smallest, absolute, scale);
 	}
 	
+	
 	public void windowActivated(final WindowEvent e) {
 	}
+	
 	
 	public void windowClosed(final WindowEvent e) {
 		
@@ -72,21 +74,25 @@ public class FJ_Hessian implements PlugIn, WindowListener {
 		pos.y = e.getWindow().getY();
 	}
 	
+	
 	public void windowClosing(final WindowEvent e) {
 	}
+	
 	
 	public void windowDeactivated(final WindowEvent e) {
 	}
 	
+	
 	public void windowDeiconified(final WindowEvent e) {
 	}
+	
 	
 	public void windowIconified(final WindowEvent e) {
 	}
 	
+	
 	public void windowOpened(final WindowEvent e) {
 	}
-	
 }
 
 class FJHessian {
@@ -101,9 +107,9 @@ class FJHessian {
 	        ) {
 		
 		try {
-			double scaleval;
+			double scaleVal;
 			try {
-				scaleval = Double.parseDouble(scale);
+				scaleVal = Double.parseDouble(scale);
 			} catch (Exception e) {
 				throw new IllegalArgumentException("Invalid smoothing scale value");
 			}
@@ -116,17 +122,17 @@ class FJHessian {
 			hess.messenger.status(FJ_Options.pgs);
 			hess.progressor.display(FJ_Options.pgs);
 			
-			final Vector<Image> eigenimages = hess.run(new FloatImage(img), scaleval, absolute);
+			final Vector<Image> eigenImages = hess.run(new FloatImage(img), scaleVal, absolute);
 			
-			final int nrimgs = eigenimages.size();
-			for (Image eigenimage : eigenimages) eigenimage.aspects(aspects);
-			if (nrimgs == 2) {
-				if (largest) FJ.show(eigenimages.get(0), imp);
-				if (smallest) FJ.show(eigenimages.get(1), imp);
-			} else if (nrimgs == 3) {
-				if (largest) FJ.show(eigenimages.get(0), imp);
-				if (middle) FJ.show(eigenimages.get(1), imp);
-				if (smallest) FJ.show(eigenimages.get(2), imp);
+			final int nImages = eigenImages.size();
+			for (Image eigenImage : eigenImages) eigenImage.aspects(aspects);
+			if (nImages == 2) {
+				if (largest) FJ.show(eigenImages.get(0), imp);
+				if (smallest) FJ.show(eigenImages.get(1), imp);
+			} else if (nImages == 3) {
+				if (largest) FJ.show(eigenImages.get(0), imp);
+				if (middle) FJ.show(eigenImages.get(1), imp);
+				if (smallest) FJ.show(eigenImages.get(2), imp);
 			}
 			
 			FJ.close(imp);
@@ -142,5 +148,4 @@ class FJHessian {
 			
 		}
 	}
-	
 }

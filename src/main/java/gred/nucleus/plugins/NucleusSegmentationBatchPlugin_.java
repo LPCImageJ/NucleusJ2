@@ -39,12 +39,12 @@ public class NucleusSegmentationBatchPlugin_ implements PlugIn {
 					return;
 				}
 				try {
-					SegmentationCalling otsuModif =
+					SegmentationCalling otsuModified =
 							new SegmentationCalling(_nucleusSegmentationBatchDialog.getRawDataDirectory(),
 							                        _nucleusSegmentationBatchDialog.getWorkDirectory(),
 							                        (short) _nucleusSegmentationBatchDialog.getMinVolume(),
 							                        (short) _nucleusSegmentationBatchDialog.getMaxVolume());
-					otsuModif.runOneImage();
+					otsuModified.runOneImage();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -52,42 +52,50 @@ public class NucleusSegmentationBatchPlugin_ implements PlugIn {
 		}
 	}
 	
-	/** @return */
+	
+	/** @return  */
 	public int getNbCpu() {
 		return _nucleusSegmentationBatchDialog.getNbCpu();
 	}
 	
-	/** @return */
+	
+	/** @return  */
 	public double getZCalibration() {
 		return _nucleusSegmentationBatchDialog.getZCalibration();
 	}
 	
-	/** @return */
+	
+	/** @return  */
 	public double getXCalibration() {
 		return _nucleusSegmentationBatchDialog.getXCalibration();
 	}
 	
-	/** @return */
+	
+	/** @return  */
 	public double getYCalibration() {
 		return _nucleusSegmentationBatchDialog.getYCalibration();
 	}
 	
-	/** @return */
+	
+	/** @return  */
 	public String getUnit() {
 		return _nucleusSegmentationBatchDialog.getUnit();
 	}
 	
-	/** @return */
+	
+	/** @return  */
 	public double getMinVolume() {
 		return _nucleusSegmentationBatchDialog.getMinVolume();
 	}
 	
-	/** @return */
+	
+	/** @return  */
 	public double getMaxVolume() {
 		return _nucleusSegmentationBatchDialog.getMaxVolume();
 	}
 	
-	/** @return */
+	
+	/** @return  */
 	public String getWorkDirectory() {
 		return _nucleusSegmentationBatchDialog.getWorkDirectory();
 	}

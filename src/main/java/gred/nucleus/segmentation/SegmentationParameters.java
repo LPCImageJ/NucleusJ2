@@ -11,7 +11,7 @@ import java.util.Properties;
 
 public class SegmentationParameters extends PluginParameters {
 	/** GIFT wrapping option */
-	boolean m_giftVrapping     = true;
+	boolean m_giftWrapping     = true;
 	/** Minimal object volume to segment */
 	int     m_minVolumeNucleus = 1;
 	/** Maximal object volume to segment */
@@ -28,13 +28,15 @@ public class SegmentationParameters extends PluginParameters {
 		super(inputFolder, outputFolder);
 	}
 	
+	
 	public SegmentationParameters(String inputFolder, String outputFolder, int minVolume, int maxVolume, boolean gift) {
 		super(inputFolder, outputFolder);
 		this.m_minVolumeNucleus = minVolume;
 		this.m_maxVolumeNucleus = maxVolume;
-		this.m_giftVrapping = gift;
+		this.m_giftWrapping = gift;
 		
 	}
+	
 	
 	public SegmentationParameters(String inputFolder,
 	                              String outputFolder,
@@ -47,21 +49,22 @@ public class SegmentationParameters extends PluginParameters {
 		super(inputFolder, outputFolder, xCal, yCal, zCal);
 		this.m_minVolumeNucleus = minVolume;
 		this.m_maxVolumeNucleus = maxVolume;
-		this.m_giftVrapping = gift;
+		this.m_giftWrapping = gift;
 		
 	}
+	
 	
 	public SegmentationParameters(String inputFolder, String outputFolder, String pathToConfigFile) {
 		super(inputFolder, outputFolder, pathToConfigFile);
 		addProperties(pathToConfigFile);
 	}
 	
+	
 	public void addProperties(String pathToConfigFile) {
 		Properties  prop     = new Properties();
-		String      fileName = pathToConfigFile;
 		InputStream is       = null;
 		try {
-			is = new FileInputStream(fileName);
+			is = new FileInputStream(pathToConfigFile);
 		} catch (FileNotFoundException ex) {
 			System.err.println(pathToConfigFile + " : can't find the config file !");
 			System.exit(-1);
@@ -74,7 +77,7 @@ public class SegmentationParameters extends PluginParameters {
 		}
 		for (String idProp : prop.stringPropertyNames()) {
 			if (idProp.equals("GiftWrapping")) {
-				this.m_giftVrapping = Boolean.parseBoolean(prop.getProperty("GiftWrapping"));
+				this.m_giftWrapping = Boolean.parseBoolean(prop.getProperty("GiftWrapping"));
 			}
 			if (idProp.equals("maxVolumeNucleus")) {
 				this.m_maxVolumeNucleus = Integer.parseInt(prop.getProperty("maxVolumeNucleus"));
@@ -85,9 +88,11 @@ public class SegmentationParameters extends PluginParameters {
 		}
 	}
 	
+	
 	public void setMinVolumeNucleus(int vMin) {
 		this.m_minVolumeNucleus = vMin;
 	}
+	
 	
 	public void setMaxVolumeNucleus(int vMax) {
 		this.m_maxVolumeNucleus = vMax;
@@ -102,16 +107,18 @@ public class SegmentationParameters extends PluginParameters {
 		return this.m_headerInfo;
 	}
 	
+	
 	public int getM_minVolumeNucleus() {
 		return this.m_minVolumeNucleus;
 	}
+	
 	
 	public int getM_maxVolumeNucleus() {
 		return this.m_maxVolumeNucleus;
 	}
 	
-	public boolean getGiftWrapping() {
-		return this.m_giftVrapping;
-	}
 	
+	public boolean getGiftWrapping() {
+		return this.m_giftWrapping;
+	}
 }

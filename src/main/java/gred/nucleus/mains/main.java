@@ -4,11 +4,11 @@ import fr.igred.omero.Client;
 import fr.igred.omero.ImageContainer;
 import fr.igred.omero.repository.DatasetContainer;
 import fr.igred.omero.repository.ProjectContainer;
-import gred.nucleus.cli.*;
-import gred.nucleus.machineLeaningUtils.ComputeNucleiParametersML;
 import gred.nucleus.autocrop.*;
+import gred.nucleus.cli.*;
 import gred.nucleus.core.ComputeNucleiParameters;
 import gred.nucleus.exceptions.fileInOut;
+import gred.nucleus.machineLeaningUtils.ComputeNucleiParametersML;
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
 import ij.ImagePlus;
@@ -18,10 +18,12 @@ import loci.formats.FormatException;
 import org.apache.commons.cli.*;
 
 import java.io.Console;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Pattern;
 
 
 public class main {
@@ -29,23 +31,18 @@ public class main {
 	/**
 	 * Method to run autocrop with only input output folder and with default parameters which are:
 	 * <p>
-	 * xCropBoxSize:40 yCropBoxSize:40 zCropBoxSize:20 thresholdOTSUcomputing:20 slicesOTSUcomputing:0
+	 * xCropBoxSize:40 yCropBoxSize:40 zCropBoxSize:20 thresholdOTSUComputing:20 slicesOTSUComputing:0
 	 * channelToComputeThreshold:1 maxVolumeNucleus:2147483647 minVolumeNucleus:1
 	 *
 	 * @param inputDirectory  path to the raw image's folder
 	 * @param outputDirectory path to output folder analysis
-	 *
-	 * @throws IOException
-	 * @throws FormatException
-	 * @throws fileInOut
-	 * @throws Exception
 	 */
-	public static void runAutoCropFolder(String inputDirectory, String outputDirectory)
-	throws IOException, FormatException, fileInOut, Exception {
+	public static void runAutoCropFolder(String inputDirectory, String outputDirectory) {
 		AutocropParameters autocropParameters = new AutocropParameters(inputDirectory, outputDirectory);
 		AutoCropCalling    autoCrop           = new AutoCropCalling(autocropParameters);
 		autoCrop.runFolder();
 	}
+	
 	
 	/**
 	 * Method to run autocrop with input folder, output folder and with config file analysis :
@@ -53,18 +50,13 @@ public class main {
 	 * @param inputDirectory  path to the raw image's folder
 	 * @param outputDirectory path to output folder analysis
 	 * @param pathToConfig    path to config file
-	 *
-	 * @throws IOException
-	 * @throws FormatException
-	 * @throws fileInOut
-	 * @throws Exception
 	 */
-	public static void runAutoCropFolder(String inputDirectory, String outputDirectory, String pathToConfig)
-	throws IOException, FormatException, fileInOut, Exception {
+	public static void runAutoCropFolder(String inputDirectory, String outputDirectory, String pathToConfig) {
 		AutocropParameters autocropParameters = new AutocropParameters(inputDirectory, outputDirectory, pathToConfig);
 		AutoCropCalling    autoCrop           = new AutoCropCalling(autocropParameters);
 		autoCrop.runFolder();
 	}
+	
 	
 	/**
 	 * Method to run autocrop with input folder, output folder :
@@ -84,11 +76,12 @@ public class main {
 		autoCrop.runFile(inputDirectory);
 	}
 	
+	
 	public static void runAutoCropOmero(String inputDirectory,
 	                                    String outputDirectory,
 	                                    Client client,
 	                                    AutoCropCalling autoCrop) throws Exception {
-		String[] param = inputDirectory.split("/");
+		String[] param = inputDirectory.split(Pattern.quote(File.separator));
 		
 		if (param.length >= 2) {
 			if (param[0].equals("image")) {
@@ -107,8 +100,8 @@ public class main {
 				
 				autoCrop.runImageOmero(image, outputsDat, client);
 			} else {
-				Long                 id     = Long.parseLong(param[1]);
-				List<ImageContainer> images = null;
+				Long                 id = Long.parseLong(param[1]);
+				List<ImageContainer> images;
 				
 				String name = "";
 				
@@ -145,6 +138,7 @@ public class main {
 		}
 	}
 	
+	
 	public static void runAutoCropOmero(String inputDirectory,
 	                                    String outputDirectory,
 	                                    String pathToConfig,
@@ -154,6 +148,7 @@ public class main {
 		
 		runAutoCropOmero(inputDirectory, outputDirectory, client, autoCrop);
 	}
+	
 	
 	public static void runAutoCropOmero(String inputDirectory, String outputDirectory, Client client) throws Exception {
 		AutocropParameters autocropParameters = new AutocropParameters(".", ".");
@@ -176,9 +171,9 @@ public class main {
 	public static void segmentationFolder(String inputDirectory, String outputDirectory) throws Exception {
 		System.out.println("test " + inputDirectory);
 		SegmentationParameters segmentationParameters = new SegmentationParameters(inputDirectory, outputDirectory);
-		SegmentationCalling    otsuModif              = new SegmentationCalling(segmentationParameters);
+		SegmentationCalling    otsuModified           = new SegmentationCalling(segmentationParameters);
 		try {
-			String log = otsuModif.runSeveralImages2();
+			String log = otsuModified.runSeveralImages2();
 			if (!(log.equals(""))) {
 				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
 			}
@@ -186,6 +181,7 @@ public class main {
 			e.printStackTrace();
 		}
 	}
+	
 	
 	/**
 	 * Method to run segmentation with input folder, output folder with config file :
@@ -200,9 +196,9 @@ public class main {
 	throws Exception {
 		SegmentationParameters segmentationParameters =
 				new SegmentationParameters(inputDirectory, outputDirectory, config);
-		SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
+		SegmentationCalling otsuModified = new SegmentationCalling(segmentationParameters);
 		try {
-			String log = otsuModif.runSeveralImages2();
+			String log = otsuModified.runSeveralImages2();
 			if (!(log.equals(""))) {
 				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
 			}
@@ -210,6 +206,7 @@ public class main {
 			e.printStackTrace();
 		}
 	}
+	
 	
 	/**
 	 * Method to run segmentation on one image :
@@ -221,9 +218,9 @@ public class main {
 	 */
 	public static void segmentationOneImage(String inputDirectory, String outputDirectory) throws Exception {
 		SegmentationParameters segmentationParameters = new SegmentationParameters(inputDirectory, outputDirectory);
-		SegmentationCalling    otsuModif              = new SegmentationCalling(segmentationParameters);
+		SegmentationCalling    otsuModified           = new SegmentationCalling(segmentationParameters);
 		try {
-			String log = otsuModif.runOneImage(inputDirectory);
+			String log = otsuModified.runOneImage(inputDirectory);
 			if (!(log.equals(""))) {
 				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
 			}
@@ -232,11 +229,14 @@ public class main {
 		}
 	}
 	
+	
 	public static void segmentationOmero(String inputDirectory,
 	                                     String outputDirectory,
 	                                     Client client,
-	                                     SegmentationCalling otsuModif) throws Exception {
-		String[] param = inputDirectory.split("/");
+	                                     SegmentationCalling otsuModified)
+	throws Exception {
+		
+		String[] param = inputDirectory.split(Pattern.quote(File.separator));
 		
 		if (param.length >= 2) {
 			if (param[0].equals("image")) {
@@ -246,9 +246,9 @@ public class main {
 				try {
 					String log;
 					if (param.length == 3 && param[2].equals("ROI")) {
-						log = otsuModif.runOneImageOmeroROI(image, Long.parseLong(outputDirectory), client);
+						log = otsuModified.runOneImageOmeroROI(image, Long.parseLong(outputDirectory), client);
 					} else {
-						log = otsuModif.runOneImageOmero(image, Long.parseLong(outputDirectory), client);
+						log = otsuModified.runOneImageOmero(image, Long.parseLong(outputDirectory), client);
 					}
 					if (!(log.equals(""))) {
 						System.out.println("Nuclei which didn't pass the segmentation\n" + log);
@@ -257,8 +257,8 @@ public class main {
 					e.printStackTrace();
 				}
 			} else {
-				Long                 id     = Long.parseLong(param[1]);
-				List<ImageContainer> images = null;
+				Long                 id = Long.parseLong(param[1]);
+				List<ImageContainer> images;
 				
 				switch (param[0]) {
 					case "dataset":
@@ -289,9 +289,9 @@ public class main {
 					String log;
 					if ((param.length == 3 && param[2].equals("ROI")) ||
 					    (param.length == 5 && param[4].equals("ROI"))) {
-						log = otsuModif.runSeveralImageOmeroROI(images, Long.parseLong(outputDirectory), client);
+						log = otsuModified.runSeveralImageOmeroROI(images, Long.parseLong(outputDirectory), client);
 					} else {
-						log = otsuModif.runSeveralImageOmero(images, Long.parseLong(outputDirectory), client);
+						log = otsuModified.runSeveralImageOmero(images, Long.parseLong(outputDirectory), client);
 					}
 					if (!(log.equals(""))) {
 						System.out.println("Nuclei which didn't pass the segmentation\n" + log);
@@ -305,21 +305,24 @@ public class main {
 		}
 	}
 	
+	
 	public static void segmentationOmero(String inputDirectory, String outputDirectory, String config, Client client)
 	throws Exception {
 		SegmentationParameters segmentationParameters = new SegmentationParameters(".", ".", config);
-		SegmentationCalling    otsuModif              = new SegmentationCalling(segmentationParameters);
+		SegmentationCalling    otsuModified           = new SegmentationCalling(segmentationParameters);
 		
-		segmentationOmero(inputDirectory, outputDirectory, client, otsuModif);
+		segmentationOmero(inputDirectory, outputDirectory, client, otsuModified);
 	}
+	
 	
 	public static void segmentationOmero(String inputDirectory, String outputDirectory, Client client)
 	throws Exception {
 		SegmentationParameters segmentationParameters = new SegmentationParameters(".", ".");
-		SegmentationCalling    otsuModif              = new SegmentationCalling(segmentationParameters);
+		SegmentationCalling    otsuModified           = new SegmentationCalling(segmentationParameters);
 		
-		segmentationOmero(inputDirectory, outputDirectory, client, otsuModif);
+		segmentationOmero(inputDirectory, outputDirectory, client, otsuModified);
 	}
+	
 	
 	/**
 	 * Compute parameter from raw data folder and segmented data :
@@ -327,16 +330,10 @@ public class main {
 	 * @param rawImagesInputDirectory  path to the raw image's folder
 	 * @param segmentedImagesDirectory path to the segmented image's folder
 	 * @param pathToConfig             path to config file
-	 *
-	 * @throws IOException
-	 * @throws FormatException
-	 * @throws fileInOut
-	 * @throws Exception
 	 */
 	public static void computeNucleusParameters(String rawImagesInputDirectory,
 	                                            String segmentedImagesDirectory,
-	                                            String pathToConfig)
-	throws IOException, FormatException, fileInOut, Exception {
+	                                            String pathToConfig) {
 		ComputeNucleiParameters generateParameters =
 				new ComputeNucleiParameters(rawImagesInputDirectory, segmentedImagesDirectory, pathToConfig);
 		generateParameters.run();
@@ -349,14 +346,8 @@ public class main {
 	 *
 	 * @param rawImagesInputDirectory  path to the raw image's folder
 	 * @param segmentedImagesDirectory path to the segmented image's folder
-	 *
-	 * @throws IOException
-	 * @throws FormatException
-	 * @throws fileInOut
-	 * @throws Exception
 	 */
-	public static void computeNucleusParameters(String rawImagesInputDirectory, String segmentedImagesDirectory)
-	throws IOException, FormatException, fileInOut, Exception {
+	public static void computeNucleusParameters(String rawImagesInputDirectory, String segmentedImagesDirectory) {
 		ComputeNucleiParameters generateParameters =
 				new ComputeNucleiParameters(rawImagesInputDirectory, segmentedImagesDirectory);
 		generateParameters.run();
@@ -391,8 +382,6 @@ public class main {
 	 * @param pathToCoordinates : folder containing coordinate files
 	 * @param pathToRaw         : folder containing raw images associate
 	 *
-	 * @throws IOException
-	 * @throws FormatException
 	 * @throws Exception
 	 */
 	
@@ -400,11 +389,12 @@ public class main {
 	// UN DOSSIER AVEC LES ZPROJECTION
 	// UN DOSSIER AVEC LES COORDONNEES
 	public static void generateProjectionFromCoordinates(String pathToCoordinates, String pathToRaw)
-	throws IOException, FormatException, Exception {
+	throws Exception {
 		generateProjectionFromCoordinates
 				projection = new generateProjectionFromCoordinates(pathToCoordinates, pathToRaw);
 		projection.generateCoordinate();
 	}
+	
 	
 	/**
 	 * Method to draw missing boxes in initial projection after manual filtering.
@@ -428,6 +418,7 @@ public class main {
 		projection.generateCoordinateFiltered();
 	}
 	
+	
 	/**
 	 * Method to crop an image from coordinates (case of multi channels). Tabulated file containing associate coordinate
 	 * file and images , 1 association per line example  :
@@ -444,6 +435,7 @@ public class main {
 		test.runCropFromCoordinate();
 	}
 	
+	
 	/**
 	 * Method merge overlay and raw images together (cellular population annotation , example guard cells pavement
 	 * cells). This method contrast Tabulated file containing associate coordinate file and images ,
@@ -456,23 +448,24 @@ public class main {
 	 */
 	
 	
-	public static void genereOV(String linkOverlayProjection) throws Exception {
+	public static void generateOV(String linkOverlayProjection) throws Exception {
 		
 		GenerateOverlay ov = new GenerateOverlay(linkOverlayProjection);
 		ov.run();
 		
 	}
 	
+	
 	public static void saveFile(ImagePlus imagePlusInput, String pathFile) {
 		FileSaver fileSaver = new FileSaver(imagePlusInput);
 		fileSaver.saveAsTiff(pathFile);
 	}
 	
+	
 	public static void main(String[] args) throws Exception {
 		DebugTools.enableLogging("OFF");
 		List<String> listArgs = Arrays.asList(args);
 		System.setProperty("java.awt.headless", "false");
-		
 		
 		if (listArgs.contains("-h") || listArgs.contains("-help")) {
 			CLIHelper command = new CLIHelper(args);
@@ -484,6 +477,7 @@ public class main {
 			CLIRunAction           runCmd  = new CLIRunAction(command.getCmd());
 		}
 	}
+	
 	
 	public static boolean OMEROAvailableAction(String action) {
 		ArrayList<String> actionAvailableInOmero = new ArrayList<>();
@@ -505,11 +499,11 @@ public class main {
 		options.addOption("a", "action", true, "Action to make");
 		options.addOption("in", "input", true, "Input path");
 		options.addOption("out", "output", true, "Output path");
-		options.addOption("co", "coodinates", true, "Coordinates file");
+		options.addOption("co", "coordinates", true, "Coordinates file");
 		options.addOption("f", "file", false, "Input is a file");
 		options.addOption("c", "config", true, "Path to config file");
 		options.addOption("ome", "omero", false, "Usage of OMERO");
-		options.addOption("h", "hostname", true, "Hostname of the OMERO serveur");
+		options.addOption("h", "hostname", true, "Hostname of the OMERO server");
 		options.addOption("pt", "port", true, "Port used by OMERO");
 		options.addOption("u", "username", true, "Username in OMERO");
 		options.addOption("p", "password", true, "Password in OMERO");
@@ -642,7 +636,7 @@ public class main {
 				cropFromCoordinates(cmd.getOptionValue("input"));
 				break;
 			case "GenerateOverlay":
-				genereOV(cmd.getOptionValue("input"));
+				generateOV(cmd.getOptionValue("input"));
 				break;
 			default:
 				formatter.printHelp("NucleusJ2.0", options, true);
@@ -657,7 +651,6 @@ public class main {
 		}
 		System.out.println("Fin du programme");
 	}
-	
 }
 
 

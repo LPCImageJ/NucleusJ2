@@ -28,7 +28,7 @@ public class ChromocenterTransformation {
 			File       currentFile      = directoryInput.getFile(i);
 			String     fileImg          = currentFile.toString();
 			FilesNames outPutFilesNames = new FilesNames(fileImg);
-			String     prefix           = outPutFilesNames.PrefixeNameFile();
+			String     prefix           = outPutFilesNames.prefixNameFile();
 			NucleusSegmentation nucleusSegmentation =
 					new NucleusSegmentation(currentFile, prefix, segmentationParameters);
 			ImagePlus[]     currentImage = BF.openImagePlus(currentFile.getAbsolutePath());
@@ -40,9 +40,8 @@ public class ChromocenterTransformation {
 			
 			
 		}
-		
-		
 	}
+	
 	
 	public static void saveFile(ImagePlus imagePlusInput, String pathFile) {
 		FileSaver fileSaver = new FileSaver(imagePlusInput);

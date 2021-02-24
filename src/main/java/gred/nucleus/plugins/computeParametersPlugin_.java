@@ -17,7 +17,6 @@ public class computeParametersPlugin_ implements PlugIn {
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-			
 		}
 		try {
 			if (_computeParametersDialog.isStart()) {
@@ -38,11 +37,9 @@ public class computeParametersPlugin_ implements PlugIn {
 							_computeParametersDialog.getWorkDirectory());
 					generateParameters.run();
 				}
-				
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
 }

@@ -13,7 +13,7 @@ public class ImagesIntegrationTest {
 	 
 	 
 	 OutputFileVerification fw = new OutputFileVerification();
-	 fw.GetFileResultExpeted(ExpectedResult);
+	 fw.GetFileResultExpected(ExpectedResult);
 	 fw.GetFilesOutputFolder(outputTristan);
 	 fw.GetFilesResultingOfAnalysis(outputTristan);
 	 fw.CompareAnalysisResult();

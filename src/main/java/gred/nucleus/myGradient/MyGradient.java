@@ -22,14 +22,15 @@ public class MyGradient {
 	private static String  lower    = "";
 	private static String  higher   = "";
 	ImagePlus _imagePlus;
-	ImagePlus _imagePlusBinaire;
-	private        boolean mask;
+	ImagePlus _imagePlusBinary;
+	private boolean mask;
 	
-	public MyGradient(ImagePlus imp, ImagePlus imagePlusBinaire) {
+	public MyGradient(ImagePlus imp, ImagePlus imagePlusBinary) {
 		_imagePlus = imp;
-		_imagePlusBinaire = imagePlusBinaire;
+		_imagePlusBinary = imagePlusBinary;
 		mask = true;
 	}
+	
 	
 	public MyGradient(ImagePlus imp) {
 		_imagePlus = imp;
@@ -38,66 +39,70 @@ public class MyGradient {
 	
 	@SuppressWarnings("unused")
 	public ImagePlus run() {
-		ImagePlus newimp = new ImagePlus();
+		ImagePlus newImagePlus = new ImagePlus();
 		try {
-			double  scaleval, lowval = 0, highval = 0;
-			boolean lowthres         = true, highthres = true;
+			double  scaleVal;
+			double  lowVal        = 0;
+			double  highVal       = 0;
+			boolean lowThreshold  = true;
+			boolean highThreshold = true;
 			try {
-				scaleval = Double.parseDouble(scale);
+				scaleVal = Double.parseDouble(scale);
 			} catch (Exception e) {
 				throw new IllegalArgumentException("Invalid smoothing scale value");
 			}
 			try {
 				if (lower.equals("")) {
-					lowthres = false;
+					lowThreshold = false;
 				} else {
-					lowval = Double.parseDouble(lower);
+					lowVal = Double.parseDouble(lower);
 				}
 			} catch (Exception e) {
 				throw new IllegalArgumentException("Invalid lower threshold value");
 			}
 			try {
 				if (higher.equals("")) {
-					highthres = false;
+					highThreshold = false;
 				} else {
-					highval = Double.parseDouble(higher);
+					highVal = Double.parseDouble(higher);
 				}
 			} catch (Exception e) {
 				throw new IllegalArgumentException("Invalid higher threshold value");
 			}
-			final int   thresmode = (lowthres ? 10 : 0) + (highthres ? 1 : 0);
-			final Image img       = Image.wrap(_imagePlus);
-			Image       newimg    = new FloatImage(img);
-			double[]    pls       = {0, 1};
-			int         pl        = 0;
-			if ((compute || suppress) && thresmode > 0) {
+			final int   threshMode = (lowThreshold ? 10 : 0) + (highThreshold ? 1 : 0);
+			final Image image      = Image.wrap(_imagePlus);
+			Image       newImage   = new FloatImage(image);
+			double[]    pls        = {0, 1};
+			int         pl         = 0;
+			if ((compute || suppress) && threshMode > 0) {
 				pls = new double[]{0, 0.9, 1};
 			}
 			final Progressor progressor = new Progressor();
 			progressor.display(FJ_Options.pgs);
 			if (compute || suppress) {
-				final Aspects aspects = newimg.aspects();
-				if (!FJ_Options.isotropic) newimg.aspects(new Aspects());
+				final Aspects aspects = newImage.aspects();
+				if (!FJ_Options.isotropic) newImage.aspects(new Aspects());
 				final MyEdges myEdges = new MyEdges();
-				if (mask) myEdges.setMask(_imagePlusBinaire);
+				if (mask) myEdges.setMask(_imagePlusBinary);
 				progressor.range(pls[pl], pls[++pl]);
 				myEdges.progressor.parent(progressor);
 				myEdges.messenger.log(FJ_Options.log);
 				myEdges.messenger.status(FJ_Options.pgs);
-				newimg = myEdges.run(newimg, scaleval, suppress);
-				newimg.aspects(aspects);
+				newImage = myEdges.run(newImage, scaleVal, suppress);
+				newImage.aspects(aspects);
 			}
-			newimp = newimg.imageplus();
-			_imagePlus.setCalibration(newimp.getCalibration());
-			final double[] minmax = newimg.extrema();
-			final double   min    = minmax[0], max = minmax[1];
-			newimp.setDisplayRange(min, max);
+			newImagePlus = newImage.imageplus();
+			_imagePlus.setCalibration(newImagePlus.getCalibration());
+			final double[] min_max = newImage.extrema();
+			final double   min     = min_max[0];
+			final double   max     = min_max[1];
+			newImagePlus.setDisplayRange(min, max);
 		} catch (OutOfMemoryError e) {
 			FJ.error("Not enough memory for this operation");
 		} catch (IllegalArgumentException | IllegalStateException e) {
 			FJ.error(e.getMessage());
 		}
 		//catch (Throwable e) {	FJ.error("An unidentified error occurred while running the plugin");	}
-		return newimp;
+		return newImagePlus;
 	}
 }

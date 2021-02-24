@@ -28,6 +28,7 @@ public class RegionalExtremaFilter implements PlugInFilter {
 		return 0;
 	}
 	
+	
 	/**
 	 * To run the plugin with imageJ
 	 *
@@ -36,6 +37,7 @@ public class RegionalExtremaFilter implements PlugInFilter {
 	public void run(ImageProcessor imageProcessor) {
 		applyWithMask(_imagePlusInput);
 	}
+	
 	
 	/**
 	 * Method used to scan the deconvolved image, and the image having undergone the filter min in the binary mask of
@@ -51,9 +53,9 @@ public class RegionalExtremaFilter implements PlugInFilter {
 		double                 width          = _imagePlusInput.getWidth();
 		double                 height         = _imagePlusInput.getHeight();
 		double                 depth          = _imagePlusInput.getStackSize();
-		int                    kcurrent;
-		int                    icurrent;
-		int                    jcurrent;
+		int                    kCurrent;
+		int                    iCurrent;
+		int                    jCurrent;
 		int                    ii;
 		int                    jj;
 		int                    kk;
@@ -74,12 +76,12 @@ public class RegionalExtremaFilter implements PlugInFilter {
 						arrayListVoxel.add(voxelRecord);
 						while (arrayListVoxel.size() > 0) {
 							voxelRecord = arrayListVoxel.remove(0);
-							icurrent = (int) voxelRecord.getI();
-							jcurrent = (int) voxelRecord.getJ();
-							kcurrent = (int) voxelRecord.getK();
-							for (kk = kcurrent - 1; kk <= kcurrent + 1; ++kk) {
-								for (ii = icurrent - 1; ii <= icurrent + 1; ++ii) {
-									for (jj = jcurrent - 1; jj <= jcurrent + 1; ++jj) {
+							iCurrent = (int) voxelRecord.getI();
+							jCurrent = (int) voxelRecord.getJ();
+							kCurrent = (int) voxelRecord.getK();
+							for (kk = kCurrent - 1; kk <= kCurrent + 1; ++kk) {
+								for (ii = iCurrent - 1; ii <= iCurrent + 1; ++ii) {
+									for (jj = jCurrent - 1; jj <= jCurrent + 1; ++jj) {
 										if (kk >= 0 &&
 										    kk < depth &&
 										    ii >= 0 &&
@@ -121,6 +123,7 @@ public class RegionalExtremaFilter implements PlugInFilter {
 		}
 	}
 	
+	
 	/** Filter minimum in 3D with a neighboring 3 */
 	
 	void filterMin3DWithMask() {
@@ -160,6 +163,7 @@ public class RegionalExtremaFilter implements PlugInFilter {
 		}
 	}
 	
+	
 	/**
 	 * Initialise a matrix of a binary mask to search the minima regions in the mask
 	 *
@@ -169,21 +173,22 @@ public class RegionalExtremaFilter implements PlugInFilter {
 		_tabMask = tab;
 	}
 	
+	
 	/**
 	 * Initialise a matrix of a binary mask to search the minima regions in the mask
 	 *
 	 * @param imagePlusEntree Binary image
 	 */
 	public void setMask(ImagePlus imagePlusEntree) {
-		ImageStack imagePluslabel = imagePlusEntree.getStack();
-		final int  size1          = imagePluslabel.getWidth();
-		final int  size2          = imagePluslabel.getHeight();
-		final int  size3          = imagePluslabel.getSize();
+		ImageStack imagePlusLabel = imagePlusEntree.getStack();
+		final int  size1          = imagePlusLabel.getWidth();
+		final int  size2          = imagePlusLabel.getHeight();
+		final int  size3          = imagePlusLabel.getSize();
 		_tabMask = new double[size1][size2][size3];
 		for (int i = 0; i < size1; ++i) {
 			for (int j = 0; j < size2; ++j) {
 				for (int k = 0; k < size3; ++k) {
-					_tabMask[i][j][k] = imagePluslabel.getVoxel(i, j, k);
+					_tabMask[i][j][k] = imagePlusLabel.getVoxel(i, j, k);
 				}
 			}
 		}

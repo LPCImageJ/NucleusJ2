@@ -6,7 +6,6 @@ import ij.ImagePlus;
 import ij.io.FileSaver;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
@@ -15,7 +14,7 @@ public class GenerateOverlay {
 	
 	HashMap<String, String> linkOverlayProjection = new HashMap<>();
 	
-	public GenerateOverlay(String linkOverlayProjection) throws IOException, Exception {
+	public GenerateOverlay(String linkOverlayProjection) throws Exception {
 		File    overlayProjection = new File(linkOverlayProjection);
 		Scanner scanner           = new Scanner(overlayProjection);
 		while (scanner.hasNextLine()) {
@@ -29,6 +28,7 @@ public class GenerateOverlay {
 		}
 	}
 	
+	
 	/**
 	 * Save output file in png format for OMERO
 	 *
@@ -40,11 +40,11 @@ public class GenerateOverlay {
 		fileSaver.saveAsPng(pathFile);
 	}
 	
+	
 	public void run() {
 		for (Map.Entry<String, String> listOfFile : this.linkOverlayProjection.entrySet()) {
 			File      zprojectionFile = new File(listOfFile.getValue());
-			Directory output          = new Directory(zprojectionFile.getParent() +
-			                                          zprojectionFile.separator +
+			Directory output          = new Directory(zprojectionFile.getParent() + File.separator +
 			                                          "Overlay_Projection_MERGED");
 			output.CheckAndCreateDir();
 			ImagePlus overlay     = IJ.openImage(listOfFile.getKey());
@@ -55,8 +55,7 @@ public class GenerateOverlay {
 			overlay.show();
 			Zprojection.show();
 			IJ.run("Add Image...", overlay + " x=0 y=0 opacity=50");
-			saveFile(Zprojection, output.m_dirPath +
-			                      zprojectionFile.separator +
+			saveFile(Zprojection, output.m_dirPath + File.separator +
 			                      zprojectionFile.getName().substring(0, zprojectionFile.getName().lastIndexOf('.')) +
 			                      "_MERGED.tiff");
 			overlay.close();

@@ -21,7 +21,7 @@ public class ConvexeHullImageMaker {
 	/**
 	 *
 	 */
-	private final VoxelRecord            _p0       = new VoxelRecord();
+	private final VoxelRecord _p0 = new VoxelRecord();
 	/**
 	 *
 	 */
@@ -29,12 +29,12 @@ public class ConvexeHullImageMaker {
 	/**
 	 *
 	 */
-	private       String                 _axesName = "";
+	private String                 _axesName = "";
 	/**
 	 *
 	 */
-	private       Calibration            _calibration;
-	private       SegmentationParameters m_segmentationParameters;
+	private Calibration            _calibration;
+	private SegmentationParameters m_segmentationParameters;
 	
 	/* Constructor
 	 * @see VoxelRecord
@@ -62,13 +62,13 @@ public class ConvexeHullImageMaker {
 		double      equivalentSphericalRadius = (mesure3d.equivalentSphericalRadius(imagePlusBinary) / 2);
 		VoxelRecord tVoxelRecord              = mesure3d.computeBarycenter3D(false, imagePlusBinary, 255.0);
 		ImagePlus   imagePlusCorrected        = new ImagePlus();
-		int         indice                    = 0, width = 0, height = 0;
 		ImagePlus   imagePlusBlack            = new ImagePlus();
-		if (_axesName == "xy") {
+		int         indice, width, height;
+		if (_axesName.equals("xy")) {
 			width = imagePlusBinary.getWidth();
 			height = imagePlusBinary.getHeight();
 			indice = imagePlusBinary.getNSlices();
-		} else if (_axesName == "xz") {
+		} else if (_axesName.equals("xz")) {
 			width = imagePlusBinary.getWidth();
 			height = imagePlusBinary.getNSlices();
 			indice = imagePlusBinary.getHeight();
@@ -118,6 +118,7 @@ public class ConvexeHullImageMaker {
 		return imagePlusCorrected;
 	}
 	
+	
 	/**
 	 * Determine l'ensemble des pixels "frontieres" et le plus extreme
 	 *
@@ -136,15 +137,15 @@ public class ConvexeHullImageMaker {
 				if (image[i][j] == label) {
 					if (image[i - 1][j] == 0 || image[i + 1][j] == 0 || image[i][j - 1] == 0 || image[i][j + 1] == 0) {
 						VoxelRecord voxelTest = new VoxelRecord();
-						if (_axesName == "xy") {
+						if (_axesName.equals("xy")) {
 							voxelTest.setLocation(i, j, indice);
-						} else if (_axesName == "xz") {
+						} else if (_axesName.equals("xz")) {
 							voxelTest.setLocation(i, indice, j);
 						} else {
 							voxelTest.setLocation(indice, i, j);
 						}
 						lVoxelBoundary.add(voxelTest);
-						if (_axesName == "xy") {
+						if (_axesName.equals("xy")) {
 							if (j > _p0._j) {
 								_p0.setLocation(i, j, indice);
 							} else if (j == _p0._j) {
@@ -152,7 +153,7 @@ public class ConvexeHullImageMaker {
 									_p0.setLocation(i, j, indice);
 								}
 							}
-						} else if (_axesName == "xz") {
+						} else if (_axesName.equals("xz")) {
 							if (j > _p0._k) {
 								_p0.setLocation(i, indice, j);
 							} else if (j == _p0._k) {
@@ -176,6 +177,7 @@ public class ConvexeHullImageMaker {
 		return lVoxelBoundary;
 	}
 	
+	
 	/**
 	 * @param lVoxelBoundary
 	 * @param width
@@ -192,9 +194,9 @@ public class ConvexeHullImageMaker {
 		ArrayList<VoxelRecord> convexHull = new ArrayList<>();
 		convexHull.add(_p0);
 		VoxelRecord vectorTest = new VoxelRecord();
-		if (_axesName == "xy" || _axesName == "xz") {
+		if (_axesName.equals("xy") || _axesName.equals("xz")) {
 			vectorTest.setLocation(-10, 0, 0);
-		} else if (_axesName == "yz") {
+		} else if (_axesName.equals("yz")) {
 			vectorTest.setLocation(0, -10, 0);
 		}
 		
@@ -207,9 +209,9 @@ public class ConvexeHullImageMaker {
 		                                                 vectorTest,
 		                                                 _calibration,
 		                                                 equivalentSphericalRadius);
-		ImagePlus ip = makerPolygon(convexHull, width, height);
-		return ip;
+		return makePolygon(convexHull, width, height);
 	}
+	
 	
 	/**
 	 * @param convexHull
@@ -218,33 +220,41 @@ public class ConvexeHullImageMaker {
 	 *
 	 * @return
 	 */
-	public ImagePlus makerPolygon(ArrayList<VoxelRecord> convexHull, int width, int height) {
+	public ImagePlus makePolygon(ArrayList<VoxelRecord> convexHull, int width, int height) {
 		ImagePlus     ip            = new ImagePlus();
 		BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
 		int[]         tableWidth    = new int[convexHull.size() + 1];
 		int[]         tableHeight   = new int[convexHull.size() + 1];
 		for (int i = 0; i < convexHull.size(); ++i) {
-			if (_axesName == "xy") {
-				tableWidth[i] = (int) convexHull.get(i)._i;
-				tableHeight[i] = (int) convexHull.get(i)._j;
-			} else if (_axesName == "xz") {
-				tableWidth[i] = (int) convexHull.get(i)._i;
-				tableHeight[i] = (int) convexHull.get(i)._k;
-			} else if (_axesName == "yz") {
-				tableWidth[i] = (int) convexHull.get(i)._j;
-				tableHeight[i] = (int) convexHull.get(i)._k;
+			switch (_axesName) {
+				case "xy":
+					tableWidth[i] = (int) convexHull.get(i)._i;
+					tableHeight[i] = (int) convexHull.get(i)._j;
+					break;
+				case "xz":
+					tableWidth[i] = (int) convexHull.get(i)._i;
+					tableHeight[i] = (int) convexHull.get(i)._k;
+					break;
+				case "yz":
+					tableWidth[i] = (int) convexHull.get(i)._j;
+					tableHeight[i] = (int) convexHull.get(i)._k;
+					break;
 			}
 		}
 		
-		if (_axesName == "xy") {
-			tableWidth[convexHull.size()] = (int) convexHull.get(0)._i;
-			tableHeight[convexHull.size()] = (int) convexHull.get(0)._j;
-		} else if (_axesName == "xz") {
-			tableWidth[convexHull.size()] = (int) convexHull.get(0)._i;
-			tableHeight[convexHull.size()] = (int) convexHull.get(0)._k;
-		} else if (_axesName == "yz") {
-			tableWidth[convexHull.size()] = (int) convexHull.get(0)._j;
-			tableHeight[convexHull.size()] = (int) convexHull.get(0)._k;
+		switch (_axesName) {
+			case "xy":
+				tableWidth[convexHull.size()] = (int) convexHull.get(0)._i;
+				tableHeight[convexHull.size()] = (int) convexHull.get(0)._j;
+				break;
+			case "xz":
+				tableWidth[convexHull.size()] = (int) convexHull.get(0)._i;
+				tableHeight[convexHull.size()] = (int) convexHull.get(0)._k;
+				break;
+			case "yz":
+				tableWidth[convexHull.size()] = (int) convexHull.get(0)._j;
+				tableHeight[convexHull.size()] = (int) convexHull.get(0)._k;
+				break;
 		}
 		/*
 		Polygon p = new Polygon(tableWidth, tableHeight,tableWidth.length );
@@ -261,6 +271,7 @@ public class ConvexeHullImageMaker {
 		return ip;
 	}
 	
+	
 	/**
 	 * @param imagePlusInput stack
 	 * @param width
@@ -274,9 +285,9 @@ public class ConvexeHullImageMaker {
 		double[][] image           = new double[width][height];
 		for (int i = 0; i < width; ++i) {
 			for (int j = 0; j < height; ++j) {
-				if (_axesName == "xy") {
+				if (_axesName.equals("xy")) {
 					image[i][j] = imageStackInput.getVoxel(i, j, indice);
-				} else if (_axesName == "xz") {
+				} else if (_axesName.equals("xz")) {
 					image[i][j] = imageStackInput.getVoxel(i, indice, j);
 				} else {
 					image[i][j] = imageStackInput.getVoxel(indice, i, j);
@@ -290,6 +301,7 @@ public class ConvexeHullImageMaker {
 		return image;
 	}
 	
+	
 	/**
 	 * Return current combined axis  analysing
 	 *
@@ -298,6 +310,7 @@ public class ConvexeHullImageMaker {
 	public String getAxes() {
 		return _axesName;
 	}
+	
 	
 	/**
 	 * Set the current combined axis  analysing

@@ -33,6 +33,7 @@ public class RadialDistance {
 		return imagePlusSegmentedRescaled;
 	}
 	
+	
 	/**
 	 * Compute the shortest distance between the chromocenter periphery and the nuclear envelope
 	 *
@@ -74,9 +75,10 @@ public class RadialDistance {
 		return tDistanceRadial;
 	}
 	
+	
 	/**
-	 * Determine the radial distance of all chromocenter in the image of nucleus We realise the distance map on the
-	 * bianary nucleus. This method measure the radial distance between the barycenter of chromocenter and the nuclear
+	 * Determines the radial distance of all chromocenter in the image of nucleus We realise the distance map on the
+	 * binary nucleus. This method measure the radial distance between the barycenter of chromocenter and the nuclear
 	 * envelope.
 	 *
 	 * @param imagePlusSegmented
@@ -84,9 +86,7 @@ public class RadialDistance {
 	 *
 	 * @return
 	 */
-	public double[] computeBarycenterToBorderDistances(
-			ImagePlus imagePlusSegmented,
-			ImagePlus imagePlusChromocenter) {
+	public double[] computeBarycenterToBorderDistances(ImagePlus imagePlusSegmented, ImagePlus imagePlusChromocenter) {
 		Calibration calibration  = imagePlusSegmented.getCalibration();
 		double      xCalibration = calibration.pixelWidth;
 		ImagePlus imagePlusChromocenterRescale =
@@ -99,7 +99,7 @@ public class RadialDistance {
 		VoxelRecord[] tVoxelRecord = measure3D.computeObjectBarycenter(
 				imagePlusChromocenterRescale, false);
 		double[] tRadialDistance = new double[tVoxelRecord.length];
-		double   distance        = -50;
+		double   distance;
 		for (int i = 0; i < tVoxelRecord.length; ++i) {
 			VoxelRecord voxelRecord = tVoxelRecord[i];
 			distance = imageStackDistanceMap.getVoxel(
@@ -110,6 +110,7 @@ public class RadialDistance {
 		}
 		return tRadialDistance;
 	}
+	
 	
 	/**
 	 * Resize the input image to obtain isotropic voxel

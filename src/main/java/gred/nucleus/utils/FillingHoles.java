@@ -15,6 +15,7 @@ public class FillingHoles {
 	public FillingHoles() {
 	}
 	
+	
 	/** Method which process the image in the three dimensions (x, y, z) in the same time. */
 	public ImagePlus apply3D(ImagePlus imagePlusInput) {
 		// image inversion (0 became 255 and 255 became 0)
@@ -36,9 +37,6 @@ public class FillingHoles {
 		int       label;
 		boolean[] tEdgeFlags = new boolean[(int) imagePlusCorrected.getStatistics().max + 1];
 		imageStackCorrected = imagePlusCorrected.getImageStack();
-		for (int a = 0; a < tEdgeFlags.length; ++a) {
-			tEdgeFlags[a] = false;
-		}
 		// Analyse of plans extreme in the dim x
 		for (int k = 0; k < imageStackCorrected.getSize(); ++k) {
 			for (int j = 0; j < imageStackCorrected.getHeight(); ++j) {
@@ -95,49 +93,46 @@ public class FillingHoles {
 		ImageStack imageStackOutput =
 				new ImageStack(imageStackCorrected.getWidth(), imageStackCorrected.getHeight());
 		for (int k = 1; k <= imageStackCorrected.getSize(); ++k) {
-			ImageProcessor imageProcessorLabellised = imageStackCorrected.getProcessor(k);
+			ImageProcessor imageProcessorLabeled = imageStackCorrected.getProcessor(k);
 			for (int i = 0; i < imageStackCorrected.getWidth(); ++i) {
 				for (int j = 0; j < imageStackCorrected.getHeight(); ++j) {
-					voxelValue = imageProcessorLabellised.getPixel(i, j);
+					voxelValue = imageProcessorLabeled.getPixel(i, j);
 					if (voxelValue > 0) {
-						imageProcessorLabellised.putPixelValue(i, j, 0);
+						imageProcessorLabeled.putPixelValue(i, j, 0);
 					} else {
-						imageProcessorLabellised.putPixelValue(i, j, 255);
+						imageProcessorLabeled.putPixelValue(i, j, 255);
 					}
 				}
 			}
-			imageProcessorLabellised = BinaryImages.componentsLabeling(imageProcessorLabellised, 26, 32);
+			imageProcessorLabeled = BinaryImages.componentsLabeling(imageProcessorLabeled, 26, 32);
 			int       label;
-			boolean[] tEdgeFlags = new boolean[(int) imageProcessorLabellised.getMax() + 1];
-			for (int a = 0; a < tEdgeFlags.length; ++a) {
-				tEdgeFlags[a] = false;
-			}
-			// Analyse des plans extremes selon la dim x
+			boolean[] tEdgeFlags = new boolean[(int) imageProcessorLabeled.getMax() + 1];
+			// Analysis of extreme plans along x axis
 			for (int j = 0; j < imageStackCorrected.getHeight(); ++j) {
-				label = (int) imageProcessorLabellised.getf(0, j);
+				label = (int) imageProcessorLabeled.getf(0, j);
 				tEdgeFlags[label] = true;
-				label = (int) imageProcessorLabellised.getf(imageStackCorrected.getWidth() - 1, j);
+				label = (int) imageProcessorLabeled.getf(imageStackCorrected.getWidth() - 1, j);
 				tEdgeFlags[label] = true;
 			}
-			// Analyse des plans extremes selon la dim y
+			// Analysis of extreme plans along y axis
 			for (int i = 0; i < imageStackCorrected.getWidth(); ++i) {
-				label = (int) imageProcessorLabellised.getf(i, 0);
+				label = (int) imageProcessorLabeled.getf(i, 0);
 				tEdgeFlags[label] = true;
-				label = (int) imageProcessorLabellised.getf(i, imageStackCorrected.getHeight() - 1);
+				label = (int) imageProcessorLabeled.getf(i, imageStackCorrected.getHeight() - 1);
 				tEdgeFlags[label] = true;
 			}
 			
 			for (int i = 0; i < imageStackCorrected.getWidth(); ++i) {
 				for (int j = 0; j < imageStackCorrected.getHeight(); ++j) {
-					label = (int) imageProcessorLabellised.getf(i, j);
+					label = (int) imageProcessorLabeled.getf(i, j);
 					if (label == 0 || !tEdgeFlags[label]) {
-						imageProcessorLabellised.putPixelValue(i, j, 255);
+						imageProcessorLabeled.putPixelValue(i, j, 255);
 					} else {
-						imageProcessorLabellised.putPixelValue(i, j, 0);
+						imageProcessorLabeled.putPixelValue(i, j, 0);
 					}
 				}
 			}
-			imageStackOutput.addSlice(imageProcessorLabellised);
+			imageStackOutput.addSlice(imageProcessorLabeled);
 		}
 		imagePlusCorrected.setStack(imageStackOutput);
 		StackConverter stackConverter = new StackConverter(imagePlusCorrected);

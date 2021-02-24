@@ -18,6 +18,7 @@ public class ChromocenterAnalysis {
 	public ChromocenterAnalysis() {
 	}
 	
+	
 	/**
 	 * Compute the several parameters to characterize the chromocenter of one image, and return the results on the IJ
 	 * log windows
@@ -29,7 +30,7 @@ public class ChromocenterAnalysis {
 		Histogram histogram = new Histogram();
 		histogram.run(imagePlusChromocenter);
 		Measure3D      measure3D      = new Measure3D();
-		double[]       tVolume        = measure3D.computeVolumeofAllObjects(imagePlusChromocenter);
+		double[]       tVolume        = measure3D.computeVolumeOfAllObjects(imagePlusChromocenter);
 		RadialDistance radialDistance = new RadialDistance();
 		IJ.log("CHROMOCENTER PARAMETERS");
 		IJ.log("Titre Volume BorderToBorderDistance BarycenterToBorderDistance BarycenterToBorderDistanceNucleus ");
@@ -51,6 +52,7 @@ public class ChromocenterAnalysis {
 			}
 		}
 	}
+	
 	
 	/**
 	 * Compute the several parameters to characterize the chromocenter of several images, and create one output file for
@@ -77,7 +79,7 @@ public class ChromocenterAnalysis {
 			                                    imagePlusChromocenter.getCalibration().pixelHeight,
 			                                    imagePlusChromocenter.getCalibration().pixelDepth);
 			double[] tVolume =
-					measure3D.computeVolumeofAllObjects(imagePlusChromocenter);
+					measure3D.computeVolumeOfAllObjects(imagePlusChromocenter);
 			RadialDistance radialDistance = new RadialDistance();
 			double[] tBorderToBorderDistanceTable =
 					radialDistance.computeBorderToBorderDistances(imagePlusSegmented, imagePlusChromocenter);

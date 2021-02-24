@@ -24,7 +24,7 @@ public class MulticropFilter {
 			// TODO FAIRE UNE FONCTION POUR CHOPER LE FICHIER IMAGE DANS LE DIR PEUT IMPORTE L EXTENSION !
 			File tifFile = directoryTIF.searchFileNameWithoutExtension(coordinateFile.getName().split("\\.")[0]);
 			if (tifFile != null) {
-				System.out.println("Dedand");
+				System.out.println("Inside");
 				
 				AutocropParameters autocropParameters =
 						new AutocropParameters(tifFile.getParent(), tifFile.getParent());
@@ -35,14 +35,14 @@ public class MulticropFilter {
 				annotAutoCrop.run();
 			}
 		}
-		
 	}
 	
-	public static ArrayList<String> readCoordinatesTXT(File boxeFile) {
+	
+	public static ArrayList<String> readCoordinatesTXT(File boxFile) {
 		
 		ArrayList<String> boxLists = new ArrayList<>();
 		try {
-			Scanner scanner = new Scanner(boxeFile);
+			Scanner scanner = new Scanner(boxFile);
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();
 				
@@ -66,6 +66,5 @@ public class MulticropFilter {
 		}
 		return boxLists;
 	}
-	
 }
 

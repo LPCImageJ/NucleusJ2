@@ -65,39 +65,39 @@ public class ConnectedComponent2D extends ConnectedComponent {
 			//			freeVoxel();
 
 			// Determine the neighborhood taking into account the image's boundaries
-			short imin, imax, jmin, jmax;
+			short iMin, iMax, jMin, jMax;
 			if (iV-1 >= 0)
-				imin = (short)(iV-1);
+				iMin = (short)(iV-1);
 			else{
-				imin = 0;
+				iMin = 0;
 				componentInfo.setOnTheeBorder();
 			}
 
 			if (jV-1 >= 0)
-				jmin = (short)(jV-1);
+				jMin = (short)(jV-1);
 			else{
-				jmin = 0;
+				jMin = 0;
 				componentInfo.setOnTheeBorder();
 			}
 
 			if (iV+1 < this.m_inputImage.getWidth())
-				imax = (short)(iV+1);
+				iMax = (short)(iV+1);
 			else{
-				imax = (short)(this.m_inputImage.getWidth()-1);
+				iMax = (short)(this.m_inputImage.getWidth()-1);
 				componentInfo.setOnTheeBorder();
 			}
 
 			if (jV+1 < this.m_inputImage.getHeight())
-				jmax = (short)(jV+1);
+				jMax = (short)(jV+1);
 			else{
-				jmax = (short)(this.m_inputImage.getHeight()-1);
+				jMax = (short)(this.m_inputImage.getHeight()-1);
 				componentInfo.setOnTheeBorder();
 			}
 
 			ImageProcessor imgProc = m_inputImage.getProcessor();
 			// For each neighbor :
-			for (short ii = imin ; ii <= imax ; ii++) {
-				for (short jj = jmin ; jj <= jmax; jj++) {
+			for (short ii = iMin ; ii <= iMax ; ii++) {
+				for (short jj = jMin ; jj <= jMax; jj++) {
 					// If the neighbor (different from VoxelRecordShort) is a 1 and not labeled
 					if ((getLabel(ii, jj, 0) == 0) && (imgProc.get(ii, jj) == this.m_foregroundColor)) {
 						// Set the voxel's label
@@ -111,6 +111,7 @@ public class ConnectedComponent2D extends ConnectedComponent {
 			}
 		}
 	}
+
 
 	/** labels the connected components of the input image (attribute m_ip) */
 	@Override
@@ -134,6 +135,5 @@ public class ConnectedComponent2D extends ConnectedComponent {
 			}
 		}
 	}
-
 } // end of class
 

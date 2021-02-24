@@ -14,13 +14,13 @@ public class Directory {
 	/** Directory path */
 	public File            m_directory;
 	/** Directory path */
-	public String          m_dirPath        = "";
-	/** List of files in current forlder + recursive folder */
-	public ArrayList<File> m_listeOfFiles   = new ArrayList<>();
+	public String          m_dirPath       = "";
+	/** List of files in current folder + recursive folder */
+	public ArrayList<File> m_fileList      = new ArrayList<>();
 	/** Check if directory contain nd files */
-	public Boolean         m_containNdFile  = false;
+	public Boolean         m_containNdFile = false;
 	/** List of nd files */
-	public ArrayList<File> m_listeOfFilesND = new ArrayList<>();
+	public ArrayList<File> m_fileListND    = new ArrayList<>();
 	/**
 	 *
 	 */
@@ -35,12 +35,13 @@ public class Directory {
 		try {
 			this.m_dirPath = Path;
 			this.m_directory = new File(this.m_dirPath);
-			this.m_separator = this.m_directory.separator;
+			this.m_separator = File.separator;
 		} catch (Exception exp) {
 			System.out.println(exp.getMessage());
 			System.exit(1);
 		}
 	}
+	
 	
 	/** Method to check if directory and create if doesn't */
 	public void CheckAndCreateDir() {
@@ -49,13 +50,14 @@ public class Directory {
 		
 	}
 	
+	
 	/** Check if separator exist */
 	private void ChekSeparatorEndPath() {
-		if (!(this.m_dirPath.endsWith("/"))) {
-			this.m_dirPath = this.m_dirPath + this.m_directory.separator;
+		if (!(this.m_dirPath.endsWith(File.separator))) {
+			this.m_dirPath = this.m_dirPath + File.separator;
 		}
-		
 	}
+	
 	
 	/** Method creating folder if doesn't exist. */
 	private void CreateDire() {
@@ -71,10 +73,12 @@ public class Directory {
 		}
 	}
 	
+	
 	/** @return path current directory */
 	public String get_dirPath() {
 		return this.m_dirPath;
 	}
+	
 	
 	/**
 	 * Method to recursively list files contains in folder and sub folder. (Argument needed because of recursive way)
@@ -94,67 +98,74 @@ public class Directory {
 				listImageFiles(f.getAbsolutePath());
 			} else {
 				if (!(FilenameUtils.getExtension(f.getName()).equals("txt"))) {
-					this.m_listeOfFiles.add(f);
+					this.m_fileList.add(f);
 					if (FilenameUtils.getExtension(f.getName()).equals("nd")) {
 						this.m_containNdFile = true;
-						this.m_listeOfFilesND.add(f);
+						this.m_fileListND.add(f);
 					}
 				}
 			}
 		}
 	}
 	
+	
 	public void listAllFiles(String Path) {
 		File   root = new File(Path);
 		File[] list = root.listFiles();
 		
-		for (File f : list) {
-			this.m_listeOfFiles.add(f);
-			if (f.isDirectory()) {
-				listAllFiles(f.getAbsolutePath());
-				
+		if (list != null) {
+			for (File f : list) {
+				this.m_fileList.add(f);
+				if (f.isDirectory()) {
+					listAllFiles(f.getAbsolutePath());
+				}
 			}
-			
 		}
 	}
+	
 	
 	/** Replace list files if ND files have been listed. */
 	public void checkAndActualiseNDFiles() {
 		if (this.m_containNdFile) {
-			this.m_listeOfFiles = this.m_listeOfFilesND;
+			this.m_fileList = this.m_fileListND;
 		}
 	}
+	
 	
 	/** check if input directory is empty */
 	public void checkIfEmpty() {
-		if (this.m_listeOfFiles.isEmpty()) {
+		if (this.m_fileList.isEmpty()) {
 			System.err.println("Folder " + this.m_dirPath + " is empty");
 		}
-		
 	}
+	
 	
 	/** @return list of files */
 	public ArrayList<File> ListFiles() {
-		return this.m_listeOfFiles;
+		return this.m_fileList;
 	}
 	
+	
 	/**
-	 * @param indice of file in list array
+	 * @param index of file in list array
 	 *
 	 * @return File
 	 */
-	public File getFile(int indice) {
-		return this.m_listeOfFiles.get(indice);
+	public File getFile(int index) {
+		return this.m_fileList.get(index);
 	}
+	
 	
 	/** @return number of file listed */
 	public int getNumberFiles() {
-		return this.m_listeOfFiles.size();
+		return this.m_fileList.size();
 	}
 	
-	public String getdirPath() {
+	
+	public String getDirPath() {
 		return this.m_directory.getPath() + File.separator;
 	}
+	
 	
 	public String getSeparator() {
 		return this.m_separator;
@@ -167,7 +178,7 @@ public class Directory {
 	public File searchFileNameWithoutExtension(String fileName) {
 		File fileToReturn = null;
 		
-		for (File f : this.m_listeOfFiles) {
+		for (File f : this.m_fileList) {
 			if (f.getName().substring(0, f.getName().lastIndexOf('.')).equals(fileName)) {
 				fileToReturn = f;
 			}
@@ -175,10 +186,11 @@ public class Directory {
 		return fileToReturn;
 	}
 	
+	
 	public boolean checkIfFileExists(String fileName) {
 		boolean fileExists = false;
 		
-		for (File f : this.m_listeOfFiles) {
+		for (File f : this.m_fileList) {
 			if ((f.getName().substring(0, f.getName().lastIndexOf('.')).equals(fileName))
 			    || (f.getName().equals(fileName))) {
 				fileExists = true;
@@ -186,5 +198,4 @@ public class Directory {
 		}
 		return fileExists;
 	}
-	
 }

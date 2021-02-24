@@ -6,28 +6,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
- *  This class is use to filter autocrop boxes intersecting in 2D.
- *  This process is a default option used in autocrop :
- *
- *            Parameter : boolean boxesRegroupement
- *
- *  Here we regroup boxes with a certain percentage of surface
- *  intersection :
- *      if SurfaceA intersect SurfaceB >50% && SurfaceB intersect SurfaceA >50%
- *  You can defined the percent of surface intersection parameter
- *  in Aurocrop parameters :
- *
- *            Parameter : int boxesPercentSurfaceToFilter
- *
- *
- * */
+/**
+ * This class is use to filter autocrop boxes intersecting in 2D. This process is a default option used in autocrop :
+ * <p>
+ * Parameter : boolean boxesRegrouping
+ * <p>
+ * Here we regroup boxes with a certain percentage of surface intersection : if SurfaceA intersect SurfaceB >50% &&
+ * SurfaceB intersect SurfaceA >50% You can defined the percent of surface intersection parameter in Autocrop parameters
+ * :
+ * <p>
+ * Parameter : int boxesPercentSurfaceToFilter
+ **/
 
 
 public class rectangleIntersection {
 	
 	
-	/** List of boxes Rectangle : xmin , ymin , width , height */
+	/** List of boxes Rectangle : xMin , yMin , width , height */
 	ArrayList<Rectangle>      listRectangle      = new ArrayList<>();
 	/** Slice coordinate associated to the rectangles(boxes) */
 	ArrayList<String>         zSlices            = new ArrayList<>();
@@ -36,7 +31,7 @@ public class rectangleIntersection {
 	/** Number of intersections per rectangles */
 	HashMap<Integer, Integer> countIntersect     = new HashMap<>();
 	/** Final list of rectangles after re rectangle computations */
-	ArrayList<String>         finalListRectange  = new ArrayList<>();
+	ArrayList<String>         finalListRectangle = new ArrayList<>();
 	/** Boolean to check if new rectangles are computed */
 	boolean                   newBoxesAdded      = false;
 	/** Autocrop parameter */
@@ -44,7 +39,7 @@ public class rectangleIntersection {
 	
 	/**
 	 * Constructor getting list of boxes computed in autocrop class. Initialisation of a list of 2D rectangles and a
-	 * list of Z stack associated (Zmin-Zmax).
+	 * list of Z stack associated (zMin-zMax).
 	 *
 	 * @param _boxes               : list of boxes
 	 * @param m_autocropParameters : autocrop parameters
@@ -62,6 +57,7 @@ public class rectangleIntersection {
 		}
 	}
 	
+	
 	/**
 	 * Compute the percentage of surface intersecting between r1 and r2.
 	 *
@@ -70,13 +66,14 @@ public class rectangleIntersection {
 	 *
 	 * @return percent of overlap of r1
 	 */
-	public static double perceOf2Rect(Rectangle2D r1, Rectangle2D r2) {
+	public static double percentOf2Rectangles(Rectangle2D r1, Rectangle2D r2) {
 		Rectangle2D r = new Rectangle2D.Double();
 		Rectangle2D.intersect(r1, r2, r);
 		double fr1 = r1.getWidth() * r1.getHeight();                // area of "r1"
 		double f   = r.getWidth() * r.getHeight();                  // area of "r" - overlap
 		return (fr1 == 0 || f <= 0) ? 0 : (f / fr1) * 100;          // overlap percentage
 	}
+	
 	
 	/**
 	 * Class to run the boxes merge process : Step 1 : detecting boxes intersections Step 2 : group rectangle
@@ -88,11 +85,11 @@ public class rectangleIntersection {
 		while (this.newBoxesAdded) {
 			tours++;
 			computeIntersection();
-			rectangleRegroupement();
+			rectangleRegroup();
 			recompileRectangle();
 		}
-		
 	}
+	
 	
 	/** Regroup list of rectangles intersecting */
 	public void computeIntersection() {
@@ -107,9 +104,9 @@ public class rectangleIntersection {
 					
 					if (listRectangle.get(i).intersects(this.listRectangle.get(y))) {
 						
-						if (perceOf2Rect(this.listRectangle.get(i), this.listRectangle.get(y)) >
+						if (percentOf2Rectangles(this.listRectangle.get(i), this.listRectangle.get(y)) >
 						    autocropParameters.getBoxesPercentSurfaceToFilter() ||
-						    perceOf2Rect(this.listRectangle.get(y), this.listRectangle.get(i)) >
+						    percentOf2Rectangles(this.listRectangle.get(y), this.listRectangle.get(i)) >
 						    autocropParameters.getBoxesPercentSurfaceToFilter()) {
 							
 							this.rectangleIntersect.add(i + "-" + y);
@@ -126,68 +123,54 @@ public class rectangleIntersection {
 		}
 	}
 	
+	
 	/** Regroup of rectangle intersecting recursively */
-	public void rectangleRegroupement() {
-		this.finalListRectange.clear();
+	public void rectangleRegroup() {
+		this.finalListRectangle.clear();
 		for (Map.Entry<Integer, Integer> entry : this.countIntersect.entrySet()) {
-			String listRectangleConnected          = "" + entry.getKey();
-			String listRectangleConnectedStartTurn = "" + entry.getKey();
+			StringBuilder listRectangleConnected          = new StringBuilder("" + entry.getKey());
+			String        listRectangleConnectedStartTurn = "" + entry.getKey();
 			for (int i = 0; i < this.rectangleIntersect.size(); i++) {
 				
 				String[] splitIntersect = this.rectangleIntersect.get(i).split("-");
 				if (splitIntersect[0].equals(Integer.toString(entry.getKey()))) {
-					String[] splitlist = this.rectangleIntersect.get(i).split("-");
-					listRectangleConnected = listRectangleConnected + "-" + splitlist[splitlist.length - 1];
+					String[] splitList = this.rectangleIntersect.get(i).split("-");
+					listRectangleConnected.append("-").append(splitList[splitList.length - 1]);
 					this.rectangleIntersect.remove(i);
-					this.rectangleIntersect.remove(this.rectangleIntersect.indexOf(splitlist[splitlist.length - 1] +
-					                                                               "-" +
-					                                                               entry.getKey()));
-					ArrayList<String> listAParcourir = new ArrayList<>();
-					listAParcourir.add(splitlist[splitlist.length - 1]);
-					while (listAParcourir.size() > 0) {
+					this.rectangleIntersect.remove(splitList[splitList.length - 1] + "-" + entry.getKey());
+					ArrayList<String> listToIterateThrough = new ArrayList<>();
+					listToIterateThrough.add(splitList[splitList.length - 1]);
+					while (listToIterateThrough.size() > 0) {
 						for (int y = 0; y < this.rectangleIntersect.size(); y++) {
 							String[] splitIntersect2 = this.rectangleIntersect.get(y).split("-");
-							if (splitIntersect2[0].equals(listAParcourir.get(0))) {
-								String[] splitlist2 = this.rectangleIntersect.get(y).split("-");
-								listAParcourir.add(splitlist2[splitlist.length - 1]);
-								listRectangleConnected =
-										listRectangleConnected + "-" + splitlist2[splitlist.length - 1];
-								String[] splitCurrentRectangleConnected = listRectangleConnected.split("-");
+							if (splitIntersect2[0].equals(listToIterateThrough.get(0))) {
+								String[] splitList2 = this.rectangleIntersect.get(y).split("-");
+								listToIterateThrough.add(splitList2[splitList.length - 1]);
+								listRectangleConnected.append("-").append(splitList2[splitList.length - 1]);
+								String[] splitCurrentRectangleConnected = listRectangleConnected.toString().split("-");
 								this.rectangleIntersect.remove(y);
-								this.rectangleIntersect.remove(this.rectangleIntersect.indexOf(splitlist2[splitlist.length -
-								                                                                          1] +
-								                                                               "-" +
-								                                                               listAParcourir.get(0)));
+								this.rectangleIntersect.remove(splitList2[splitList.length - 1] +
+								                               "-" +
+								                               listToIterateThrough.get(0));
 								for (String s : splitCurrentRectangleConnected) {
-									if (this.rectangleIntersect.contains(splitlist2[splitlist.length - 1] + "-" + s)) {
-										this.rectangleIntersect.remove(this.rectangleIntersect.indexOf(splitlist2[
-												                                                               splitlist.length -
-												                                                               1] +
-										                                                               "-" +
-										                                                               s));
-									}
-									if (this.rectangleIntersect.contains(s + "-" + splitlist2[splitlist.length - 1])) {
-										this.rectangleIntersect.remove(this.rectangleIntersect.indexOf(s +
-										                                                               "-" +
-										                                                               splitlist2[
-												                                                               splitlist.length -
-												                                                               1]));
-									}
+									this.rectangleIntersect.remove(splitList2[splitList.length - 1] + "-" + s);
+									this.rectangleIntersect.remove(s + "-" + splitList2[splitList.length - 1]);
 								}
 								y = 0;
 							}
 						}
-						listAParcourir.remove(0);
+						listToIterateThrough.remove(0);
 					}
 				}
-				if (!(listRectangleConnected.equals(listRectangleConnectedStartTurn))) {
+				if (!(listRectangleConnected.toString().equals(listRectangleConnectedStartTurn))) {
 					i--;
-					listRectangleConnectedStartTurn = listRectangleConnected;
+					listRectangleConnectedStartTurn = listRectangleConnected.toString();
 				}
 			}
-			this.finalListRectange.add(listRectangleConnected);
+			this.finalListRectangle.add(listRectangleConnected.toString());
 		}
 	}
+	
 	
 	/** Compile of new rectangle by getting extreme coordinate of a group of rectangles. */
 	public void recompileRectangle() {
@@ -195,16 +178,16 @@ public class rectangleIntersection {
 		ArrayList<Rectangle> listOfRectangleToAdd       = new ArrayList<>();
 		ArrayList<String>    listOfRectangleZSliceToAdd = new ArrayList<>();
 		ArrayList<Rectangle> listOfRectangleToRemove    = new ArrayList<>();
-		for (String value : this.finalListRectange) {
-			String[] splitlist2       = value.split("-");
+		for (String value : this.finalListRectangle) {
+			String[] splitList2       = value.split("-");
 			double   xMixNewRectangle = 0;
 			double   yMinNewRectangle = 0;
 			double   maxWidth         = 0;
 			double   maxHeight        = 0;
 			int      minZSlice        = 0;
 			int      maxZSlice        = 0;
-			if (splitlist2.length > 1) {
-				for (String s : splitlist2) {
+			if (splitList2.length > 1) {
+				for (String s : splitList2) {
 					int tmp = Integer.parseInt(s);
 					if ((this.listRectangle.get(tmp).getX() < xMixNewRectangle) || (xMixNewRectangle == 0)) {
 						xMixNewRectangle = this.listRectangle.get(tmp).getX();
@@ -235,8 +218,8 @@ public class rectangleIntersection {
 					                                          (int) this.listRectangle.get(tmp).getHeight()));
 				}
 				
-				maxZSlice = (int) maxZSlice - (int) minZSlice;
-				listOfRectangleZSliceToAdd.add((int) minZSlice + "-" + (int) maxZSlice);
+				maxZSlice = maxZSlice - minZSlice;
+				listOfRectangleZSliceToAdd.add(minZSlice + "-" + maxZSlice);
 				maxWidth = (int) maxWidth - (int) xMixNewRectangle;
 				maxHeight = (int) maxHeight - (int) yMinNewRectangle;
 				listOfRectangleToAdd.add(new Rectangle((int) xMixNewRectangle,
@@ -257,8 +240,8 @@ public class rectangleIntersection {
 			listRectangle.remove(indexRectangleRemove);
 			zSlices.remove(indexRectangleRemove);
 		}
-		
 	}
+	
 	
 	/**
 	 * Computing the list of the new rectangles using boxes coordinates format.
@@ -271,22 +254,20 @@ public class rectangleIntersection {
 		
 		for (int i = 0; i < listRectangle.size(); i++) {
 			String[] zSliceTMP = this.zSlices.get(i).split("-");
-			Integer.valueOf(zSliceTMP[0]);
-			short tmpXmax = (short) (this.listRectangle.get(i).getX() + this.listRectangle.get(i).getWidth());
-			short tmpYmax = (short) (this.listRectangle.get(i).getY() + this.listRectangle.get(i).getHeight());
-			short tmpZmax = (short) (Short.parseShort(zSliceTMP[0]) + Short.parseShort(zSliceTMP[1]));
-			if (tmpZmax == 0) {
-				tmpZmax = 1;
+			short tmpXMax = (short) (this.listRectangle.get(i).getX() + this.listRectangle.get(i).getWidth());
+			short tmpYMax = (short) (this.listRectangle.get(i).getY() + this.listRectangle.get(i).getHeight());
+			short tmpZMax = (short) (Short.parseShort(zSliceTMP[0]) + Short.parseShort(zSliceTMP[1]));
+			if (tmpZMax == 0) {
+				tmpZMax = 1;
 			}
 			Box box = new Box((short) (this.listRectangle.get(i).getX()),
-			                  tmpXmax,
+			                  tmpXMax,
 			                  (short) (this.listRectangle.get(i).getY()),
-			                  tmpYmax,
+			                  tmpYMax,
 			                  Short.parseShort(zSliceTMP[0]),
-			                  tmpZmax);
+			                  tmpZMax);
 			boxes.put((double) i, box);
 		}
 		return boxes;
 	}
-	
 }

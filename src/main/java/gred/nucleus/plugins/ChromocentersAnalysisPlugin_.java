@@ -20,12 +20,12 @@ public class ChromocentersAnalysisPlugin_ implements PlugIn {
 	 *
 	 */
 	public void run(String arg) {
-		int    indiceCcImage        = 0;
-		int    indiceRawImage       = 0;
-		int    indiceSegmentedImage = 0;
-		double xCalibration         = 1, yCalibration = 1, zCalibration = 1;
-		String unit                 = "pixel";
-		int[]  wList                = WindowManager.getIDList();
+		int    indexCcImage        = 0;
+		int    indexRawImage       = 0;
+		int    indexSegmentedImage = 0;
+		double xCalibration        = 1, yCalibration = 1, zCalibration = 1;
+		String unit                = "pixel";
+		int[]  wList               = WindowManager.getIDList();
 		if (wList == null) {
 			IJ.noImage();
 			return;
@@ -47,10 +47,10 @@ public class ChromocentersAnalysisPlugin_ implements PlugIn {
 			}
 		}
 		GenericDialog genericDialog = new GenericDialog("Chromocenter Analysis", IJ.getInstance());
-		genericDialog.addChoice("Raw image", titles, titles[indiceRawImage]);
-		genericDialog.addChoice("Nucleus Segmented", titles, titles[indiceSegmentedImage]);
-		genericDialog.addChoice("Chromocenters image Segmented", titles, titles[indiceCcImage]);
-		genericDialog.addNumericField("x calibartion", xCalibration, 3);
+		genericDialog.addChoice("Raw image", titles, titles[indexRawImage]);
+		genericDialog.addChoice("Nucleus Segmented", titles, titles[indexSegmentedImage]);
+		genericDialog.addChoice("Chromocenters image Segmented", titles, titles[indexCcImage]);
+		genericDialog.addNumericField("x calibration", xCalibration, 3);
 		genericDialog.addNumericField("y calibration", yCalibration, 3);
 		genericDialog.addNumericField("z calibration).", zCalibration, 3);
 		genericDialog.addStringField("Unit", unit, 10);

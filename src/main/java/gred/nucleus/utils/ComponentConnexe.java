@@ -8,13 +8,13 @@ public class ComponentConnexe {
 	private       String            _axesName;
 	
 	/**
-	 * Parcour de l'image pixel par pixel et recherche ces composantes connexes
+	 * Iterates over the image pixels and look for these connected components
 	 *
 	 * @param labelIni
 	 */
 	void computeLabel(double labelIni) {
 		int currentLabel = 2;
-		// Parcour des différents Pixels de l'images
+		// Iterate over the image pixels
 		for (int i = 0; i < _image.length; ++i) {
 			for (int j = 0; j < _image[i].length; ++j) {
 				if (_image[i][j] == labelIni) {
@@ -28,6 +28,7 @@ public class ComponentConnexe {
 			}
 		}
 	}
+	
 	
 	/**
 	 * @param labelIni
@@ -53,88 +54,89 @@ public class ComponentConnexe {
 								VoxelRecord voxel = new VoxelRecord();
 								voxel.setLocation(ii, jj, 0);
 								voxelBoundary.add(0, voxel);
-							} else if (ii == 0) {
-								if (jj == 0) {
-									if (_image[ii][jj] == labelIni &&
-									    (_image[ii + 1][jj] == currentLabel ||
-									     _image[ii][jj + 1] == currentLabel)) {
-										_image[ii][jj] = currentLabel;
-										VoxelRecord voxel = new VoxelRecord();
-										voxel.setLocation(ii, jj, 0);
-										voxelBoundary.add(0, voxel);
-									} else if (jj == _image[0].length - 1) {
-										if (_image[ii][jj] == labelIni &&
-										    (_image[ii + 1][jj] == currentLabel ||
-										     _image[ii][jj - 1] == currentLabel)) {
-											_image[ii][jj] = currentLabel;
-											VoxelRecord voxel = new VoxelRecord();
-											voxel.setLocation(ii, jj, 0);
-											voxelBoundary.add(0, voxel);
-										} else if (_image[ii][jj] == labelIni &&
-										           (_image[ii + 1][jj] == currentLabel ||
-										            _image[ii][jj - 1] == currentLabel ||
-										            _image[ii][jj + 1] == currentLabel)) {
-											_image[ii][jj] = currentLabel;
-											VoxelRecord voxel = new VoxelRecord();
-											voxel.setLocation(ii, jj, 0);
-											voxelBoundary.add(0, voxel);
-										} else if (ii == _image.length - 1) {
-											if (jj == 0) {
-												if (_image[ii][jj] == labelIni &&
-												    (_image[ii - 1][jj] == currentLabel ||
-												     _image[ii][jj + 1] == currentLabel)) {
-													_image[ii][jj] = currentLabel;
-													VoxelRecord voxel = new VoxelRecord();
-													voxel.setLocation(ii, jj, 0);
-													voxelBoundary.add(0, voxel);
-												} else if (jj == _image[0].length - 1) {
-													if (_image[ii][jj] == labelIni &&
-													    (_image[ii - 1][jj] == currentLabel ||
-													     _image[ii][jj - 1] == currentLabel)) {
-														_image[ii][jj] = currentLabel;
-														VoxelRecord voxel = new VoxelRecord();
-														voxel.setLocation(ii, jj, 0);
-														voxelBoundary.add(0, voxel);
-													} else if (_image[ii][jj] == labelIni &&
-													           (_image[ii - 1][jj] == currentLabel ||
-													            _image[ii][jj - 1] == currentLabel ||
-													            _image[ii][jj + 1] == currentLabel)) {
-														_image[ii][jj] = currentLabel;
-														VoxelRecord voxel = new VoxelRecord();
-														voxel.setLocation(ii, jj, 0);
-														voxelBoundary.add(0, voxel);
-													} else if (jj == 0) {
-														if (_image[ii][jj] == labelIni &&
-														    (_image[ii - 1][jj] == currentLabel ||
-														     _image[ii + 1][jj] == currentLabel ||
-														     _image[ii][jj + 1] == currentLabel)) {
-															_image[ii][jj] = currentLabel;
-															VoxelRecord voxel = new VoxelRecord();
-															voxel.setLocation(ii, jj, 0);
-															voxelBoundary.add(0, voxel);
-														} else if (jj == _image[0].length - 1 &&
-														           _image[ii][jj] == labelIni &&
-														           (_image[ii - 1][jj] == currentLabel ||
-														            _image[ii + 1][jj] == currentLabel ||
-														            _image[ii][jj - 1] == currentLabel)) {
-															_image[ii][jj] = currentLabel;
-															VoxelRecord voxel = new VoxelRecord();
-															voxel.setLocation(ii, jj, 0);
-															voxelBoundary.add(0, voxel);
-														}
-													}
-												}
-											}
-										}
-									}
+							}
+						} else if (ii == 0) {
+							if (jj == 0) {
+								if (_image[ii][jj] == labelIni &&
+								    (_image[ii + 1][jj] == currentLabel || _image[ii][jj + 1] == currentLabel)) {
+									_image[ii][jj] = currentLabel;
+									VoxelRecord voxel = new VoxelRecord();
+									voxel.setLocation(ii, jj, 0);
+									voxelBoundary.add(0, voxel);
+								}
+							} else if (jj == _image[0].length - 1) {
+								if (_image[ii][jj] == labelIni &&
+								    (_image[ii + 1][jj] == currentLabel || _image[ii][jj - 1] == currentLabel)) {
+									_image[ii][jj] = currentLabel;
+									VoxelRecord voxel = new VoxelRecord();
+									voxel.setLocation(ii, jj, 0);
+									voxelBoundary.add(0, voxel);
+								}
+							} else {
+								if (_image[ii][jj] == labelIni &&
+								    (_image[ii + 1][jj] == currentLabel ||
+								     _image[ii][jj - 1] == currentLabel ||
+								     _image[ii][jj + 1] == currentLabel)) {
+									_image[ii][jj] = currentLabel;
+									VoxelRecord voxel = new VoxelRecord();
+									voxel.setLocation(ii, jj, 0);
+									voxelBoundary.add(0, voxel);
 								}
 							}
+						} else if (ii == _image.length - 1) {
+							if (jj == 0) {
+								if (_image[ii][jj] == labelIni &&
+								    (_image[ii - 1][jj] == currentLabel || _image[ii][jj + 1] == currentLabel)) {
+									_image[ii][jj] = currentLabel;
+									VoxelRecord voxel = new VoxelRecord();
+									voxel.setLocation(ii, jj, 0);
+									voxelBoundary.add(0, voxel);
+								}
+							} else if (jj == _image[0].length - 1) {
+								if (_image[ii][jj] == labelIni &&
+								    (_image[ii - 1][jj] == currentLabel || _image[ii][jj - 1] == currentLabel)) {
+									_image[ii][jj] = currentLabel;
+									VoxelRecord voxel = new VoxelRecord();
+									voxel.setLocation(ii, jj, 0);
+									voxelBoundary.add(0, voxel);
+								}
+							} else {
+								if (_image[ii][jj] == labelIni &&
+								    (_image[ii - 1][jj] == currentLabel ||
+								     _image[ii][jj - 1] == currentLabel ||
+								     _image[ii][jj + 1] == currentLabel)) {
+									_image[ii][jj] = currentLabel;
+									VoxelRecord voxel = new VoxelRecord();
+									voxel.setLocation(ii, jj, 0);
+									voxelBoundary.add(0, voxel);
+								}
+							}
+						} else if (jj == 0) {
+							if (_image[ii][jj] == labelIni &&
+							    (_image[ii - 1][jj] == currentLabel ||
+							     _image[ii + 1][jj] == currentLabel ||
+							     _image[ii][jj + 1] == currentLabel)) {
+								_image[ii][jj] = currentLabel;
+								VoxelRecord voxel = new VoxelRecord();
+								voxel.setLocation(ii, jj, 0);
+								voxelBoundary.add(0, voxel);
+							}
+						} else if (jj == _image[0].length - 1 &&
+						           _image[ii][jj] == labelIni &&
+						           (_image[ii - 1][jj] == currentLabel ||
+						            _image[ii + 1][jj] == currentLabel ||
+						            _image[ii][jj - 1] == currentLabel)) {
+							_image[ii][jj] = currentLabel;
+							VoxelRecord voxel = new VoxelRecord();
+							voxel.setLocation(ii, jj, 0);
+							voxelBoundary.add(0, voxel);
 						}
 					}
 				}
 			}
 		}
 	}
+	
 	
 	/**
 	 * @param label
@@ -214,6 +216,7 @@ public class ComponentConnexe {
 		return lVoxelBoundary;
 	}
 	
+	
 	/**
 	 * @param labelIni
 	 *
@@ -224,28 +227,32 @@ public class ComponentConnexe {
 		return _listLabel;
 	}
 	
-	/** @return */
+	
+	/** @return  */
 	public double[][] getImageTable() {
 		return _image;
 	}
 	
-	/** @param _image */
+	
+	/** @param _image  */
 	public void setImageTable(double[][] _image) {
 		this._image = _image;
 	}
 	
+	
 	/**
-	 * @param labelInitial
+	 * @param initialLabel
 	 * @param voxelRecord
 	 *
 	 * @return
 	 */
-	double[][] computeLabelOfOneObject(int labelInitial, VoxelRecord voxelRecord) {
+	double[][] computeLabelOfOneObject(int initialLabel, VoxelRecord voxelRecord) {
 		int currentLabel = 2;
 		//	IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+ " \nstart " +labelInitial+"\n j "+voxelRecord._j+"\n i "+voxelRecord._i+ " \n "+currentLabel+ "\n euu "+_image[(int)voxelRecord._i][(int)voxelRecord._j]+" end");
-		breadthFirstSearch(labelInitial, voxelRecord, currentLabel);
+		breadthFirstSearch(initialLabel, voxelRecord, currentLabel);
 		return _image;
 	}
+	
 	
 	/**
 	 * @param label

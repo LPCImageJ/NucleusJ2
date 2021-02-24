@@ -17,7 +17,7 @@ import java.awt.event.WindowListener;
 public class FJ_Laplacian implements PlugIn, WindowListener {
 	
 	private static boolean compute   = true;
-	private static boolean zerocross = false;
+	private static boolean zeroCross = false;
 	
 	private static String scale = "1.0";
 	
@@ -25,7 +25,7 @@ public class FJ_Laplacian implements PlugIn, WindowListener {
 	
 	public void run(String arg) {
 		
-		if (!FJ.libcheck()) return;
+		if (!FJ.libCheck()) return;
 		final ImagePlus imp = FJ.imageplus();
 		if (imp == null) return;
 		
@@ -35,7 +35,7 @@ public class FJ_Laplacian implements PlugIn, WindowListener {
 		gd.addCheckbox(" Compute Laplacian image    ", compute);
 		gd.addStringField("                Smoothing scale:", scale);
 		gd.addPanel(new Panel(), GridBagConstraints.EAST, new Insets(1, 0, 0, 0));
-		gd.addCheckbox(" Detect zero-crossings    ", zerocross);
+		gd.addCheckbox(" Detect zero-crossings    ", zeroCross);
 		gd.addPanel(new Panel(), GridBagConstraints.EAST, new Insets(0, 0, 0, 0));
 		
 		if (pos.x >= 0 && pos.y >= 0) {
@@ -51,13 +51,15 @@ public class FJ_Laplacian implements PlugIn, WindowListener {
 		
 		compute = gd.getNextBoolean();
 		scale = gd.getNextString();
-		zerocross = gd.getNextBoolean();
+		zeroCross = gd.getNextBoolean();
 		
-		(new FJLaplacian()).run(imp, compute, scale, zerocross);
+		(new FJLaplacian()).run(imp, compute, scale, zeroCross);
 	}
+	
 	
 	public void windowActivated(final WindowEvent e) {
 	}
+	
 	
 	public void windowClosed(final WindowEvent e) {
 		
@@ -65,21 +67,25 @@ public class FJ_Laplacian implements PlugIn, WindowListener {
 		pos.y = e.getWindow().getY();
 	}
 	
+	
 	public void windowClosing(final WindowEvent e) {
 	}
+	
 	
 	public void windowDeactivated(final WindowEvent e) {
 	}
 	
+	
 	public void windowDeiconified(final WindowEvent e) {
 	}
+	
 	
 	public void windowIconified(final WindowEvent e) {
 	}
 	
+	
 	public void windowOpened(final WindowEvent e) {
 	}
-	
 }
 
 class FJLaplacian {
@@ -88,50 +94,50 @@ class FJLaplacian {
 			final ImagePlus imp,
 			final boolean compute,
 			final String scale,
-			final boolean zerocross
+			final boolean zeroCross
 	        ) {
 		
 		try {
-			double scaleval;
+			double scaleVal;
 			try {
-				scaleval = Double.parseDouble(scale);
+				scaleVal = Double.parseDouble(scale);
 			} catch (Exception e) {
 				throw new IllegalArgumentException("Invalid smoothing scale value");
 			}
 			
 			final Image img    = Image.wrap(imp);
-			Image       newimg = new FloatImage(img);
+			Image       newImg = new FloatImage(img);
 			
 			double[] pls = {0, 1};
 			int      pl  = 0;
-			if (compute && zerocross) {
+			if (compute && zeroCross) {
 				pls = new double[]{0, 0.95, 1};
 			}
 			final Progressor progressor = new Progressor();
 			progressor.display(FJ_Options.pgs);
 			
 			if (compute) {
-				final Aspects aspects = newimg.aspects();
-				if (!FJ_Options.isotropic) newimg.aspects(new Aspects());
+				final Aspects aspects = newImg.aspects();
+				if (!FJ_Options.isotropic) newImg.aspects(new Aspects());
 				final Laplacian laplace = new Laplacian();
 				progressor.range(pls[pl], pls[++pl]);
 				laplace.progressor.parent(progressor);
 				laplace.messenger.log(FJ_Options.log);
 				laplace.messenger.status(FJ_Options.pgs);
-				newimg = laplace.run(newimg, scaleval);
-				newimg.aspects(aspects);
+				newImg = laplace.run(newImg, scaleVal);
+				newImg.aspects(aspects);
 			}
 			
-			if (zerocross) {
+			if (zeroCross) {
 				final ZeroCrosser zc = new ZeroCrosser();
 				progressor.range(pls[pl], pls[++pl]);
 				zc.progressor.parent(progressor);
 				zc.messenger.log(FJ_Options.log);
 				zc.messenger.status(FJ_Options.pgs);
-				zc.run(newimg);
+				zc.run(newImg);
 			}
 			
-			FJ.show(newimg, imp);
+			FJ.show(newImg, imp);
 			FJ.close(imp);
 			
 		} catch (OutOfMemoryError e) {
@@ -145,5 +151,4 @@ class FJLaplacian {
 			
 		}
 	}
-	
 }

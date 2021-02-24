@@ -30,6 +30,7 @@ public class PluginParameters {
 	public PluginParameters() {
 	}
 	
+	
 	/**
 	 * Constructor with default parameter
 	 *
@@ -44,6 +45,7 @@ public class PluginParameters {
 		
 		
 	}
+	
 	
 	/**
 	 * Constructor with specific calibration in x y and z
@@ -66,6 +68,7 @@ public class PluginParameters {
 		
 	}
 	
+	
 	/**
 	 * Constructor using input , output folders and config file (for command line execution)
 	 *
@@ -82,13 +85,13 @@ public class PluginParameters {
 		
 	}
 	
+	
 	public void addGeneralProperties(String pathToConfigFile) {
 		
 		Properties  prop     = new Properties();
-		String      fileName = pathToConfigFile;
 		InputStream is       = null;
 		try {
-			is = new FileInputStream(fileName);
+			is = new FileInputStream(pathToConfigFile);
 		} catch (FileNotFoundException ex) {
 			System.err.println(pathToConfigFile + " : can't find the config file !");
 			System.exit(-1);
@@ -100,17 +103,20 @@ public class PluginParameters {
 			System.exit(-1);
 		}
 		for (String idProp : prop.stringPropertyNames()) {
-			if (idProp.equals("xcal")) {
-				setXCal(Double.parseDouble(prop.getProperty("xcal")));
-			}
-			if (idProp.equals("ycal")) {
-				setYCal(Double.parseDouble(prop.getProperty("ycal")));
-			}
-			if (idProp.equals("zcal")) {
-				setZCal(Double.parseDouble(prop.getProperty("zcal")));
+			switch (idProp) {
+				case "xCal":
+					setXCal(Double.parseDouble(prop.getProperty("xCal")));
+					break;
+				case "yCal":
+					setYCal(Double.parseDouble(prop.getProperty("yCal")));
+					break;
+				case "zCal":
+					setZCal(Double.parseDouble(prop.getProperty("zCal")));
+					break;
 			}
 		}
 	}
+	
 	
 	private void checkInputPaths(String inputFolder, String outputFolder) {
 		File input = new File(inputFolder);
@@ -140,6 +146,7 @@ public class PluginParameters {
 		return this.m_inputFolder;
 	}
 	
+	
 	/**
 	 * Getter : output path
 	 *
@@ -148,6 +155,7 @@ public class PluginParameters {
 	public String getOutputFolder() {
 		return this.m_outputFolder;
 	}
+	
 	
 	/**
 	 * Getter : HEADER parameter of the analyse containing path input output folder and x y z calibration on parameter
@@ -165,6 +173,7 @@ public class PluginParameters {
 		
 	}
 	
+	
 	/**
 	 * Getter : image x y z calibration
 	 *
@@ -181,53 +190,62 @@ public class PluginParameters {
 		
 	}
 	
+	
 	/**
 	 * get local time start analyse information yyyy-MM-dd:HH-mm-ss format
 	 *
 	 * @return time in yyyy-MM-dd:HH-mm-ss format
 	 */
 	public String getLocalTime() {
-		String timeStamp = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
-		return timeStamp;
+		return new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
 	}
+	
 	
 	public double getVoxelVolume() {
 		return this.m_xCal * this.m_yCal * this.m_zCal;
 		
 	}
 	
+	
 	public double getXCal() {
 		return this.m_xCal;
 	}
 	
-	public void setXCal(double nanualXcal) {
-		this.m_xCal = nanualXcal;
+	
+	public void setXCal(double manualXCal) {
+		this.m_xCal = manualXCal;
 		this.m_manualParameter = true;
 	}
+	
 	
 	public double getYCal() {
 		return this.m_yCal;
 	}
 	
-	public void setYCal(double nanualYcal) {
-		this.m_yCal = nanualYcal;
+	
+	public void setYCal(double manualYCal) {
+		this.m_yCal = manualYCal;
 		this.m_manualParameter = true;
 	}
+	
 	
 	public double getZCal() {
 		return this.m_zCal;
 	}
 	
-	public void setZCal(double nanualZcal) {
-		this.m_zCal = nanualZcal;
+	
+	public void setZCal(double manualZCal) {
+		this.m_zCal = manualZCal;
 		this.m_manualParameter = true;
 	}
+	
 	
 	public boolean getManualParameter() {
 		return this.m_manualParameter;
 	}
 	
-	public double getXcalibration(ImagePlus raw) {
+	
+	public double getXCalibration(ImagePlus raw) {
 		double xCal;
 		if (this.m_manualParameter) {
 			xCal = this.getXCal();
@@ -238,7 +256,8 @@ public class PluginParameters {
 		return xCal;
 	}
 	
-	public double getYcalibration(ImagePlus raw) {
+	
+	public double getYCalibration(ImagePlus raw) {
 		double yCal;
 		if (this.m_manualParameter) {
 			yCal = this.getYCal();
@@ -248,7 +267,8 @@ public class PluginParameters {
 		return yCal;
 	}
 	
-	public double getZcalibration(ImagePlus raw) {
+	
+	public double getZCalibration(ImagePlus raw) {
 		double zCal;
 		if (this.getManualParameter()) {
 			zCal = this.getZCal();
@@ -257,5 +277,4 @@ public class PluginParameters {
 		}
 		return zCal;
 	}
-	
 }

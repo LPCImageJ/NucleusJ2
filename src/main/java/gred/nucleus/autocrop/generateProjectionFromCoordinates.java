@@ -6,6 +6,7 @@ import gred.nucleus.filesInputOutput.FilesNames;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.*;
+import java.util.regex.Pattern;
 
 public class generateProjectionFromCoordinates {
 	
@@ -28,6 +29,7 @@ public class generateProjectionFromCoordinates {
 		this.m_pathToCoordinates = pathToCoordinates;
 	}
 	
+	
 	/**
 	 * Constructor
 	 *
@@ -40,42 +42,44 @@ public class generateProjectionFromCoordinates {
 		this.m_pathToRaw = pathToRaw;
 	}
 	
+	
 	/**
 	 * Compute list of boxes from coordinates file.
 	 *
-	 * @param boxeFile coordinate file
+	 * @param boxFile coordinates file
 	 *
 	 * @return list of boxes file to draw in red
 	 */
-	public static HashMap<String, String> readCoordinnateTXT(File boxeFile) {
+	public static HashMap<String, String> readCoordinatesTXT(File boxFile) {
 		
 		HashMap<String, String> boxLists = new HashMap<>();
 		try {
-			Scanner scanner = new Scanner(boxeFile);
+			Scanner scanner = new Scanner(boxFile);
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();
 				
 				if ((!(line.matches("^#.*")))
 				    && (!(line.matches("^FileName.*")))) {
 					String[] splitLine = line.split("\\t");
-					String[] fileName  = splitLine[0].split("\\/");
+					String[] fileName  = splitLine[0].split(Pattern.quote(File.separator));
 					int      xMax      = Integer.parseInt(splitLine[3]) + Integer.parseInt(splitLine[6]);
 					int      yMax      = Integer.parseInt(splitLine[4]) + Integer.parseInt(splitLine[7]);
 					int      zMax      = Integer.parseInt(splitLine[5]) + Integer.parseInt(splitLine[8]);
-					boxLists.put(fileName[fileName.length - 1], splitLine[0]
-					                                            + "\t" + splitLine[3]
-					                                            + "\t" + xMax
-					                                            + "\t" + splitLine[4]
-					                                            + "\t" + yMax
-					                                            + "\t" + splitLine[5]
-					                                            + "\t" + zMax);
-					System.out.println("EUUU" + fileName[fileName.length - 1] + "value" + splitLine[0]
-					                   + "\t" + splitLine[3]
-					                   + "\t" + xMax
-					                   + "\t" + splitLine[4]
-					                   + "\t" + yMax
-					                   + "\t" + splitLine[5]
-					                   + "\t" + zMax);
+					boxLists.put(fileName[fileName.length - 1], splitLine[0] + "\t"
+					                                            + splitLine[3] + "\t"
+					                                            + xMax + "\t"
+					                                            + splitLine[4] + "\t"
+					                                            + yMax + "\t"
+					                                            + splitLine[5] + "\t"
+					                                            + zMax);
+					System.out.println("EUUU" + fileName[fileName.length - 1] + "value"
+					                   + splitLine[0] + "\t"
+					                   + splitLine[3] + "\t"
+					                   + xMax +"\t"
+					                   + splitLine[4] + "\t"
+					                   + yMax + "\t"
+					                   + splitLine[5] + "\t"
+					                   + zMax);
 				}
 			}
 		} catch (FileNotFoundException e) {
@@ -84,6 +88,7 @@ public class generateProjectionFromCoordinates {
 		return boxLists;
 	}
 	
+	
 	/**
 	 * Run new annotation of Zprojection, color in red nuclei which were filtered (in case of GIFT wrapping color in red
 	 * nuclei which not pass the segmentation most of case Z truncated )
@@ -91,9 +96,9 @@ public class generateProjectionFromCoordinates {
 	 * @throws Exception
 	 */
 	public void generateCoordinateFiltered() throws Exception {
-		Directory GIFTsegImages = new Directory(this.m_pathToGIFTSeg);
-		GIFTsegImages.listImageFiles(this.m_pathToGIFTSeg);
-		GIFTsegImages.checkIfEmpty();
+		Directory GIFTSegImages = new Directory(this.m_pathToGIFTSeg);
+		GIFTSegImages.listImageFiles(this.m_pathToGIFTSeg);
+		GIFTSegImages.checkIfEmpty();
 		Directory Zprojection = new Directory(this.m_pathToZprojection);
 		Zprojection.listImageFiles(this.m_pathToZprojection);
 		Zprojection.checkIfEmpty();
@@ -102,12 +107,12 @@ public class generateProjectionFromCoordinates {
 		Coordinates.checkIfEmpty();
 		for (short i = 0; i < Coordinates.getNumberFiles(); ++i) {
 			File                    coordinateFile        = Coordinates.getFile(i);
-			HashMap<String, String> listOfBoxes           = readCoordinnateTXT(coordinateFile);
+			HashMap<String, String> listOfBoxes           = readCoordinatesTXT(coordinateFile);
 			ArrayList<Integer>      boxNumber             = new ArrayList<>();
 			ArrayList<String>       boxListsNucleiNotPass = new ArrayList<>();
 			Map<String, String>     sortedMap             = new TreeMap<>(listOfBoxes);
 			for (HashMap.Entry<String, String> entry : sortedMap.entrySet()) {
-				if (!(GIFTsegImages.checkIfFileExists(entry.getKey()))) {
+				if (!(GIFTSegImages.checkIfFileExists(entry.getKey()))) {
 					boxListsNucleiNotPass.add(entry.getValue());
 					System.out.println("add " + entry.getValue());
 				}
@@ -134,8 +139,8 @@ public class generateProjectionFromCoordinates {
 			                                                autocropParameters);
 			annotAutoCrop.runAddBadCrop(boxNumber);
 		}
-		
 	}
+	
 	
 	public void generateCoordinate() throws Exception {
 		Directory RawImage = new Directory(this.m_pathToRaw);
@@ -147,23 +152,21 @@ public class generateProjectionFromCoordinates {
 		
 		for (short i = 0; i < Coordinates.getNumberFiles(); ++i) {
 			File                    coordinateFile        = Coordinates.getFile(i);
-			HashMap<String, String> listOfBoxes           = readCoordinnateTXT(coordinateFile);
+			HashMap<String, String> listOfBoxes           = readCoordinatesTXT(coordinateFile);
 			ArrayList<Integer>      boxNumber             = new ArrayList<>();
 			ArrayList<String>       boxListsNucleiNotPass = new ArrayList<>();
-			Map<String, String>     sortedMap             = new TreeMap<>(listOfBoxes);
 			for (HashMap.Entry<String, String> entry : listOfBoxes.entrySet()) {
 				boxListsNucleiNotPass.add(entry.getValue());
 			}
 			System.out.println(coordinateFile.getName());
 			
-			File       CurrentRaw       = RawImage.searchFileNameWithoutExtension(coordinateFile.getName()
-			                                                                                    .substring(0,
-			                                                                                              coordinateFile
-					                                                                                              .getName()
-					                                                                                              .lastIndexOf(
-							                                                                                              '.')));
+			File CurrentRaw = RawImage.searchFileNameWithoutExtension(coordinateFile.getName()
+			                                                                        .substring(0,
+			                                                                                   coordinateFile.getName()
+			                                                                                                 .lastIndexOf(
+					                                                                                                 '.')));
 			FilesNames outPutFilesNames = new FilesNames(CurrentRaw.toString());
-			String     prefix           = outPutFilesNames.PrefixeNameFile();
+			String     prefix           = outPutFilesNames.prefixNameFile();
 			System.out.println("current raw " + CurrentRaw.getName());
 			AutocropParameters autocropParameters = new AutocropParameters(CurrentRaw.getParent(),
 			                                                               CurrentRaw.getParent() +
@@ -175,7 +178,6 @@ public class generateProjectionFromCoordinates {
 			                                                autocropParameters);
 			annotAutoCrop.run();
 		}
-		
 	}
 	
 }

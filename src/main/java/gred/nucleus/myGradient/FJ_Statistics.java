@@ -67,12 +67,14 @@ public class FJ_Statistics implements PlugIn, ItemListener, WindowListener {
 	
 	private static int      decimals = 3;
 	private static Point    pos      = new Point(-1, -1);
-	private        Checkbox channelbox, timebox, slicebox;
+	private        Checkbox channelBox;
+	private        Checkbox timeBox;
+	private        Checkbox sliceBox;
 	
 	@SuppressWarnings("rawtypes")
 	public void run(String arg) {
 		
-		if (!FJ.libcheck()) return;
+		if (!FJ.libCheck()) return;
 		final ImagePlus imp = FJ.imageplus();
 		if (imp == null) return;
 		
@@ -87,17 +89,17 @@ public class FJ_Statistics implements PlugIn, ItemListener, WindowListener {
 		gd.addCheckbox(" Time frame numbering", time);
 		gd.addCheckbox(" Slice numbering", slice);
 		final Vector checkboxes = gd.getCheckboxes();
-		final int    veclen     = checkboxes.size();
-		slicebox = (Checkbox) checkboxes.get(veclen - 1);
-		slicebox.addItemListener(this);
-		timebox = (Checkbox) checkboxes.get(veclen - 2);
-		timebox.addItemListener(this);
-		channelbox = (Checkbox) checkboxes.get(veclen - 3);
-		channelbox.addItemListener(this);
+		final int    vecLen     = checkboxes.size();
+		sliceBox = (Checkbox) checkboxes.get(vecLen - 1);
+		sliceBox.addItemListener(this);
+		timeBox = (Checkbox) checkboxes.get(vecLen - 2);
+		timeBox.addItemListener(this);
+		channelBox = (Checkbox) checkboxes.get(vecLen - 3);
+		channelBox.addItemListener(this);
 		gd.addPanel(new Panel(), GridBagConstraints.EAST, new Insets(0, 0, 0, 0));
-		final String[] decslist = new String[11];
-		for (int i = 0; i < 11; ++i) decslist[i] = String.valueOf(i);
-		gd.addChoice("        Decimal places:", decslist, String.valueOf(decimals));
+		final String[] decsList = new String[11];
+		for (int i = 0; i < 11; ++i) decsList[i] = String.valueOf(i);
+		gd.addChoice("        Decimal places:", decsList, String.valueOf(decimals));
 		
 		if (pos.x >= 0 && pos.y >= 0) {
 			gd.centerDialog(false);
@@ -121,49 +123,56 @@ public class FJ_Statistics implements PlugIn, ItemListener, WindowListener {
 		(new FJStatistics()).run(imp, values, clear, name, channel, time, slice, decimals);
 	}
 	
+	
 	public void itemStateChanged(final ItemEvent e) {
-		if (e.getSource() == slicebox) {
-			if (slicebox.getState()) {
-				timebox.setState(true);
-				channelbox.setState(true);
+		if (e.getSource() == sliceBox) {
+			if (sliceBox.getState()) {
+				timeBox.setState(true);
+				channelBox.setState(true);
 			}
-		} else if (e.getSource() == timebox) {
-			if (timebox.getState()) {
-				channelbox.setState(true);
+		} else if (e.getSource() == timeBox) {
+			if (timeBox.getState()) {
+				channelBox.setState(true);
 			} else {
-				slicebox.setState(false);
+				sliceBox.setState(false);
 			}
-		} else if (e.getSource() == channelbox) {
-			if (!channelbox.getState()) {
-				timebox.setState(false);
-				slicebox.setState(false);
+		} else if (e.getSource() == channelBox) {
+			if (!channelBox.getState()) {
+				timeBox.setState(false);
+				sliceBox.setState(false);
 			}
 		}
 	}
 	
+	
 	public void windowActivated(final WindowEvent e) {
 	}
+	
 	
 	public void windowClosed(final WindowEvent e) {
 		pos.x = e.getWindow().getX();
 		pos.y = e.getWindow().getY();
 	}
 	
+	
 	public void windowClosing(final WindowEvent e) {
 	}
+	
 	
 	public void windowDeactivated(final WindowEvent e) {
 	}
 	
+	
 	public void windowDeiconified(final WindowEvent e) {
 	}
+	
 	
 	public void windowIconified(final WindowEvent e) {
 	}
 	
+	
 	public void windowOpened(final WindowEvent e) {
 	}
-	
 }
 
 class FJStatistics {
@@ -215,11 +224,11 @@ class FJStatistics {
 			// Determine region of interest:
 			final Image       img  = Image.wrap(imp);
 			final Dimensions  dims = img.dimensions();
-			final Coordinates cmin = new Coordinates();
-			final Coordinates cmax = new Coordinates();
+			final Coordinates cMin = new Coordinates();
+			final Coordinates cMax = new Coordinates();
 			Roi               roi  = imp.getRoi();
 			if (roi == null) roi = new Roi(0, 0, dims.x, dims.y);
-			ImageProcessor maskip = null;
+			ImageProcessor maskImageProcessor = null;
 			switch (roi.getType()) {
 				case Roi.COMPOSITE:
 				case Roi.FREEROI:
@@ -227,24 +236,24 @@ class FJStatistics {
 				case Roi.POINT:
 				case Roi.POLYGON:
 				case Roi.TRACED_ROI:
-					maskip = roi.getMask();
+					maskImageProcessor = roi.getMask();
 					break;
 				case Roi.RECTANGLE:
-					maskip = new ByteProcessor(1, 1);
-					maskip.set(0, 0, 255);
+					maskImageProcessor = new ByteProcessor(1, 1);
+					maskImageProcessor.set(0, 0, 255);
 					break;
 			}
-			if (maskip == null) throw new IllegalArgumentException("Region of interest not supported");
-			final ImagePlus maskimp = new ImagePlus("Mask", maskip); // maskimp.show();
-			final Image     mask    = Image.wrap(maskimp);
-			final Rectangle bounds  = roi.getBounds();
-			cmin.x = bounds.x;
-			cmin.y = bounds.y;
-			cmax.x = bounds.x + bounds.width - 1;
-			cmax.y = bounds.y + bounds.height - 1;
+			if (maskImageProcessor == null) throw new IllegalArgumentException("Region of interest not supported");
+			final ImagePlus maskImagePlus = new ImagePlus("Mask", maskImageProcessor); // maskImagePlus.show();
+			final Image     mask          = Image.wrap(maskImagePlus);
+			final Rectangle bounds        = roi.getBounds();
+			cMin.x = bounds.x;
+			cMin.y = bounds.y;
+			cMax.x = bounds.x + bounds.width - 1;
+			cMax.y = bounds.y + bounds.height - 1;
 			
 			// Compute and show statistics:
-			final String    nameprelude = name ? ("\t" + imp.getTitle()) : "";
+			final String    namePrelude = name ? ("\t" + imp.getTitle()) : "";
 			final TextPanel textpanel   = IJ.getTextPanel();
 			final String    headings    = headings();
 			if (clear || !headings.equals(textpanel.getColumnHeadings())) {
@@ -261,15 +270,15 @@ class FJStatistics {
 				msg.status("Computing statistics per slice / time / channel...");
 				pgs.steps(dims.c * dims.t * dims.z);
 				pgs.start();
-				for (cmin.c = cmax.c = 0; cmin.c < dims.c; ++cmin.c, ++cmax.c) {
-					for (cmin.t = cmax.t = 0; cmin.t < dims.t; ++cmin.t, ++cmax.t) {
-						for (cmin.z = cmax.z = 0; cmin.z < dims.z; ++cmin.z, ++cmax.z) {
-							stats.run(img, cmin, cmax, mask);
+				for (cMin.c = cMax.c = 0; cMin.c < dims.c; ++cMin.c, ++cMax.c) {
+					for (cMin.t = cMax.t = 0; cMin.t < dims.t; ++cMin.t, ++cMax.t) {
+						for (cMin.z = cMax.z = 0; cMin.z < dims.z; ++cMin.z, ++cMax.z) {
+							stats.run(img, cMin, cMax, mask);
 							final String prelude = (++number) +
-							                       nameprelude + "\t" +
-							                       (cmin.c + 1) + "\t" +
-							                       (cmin.t + 1) + "\t" +
-							                       (cmin.z + 1);
+							                       namePrelude + "\t" +
+							                       (cMin.c + 1) + "\t" +
+							                       (cMin.t + 1) + "\t" +
+							                       (cMin.z + 1);
 							textpanel.append(prelude + results());
 							pgs.step();
 						}
@@ -282,11 +291,11 @@ class FJStatistics {
 				msg.status("Computing statistics per time / channel...");
 				pgs.steps(dims.c * dims.t);
 				pgs.start();
-				cmax.z = dims.z - 1;
-				for (cmin.c = cmax.c = 0; cmin.c < dims.c; ++cmin.c, ++cmax.c) {
-					for (cmin.t = cmax.t = 0; cmin.t < dims.t; ++cmin.t, ++cmax.t) {
-						stats.run(img, cmin, cmax, mask);
-						final String prelude = (++number) + nameprelude + "\t" + (cmin.c + 1) + "\t" + (cmin.t + 1);
+				cMax.z = dims.z - 1;
+				for (cMin.c = cMax.c = 0; cMin.c < dims.c; ++cMin.c, ++cMax.c) {
+					for (cMin.t = cMax.t = 0; cMin.t < dims.t; ++cMin.t, ++cMax.t) {
+						stats.run(img, cMin, cMax, mask);
+						final String prelude = (++number) + namePrelude + "\t" + (cMin.c + 1) + "\t" + (cMin.t + 1);
 						textpanel.append(prelude + results());
 						pgs.step();
 					}
@@ -298,11 +307,11 @@ class FJStatistics {
 				msg.status("Computing statistics per channel...");
 				pgs.steps(dims.c);
 				pgs.start();
-				cmax.z = dims.z - 1;
-				cmax.t = dims.t - 1;
-				for (cmin.c = cmax.c = 0; cmin.c < dims.c; ++cmin.c, ++cmax.c) {
-					stats.run(img, cmin, cmax, mask);
-					final String prelude = (++number) + nameprelude + "\t" + (cmin.c + 1);
+				cMax.z = dims.z - 1;
+				cMax.t = dims.t - 1;
+				for (cMin.c = cMax.c = 0; cMin.c < dims.c; ++cMin.c, ++cMax.c) {
+					stats.run(img, cMin, cMax, mask);
+					final String prelude = (++number) + namePrelude + "\t" + (cMin.c + 1);
 					textpanel.append(prelude + results());
 					pgs.step();
 				}
@@ -310,16 +319,15 @@ class FJStatistics {
 				msg.status("");
 				
 			} else {
-				cmax.z = dims.z - 1;
-				cmax.t = dims.t - 1;
-				cmax.c = dims.c - 1;
+				cMax.z = dims.z - 1;
+				cMax.t = dims.t - 1;
+				cMax.c = dims.c - 1;
 				stats.messenger.status(FJ_Options.pgs);
 				stats.progressor.display(FJ_Options.pgs);
-				stats.run(img, cmin, cmax, mask);
-				final String prelude = (++number) + nameprelude;
+				stats.run(img, cMin, cMax, mask);
+				final String prelude = (++number) + namePrelude;
 				textpanel.append(prelude + results());
 			}
-			
 		} catch (OutOfMemoryError e) {
 			FJ.error("Not enough memory for this operation");
 			
@@ -331,6 +339,7 @@ class FJStatistics {
 			
 		}
 	}
+	
 	
 	private String headings() {
 		
@@ -383,5 +392,4 @@ class FJStatistics {
 		
 		return res.toString();
 	}
-	
 }

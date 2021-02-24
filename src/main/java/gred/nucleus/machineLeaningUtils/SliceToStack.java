@@ -5,6 +5,8 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
 import ij.plugin.Concatenator;
+
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +35,7 @@ public class SliceToStack {
         Directory directoryOutput = new Directory(this.m_pathToOutputDir);
         Directory directoryInput = new Directory(this.m_pathToSliceDir);
         directoryInput.listImageFiles(this.m_pathToSliceDir);
-        //Parcour de l'ensemble des images du dossier
+        // Iterate over images from directory
         for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
             String tm = directoryInput.getFile(i).getName();
             tm = tm.substring(0, tm.lastIndexOf("_"));
@@ -50,11 +52,12 @@ public class SliceToStack {
             System.out.println("image :" + entry.getKey());
             for (short i = 0; i < image.length; ++i) {
                 //image= BF.openImagePlus((directoryInput.m_dirPath
-                image[i] = IJ.openImage((directoryInput.m_dirPath
-                        + "/"
-                        + entry.getKey()
-                        + "_"
-                        + i + "_MLprediction.tif"));
+                image[i] = IJ.openImage((directoryInput.m_dirPath +
+                                         File.separator +
+                                         entry.getKey() +
+                                         "_" +
+                                         i +
+                                         "_MLprediction.tif"));
                 IJ.run(image[i], "8-bit", "");
                 //
             }

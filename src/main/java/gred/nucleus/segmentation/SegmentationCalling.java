@@ -27,9 +27,9 @@ import java.util.List;
 
 
 /**
- * This class call the different segmentation methods available to detect the nucleus. The Ostu method modified and the
+ * This class call the different segmentation methods available to detect the nucleus. The Otsu method modified and the
  * gift wrapping 3D. Methods can be call for analysis of several images or only one. The gift wrapping is initialized by
- * teh Otsu method modified, then the gift wrapping algorithm process the result obtain with the first method. If the
+ * the Otsu method modified, then the gift wrapping algorithm process the result obtain with the first method. If the
  * first method doesn't detect a nucleus, a message is print on the console.
  * <p>
  * if the nucleus input image is 16bit, a preprocess is done to convert it in 8bit, and also increase the contrast and
@@ -57,6 +57,7 @@ public class SegmentationCalling {
 	public SegmentationCalling() {
 	}
 	
+	
 	/**
 	 * Constructor for ImagePlus input
 	 *
@@ -64,17 +65,18 @@ public class SegmentationCalling {
 	 */
 	public SegmentationCalling(SegmentationParameters segmentationParameters) {
 		this.m_segmentationParameters = segmentationParameters;
-		this.m_outputCropGeneralInfoOTSU = this.m_segmentationParameters.getAnalyseParameters() + getColnameResult();
-		this.m_outputCropGeneralInfoGIFT = this.m_segmentationParameters.getAnalyseParameters() + getColnameResult();
+		this.m_outputCropGeneralInfoOTSU = this.m_segmentationParameters.getAnalyseParameters() + getResultsColumnNames();
+		this.m_outputCropGeneralInfoGIFT = this.m_segmentationParameters.getAnalyseParameters() + getResultsColumnNames();
 	}
 	
 	
 	public SegmentationCalling(String inputDir, String outputDir) {
 		this._inputDir = inputDir;
 		this._output = outputDir;
-		this.m_outputCropGeneralInfoOTSU = this.m_segmentationParameters.getAnalyseParameters() + getColnameResult();
-		this.m_outputCropGeneralInfoGIFT = this.m_segmentationParameters.getAnalyseParameters() + getColnameResult();
+		this.m_outputCropGeneralInfoOTSU = this.m_segmentationParameters.getAnalyseParameters() + getResultsColumnNames();
+		this.m_outputCropGeneralInfoGIFT = this.m_segmentationParameters.getAnalyseParameters() + getResultsColumnNames();
 	}
+	
 	
 	/**
 	 * Constructor for ImagePlus input
@@ -91,6 +93,7 @@ public class SegmentationCalling {
 		this._output = outputImg + File.separator + "Segmented" + this._imgInput.getTitle();
 	}
 	
+	
 	/**
 	 * Constructor for ImagePlus input
 	 *
@@ -103,6 +106,7 @@ public class SegmentationCalling {
 		this.m_segmentationParameters.setMaxVolumeNucleus(vMax);
 		this._imgInput = img;
 	}
+	
 	
 	/**
 	 * Constructor for directory input
@@ -121,6 +125,7 @@ public class SegmentationCalling {
 		dirOutput.CheckAndCreateDir();
 		this._output = dirOutput.get_dirPath();
 	}
+	
 	
 	/**
 	 * @return ImagePlus the segmented nucleus
@@ -150,7 +155,7 @@ public class SegmentationCalling {
 			                   "and" +
 			                   this.m_segmentationParameters.getM_maxVolumeNucleus());
 		} else {
-			System.out.println("otsu modif threshold: " + nucleusSegmentation.getBestThreshold() + "\n");
+			System.out.println("otsu modified threshold: " + nucleusSegmentation.getBestThreshold() + "\n");
 			if (this.m_segmentationParameters.getGiftWrapping()) {
 				ConvexHullSegmentation nuc = new ConvexHullSegmentation();
 				imgSeg = nuc.runGIFTWrapping(imgSeg, this.m_segmentationParameters);
@@ -166,6 +171,7 @@ public class SegmentationCalling {
 		this._imgSeg = imgSeg;
 		return nucleusSegmentation.getBestThreshold();
 	}
+	
 	
 	/**
 	 * getter of the image segmented
@@ -201,7 +207,7 @@ public class SegmentationCalling {
 			File       currentFile      = directoryInput.getFile(i);
 			String     fileImg          = currentFile.toString();
 			FilesNames outPutFilesNames = new FilesNames(fileImg);
-			this._prefix = outPutFilesNames.PrefixeNameFile();
+			this._prefix = outPutFilesNames.prefixNameFile();
 			System.out.println("Current image in process " + currentFile);
 			
 			String timeStampStart =
@@ -211,7 +217,7 @@ public class SegmentationCalling {
 			NucleusSegmentation nucleusSegmentation =
 					new NucleusSegmentation(currentFile, this._prefix, this.m_segmentationParameters);
 			nucleusSegmentation.preProcessImage();
-			nucleusSegmentation.findOTSUmaximisingSephericity();
+			nucleusSegmentation.findOTSUMaximisingSphericity();
 			nucleusSegmentation.checkBadCrop(this.m_segmentationParameters.m_inputFolder);
 			nucleusSegmentation.saveOTSUSegmented();
 			this.m_outputCropGeneralInfoOTSU =
@@ -242,12 +248,13 @@ public class SegmentationCalling {
 		return log;
 	}
 	
+	
 	public String runOneImage(String filePath) throws Exception {
 		String     log              = "";
 		File       currentFile      = new File(filePath);
 		String     fileImg          = currentFile.toString();
 		FilesNames outPutFilesNames = new FilesNames(fileImg);
-		this._prefix = outPutFilesNames.PrefixeNameFile();
+		this._prefix = outPutFilesNames.prefixNameFile();
 		System.out.println("Current image in process " + currentFile);
 		
 		String timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
@@ -255,7 +262,7 @@ public class SegmentationCalling {
 		NucleusSegmentation nucleusSegmentation =
 				new NucleusSegmentation(currentFile, this._prefix, this.m_segmentationParameters);
 		nucleusSegmentation.preProcessImage();
-		nucleusSegmentation.findOTSUmaximisingSephericity();
+		nucleusSegmentation.findOTSUMaximisingSphericity();
 		nucleusSegmentation.checkBadCrop(this.m_segmentationParameters.m_inputFolder);
 		nucleusSegmentation.saveOTSUSegmented();
 		this.m_outputCropGeneralInfoOTSU =
@@ -269,6 +276,7 @@ public class SegmentationCalling {
 		return log;
 	}
 	
+	
 	public String runOneImageOmero(ImageContainer image, Long output, Client client) throws Exception {
 		String log = "";
 		
@@ -279,7 +287,7 @@ public class SegmentationCalling {
 		System.out.println("Start :" + timeStampStart);
 		NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(image, this.m_segmentationParameters, client);
 		nucleusSegmentation.preProcessImage();
-		nucleusSegmentation.findOTSUmaximisingSephericity();
+		nucleusSegmentation.findOTSUMaximisingSphericity();
 		nucleusSegmentation.checkBadCrop(image, client);
 		
 		nucleusSegmentation.saveOTSUSegmentedOmero(client, output);
@@ -295,11 +303,12 @@ public class SegmentationCalling {
 		return log;
 	}
 	
+	
 	public String runSeveralImageOmero(List<ImageContainer> images, Long output, Client client) throws Exception {
-		String log = "";
+		StringBuilder log = new StringBuilder();
 		
 		for (ImageContainer image : images) {
-			log += runOneImageOmero(image, output, client);
+			log.append(runOneImageOmero(image, output, client));
 		}
 		
 		DatasetContainer dataset = client.getProject(output).getDatasets("OTSU").get(0);
@@ -307,7 +316,7 @@ public class SegmentationCalling {
 		String path =
 				new java.io.File(".").getCanonicalPath() + dataset.getName() + "result_Segmentation_Analyse.csv";
 		OutputTexteFile resultFileOutputOTSU = new OutputTexteFile(path);
-		resultFileOutputOTSU.SaveTexteFile(this.m_outputCropGeneralInfoOTSU);
+		resultFileOutputOTSU.saveTextFile(this.m_outputCropGeneralInfoOTSU);
 		
 		File file = new File(path);
 		dataset.addFile(client, file);
@@ -316,14 +325,14 @@ public class SegmentationCalling {
 		if (this.m_segmentationParameters.getGiftWrapping()) {
 			dataset = client.getProject(output).getDatasets("GIFT").get(0);
 			OutputTexteFile resultFileOutputGIFT = new OutputTexteFile(path);
-			resultFileOutputGIFT.SaveTexteFile(this.m_outputCropGeneralInfoGIFT);
+			resultFileOutputGIFT.saveTextFile(this.m_outputCropGeneralInfoGIFT);
 			
 			file = new File(path);
 			dataset.addFile(client, file);
 			file.delete();
 		}
 		
-		return log;
+		return log.toString();
 	}
 	
 	
@@ -347,7 +356,7 @@ public class SegmentationCalling {
 			NucleusSegmentation nucleusSegmentation =
 					new NucleusSegmentation(image, roi, i, this.m_segmentationParameters, client);
 			nucleusSegmentation.preProcessImage();
-			nucleusSegmentation.findOTSUmaximisingSephericity();
+			nucleusSegmentation.findOTSUMaximisingSphericity();
 			nucleusSegmentation.checkBadCrop(roi, client);
 			
 			
@@ -369,7 +378,7 @@ public class SegmentationCalling {
 		String path =
 				new java.io.File(".").getCanonicalPath() + "result_Segmentation_Analyse.csv";
 		OutputTexteFile resultFileOutputOTSU = new OutputTexteFile(path);
-		resultFileOutputOTSU.SaveTexteFile(this.m_outputCropGeneralInfoOTSU);
+		resultFileOutputOTSU.saveTextFile(this.m_outputCropGeneralInfoOTSU);
 		
 		File file = new File(path);
 		dataset.addFile(client, file);
@@ -378,7 +387,7 @@ public class SegmentationCalling {
 		if (this.m_segmentationParameters.getGiftWrapping()) {
 			dataset = client.getProject(output).getDatasets("GIFT").get(0);
 			OutputTexteFile resultFileOutputGIFT = new OutputTexteFile(path);
-			resultFileOutputGIFT.SaveTexteFile(this.m_outputCropGeneralInfoGIFT);
+			resultFileOutputGIFT.saveTextFile(this.m_outputCropGeneralInfoGIFT);
 			
 			file = new File(path);
 			dataset.addFile(client, file);
@@ -388,14 +397,15 @@ public class SegmentationCalling {
 		return log;
 	}
 	
+	
 	public String runSeveralImageOmeroROI(List<ImageContainer> images, Long output, Client client) throws Exception {
-		String log = "";
+		StringBuilder log = new StringBuilder();
 		
 		for (ImageContainer image : images) {
-			log += runOneImageOmeroROI(image, output, client);
+			log.append(runOneImageOmeroROI(image, output, client));
 		}
 		
-		return log;
+		return log.toString();
 	}
 	
 	
@@ -410,8 +420,9 @@ public class SegmentationCalling {
 		fileSaver.saveAsTiffStack(pathFile);
 	}
 	
+	
 	/**
-	 * 16bits image preprocessing normalised the histohram distribution apply a gaussian filter to smooth the signal
+	 * 16bits image preprocessing normalised the histogram distribution apply a gaussian filter to smooth the signal
 	 * convert the image in 8bits
 	 *
 	 * @param img 16bits ImagePlus
@@ -429,7 +440,7 @@ public class SegmentationCalling {
 	}
 	
 	
-	public String getColnameResult() {
+	public String getResultsColumnNames() {
 		return "NucleusFileName\t" +
 		       "Volume\t" +
 		       "Flatness\t" +

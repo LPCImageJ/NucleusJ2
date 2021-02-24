@@ -21,7 +21,7 @@ public class FJ_Panel implements PlugIn, ActionListener, WindowListener {
 	
 	public void run(String arg) {
 		
-		if (!FJ.libcheck()) return;
+		if (!FJ.libCheck()) return;
 		
 		FJ.log(FJ.name() + " " + FJ.version() + ": Panel");
 		
@@ -55,6 +55,7 @@ public class FJ_Panel implements PlugIn, ActionListener, WindowListener {
 		dialog.setVisible(true);
 	}
 	
+	
 	private Button addButton(String label) {
 		
 		final Button b = new Button("   " + label + "   ");
@@ -62,6 +63,7 @@ public class FJ_Panel implements PlugIn, ActionListener, WindowListener {
 		panel.add(b);
 		return b;
 	}
+	
 	
 	public void actionPerformed(ActionEvent e) {
 		
@@ -85,8 +87,10 @@ public class FJ_Panel implements PlugIn, ActionListener, WindowListener {
 		} else if (source == website) (new FJ_Website()).run("");
 	}
 	
+	
 	public void windowActivated(final WindowEvent e) {
 	}
+	
 	
 	public void windowClosed(final WindowEvent e) {
 		
@@ -94,22 +98,26 @@ public class FJ_Panel implements PlugIn, ActionListener, WindowListener {
 		pos.y = e.getWindow().getY();
 	}
 	
+	
 	public void windowClosing(final WindowEvent e) {
 		
 		dialog.setVisible(false);
 		dialog.dispose();
 	}
 	
+	
 	public void windowDeactivated(final WindowEvent e) {
 	}
+	
 	
 	public void windowDeiconified(final WindowEvent e) {
 	}
 	
+	
 	public void windowIconified(final WindowEvent e) {
 	}
 	
+	
 	public void windowOpened(final WindowEvent e) {
 	}
-	
 }

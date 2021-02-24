@@ -12,7 +12,7 @@ package gred.nucleus.connectedComponent;
 import gred.nucleus.utils.Voxel;
 
 /**
- * Represents the informations relative to a connected component in a binary image.
+ * Represents the information relative to a connected component in a binary image.
  *
  * @author Remy Malgouyres, Tristan Dubos and Axel Poulet
  */
@@ -29,7 +29,8 @@ public class ComponentInfo {
 	
 	/**
 	 * Voxel representative of the component (one voxel in the component) Currently, this representative has minimal
-	 * depth Z TODO extend usage using a comparison predicate possibly other that comparing depth.
+	 * depth Z
+	 * TODO extend usage using a comparison predicate possibly other that comparing depth.
 	 */
 	private Voxel m_voxelRepresentant;
 	
@@ -55,6 +56,7 @@ public class ComponentInfo {
 		this.m_componentOnTheBorder = componentOnTheBorder;
 	}
 	
+	
 	/**
 	 * Getter.
 	 *
@@ -63,6 +65,7 @@ public class ComponentInfo {
 	public int getLabel() {
 		return this.m_label;
 	}
+	
 	
 	/**
 	 * Setter  for the label of the component
@@ -73,19 +76,22 @@ public class ComponentInfo {
 		this.m_label = label;
 	}
 	
+	
 	/**
 	 * Getter
 	 *
 	 * @return the cardinality of the component
 	 */
-	public int getnumberOfPoints() {
+	public int getNumberOfPoints() {
 		return this.m_numberOfPoints;
 	}
+	
 	
 	/** Increments the cardinality */
 	public void incrementNumberOfPoints() {
 		this.m_numberOfPoints++;
 	}
+	
 	
 	/**
 	 * Setter
@@ -96,6 +102,7 @@ public class ComponentInfo {
 		this.m_numberOfPoints = numberOfPoints;
 	}
 	
+	
 	/**
 	 * Getter
 	 *
@@ -105,6 +112,7 @@ public class ComponentInfo {
 		return this.m_componentOnTheBorder;
 	}
 	
+	
 	/**
 	 * Getter
 	 *
@@ -113,6 +121,7 @@ public class ComponentInfo {
 	public Voxel getRepresentant() {
 		return this.m_voxelRepresentant;
 	}
+	
 	
 	/** Sets to true the flag indicating whether the component is on the border. */
 	public void setOnTheeBorder() {
@@ -129,6 +138,5 @@ public class ComponentInfo {
 	public String toString() {
 		return "Component label : " + this.m_label + ", Number of points : " + this.m_numberOfPoints;
 	}
-	
 } // end of class ComponentInfo
 

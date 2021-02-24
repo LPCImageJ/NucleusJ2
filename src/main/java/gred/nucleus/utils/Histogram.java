@@ -12,7 +12,7 @@ import java.util.HashMap;
  * @author Tristan Dubos and Axel Poulet
  */
 public class Histogram {
-	/** HashMap which stock the diffents value voxel and the number of voxel for each value present on the image */
+	/** HashMap which stock the different values of voxels and the number of voxels for each value present on the image */
 	private final HashMap<Double, Integer> _hHistogram = new HashMap<>();
 	/** All the value present on the image */
 	private       double[]                 _label;
@@ -31,7 +31,8 @@ public class Histogram {
 	public Histogram() {
 	}
 	
-	/** @param imagePlusInput */
+	
+	/** @param imagePlusInput  */
 	public void run(ImagePlus imagePlusInput) {
 		Object[] tTemp = computeHistogram(imagePlusInput).keySet().toArray();
 		_label = new double[tTemp.length];
@@ -43,6 +44,7 @@ public class Histogram {
 			_labelMax = _label[_label.length - 1];
 		}
 	}
+	
 	
 	/**
 	 * this method return a Histogram of the image input in hashMap form
@@ -74,6 +76,7 @@ public class Histogram {
 		return _hHistogram;
 	}
 	
+	
 	/**
 	 * this method return a double table which contain the all the value voxel present on the input image
 	 *
@@ -83,17 +86,20 @@ public class Histogram {
 		return _label;
 	}
 	
-	/** @return */
+	
+	/** @return  */
 	public HashMap<Double, Integer> getHistogram() {
 		return _hHistogram;
 	}
 	
-	/** @return */
+	
+	/** @return  */
 	public double getLabelMax() {
 		return _labelMax;
 	}
 	
-	/** @return */
+	
+	/** @return  */
 	public int getNbLabels() {
 		return _nbLabel;
 	}

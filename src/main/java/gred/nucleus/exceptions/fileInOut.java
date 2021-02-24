@@ -6,8 +6,6 @@ public class fileInOut extends Exception {
 		
 		System.err.println("File " + fileName + " already exist ");
 	}
-	
-	
 }
 
 

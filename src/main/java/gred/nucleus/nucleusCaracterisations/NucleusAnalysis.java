@@ -5,7 +5,7 @@ import ij.ImagePlus;
 
 
 /**
- * Analysis of nuclear segmented image, method call Measure3D class, to copute the 3D parameters of interest
+ * Analysis of nuclear segmented image, method call Measure3D class, to compute the 3D parameters of interest
  *
  * @author Tristan Dubos and Axel Poulet
  */
@@ -15,7 +15,7 @@ public class NucleusAnalysis {
 	/** ImagePlus segmented image */
 	private ImagePlus              _imgSeg;
 	/** String stocking the the parameters 3D results */
-	private String                 _resu = "";
+	private String                 _results = "";
 	private SegmentationParameters m_segmentationParameters;
 	
 	/**
@@ -28,6 +28,7 @@ public class NucleusAnalysis {
 		this._imgRaw = raw;
 		this._imgSeg = seg;
 	}
+	
 	
 	public NucleusAnalysis(ImagePlus raw, ImagePlus seg, SegmentationParameters segmentationParameters) {
 		this._imgRaw = raw;
@@ -45,36 +46,36 @@ public class NucleusAnalysis {
       Esr
       SurfaceArea => //TODO can be removed after test if the correction is OK
       SurfaceAreaCorrected => with surfel method
-      SphericityCorrected => compute sphericty with SurfaceAreaCorrected
+      SphericityCorrected => compute sphericity with SurfaceAreaCorrected
       @return String results of the 3D parameter
      */
 	/*
-    public String nucleusParameter3D() {
-	    Measure3D measure3D = new Measure3D();
-	    double volume = measure3D.computeVolumeObject(this._imgSeg, 255);
-	    double surfaceArea = measure3D.computeSurfaceObject(255);
-	    double bis = measure3D.computeComplexSurface(this._imgRaw, this._imgSeg);
-	    double[] tEigenValues = measure3D.computeEigenValue3D(this._imgSeg, 255);
-	    IJ.log(" " + tEigenValues[0] + " " + tEigenValues[1] + " " + tEigenValues[2]);
-	    this._resu = this._imgRaw.getTitle() + "\t" +
-	                 measure3D.computeVolumeObject(this._imgSeg, 255) + "\t" +
-	                 measure3D.computeFlatnessAndElongation(this._imgSeg, 255)[0] + "\t" +
-	                 measure3D.computeFlatnessAndElongation(this._imgSeg, 255)[1] + "\t" +
-	                 measure3D.computeSphericity(volume, surfaceArea) + "\t" +
-	                 measure3D.equivalentSphericalRadius(volume) + "\t" +
-	                 surfaceArea + "\t" +
-	                 bis + "\t" +
-	                 measure3D.computeSphericity(volume, bis) + "\n";
-	    return this._resu;
-    }
-    <p>*/
+	public String nucleusParameter3D() {
+		Measure3D measure3D    = new Measure3D();
+		double    volume       = measure3D.computeVolumeObject(this._imgSeg, 255);
+		double    surfaceArea  = measure3D.computeSurfaceObject(255);
+		double    bis          = measure3D.computeComplexSurface(this._imgRaw, this._imgSeg);
+		double[]  tEigenValues = measure3D.computeEigenValue3D(this._imgSeg, 255);
+		IJ.log(" " + tEigenValues[0] + " " + tEigenValues[1] + " " + tEigenValues[2]);
+		this._results = this._imgRaw.getTitle() + "\t" +
+		                measure3D.computeVolumeObject(this._imgSeg, 255) + "\t" +
+		                measure3D.computeFlatnessAndElongation(this._imgSeg, 255)[0] + "\t" +
+		                measure3D.computeFlatnessAndElongation(this._imgSeg, 255)[1] + "\t" +
+		                measure3D.computeSphericity(volume, surfaceArea) + "\t" +
+		                measure3D.equivalentSphericalRadius(volume) + "\t" +
+		                surfaceArea + "\t" +
+		                bis + "\t" +
+		                measure3D.computeSphericity(volume, bis) + "\n";
+		return this._results;
+	}
+    */
 	
 	/**
-	 * Setter of _resu.
+	 * Setter of _results.
 	 *
-	 * @param resu String
+	 * @param results String
 	 */
-	public void setResu(String resu) {
-		this._resu = resu;
+	public void setResults(String results) {
+		this._results = results;
 	}
 }

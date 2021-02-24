@@ -1,8 +1,8 @@
 package gred.nucleus.mains;
 
+import gred.nucleus.core.Measure3D;
 import gred.nucleus.filesInputOutput.Directory;
 import gred.nucleus.filesInputOutput.OutputTextFile;
-import gred.nucleus.core.Measure3D;
 import gred.nucleus.plugins.PluginParameters;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -23,24 +23,25 @@ public class computeSegmentationParameters {
 		Directory directoryInput = new Directory(pluginParameters.getInputFolder());
 		directoryInput.listImageFiles(pluginParameters.getInputFolder());
 		directoryInput.checkIfEmpty();
-		ArrayList<File> rawImages                 = directoryInput.m_listeOfFiles;
-		String          outputCropGeneralInfoOTSU = pluginParameters.getAnalyseParameters() + getColnameResult();
+		ArrayList<File> rawImages = directoryInput.m_fileList;
+		StringBuilder outputCropGeneralInfoOTSU =
+				new StringBuilder(pluginParameters.getAnalyseParameters() + getColnameResult());
 		for (File currentFile : rawImages) {
 			ImagePlus   Raw       = new ImagePlus(currentFile.getAbsolutePath());
 			ImagePlus[] Segmented = BF.openImagePlus(pluginParameters.getOutputFolder() + currentFile.getName());
 			
 			
-			Measure3D mesure3D = new Measure3D(Segmented,
+			Measure3D measure3D = new Measure3D(Segmented,
 			                                   Raw,
-			                                   pluginParameters.getXcalibration(Raw),
-			                                   pluginParameters.getYcalibration(Raw),
-			                                   pluginParameters.getZcalibration(Raw));
-			outputCropGeneralInfoOTSU += mesure3D.nucleusParameter3D() + "\n";
+			                                   pluginParameters.getXCalibration(Raw),
+			                                   pluginParameters.getYCalibration(Raw),
+			                                   pluginParameters.getZCalibration(Raw));
+			outputCropGeneralInfoOTSU.append(measure3D.nucleusParameter3D()).append("\n");
 		}
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(pluginParameters.getOutputFolder()
 		                                                         + directoryInput.getSeparator()
 		                                                         + "result_Segmentation_Analyse.csv");
-		resultFileOutputOTSU.SaveTextFile(outputCropGeneralInfoOTSU);
+		resultFileOutputOTSU.SaveTextFile(outputCropGeneralInfoOTSU.toString());
 		
 	}
 	
@@ -51,28 +52,30 @@ public class computeSegmentationParameters {
 		Directory        directoryInput   = new Directory(pluginParameters.getInputFolder());
 		directoryInput.listImageFiles(pluginParameters.getInputFolder());
 		directoryInput.checkIfEmpty();
-		ArrayList<File> rawImages                 = directoryInput.m_listeOfFiles;
-		String          outputCropGeneralInfoOTSU = pluginParameters.getAnalyseParameters() + getColnameResult();
+		ArrayList<File> rawImages = directoryInput.m_fileList;
+		StringBuilder outputCropGeneralInfoOTSU =
+				new StringBuilder(pluginParameters.getAnalyseParameters() + getColnameResult());
 		for (File currentFile : rawImages) {
 			System.out.println("current File " + currentFile.getName());
 			
 			ImagePlus   Raw       = new ImagePlus(currentFile.getAbsolutePath());
 			ImagePlus[] Segmented = BF.openImagePlus(pluginParameters.getOutputFolder() + currentFile.getName());
-			Measure3D mesure3D = new Measure3D(Segmented,
+			Measure3D measure3D = new Measure3D(Segmented,
 			                                   Raw,
-			                                   pluginParameters.getXcalibration(Raw),
-			                                   pluginParameters.getYcalibration(Raw),
-			                                   pluginParameters.getZcalibration(Raw));
+			                                   pluginParameters.getXCalibration(Raw),
+			                                   pluginParameters.getYCalibration(Raw),
+			                                   pluginParameters.getZCalibration(Raw));
 			
-			outputCropGeneralInfoOTSU += mesure3D.nucleusParameter3D() + "\tNA" + "\n";
+			outputCropGeneralInfoOTSU.append(measure3D.nucleusParameter3D()).append("\tNA").append("\n");
 		}
 		
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(pluginParameters.getOutputFolder()
 		                                                         + directoryInput.getSeparator()
 		                                                         + "result_Segmentation_Analyse.csv");
-		resultFileOutputOTSU.SaveTextFile(outputCropGeneralInfoOTSU);
+		resultFileOutputOTSU.SaveTextFile(outputCropGeneralInfoOTSU.toString());
 		
 	}
+	
 	
 	public static void main(String[] args) throws Exception {
 		DebugTools.enableLogging("OFF");
@@ -102,24 +105,22 @@ public class computeSegmentationParameters {
 		       "OTSUThreshold\n";
 	}
 	
+	
 	public static int recomputeOTSU(ImagePlus _Raw, ImagePlus _Segmented) {
-		int        OTSUthreshold = Integer.MAX_VALUE;
+		int        OTSUThreshold = Integer.MAX_VALUE;
 		ImageStack imageStackRaw = _Raw.getStack();
 		ImageStack imageStackSeg = _Segmented.getStack();
 		for (int k = 0; k < _Raw.getStackSize(); ++k) {
 			for (int i = 0; i < _Raw.getWidth(); ++i) {
 				for (int j = 0; j < _Raw.getHeight(); ++j) {
 					if ((imageStackSeg.getVoxel(i, j, k) == 255) &&
-					    (OTSUthreshold >= imageStackRaw.getVoxel(i, j, k))) {
-						OTSUthreshold = (int) (imageStackRaw.getVoxel(i, j, k));
+					    (OTSUThreshold >= imageStackRaw.getVoxel(i, j, k))) {
+						OTSUThreshold = (int) (imageStackRaw.getVoxel(i, j, k));
 					}
-					
 				}
 			}
 		}
-		return OTSUthreshold;
-		
+		return OTSUThreshold;
 	}
-	
 }
 

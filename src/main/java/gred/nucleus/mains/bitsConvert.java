@@ -21,6 +21,7 @@ public class bitsConvert {
 		}
 	}
 	
+	
 	private static void saveFile(ImagePlus imagePlusInput, String pathFile) {
 		FileSaver fileSaver = new FileSaver(imagePlusInput);
 		fileSaver.saveAsTiffStack(pathFile);

@@ -4,13 +4,10 @@ import gred.nucleus.autocrop.CropFromCoordinates;
 import gred.nucleus.dialogs.CropFromCoodinateDialog;
 import ij.IJ;
 import ij.plugin.PlugIn;
-import loci.formats.FormatException;
-
-import java.io.IOException;
 
 public class CropFromCoordinate_ implements PlugIn {
 	
-	public static void cropFromCoordinates(String coordinateDir) throws IOException, FormatException, Exception {
+	public static void cropFromCoordinates(String coordinateDir) throws Exception {
 		
 		CropFromCoordinates test = new CropFromCoordinates(coordinateDir);
 		test.runCropFromCoordinate();
@@ -49,5 +46,4 @@ public class CropFromCoordinate_ implements PlugIn {
 			}
 		}
 	}
-	
 }

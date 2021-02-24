@@ -50,66 +50,72 @@ public class OutputFileVerification {
 		this._rawPathOutPut = PathOutPut;
 	}
 	
+	
 	/**
 	 * List files expected and compute md5sum stored in hashMap (read recursively folders)
 	 *
 	 * @param path : path of folder which contains files expected
 	 */
-	public void GetFileResultExpected(String path) throws IOException {
+	public void GetFileResultExpected(String path) {
 		File   root = new File(path);
 		File[] list = root.listFiles();
-		for (File f : list) {
-			if (f.isDirectory()) {
-				GetFileResultExpected(f.getAbsolutePath());
-			} else {
-				String temps = f.getPath().replace(
-						this._rawPathExpectedResult, "");
-				this._myMapInitialFilesInputFolder.put(temps, md5(f.getPath()));
+		if(list != null) {
+			for (File f : list) {
+				if (f.isDirectory()) {
+					GetFileResultExpected(f.getAbsolutePath());
+				} else {
+					String temps = f.getPath().replace(
+							this._rawPathExpectedResult, "");
+					this._myMapInitialFilesInputFolder.put(temps, md5(f.getPath()));
+				}
 			}
 		}
-		
 	}
+	
 	
 	/**
 	 * List files already inside the output folder and compute md5sum stored in hashMap (read recursively folders)
 	 *
 	 * @param path : path of folder which contains files expected
 	 */
-	public void GetFilesOutputFolder(String path) throws IOException {
+	public void GetFilesOutputFolder(String path) {
 		File   root = new File(path);
 		File[] list = root.listFiles();
-		for (File f : list) {
-			if (f.isDirectory()) {
-				GetFilesOutputFolder(f.getAbsolutePath());
-			} else {
-				String temps = f.getPath().replace(this._rawPathOutPut,
-				                                   "");
-				this._myMapInitialFileOutputFolder.put(temps, md5(f.getPath()));
+		if(list != null) {
+			for (File f : list) {
+				if (f.isDirectory()) {
+					GetFilesOutputFolder(f.getAbsolutePath());
+				} else {
+					String temps = f.getPath().replace(this._rawPathOutPut, "");
+					this._myMapInitialFileOutputFolder.put(temps, md5(f.getPath()));
+				}
 			}
 		}
-		
 	}
+	
 	
 	/**
 	 * List files output folder produce by the analyse and compute md5sum stored in hashMap (read recursively folders)
 	 *
 	 * @param path : path of folder which contains files expected
 	 */
-	public void GetFilesResultingOfAnalysis(String path) throws IOException {
+	public void GetFilesResultingOfAnalysis(String path) {
 		File   root = new File(path);
 		File[] list = root.listFiles();
-		for (File f : list) {
-			if (f.isDirectory()) {
-				GetFilesResultingOfAnalysis(f.getAbsolutePath());
-			} else {
-				String temps = f.getPath().replace(this._rawPathOutPut
-						, "");
-				System.out.println(temps);
-				this._myMapFilesProduceByAnalysis.put(temps, md5(f.getPath()));
+		if(list != null) {
+			for (File f : list) {
+				if (f.isDirectory()) {
+					GetFilesResultingOfAnalysis(f.getAbsolutePath());
+				} else {
+					String temps = f.getPath().replace(this._rawPathOutPut
+							, "");
+					System.out.println(temps);
+					this._myMapFilesProduceByAnalysis.put(temps, md5(f.getPath()));
+				}
 			}
 		}
-		
 	}
+	
 	
 	/** Method to compare md5sum of files from output analysis with expected results */
 	public void CompareAnalysisResult() {
@@ -126,9 +132,9 @@ public class OutputFileVerification {
 				                   + hashCode + "\n"
 				                   + this._myMapFilesProduceByAnalysis.get(fileName) + "\n");
 			}
-			
 		}
 	}
+	
 	
 	/**
 	 * Method to compute md5sum of file
@@ -137,9 +143,8 @@ public class OutputFileVerification {
 	 *
 	 * @return hash md5 of file
 	 *
-	 * @throws IOException
 	 */
-	public String md5(String path) throws IOException {
+	public String md5(String path) {
 		String checksumMD5 = "Na";
 		try {
 			checksumMD5 = DigestUtils.md5Hex(new FileInputStream(path));

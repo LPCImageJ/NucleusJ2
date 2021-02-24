@@ -16,19 +16,20 @@ public class SegmentationImagesIntegration {
 /*
  public static void testStupid(ImagePlus img, short vMin, int vMax, String outputImgString ) throws FormatException {
  SegmentationParameters segmentationParameters = new SegmentationParameters();
- SegmentationCalling otsuModif = new SegmentationCalling(img, vMin, vMax, outputImgString);
- otsuModif.runSeveralImages2();
+ SegmentationCalling otsuModified = new SegmentationCalling(img, vMin, vMax, outputImgString);
+ otsuModified.runSeveralImages2();
  }
  */
+	
 	/**
 	 * @param input
 	 * @param output
 	 */
 	public static void testStupidSeveralImages(String input, String output) throws Exception {
 		SegmentationParameters segmentationParameters = new SegmentationParameters(input, output);
-		SegmentationCalling    otsuModif              = new SegmentationCalling(segmentationParameters);
+		SegmentationCalling    otsuModified           = new SegmentationCalling(segmentationParameters);
 		try {
-			String log = otsuModif.runSeveralImages2();
+			String log = otsuModified.runSeveralImages2();
 			if (!(log.equals(""))) {
 				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
 			}
@@ -37,11 +38,12 @@ public class SegmentationImagesIntegration {
 		}
 	}
 	
+	
 	public static void testStupidSeveralImages(String input, String output, String config) throws Exception {
 		SegmentationParameters segmentationParameters = new SegmentationParameters(input, output, config);
-		SegmentationCalling    otsuModif              = new SegmentationCalling(segmentationParameters);
+		SegmentationCalling    otsuModified           = new SegmentationCalling(segmentationParameters);
 		try {
-			String log = otsuModif.runSeveralImages2();
+			String log = otsuModified.runSeveralImages2();
 			if (!(log.equals(""))) {
 				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
 			}
@@ -49,6 +51,7 @@ public class SegmentationImagesIntegration {
 			e.printStackTrace();
 		}
 	}
+	
 	
 	/**
 	 * Main function of the package's tests.
@@ -71,7 +74,7 @@ public class SegmentationImagesIntegration {
         /*fw.GetFilesResultingOfAnalysis(inputTristan);
         fw.CompareAnalysisResult();
         OutputFileVerification fw = new OutputFileVerification();
-        fw.GetFileResultExpeted(ExpectedResult);
+        fw.GetFileResultExpected(ExpectedResult);
         fw.GetFilesOutputFolder(outputTristan);
         fw.GetFilesResultingOfAnalysis(outputTristan);
         fw.CompareAnalysisResult();

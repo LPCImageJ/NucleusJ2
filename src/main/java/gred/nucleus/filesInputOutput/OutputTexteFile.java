@@ -3,7 +3,6 @@ package gred.nucleus.filesInputOutput;
 import ij.IJ;
 
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -13,11 +12,12 @@ public class OutputTexteFile extends FilesNames {
 		super(filePath);
 	}
 	
+	
 	/** Method to save file with verification if file already exists TODO(@DesTristus) ADD ERROR IN LOG FILE */
-	public void SaveTexteFile(String text) {
+	public void saveTextFile(String text) {
 		try {
 			BufferedWriter writer;
-			writer = new BufferedWriter(new FileWriter(new File(this._fullPathFile)));
+			writer = new BufferedWriter(new FileWriter(this._fullPathFile));
 			writer.write(text);
 			writer.close();
 

@@ -7,22 +7,23 @@ import imagescience.image.*;
 import imagescience.utility.*;
 
 /*
-  Modification in this class to adapte this class for this image processing poulet axel
+  Modification in this class to adapt this class for this image processing poulet axel
  */
 
 /** Detects edges in images. */
 public class MyEdges {
 	/** The object used for message displaying. */
-	public final Messenger messenger = new Messenger();
+	public final Messenger      messenger      = new Messenger();
 	/** The object used for progress displaying. */
-	public final Progressor progressor = new Progressor();
+	public final Progressor     progressor     = new Progressor();
 	/** The object used for image differentiation. */
 	public final Differentiator differentiator = new Differentiator();
-	private double[][][] tabMask = null;
+	private      double[][][]   tabMask        = null;
 	
 	/** Default constructor. */
 	public MyEdges() {
 	}
+	
 	
 	/**
 	 * Detects edges in images.
@@ -32,7 +33,7 @@ public class MyEdges {
 	 *                  image in the z-dimension equals {@code 1}, this method will compute, for every image element,
 	 *                  the magnitude of the two-dimensional (2D) gradient vector. Otherwise it will compute for every
 	 *                  image element the magnitude of the full three-dimensional (3D) gradient vector. These
-	 *                  computations are performed on every x-y(-z) subimage in a 5D image.
+	 *                  computations are performed on every x-y(-z) sub-image in a 5D image.
 	 * @param scale     the smoothing scale at which the required image derivatives are computed. The scale is equal to
 	 *                  the standard deviation of the Gaussian kernel used for differentiation and must be larger than
 	 *                  {@code 0}. In order to enforce physical isotropy, for each dimension, the scale is divided by
@@ -65,29 +66,19 @@ public class MyEdges {
 		
 		final Dimensions dims = image.dimensions();
 		messenger.log("Input image dimensions: (x,y,z,t,c) = (" +
-		              dims.x +
-		              "," +
-		              dims.y +
-		              "," +
-		              dims.z +
-		              "," +
-		              dims.t +
-		              "," +
-		              dims.c +
-		              ")");
+		              dims.x + "," +
+		              dims.y + "," +
+		              dims.z + "," +
+		              dims.t + "," +
+		              dims.c + ")");
 		
 		final Aspects asps = image.aspects();
 		messenger.log("Element aspect-ratios: (" +
-		              asps.x +
-		              "," +
-		              asps.y +
-		              "," +
-		              asps.z +
-		              "," +
-		              asps.t +
-		              "," +
-		              asps.c +
-		              ")");
+		              asps.x + "," +
+		              asps.y + "," +
+		              asps.z + "," +
+		              asps.t + "," +
+		              asps.c + ")");
 		if (asps.x <= 0) throw new IllegalStateException("Aspect-ratio value in x-dimension less than or equal to 0");
 		if (asps.y <= 0) throw new IllegalStateException("Aspect-ratio value in y-dimension less than or equal to 0");
 		if (asps.z <= 0) throw new IllegalStateException("Aspect-ratio value in z-dimension less than or equal to 0");
@@ -107,19 +98,19 @@ public class MyEdges {
 		if (nonmaxsup) pls = new double[]{0, 0.32, 0.64, 0.9, 0.92, 1};
 		
 		// Compute gradient vector:
-		logstatus("Computing Ix");
+		logStatus("Computing Ix");
 		progressor.range(pls[pl], pls[++pl]);
 		final Image Ix = differentiator.run(edgeImage.duplicate(), scale, 1, 0, 0);
-		logstatus("Computing Iy");
+		logStatus("Computing Iy");
 		progressor.range(pls[pl], pls[++pl]);
 		final Image Iy = differentiator.run(edgeImage.duplicate(), scale, 0, 1, 0);
-		logstatus("Computing Iz");
+		logStatus("Computing Iz");
 		progressor.range(pls[pl], pls[++pl]);
 		final Image Iz = differentiator.run(edgeImage, scale, 0, 0, 1);
 		
 		// Compute gradient magnitude (Ix is reused to save memory in case
 		//non-maxima suppression is not applied):
-		logstatus("Computing gradient magnitude");
+		logStatus("Computing gradient magnitude");
 		progressor.steps(dims.c * dims.t * dims.z * dims.y);
 		progressor.range(pls[pl], pls[++pl]);
 		edgeImage = nonmaxsup ? new FloatImage(dims) : Ix;
@@ -127,28 +118,28 @@ public class MyEdges {
 		Iy.axes(Axes.X);
 		Iz.axes(Axes.X);
 		edgeImage.axes(Axes.X);
-		final double[]    aIx    = new double[dims.x];
-		final double[]    aIy    = new double[dims.x];
-		final double[]    aIz    = new double[dims.x];
-		final Coordinates coords = new Coordinates();
+		final double[]    aIx         = new double[dims.x];
+		final double[]    aIy         = new double[dims.x];
+		final double[]    aIz         = new double[dims.x];
+		final Coordinates coordinates = new Coordinates();
 		
 		progressor.start();
-		for (coords.c = 0; coords.c < dims.c; ++coords.c) {
-			for (coords.t = 0; coords.t < dims.t; ++coords.t) {
-				for (coords.z = 0; coords.z < dims.z; ++coords.z) {
-					for (coords.y = 0; coords.y < dims.y; ++coords.y) {
-						Ix.get(coords, aIx);
-						Iy.get(coords, aIy);
-						Iz.get(coords, aIz);
+		for (coordinates.c = 0; coordinates.c < dims.c; ++coordinates.c) {
+			for (coordinates.t = 0; coordinates.t < dims.t; ++coordinates.t) {
+				for (coordinates.z = 0; coordinates.z < dims.z; ++coordinates.z) {
+					for (coordinates.y = 0; coordinates.y < dims.y; ++coordinates.y) {
+						Ix.get(coordinates, aIx);
+						Iy.get(coordinates, aIy);
+						Iz.get(coordinates, aIz);
 						for (int x = 0; x < dims.x; ++x) {
 							if (tabMask != null) {
-								if (tabMask[x][coords.y][coords.z] > 0) {
+								if (tabMask[x][coordinates.y][coordinates.z] > 0) {
 									aIx[x] = Math.sqrt(aIx[x] * aIx[x] + aIy[x] * aIy[x] + aIz[x] * aIz[x]);
-									edgeImage.set(coords, aIx);
+									edgeImage.set(coordinates, aIx);
 									progressor.step();
 								} else {
 									aIx[x] = 0;
-									edgeImage.set(coords, aIx);
+									edgeImage.set(coordinates, aIx);
 								}
 							}
 						}
@@ -160,7 +151,7 @@ public class MyEdges {
 		
 		// Apply non-maxima suppression if requested (using mirror-boundary conditions and linear interpolation):
 		if (nonmaxsup) {
-			logstatus("Suppressing non-maxima");
+			logStatus("Suppressing non-maxima");
 			progressor.steps(dims.c * dims.t * dims.z);
 			progressor.range(pls[pl], pls[++pl]);
 			Ix.axes(Axes.X + Axes.Y);
@@ -174,46 +165,46 @@ public class MyEdges {
 			final double[][]   aaIz = new double[dims.y][dims.x];
 			final Coordinates  cgm  = new Coordinates();
 			cgm.y = cgm.x = -1;
-			coords.reset();
-			final int  dimszm1 = dims.z - 1;
-			double[][] atmp    = null;
+			coordinates.reset();
+			final int  dimsZm1 = dims.z - 1;
+			double[][] atmp;
 			
 			progressor.start();
-			for (coords.c = 0, cgm.c = 0; coords.c < dims.c; ++coords.c, ++cgm.c) {
-				for (coords.t = 0, cgm.t = 0; coords.t < dims.t; ++coords.t, ++cgm.t) {
+			for (coordinates.c = 0, cgm.c = 0; coordinates.c < dims.c; ++coordinates.c, ++cgm.c) {
+				for (coordinates.t = 0, cgm.t = 0; coordinates.t < dims.t; ++coordinates.t, ++cgm.t) {
 					// First slice:
 					
-					coords.z = 0;
-					Ix.get(coords, aaIx);
-					Iy.get(coords, aaIy);
-					Iz.get(coords, aaIz);
+					coordinates.z = 0;
+					Ix.get(coordinates, aaIx);
+					Iy.get(coordinates, aaIy);
+					Iz.get(coordinates, aaIz);
 					cgm.z = 0;
 					edgeImage.get(cgm, gm[1]);
 					cgm.z = 1;
 					edgeImage.get(cgm, gm[0]);
 					edgeImage.get(cgm, gm[2]);
 					suppress3D(gm, aaIx, aaIy, aaIz);
-					supImage.set(coords, aaIx);
+					supImage.set(coordinates, aaIx);
 					progressor.step();
 					
 					// Intermediate slices:
-					for (coords.z = 1, cgm.z = 2; coords.z < dimszm1; ++coords.z, ++cgm.z) {
-						Ix.get(coords, aaIx);
-						Iy.get(coords, aaIy);
-						Iz.get(coords, aaIz);
+					for (coordinates.z = 1, cgm.z = 2; coordinates.z < dimsZm1; ++coordinates.z, ++cgm.z) {
+						Ix.get(coordinates, aaIx);
+						Iy.get(coordinates, aaIy);
+						Iz.get(coordinates, aaIz);
 						atmp = gm[0];
 						gm[0] = gm[1];
 						gm[1] = gm[2];
 						gm[2] = atmp;
 						edgeImage.get(cgm, gm[2]);
 						suppress3D(gm, aaIx, aaIy, aaIz);
-						supImage.set(coords, aaIx);
+						supImage.set(coordinates, aaIx);
 						progressor.step();
 					}
 					// Last slice:
-					Ix.get(coords, aaIx);
-					Iy.get(coords, aaIy);
-					Iz.get(coords, aaIz);
+					Ix.get(coordinates, aaIx);
+					Iy.get(coordinates, aaIy);
+					Iz.get(coordinates, aaIz);
 					atmp = gm[0];
 					gm[0] = gm[1];
 					gm[1] = gm[2];
@@ -221,7 +212,7 @@ public class MyEdges {
 					cgm.z = dims.z - 2;
 					edgeImage.get(cgm, gm[2]);
 					suppress3D(gm, aaIx, aaIy, aaIz);
-					supImage.set(coords, aaIx);
+					supImage.set(coordinates, aaIx);
 					progressor.step();
 				}
 			}
@@ -238,58 +229,59 @@ public class MyEdges {
 		return edgeImage;
 	}
 	
+	
 	private void suppress3D(final double[][][] gm,
 	                        final double[][] aaIx,
 	                        final double[][] aaIy,
 	                        final double[][] aaIz) {
 		
 		// Initialize:
-		final int dimsy   = aaIx.length;
-		final int dimsyp1 = dimsy + 1;
-		final int dimsym1 = dimsy - 1;
-		final int dimsx   = aaIx[0].length;
-		final int dimsxp1 = dimsx + 1;
-		final int dimsxm1 = dimsx - 1;
-		double    rx, ry, rz, fx, fy, fz, gmval, gmval1, gmval2;
+		final int dimsY   = aaIx.length;
+		final int dimsYp1 = dimsY + 1;
+		final int dimsYm1 = dimsY - 1;
+		final int dimsX   = aaIx[0].length;
+		final int dimsXp1 = dimsX + 1;
+		final int dimsXm1 = dimsX - 1;
+		double    rx, ry, rz, fx, fy, fz, gmVal, gmVal1, gmVal2;
 		double    fdx, fdy, fdz, f1mdx, f1mdy, f1mdz;
 		int       ix, iy, iz, ixp1, iyp1, izp1;
 		
 		// Mirror x-borders:
-		if (dimsx == 1) {
+		if (dimsX == 1) {
 			for (int z = 0; z < 3; ++z) {
 				final double[][] slice = gm[z];
-				for (int y = 1; y < dimsyp1; ++y) {
+				for (int y = 1; y < dimsYp1; ++y) {
 					slice[y][0] = slice[y][1];
-					slice[y][dimsxp1] = slice[y][dimsx];
+					slice[y][dimsXp1] = slice[y][dimsX];
 				}
 			}
 		} else {
 			for (int z = 0; z < 3; ++z) {
 				final double[][] slice = gm[z];
-				for (int y = 1; y < dimsyp1; ++y) {
+				for (int y = 1; y < dimsYp1; ++y) {
 					slice[y][0] = slice[y][2];
-					slice[y][dimsxp1] = slice[y][dimsxm1];
+					slice[y][dimsXp1] = slice[y][dimsXm1];
 				}
 			}
 		}
 		
 		// Mirror y-borders:
-		if (dimsy == 1) {
+		if (dimsY == 1) {
 			for (int z = 0; z < 3; ++z) {
 				final double[] y0 = gm[z][0];
 				final double[] y1 = gm[z][1];
 				final double[] y2 = gm[z][2];
-				for (int x = 0; x <= dimsxp1; ++x) y0[x] = y2[x] = y1[x];
+				for (int x = 0; x <= dimsXp1; ++x) y0[x] = y2[x] = y1[x];
 			}
 		} else {
 			for (int z = 0; z < 3; ++z) {
 				final double[] y0       = gm[z][0];
 				final double[] y2       = gm[z][2];
-				final double[] ydimsym1 = gm[z][dimsym1];
-				final double[] ydimsyp1 = gm[z][dimsyp1];
-				for (int x = 0; x <= dimsxp1; ++x) {
+				final double[] yDimsYm1 = gm[z][dimsYm1];
+				final double[] yDimsYp1 = gm[z][dimsYp1];
+				for (int x = 0; x <= dimsXp1; ++x) {
 					y0[x] = y2[x];
-					ydimsyp1[x] = ydimsym1[x];
+					yDimsYp1[x] = yDimsYm1[x];
 				}
 			}
 		}
@@ -297,23 +289,23 @@ public class MyEdges {
 		// Suppress non-maxima:
 		final double[][] gm1 = gm[1];
 		
-		for (int y = 0, yp1 = 1; y < dimsy; ++y, ++yp1) {
+		for (int y = 0, yp1 = 1; y < dimsY; ++y, ++yp1) {
 			
 			final double[] gm1yp1 = gm1[yp1];
 			final double[] aIx    = aaIx[y];
 			final double[] aIy    = aaIy[y];
 			final double[] aIz    = aaIz[y];
 			
-			for (int x = 0, xp1 = 1; x < dimsx; ++x, ++xp1) {
+			for (int x = 0, xp1 = 1; x < dimsX; ++x, ++xp1) {
 				
-				gmval = gm1yp1[xp1];
-				if (gmval == 0) {
+				gmVal = gm1yp1[xp1];
+				if (gmVal == 0) {
 					aIx[x] = 0;
 				} else {
 					// Compute direction vector:
-					rx = 0.7f * aIx[x] / gmval;
-					ry = 0.7f * aIy[x] / gmval;
-					rz = 0.7f * aIz[x] / gmval;
+					rx = 0.7f * aIx[x] / gmVal;
+					ry = 0.7f * aIy[x] / gmVal;
+					rz = 0.7f * aIz[x] / gmVal;
 					
 					// Compute gradient magnitude in one direction:
 					fx = xp1 + rx;
@@ -332,7 +324,7 @@ public class MyEdges {
 					f1mdy = 1 - fdy;
 					f1mdz = 1 - fdz;
 					
-					gmval1 = (
+					gmVal1 = (
 							f1mdz * f1mdy * f1mdx * gm[iz][iy][ix] +
 							f1mdz * f1mdy * fdx * gm[iz][iy][ixp1] +
 							f1mdz * fdy * f1mdx * gm[iz][iyp1][ix] +
@@ -360,7 +352,7 @@ public class MyEdges {
 					f1mdy = 1 - fdy;
 					f1mdz = 1 - fdz;
 					
-					gmval2 = (
+					gmVal2 = (
 							f1mdz * f1mdy * f1mdx * gm[iz][iy][ix] +
 							f1mdz * f1mdy * fdx * gm[iz][iy][ixp1] +
 							f1mdz * fdy * f1mdx * gm[iz][iyp1][ix] +
@@ -372,19 +364,20 @@ public class MyEdges {
 					);
 					
 					// Suppress current gradient magnitude if non-maximum:
-					if (gmval1 >= gmval || gmval2 >= gmval) {
+					if (gmVal1 >= gmVal || gmVal2 >= gmVal) {
 						aIx[x] = 0;
 					} else {
-						aIx[x] = gmval;
+						aIx[x] = gmVal;
 					}
 				}
 			}
 		}
 	}
 	
+	
 	/**
-	 * Méthode permettant d'obtenir le masque d'un objet et de le stocker
-	 * dans une matrice
+	 * Méthode permettant d'obtenir le masque d'un objet et de le stocker dans une matrice
+	 *
 	 * @param imagePlus => image binaire de l'image en cours de traitement
 	 */
 	public void setMask(ImagePlus imagePlus) {
@@ -404,10 +397,9 @@ public class MyEdges {
 		}
 	}
 	
-	private void logstatus(final String s) {
-		
+	
+	private void logStatus(final String s) {
 		messenger.log(s);
 		messenger.status(s + "...");
 	}
-	
 }

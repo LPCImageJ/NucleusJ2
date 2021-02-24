@@ -10,34 +10,38 @@ import imagescience.utility.I5DResource;
 import imagescience.utility.ImageScience;
 
 public final class FJ {
-	
-	static final int SINGLEIMAGE = 1, IMAGESTACK = 2, HYPERSTACK = 3, COMPOSITEIMAGE = 4, IMAGE5D = 5;
-	private static final String NAME         = "FeatureJ";
-	private static final String VERSION      = "1.6.0";
-	private static final String MINIJVERSION = "1.44a";
-	private static final String MINISVERSION = "2.4.0";
+	static final         int    SINGLE_IMAGE    = 1;
+	static final         int    IMAGE_STACK     = 2;
+	static final         int    HYPERSTACK      = 3;
+	static final         int    COMPOSITE_IMAGE = 4;
+	static final         int    IMAGE5D         = 5;
+	private static final String NAME            = "FeatureJ";
+	private static final String VERSION         = "1.6.0";
+	private static final String MIN_IJ_VERSION  = "1.44a";
+	private static final String MIN_IS_VERSION  = "2.4.0";
 	
 	public static String name() {
 		return NAME;
 	}
 	
+	
 	public static String version() {
 		return VERSION;
 	}
 	
-	static boolean libcheck() {
+	static boolean libCheck() {
 		
-		if (IJ.getVersion().compareTo(MINIJVERSION) < 0) {
-			error("This plugin requires ImageJ version " + MINIJVERSION + " or higher");
+		if (IJ.getVersion().compareTo(MIN_IJ_VERSION) < 0) {
+			error("This plugin requires ImageJ version " + MIN_IJ_VERSION + " or higher");
 			return false;
 		}
 		
 		try {
-			if (ImageScience.version().compareTo(MINISVERSION) < 0) {
+			if (ImageScience.version().compareTo(MIN_IS_VERSION) < 0) {
 				throw new IllegalStateException();
 			}
 		} catch (Throwable e) {
-			error("This plugin requires ImageScience version " + MINISVERSION + " or higher");
+			error("This plugin requires ImageScience version " + MIN_IS_VERSION + " or higher");
 			return false;
 		}
 		
@@ -63,44 +67,45 @@ public final class FJ {
 	
 	static void show(final Image img, final ImagePlus imp) {
 		
-		ImagePlus newimp = img.imageplus();
-		newimp.setCalibration(imp.getCalibration());
-		final double[] minmax = img.extrema();
-		final double   min    = minmax[0], max = minmax[1];
-		newimp.setDisplayRange(min, max);
+		ImagePlus newImagePlus = img.imageplus();
+		newImagePlus.setCalibration(imp.getCalibration());
+		final double[] min_max = img.extrema();
+		final double   min     = min_max[0];
+		final double   max     = min_max[1];
+		newImagePlus.setDisplayRange(min, max);
 		
 		switch (type(imp)) {
 			
 			case IMAGE5D: {
-				newimp = I5DResource.convert(newimp, true);
-				I5DResource.transfer(imp, newimp);
-				I5DResource.minmax(newimp, min, max);
-				I5DResource.mode(newimp, I5DResource.GRAY);
+				newImagePlus = I5DResource.convert(newImagePlus, true);
+				I5DResource.transfer(imp, newImagePlus);
+				I5DResource.minmax(newImagePlus, min, max);
+				I5DResource.mode(newImagePlus, I5DResource.GRAY);
 				break;
 			}
-			case COMPOSITEIMAGE: {
-				final CompositeImage newcimp = new CompositeImage(newimp);
-				newcimp.copyLuts(imp);
-				newcimp.setMode(CompositeImage.GRAYSCALE);
-				final int nc = newcimp.getNChannels();
+			case COMPOSITE_IMAGE: {
+				final CompositeImage newCompositeImage = new CompositeImage(newImagePlus);
+				newCompositeImage.copyLuts(imp);
+				newCompositeImage.setMode(CompositeImage.GRAYSCALE);
+				final int nc = newCompositeImage.getNChannels();
 				for (int c = 1; c <= nc; ++c) {
-					final LUT lut = newcimp.getChannelLut(c);
+					final LUT lut = newCompositeImage.getChannelLut(c);
 					lut.min = min;
 					lut.max = max;
 				}
-				newimp = newcimp;
+				newImagePlus = newCompositeImage;
 				break;
 			}
 			case HYPERSTACK: {
-				newimp.setOpenAsHyperStack(true);
+				newImagePlus.setOpenAsHyperStack(true);
 				break;
 			}
 		}
 		
-		newimp.changes = FJ_Options.save;
+		newImagePlus.changes = FJ_Options.save;
 		
 		log("Showing result image");
-		newimp.show();
+		newImagePlus.show();
 	}
 	
 	static void close(final ImagePlus imp) {
@@ -113,21 +118,21 @@ public final class FJ {
 	
 	static int type(final ImagePlus imp) {
 		
-		int     type     = SINGLEIMAGE;
-		boolean i5dexist = false;
+		int     type     = SINGLE_IMAGE;
+		boolean i5dExist = false;
 		try {
 			Class.forName("i5d.Image5D");
-			i5dexist = true;
+			i5dExist = true;
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
-		if (i5dexist && I5DResource.instance(imp)) {
+		if (i5dExist && I5DResource.instance(imp)) {
 			type = IMAGE5D;
 		} else if (imp.isComposite()) {
-			type = COMPOSITEIMAGE;
+			type = COMPOSITE_IMAGE;
 		} else if (imp.isHyperStack()) {
 			type = HYPERSTACK;
-		} else if (imp.getImageStackSize() > 1) type = IMAGESTACK;
+		} else if (imp.getImageStackSize() > 1) type = IMAGE_STACK;
 		return type;
 	}
 	
@@ -142,5 +147,4 @@ public final class FJ {
 		
 		if (FJ_Options.log) IJ.log(message);
 	}
-	
 }

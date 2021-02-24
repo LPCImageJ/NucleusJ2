@@ -8,21 +8,21 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 public class SegmentationConfigDialog extends JFrame implements ItemListener {
-	private final JTextField minVolume      = new JTextField();
-	private final JTextField maxVolume      = new JTextField();
-	private final JCheckBox  giftWrapping   = new JCheckBox();
-	private final JTextField xCalibration   = new JTextField();
-	private final JTextField yCalibration   = new JTextField();
-	private final JTextField zCalibration   = new JTextField();
-	private final JCheckBox  addCalibBox    = new JCheckBox();
-	private final Container  _container;
-	private final JButton    buttonOK       = new JButton("Done");
-	private final JPanel     volumePane;
+	private final JTextField         minVolume         = new JTextField();
+	private final JTextField         maxVolume         = new JTextField();
+	private final JCheckBox          giftWrapping      = new JCheckBox();
+	private final JTextField         xCalibration      = new JTextField();
+	private final JTextField         yCalibration      = new JTextField();
+	private final JTextField         zCalibration      = new JTextField();
+	private final JCheckBox          addCalibrationBox = new JCheckBox();
+	private final JButton            buttonOK          = new JButton("Done");
+	private final JPanel             volumePane;
+	private final Container          _container;
 	private final SegmentationDialog caller;
-	private       Boolean    isGiftWrapping = true;
-	private       JPanel     XCalib;
-	private       JPanel     YCalib;
-	private       JPanel     ZCalib;
+	private       Boolean            isGiftWrapping    = true;
+	private       JPanel             XCalibration;
+	private       JPanel             YCalibration;
+	private       JPanel             ZCalibration;
 	
 	public SegmentationConfigDialog(SegmentationDialog caller) {
 		this.caller = caller;
@@ -95,15 +95,15 @@ public class SegmentationConfigDialog extends JFrame implements ItemListener {
         \*\/*/
 		
 		
-		JPanel calibPanel = new JPanel();
-		JLabel calibLabel = new JLabel("Calibration:");
-		calibLabel.setAlignmentX(0);
-		calibPanel.add(calibLabel);
-		addCalibBox.setSelected(false);
-		addCalibBox.setMinimumSize(new Dimension(100, 10));
-		addCalibBox.addItemListener(this);
-		calibPanel.add(addCalibBox);
-		volumePane.add(calibPanel);
+		JPanel calibrationPanel = new JPanel();
+		JLabel calibrationLabel = new JLabel("Calibration:");
+		calibrationLabel.setAlignmentX(0);
+		calibrationPanel.add(calibrationLabel);
+		addCalibrationBox.setSelected(false);
+		addCalibrationBox.setMinimumSize(new Dimension(100, 10));
+		addCalibrationBox.addItemListener(this);
+		calibrationPanel.add(addCalibrationBox);
+		volumePane.add(calibrationPanel);
 
 
         /*/\*\
@@ -129,36 +129,43 @@ public class SegmentationConfigDialog extends JFrame implements ItemListener {
 		
 		this.setVisible(false);
 		
-		SegmentationConfigDialog.StartListener startListener = new SegmentationConfigDialog.StartListener(this);
+		SegmentationConfigDialog.StartListener startListener = new StartListener(this);
 		buttonOK.addActionListener(startListener);
 	}
+	
 	
 	public String getMinVolume() {
 		return minVolume.getText();
 	}
 	
+	
 	public String getMaxVolume() {
 		return maxVolume.getText();
 	}
+	
 	
 	public boolean getGiftWrapping() {
 		return giftWrapping.isSelected();
 	}
 	
-	public String getxCalibration() {
+	
+	public String getXCalibration() {
 		return xCalibration.getText();
 	}
 	
-	public String getyCalibration() {
+	
+	public String getYCalibration() {
 		return yCalibration.getText();
 	}
 	
-	public String getzCalibration() {
+	
+	public String getZCalibration() {
 		return zCalibration.getText();
 	}
 	
-	public boolean isCalibSelected() {
-		return addCalibBox.isSelected();
+	
+	public boolean isCalibrationSelected() {
+		return addCalibrationBox.isSelected();
 	}
 	
 	
@@ -166,50 +173,50 @@ public class SegmentationConfigDialog extends JFrame implements ItemListener {
 	public void itemStateChanged(ItemEvent e) {
 		if (e.getSource() == giftWrapping) {
 			isGiftWrapping = giftWrapping.isSelected();
-		} else if (e.getSource() == addCalibBox) {
-			if (addCalibBox.isSelected()) {
+		} else if (e.getSource() == addCalibrationBox) {
+			if (addCalibrationBox.isSelected()) {
 				
-				XCalib = new JPanel();
-				XCalib.setLayout(new BoxLayout(XCalib, BoxLayout.X_AXIS));
-				XCalib.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+				XCalibration = new JPanel();
+				XCalibration.setLayout(new BoxLayout(XCalibration, BoxLayout.X_AXIS));
+				XCalibration.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 				JLabel xBox2 = new JLabel("X:");
-				XCalib.add(xBox2);
-				XCalib.add(Box.createRigidArea(new Dimension(10, 0)));
+				XCalibration.add(xBox2);
+				XCalibration.add(Box.createRigidArea(new Dimension(10, 0)));
 				xCalibration.setText("1");
 				xCalibration.setMinimumSize(new Dimension(60, 10));
-				XCalib.add(xCalibration);
+				XCalibration.add(xCalibration);
 				
-				YCalib = new JPanel();
-				YCalib.setLayout(new BoxLayout(YCalib, BoxLayout.X_AXIS));
-				YCalib.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+				YCalibration = new JPanel();
+				YCalibration.setLayout(new BoxLayout(YCalibration, BoxLayout.X_AXIS));
+				YCalibration.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 				JLabel yBox2 = new JLabel("Y:");
-				YCalib.add(yBox2);
-				YCalib.add(Box.createRigidArea(new Dimension(10, 0)));
+				YCalibration.add(yBox2);
+				YCalibration.add(Box.createRigidArea(new Dimension(10, 0)));
 				yCalibration.setText("1");
 				yCalibration.setMinimumSize(new Dimension(60, 10));
-				YCalib.add(yCalibration);
+				YCalibration.add(yCalibration);
 				
-				ZCalib = new JPanel();
-				ZCalib.setLayout(new BoxLayout(ZCalib, BoxLayout.X_AXIS));
-				ZCalib.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+				ZCalibration = new JPanel();
+				ZCalibration.setLayout(new BoxLayout(ZCalibration, BoxLayout.X_AXIS));
+				ZCalibration.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 				JLabel zBox2 = new JLabel("Z:");
-				ZCalib.add(zBox2);
-				ZCalib.add(Box.createRigidArea(new Dimension(10, 0)));
+				ZCalibration.add(zBox2);
+				ZCalibration.add(Box.createRigidArea(new Dimension(10, 0)));
 				zCalibration.setText("1");
 				zCalibration.setMinimumSize(new Dimension(60, 10));
-				ZCalib.add(zCalibration);
+				ZCalibration.add(zCalibration);
 				
 				volumePane.remove(buttonOK);
-				volumePane.add(XCalib);
-				volumePane.add(YCalib);
-				volumePane.add(ZCalib);
+				volumePane.add(XCalibration);
+				volumePane.add(YCalibration);
+				volumePane.add(ZCalibration);
 				volumePane.add(buttonOK);
 			} else {
 				try {
 					volumePane.remove(buttonOK);
-					volumePane.remove(XCalib);
-					volumePane.remove(YCalib);
-					volumePane.remove(ZCalib);
+					volumePane.remove(XCalibration);
+					volumePane.remove(YCalibration);
+					volumePane.remove(ZCalibration);
 					volumePane.add(buttonOK);
 				} catch (NullPointerException nullPointerException) {
 					// Do nothing
@@ -221,13 +228,14 @@ public class SegmentationConfigDialog extends JFrame implements ItemListener {
 	}
 	
 	
-	class StartListener implements ActionListener {
+	static class StartListener implements ActionListener {
 		SegmentationConfigDialog _segmentationDialog;
 		
 		/** @param segmentationDialog */
 		public StartListener(SegmentationConfigDialog segmentationDialog) {
 			_segmentationDialog = segmentationDialog;
 		}
+		
 		
 		public void actionPerformed(ActionEvent actionEvent) {
 			_segmentationDialog.setVisible(false);

@@ -2,21 +2,20 @@ package gred.nucleus.cli;
 
 import gred.nucleus.filesInputOutput.Directory;
 import gred.nucleus.filesInputOutput.OutputTextFile;
+import gred.nucleus.mains.Version;
 import org.apache.commons.cli.HelpFormatter;
 
 
 /** Class to generate helper */
 public class CLIHelper {
-	private static final String NJversion = "1.1.0";
 	
 	/**
 	 * Constructor
 	 *
-	 * @param args command line arguement
+	 * @param args command line arguments
 	 *
-	 * @throws Exception format helper
 	 */
-	public CLIHelper(String[] args) throws Exception {
+	public CLIHelper(String[] args) {
 		if (args.length == 2) {
 			specificAction(args[1]);
 		} else {
@@ -24,13 +23,13 @@ public class CLIHelper {
 		}
 	}
 	
+	
 	/**
 	 * Method get help for command line with example command line
 	 *
-	 * @throws Exception format helper
 	 */
-	private static void CmdHelpFull() throws Exception {
-		String example_command = "java -jar NucleusJ_2-" + NJversion + ".jar ";
+	private static void CmdHelpFull() {
+		String example_command = "java -jar NucleusJ_2-" + Version.get() + ".jar ";
 		String example_argument = "-action segmentation " +
 		                          "-input path/to/input/folder/ " +
 		                          "-output path/to/output/folder/ ";
@@ -45,7 +44,7 @@ public class CLIHelper {
 		                                "-action segmentation " +
 		                                "-input path/to/input/folder/ " +
 		                                "-output path/to/output/folder/ " +
-		                                "-hostname omero-server-adress " +
+		                                "-hostname omero-server-address " +
 		                                "-port 0 " +
 		                                "-group 000";
 		String[]             example_OMEROCmd = example_argument_OMERO.split(" ");
@@ -57,15 +56,15 @@ public class CLIHelper {
 		System.exit(1);
 	}
 	
+	
 	/**
 	 * Helper for specific action.
 	 *
 	 * @param action action
 	 *
-	 * @throws Exception format helper
 	 */
-	private static void specificAction(String action) throws Exception {
-		String                 example_command = "java -jar NucleusJ_2-" + NJversion + ".jar ";
+	private static void specificAction(String action) {
+		String                 example_command = "java -jar NucleusJ_2-" + Version.get() + ".jar ";
 		String                 example_argument;
 		String[]               example_Cmd;
 		HelpFormatter          formatter;
@@ -86,7 +85,7 @@ public class CLIHelper {
 				                                "-action segmentation " +
 				                                "-input path/to/input/folder/ " +
 				                                "-output path/to/output/folder/ " +
-				                                "-hostname omero-server-adress " +
+				                                "-hostname omero-server-address " +
 				                                "-port 0 " +
 				                                "-group 000";
 				
@@ -113,7 +112,7 @@ public class CLIHelper {
 				                         "-action autocrop " +
 				                         "-input path/to/input/folder/ " +
 				                         "-output path/to/output/folder/ " +
-				                         "-hostname omero-server-adress " +
+				                         "-hostname omero-server-address " +
 				                         "-port 0 " +
 				                         "-group 000";
 				example_OMEROCmd = example_argument_OMERO.split(" ");
@@ -163,7 +162,7 @@ public class CLIHelper {
 				example_argument = "-action generateProjectionFiltered " +
 				                   "-input path/to/coordinate/file/folder/ " +
 				                   "-input2 path/to/segmented/image/folder/ " +
-				                   "-input3 path/to/Zprojection/folder/";
+				                   "-input3 path/to/ZProjection/folder/";
 				example_Cmd = example_argument.split(" ");
 				command = new CLIActionOptionCmdLine(example_Cmd);
 				formatter = new HelpFormatter();
@@ -201,21 +200,21 @@ public class CLIHelper {
 				                              "zCropBoxSize:20\n" +
 				                              "minVolumeNucleus:1\n" +
 				                              "maxVolumeNucleus:2147483647\n" +
-				                              "thresholdOSTUcomputing:20\n" +
+				                              "thresholdOTSUComputing:20\n" +
 				                              "channelToComputeThreshold:0\n" +
-				                              "slicesOTSUcomputing:0\n" +
+				                              "slicesOTSUComputing:0\n" +
 				                              "boxesPercentSurfaceToFilter:50\n" +
-				                              "boxesRegroupement:10\n" +
-				                              "xcal:1\n" +
-				                              "ycal:1\n" +
-				                              "zcal:1";
+				                              "boxesRegrouping:10\n" +
+				                              "xCal:1\n" +
+				                              "yCal:1\n" +
+				                              "zCal:1";
 				
 				String segConfigOption =
-						"thresholdOSTUcomputing:20\n" +
+						"thresholdOTSUComputing:20\n" +
 						"GiftWrapping:true\n" +
-						"xcal:1\n" +
-						"ycal:1\n" +
-						"zcal:1";
+						"xCal:1\n" +
+						"yCal:1\n" +
+						"zCal:1";
 				System.out.println("Two config file with default parameters generate: \n");
 				
 				saveFile(autocropConfigOption, "autocropConfigListParameters");
@@ -233,10 +232,11 @@ public class CLIHelper {
 				example_Cmd = example_argument.split(" ");
 				CLIActionOptions wrongAction = new CLIActionOptions(example_Cmd);
 				System.out.println("Invalid action \"" + action + "\" :\n");
-				System.out.println(wrongAction.getHelperInfos());
+				System.out.println(wrongAction.getHelperInfo());
 				break;
 		}
 	}
+	
 	
 	/**
 	 * Save information use to save config file parameter example.
@@ -244,9 +244,8 @@ public class CLIHelper {
 	 * @param text     text to save
 	 * @param fileName file name
 	 *
-	 * @throws Exception file exception
 	 */
-	public static void saveFile(String text, String fileName) throws Exception {
+	public static void saveFile(String text, String fileName) {
 		Directory dirOutput = new Directory(System.getProperty("user.dir"));
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(
 				dirOutput.get_dirPath()

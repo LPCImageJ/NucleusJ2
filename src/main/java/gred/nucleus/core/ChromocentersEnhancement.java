@@ -26,6 +26,7 @@ public class ChromocentersEnhancement {
 	public ChromocentersEnhancement() {
 	}
 	
+	
 	public static void saveFile(ImagePlus imagePlus, String pathFile) {
 		FileSaver fileSaver = new FileSaver(imagePlus);
 		File      file      = new File(pathFile);
@@ -37,13 +38,14 @@ public class ChromocentersEnhancement {
 		}
 	}
 	
+	
 	/**
 	 * compute and create the image contrast with the raw image and the segmented image
 	 *
 	 * @param imagePlusRaw       raw image
 	 * @param imagePlusSegmented segmented image of the nucleus
 	 *
-	 * @return image of the cotrasted region
+	 * @return image of the contrasted region
 	 */
 	public ImagePlus applyEnhanceChromocenters(ImagePlus imagePlusRaw, ImagePlus imagePlusSegmented) {
 		MyGradient            myGradient            = new MyGradient(imagePlusRaw, imagePlusSegmented);
@@ -60,6 +62,7 @@ public class ChromocentersEnhancement {
 		double[] contrast = computeContrast(imagePlusRaw, imagePlusWatershed);
 		return computeImage(imagePlusWatershed, contrast);
 	}
+	
 	
 	/**
 	 * Compute the region adjacency graph. The aim is to detect the  neighboring region.
@@ -107,11 +110,12 @@ public class ChromocentersEnhancement {
 		return tRegionAdjacencyGraph;
 	}
 	
+	
 	/**
 	 * Compute the contrasts between neighboring region.
 	 *
 	 * @param imagePlusRaw     raw image
-	 * @param imagePlusRegions imag of the contrasted regions
+	 * @param imagePlusRegions image of the contrasted regions
 	 *
 	 * @return table of contrast
 	 */
@@ -171,6 +175,7 @@ public class ChromocentersEnhancement {
 		return tIntensityMean;
 	}
 	
+	
 	/**
 	 * Creation of the image of contrasted regions
 	 *
@@ -181,14 +186,14 @@ public class ChromocentersEnhancement {
 	 */
 	private ImagePlus computeImage(ImagePlus imagePlusInput, double[] tVoxelValue) {
 		double     voxelValue;
-		ImagePlus  imagePlusContrast   = imagePlusInput.duplicate();
-		ImageStack imageStackConstrast = imagePlusContrast.getStack();
+		ImagePlus  imagePlusContrast  = imagePlusInput.duplicate();
+		ImageStack imageStackContrast = imagePlusContrast.getStack();
 		for (int k = 0; k < imagePlusContrast.getNSlices(); ++k) {
 			for (int i = 0; i < imagePlusContrast.getWidth(); ++i) {
 				for (int j = 0; j < imagePlusContrast.getHeight(); ++j) {
-					voxelValue = imageStackConstrast.getVoxel(i, j, k);
+					voxelValue = imageStackContrast.getVoxel(i, j, k);
 					if (voxelValue > 0) {
-						imageStackConstrast.setVoxel(i, j, k, tVoxelValue[(int) voxelValue]);
+						imageStackContrast.setVoxel(i, j, k, tVoxelValue[(int) voxelValue]);
 					}
 				}
 			}
@@ -196,8 +201,9 @@ public class ChromocentersEnhancement {
 		return imagePlusContrast;
 	}
 	
+	
 	/**
-	 * Passe les valeurs de -1 a 0 suite à la nouvelle version de MorpholibJ
+	 * Converts values from -1 to 0 following the release of a new MorpholibJ version
 	 *
 	 * @param imagePlusInput
 	 *
@@ -205,13 +211,13 @@ public class ChromocentersEnhancement {
 	 */
 	private ImagePlus convertNegativeValue(ImagePlus imagePlusInput) {
 		double     voxelValue;
-		ImagePlus  imagePlusContrast   = imagePlusInput.duplicate();
-		ImageStack imageStackConstrast = imagePlusContrast.getStack();
+		ImagePlus  imagePlusContrast  = imagePlusInput.duplicate();
+		ImageStack imageStackContrast = imagePlusContrast.getStack();
 		for (int k = 0; k < imagePlusContrast.getNSlices(); ++k) {
 			for (int i = 0; i < imagePlusContrast.getWidth(); ++i) {
 				for (int j = 0; j < imagePlusContrast.getHeight(); ++j) {
-					if (imageStackConstrast.getVoxel(i, j, k) == -1.0) {
-						imageStackConstrast.setVoxel(i, j, k, 0.0);
+					if (imageStackContrast.getVoxel(i, j, k) == -1.0) {
+						imageStackContrast.setVoxel(i, j, k, 0.0);
 					}
 				}
 			}

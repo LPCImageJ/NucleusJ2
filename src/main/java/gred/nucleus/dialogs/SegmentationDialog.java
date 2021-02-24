@@ -144,7 +144,7 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 		_jButtonQuit.setPreferredSize(new java.awt.Dimension(60, 21));
 		this.setVisible(true);
 		
-		SegmentationDialog.QuitListener quitListener = new SegmentationDialog.QuitListener(this);
+		SegmentationDialog.QuitListener quitListener = new QuitListener(this);
 		_jButtonQuit.addActionListener(quitListener);
 		SegmentationDialog.StartListener startListener = new SegmentationDialog.StartListener(this);
 		_jButtonStart.addActionListener(startListener);
@@ -152,29 +152,36 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 		_jButtonConfig.addActionListener(configListener);
 	}
 	
+	
 	public boolean isStart() {
 		return _start;
 	}
+	
 	
 	public String getInput() {
 		return _jInputFileChooser.getText();
 	}
 	
+	
 	public String getOutput() {
 		return _jOutputFileChooser.getText();
 	}
+	
 	
 	public String getConfig() {
 		return _jConfigFileChooser.getText();
 	}
 	
+	
 	public int getConfigMode() {
 		return configMode;
 	}
 	
+	
 	public SegmentationConfigDialog getSegmentationConfigFileDialog() {
 		return segmentationConfigFileDialog;
 	}
+	
 	
 	public void actionPerformed(ActionEvent e) {
 		switch (((JButton) e.getSource()).getName()) {
@@ -274,22 +281,25 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 			_segmentationDialog = autocropDialog;
 		}
 		
+		
 		public void actionPerformed(ActionEvent actionEvent) {
 			_start = true;
 			_segmentationDialog.dispose();
 		}
 	}
 	
+	
 	/**
 	 *
 	 */
-	class QuitListener implements ActionListener {
+	static class QuitListener implements ActionListener {
 		SegmentationDialog _segmentationDialog;
 		
 		/** @param segmentationDialog */
 		public QuitListener(SegmentationDialog segmentationDialog) {
 			_segmentationDialog = segmentationDialog;
 		}
+		
 		
 		public void actionPerformed(ActionEvent actionEvent) {
 			_segmentationDialog.dispose();
@@ -303,6 +313,7 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 		public ConfigListener(SegmentationDialog segmentationDialog) {
 			_segmentationDialog = segmentationDialog;
 		}
+		
 		
 		public void actionPerformed(ActionEvent actionEvent) {
 			segmentationConfigFileDialog.setVisible(true);

@@ -35,6 +35,7 @@ public class ConvexHullSegmentation {
 		return imageMakingUnion(imagePlusInput, imagePlusXY, imagePlusXZ, imagePlusYZ);
 	}
 	
+	
 	/**
 	 * Make an union of segmented images from the different plans
 	 *

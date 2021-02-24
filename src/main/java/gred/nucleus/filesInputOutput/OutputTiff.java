@@ -13,6 +13,7 @@ public class OutputTiff extends FilesNames {
 		super(filePath);
 	}
 	
+	
 	/** Method to save file with verification if file already exists TODO ADD ERROR IN LOG FILE */
 	public void SaveImage(ImagePlus imageToSave) {
 		try {

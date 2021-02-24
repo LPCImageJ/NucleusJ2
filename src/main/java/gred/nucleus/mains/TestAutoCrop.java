@@ -27,21 +27,20 @@ public class TestAutoCrop {
 	
 	static ArrayList<String> m_test;
 	
-	public static void runAutoCropFolder(String imageSourceFile, String output, String pathToConfig)
-	throws Exception {
+	public static void runAutoCropFolder(String imageSourceFile, String output, String pathToConfig) {
 		AutocropParameters autocropParameters = new AutocropParameters(imageSourceFile, output, pathToConfig);
 		AutoCropCalling    autoCrop           = new AutoCropCalling(autocropParameters);
 		autoCrop.runFolder();
 	}
 	
 	
-	public static void runAutoCropFolder(String imageSourceFile, String output)
-	throws Exception {
+	public static void runAutoCropFolder(String imageSourceFile, String output) {
 		//AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
 		AutocropParameters autocropParameters = new AutocropParameters(imageSourceFile, output);
 		AutoCropCalling    autoCrop           = new AutoCropCalling(autocropParameters);
 		autoCrop.runFolder();
 	}
+	
 	
 	public static void runAutoCropFile(String imageSourceFile, String output) throws Exception {
 		//AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
@@ -50,11 +49,13 @@ public class TestAutoCrop {
 		autoCrop.runFile(imageSourceFile);
 	}
 	
+	
 	public static void runCropFromCoordinates(String coordinateDir) throws Exception {
 		
 		CropFromCoordinates test = new CropFromCoordinates(coordinateDir);
 		test.runCropFromCoordinate();
 	}
+	
 	
 	/**
 	 * Main function of the package's tests.
@@ -63,7 +64,7 @@ public class TestAutoCrop {
 	 */
 	public static void main(String[] args) throws Exception {
 		
-		System.err.println("start prog");
+		System.err.println("start program");
 		long maxMemory = Runtime.getRuntime().maxMemory();
 		/* Maximum amount of memory the JVM will attempt to use */
 		System.out.println("Maximum memory (bytes): " +
@@ -77,6 +78,4 @@ public class TestAutoCrop {
 		System.out.println("Total memory (bytes): " +
 		                   Runtime.getRuntime().totalMemory() * 1e-9);
 	}
-	
-	
 }

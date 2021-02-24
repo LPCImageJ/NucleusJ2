@@ -10,7 +10,7 @@ import ij.process.StackConverter;
 
 
 /* Bob Dougherty 8/8/2006
-Saito-Toriwaki algorithm for Euclidian Distance Transformation.
+Saito-Toriwaki algorithm for Euclidean Distance Transformation.
 Direct application of Algorithm 1.
 Version S1A: lower memory usage.
 Version S1A.1 A fixed indexing bug for 666-bin data set
@@ -19,7 +19,7 @@ Version S1B Aug. 9, 2006.  Faster.
 Version S1B.1 Sept. 6, 2006.  Changed comments.
 Version S1C Oct. 1, 2006.  Option for inverse case.
                            Fixed inverse behavior in y and z directions.
-Version D July 30, 2007.  Multithread processing for step 2.
+Version D July 30, 2007.  Multithreaded processing for step 2.
 
 This version assumes the input stack is already in memory, 8-bit, and
 outputs to a new 32-bit stack.  Versions that are more stingy with memory
@@ -67,6 +67,7 @@ public class Distance_Map implements PlugInFilter {
 		return DOES_8G;
 	}
 	
+	
 	public void run(ImageProcessor ip) {
 		apply(imp);
 	}
@@ -87,7 +88,7 @@ public class Distance_Map implements PlugInFilter {
 		//Create references to input data
 		data = new byte[d][];
 		for (int k = 0; k < d; k++) data[k] = (byte[]) stack.getPixels(k + 1);
-		//Create 32 bit floating point stack for output, s.  Will also use it for g in Transormation 1.
+		//Create 32 bit floating point stack for output, s.  Will also use it for g in Transformation 1.
 		ImageStack sStack = new ImageStack(w, h);
 		float[][]  s      = new float[d][];
 		for (int k = 0; k < d; k++) {
@@ -151,7 +152,7 @@ public class Distance_Map implements PlugInFilter {
 				} else {
 					dist = (float) Math.sqrt(sk[ind]);
 					sk[ind] = dist;
-					distMax = (dist > distMax) ? dist : distMax;
+					distMax = Math.max(dist, distMax);
 				}
 			}
 		}
@@ -191,6 +192,7 @@ public class Distance_Map implements PlugInFilter {
 			this.data = data;
 			this.s = s;
 		}
+		
 		
 		public void run() {
 			float[] sk;
@@ -236,7 +238,7 @@ public class Distance_Map implements PlugInFilter {
 		}//run
 	}//Step1Thread
 	
-	class Step2Thread extends Thread {
+	static class Step2Thread extends Thread {
 		int thread, nThreads, w, h, d;
 		float[][] s;
 		
@@ -248,6 +250,7 @@ public class Distance_Map implements PlugInFilter {
 			this.d = d;
 			this.s = s;
 		}
+		
 		
 		public void run() {
 			float[] sk;
@@ -301,6 +304,7 @@ public class Distance_Map implements PlugInFilter {
 			this.s = s;
 			this.data = data;
 		}
+		
 		
 		public void run() {
 			int zStart, zStop, zBegin, zEnd;

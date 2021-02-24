@@ -24,7 +24,7 @@ import java.util.Map;
  * <p>
  * <p>
  * <p>
- * //TODO reercrire cette classe ya des choses que je fais 5 fois c'est inutil
+ * //TODO reecrire cette classe ya des choses que je fais 5 fois c'est inutil
  *
  * @author Tristan Dubos and Axel Poulet
  */
@@ -38,28 +38,30 @@ public class Measure3D {
 	double _yCal;
 	double _zCal;
 	
-	HashMap<Double, Integer> _segmentedNucleusHisto = new HashMap<>();
-	HashMap<Double, Integer> _backgroundHisto       = new HashMap<>();
+	HashMap<Double, Integer> _segmentedNucleusHistogram = new HashMap<>();
+	HashMap<Double, Integer> _backgroundHistogram       = new HashMap<>();
 	
 	
 	public Measure3D() {
 	}
 	
 	
-	public Measure3D(double xCal, double ycal, double zCal) {
+	public Measure3D(double xCal, double yCal, double zCal) {
 		this._xCal = xCal;
-		this._yCal = ycal;
+		this._yCal = yCal;
 		this._zCal = zCal;
 		
 	}
 	
-	public Measure3D(ImagePlus[] imageSeg, ImagePlus rawImage, double xCal, double ycal, double zCal) {
+	
+	public Measure3D(ImagePlus[] imageSeg, ImagePlus rawImage, double xCal, double yCal, double zCal) {
 		this._rawImage = rawImage;
 		this._imageSeg = imageSeg;
 		this._xCal = xCal;
-		this._yCal = ycal;
+		this._yCal = yCal;
 		this._zCal = zCal;
 	}
+	
 	
 	/**
 	 * Scan of image and if the voxel belong to the object of interest, looking, if in his neighborhood there are voxel
@@ -111,7 +113,7 @@ public class Measure3D {
 	 *
 	 * @return double table which contain the volume of each image object
 	 */
-	public double[] computeVolumeofAllObjects(ImagePlus imagePlusInput) {
+	public double[] computeVolumeOfAllObjects(ImagePlus imagePlusInput) {
 		
 		Histogram histogram = new Histogram();
 		histogram.run(imagePlusInput);
@@ -125,6 +127,7 @@ public class Measure3D {
 		return tObjectVolume;
 	}
 	
+	
 	/**
 	 * Compute the volume of one object with this label
 	 *
@@ -135,21 +138,23 @@ public class Measure3D {
 	public double computeVolumeObject2(double label) {
 		Histogram histogram = new Histogram();
 		histogram.run(this._imageSeg[0]);
-		HashMap<Double, Integer> hashMapHisto = histogram.getHistogram();
+		HashMap<Double, Integer> hashMapHistogram = histogram.getHistogram();
 		
-		return hashMapHisto.get(label) * this._xCal * this._yCal * this._zCal;
+		return hashMapHistogram.get(label) * this._xCal * this._yCal * this._zCal;
 		
 	}
 	
+	
 	private double computeVolumeObjectML() {
-		Double volumeTMP = 0.0;
-		for (Map.Entry<Double, Integer> toto : this._segmentedNucleusHisto.entrySet()) {
+		double volumeTMP = 0.0;
+		for (Map.Entry<Double, Integer> toto : this._segmentedNucleusHistogram.entrySet()) {
 			if (toto.getValue() > 0) {
 				volumeTMP += toto.getValue();
 			}
 		}
 		return volumeTMP * this._xCal * this._yCal * this._zCal;
 	}
+	
 	
 	/**
 	 * Compute the volume of one object with this label
@@ -162,9 +167,10 @@ public class Measure3D {
 	public double computeVolumeObject(ImagePlus imagePlusInput, double label) {
 		Histogram histogram = new Histogram();
 		histogram.run(imagePlusInput);
-		HashMap<Double, Integer> hashMapHisto = histogram.getHistogram();
-		return hashMapHisto.get(label) * this._xCal * this._yCal * this._zCal;
+		HashMap<Double, Integer> hashMapHistogram = histogram.getHistogram();
+		return hashMapHistogram.get(label) * this._xCal * this._yCal * this._zCal;
 	}
+	
 	
 	/**
 	 * compute the equivalent spherical radius
@@ -178,6 +184,7 @@ public class Measure3D {
 		radius = Math.pow(radius, 1.0 / 3.0);
 		return radius;
 	}
+	
 	
 	/**
 	 * compute the equivalent spherical radius with ImagePlus in input
@@ -207,6 +214,7 @@ public class Measure3D {
 		        / (surface * surface * surface));
 	}
 	
+	
 	/**
 	 * Method which compute the eigen value of the matrix (differences between the coordinates of all points and the
 	 * barycenter. Obtaining a symmetric matrix : xx xy xz xy yy yz xz yz zz Compute the eigen value with the pakage
@@ -220,13 +228,13 @@ public class Measure3D {
 		ImageStack  imageStackInput = this._imageSeg[0].getImageStack();
 		VoxelRecord barycenter      = computeBarycenter3D(true, this._imageSeg[0], label);
 		
-		double xx       = 0;
-		double xy       = 0;
-		double xz       = 0;
-		double yy       = 0;
-		double yz       = 0;
-		double zz       = 0;
-		int    compteur = 0;
+		double xx      = 0;
+		double xy      = 0;
+		double xz      = 0;
+		double yy      = 0;
+		double yz      = 0;
+		double zz      = 0;
+		int    counter = 0;
 		double voxelValue;
 		for (int k = 0; k < this._imageSeg[0].getStackSize(); ++k) {
 			double dz = ((this._zCal * (double) k) - barycenter.getK());
@@ -242,14 +250,14 @@ public class Measure3D {
 						xy += dx * dy;
 						xz += dx * dz;
 						yz += dy * dz;
-						compteur++;
+						counter++;
 					}
 				}
 			}
 		}
-		double[][] tValues = {{xx / compteur, xy / compteur, xz / compteur},
-		                      {xy / compteur, yy / compteur, yz / compteur},
-		                      {xz / compteur, yz / compteur, zz / compteur}};
+		double[][] tValues = {{xx / counter, xy / counter, xz / counter},
+		                      {xy / counter, yy / counter, yz / counter},
+		                      {xz / counter, yz / counter, zz / counter}};
 		Matrix                  matrix                  = new Matrix(tValues);
 		EigenvalueDecomposition eigenValueDecomposition = matrix.eig();
 		return eigenValueDecomposition.getRealEigenvalues();
@@ -270,6 +278,7 @@ public class Measure3D {
 		shapeParameters[1] = Math.sqrt(tEigenValues[2] / tEigenValues[1]);
 		return shapeParameters;
 	}
+	
 	
 	/**
 	 * Method which determines object barycenter
@@ -313,6 +322,7 @@ public class Measure3D {
 		return voxelRecordBarycenter;
 	}
 	
+	
 	/**
 	 * Method which compute the barycenter of each objects and return the result in a table of VoxelRecord
 	 *
@@ -325,13 +335,14 @@ public class Measure3D {
 	                                             boolean unit) {
 		Histogram histogram = new Histogram();
 		histogram.run(imagePlusInput);
-		double[]      tlabel       = histogram.getLabels();
-		VoxelRecord[] tVoxelRecord = new VoxelRecord[tlabel.length];
-		for (int i = 0; i < tlabel.length; ++i) {
-			tVoxelRecord[i] = computeBarycenter3D(unit, imagePlusInput, tlabel[i]);
+		double[]      tLabel       = histogram.getLabels();
+		VoxelRecord[] tVoxelRecord = new VoxelRecord[tLabel.length];
+		for (int i = 0; i < tLabel.length; ++i) {
+			tVoxelRecord[i] = computeBarycenter3D(unit, imagePlusInput, tLabel[i]);
 		}
 		return tVoxelRecord;
 	}
+	
 	
 	/**
 	 * Intensity of chromocenters/ intensity of the nucleus
@@ -372,26 +383,25 @@ public class Measure3D {
 		return chromocenterIntensity / nucleusIntensity;
 	}
 	
+	
 	/**
 	 * Method which compute the RHF (total chromocenters volume/nucleus volume)
 	 *
-	 * @param imagePlusSegmented    binary ImagePlus
-	 * @param imagePlusChomocenters ImagePLus of the chromocenters
+	 * @param imagePlusSegmented     binary ImagePlus
+	 * @param imagePlusChromocenters ImagePLus of the chromocenters
 	 *
 	 * @return double Relative Heterochromatin Fraction compute on the Volume ratio
 	 */
-	public double computeVolumeRHF(ImagePlus imagePlusSegmented
-			, ImagePlus imagePlusChomocenters) {
-		double volumeCc = 0;
-		double[] tVolumeChromocenter =
-				computeVolumeofAllObjects(imagePlusChomocenters);
+	public double computeVolumeRHF(ImagePlus imagePlusSegmented, ImagePlus imagePlusChromocenters) {
+		double   volumeCc            = 0;
+		double[] tVolumeChromocenter = computeVolumeOfAllObjects(imagePlusChromocenters);
 		for (double v : tVolumeChromocenter) {
 			volumeCc += v;
 		}
-		double[] tVolumeSegmented =
-				computeVolumeofAllObjects(imagePlusSegmented);
+		double[] tVolumeSegmented = computeVolumeOfAllObjects(imagePlusSegmented);
 		return volumeCc / tVolumeSegmented[0];
 	}
+	
 	
 	/**
 	 * Detect the number of object on segmented image.
@@ -414,7 +424,7 @@ public class Measure3D {
 	 */
 	public double computeComplexSurface() {
 		Gradient                gradient            = new Gradient(this._rawImage);
-		ArrayList<Double>[][][] tableUnitaire       = gradient.getUnitaire();
+		ArrayList<Double>[][][] tableUnitary        = gradient.getUnitary();
 		ImageStack              imageStackSegmented = this._imageSeg[0].getStack();
 		double                  surfaceArea         = 0, voxelValue, neighborVoxelValue;
 		VoxelRecord             voxelRecordIn       = new VoxelRecord();
@@ -439,8 +449,8 @@ public class Measure3D {
 										kk);
 								surfaceArea = surfaceArea +
 								              computeSurfelContribution(
-										              tableUnitaire[i][j][k],
-										              tableUnitaire[i][j][kk],
+										              tableUnitary[i][j][k],
+										              tableUnitary[i][j][kk],
 										              voxelRecordIn,
 										              voxelRecordOut,
 										              ((this._xCal) * (this._yCal)));
@@ -459,8 +469,8 @@ public class Measure3D {
 										j,
 										k);
 								surfaceArea = surfaceArea + computeSurfelContribution(
-										tableUnitaire[i][j][k],
-										tableUnitaire[ii][j][k],
+										tableUnitary[i][j][k],
+										tableUnitary[ii][j][k],
 										voxelRecordIn, voxelRecordOut,
 										((this._yCal) * (this._zCal)));
 							}
@@ -479,8 +489,8 @@ public class Measure3D {
 										k);
 								surfaceArea = surfaceArea
 								              + computeSurfelContribution(
-										tableUnitaire[i][j][k],
-										tableUnitaire[i][jj][k],
+										tableUnitary[i][j][k],
+										tableUnitary[i][jj][k],
 										voxelRecordIn,
 										voxelRecordOut,
 										((this._xCal) * (this._zCal)));
@@ -503,7 +513,7 @@ public class Measure3D {
 	 * @return
 	 */
 	public double computeComplexSurface(ImagePlus imagePlusSegmented, Gradient gradient) {
-		ArrayList<Double>[][][] tableUnitaire       = gradient.getUnitaire();
+		ArrayList<Double>[][][] tableUnitary       = gradient.getUnitary();
 		ImageStack              imageStackSegmented = imagePlusSegmented.getStack();
 		double                  surfaceArea         = 0, voxelValue, neighborVoxelValue;
 		VoxelRecord             voxelRecordIn       = new VoxelRecord();
@@ -523,8 +533,8 @@ public class Measure3D {
 								voxelRecordIn.setLocation(i, j, k);
 								voxelRecordOut.setLocation(i, j, kk);
 								surfaceArea = surfaceArea +
-								              computeSurfelContribution(tableUnitaire[i][j][k],
-								                                        tableUnitaire[i][j][kk],
+								              computeSurfelContribution(tableUnitary[i][j][k],
+								                                        tableUnitary[i][j][kk],
 								                                        voxelRecordIn,
 								                                        voxelRecordOut,
 								                                        ((xCalibration) * (yCalibration)));
@@ -536,8 +546,8 @@ public class Measure3D {
 								voxelRecordIn.setLocation(i, j, k);
 								voxelRecordOut.setLocation(ii, j, k);
 								surfaceArea = surfaceArea +
-								              computeSurfelContribution(tableUnitaire[i][j][k],
-								                                        tableUnitaire[ii][j][k],
+								              computeSurfelContribution(tableUnitary[i][j][k],
+								                                        tableUnitary[ii][j][k],
 								                                        voxelRecordIn,
 								                                        voxelRecordOut,
 								                                        ((yCalibration) * (zCalibration)));
@@ -549,8 +559,8 @@ public class Measure3D {
 								voxelRecordIn.setLocation(i, j, k);
 								voxelRecordOut.setLocation(i, jj, k);
 								surfaceArea = surfaceArea +
-								              computeSurfelContribution(tableUnitaire[i][j][k],
-								                                        tableUnitaire[i][jj][k],
+								              computeSurfelContribution(tableUnitary[i][j][k],
+								                                        tableUnitary[i][jj][k],
 								                                        voxelRecordIn,
 								                                        voxelRecordOut,
 								                                        ((xCalibration) * (zCalibration)));
@@ -567,27 +577,28 @@ public class Measure3D {
 	/**
 	 * Compute surface contribution of each voxels from gradients.
 	 *
-	 * @param listUnitaireIn
-	 * @param listUnitaireOut
+	 * @param listUnitaryIn
+	 * @param listUnitaryOut
 	 * @param voxelRecordIn
 	 * @param voxelRecordOut
 	 * @param as
 	 *
 	 * @return
 	 */
-	private double computeSurfelContribution(ArrayList<Double> listUnitaireIn,
-	                                         ArrayList<Double> listUnitaireOut,
+	private double computeSurfelContribution(ArrayList<Double> listUnitaryIn,
+	                                         ArrayList<Double> listUnitaryOut,
 	                                         VoxelRecord voxelRecordIn,
 	                                         VoxelRecord voxelRecordOut,
 	                                         double as) {
 		double dx = voxelRecordIn._i - voxelRecordOut._i;
 		double dy = voxelRecordIn._j - voxelRecordOut._j;
 		double dz = voxelRecordIn._k - voxelRecordOut._k;
-		double nx = (listUnitaireIn.get(0) + listUnitaireOut.get(0)) / 2;
-		double ny = (listUnitaireIn.get(1) + listUnitaireOut.get(1)) / 2;
-		double nz = (listUnitaireIn.get(2) + listUnitaireOut.get(2)) / 2;
+		double nx = (listUnitaryIn.get(0) + listUnitaryOut.get(0)) / 2;
+		double ny = (listUnitaryIn.get(1) + listUnitaryOut.get(1)) / 2;
+		double nz = (listUnitaryIn.get(2) + listUnitaryOut.get(2)) / 2;
 		return Math.abs((dx * nx + dy * ny + dz * nz) * as);
 	}
+	
 	
 	/**
 	 * Compute an Hashmap describing the segmented object (from raw data). Key = Voxels intensity value = Number of
@@ -605,21 +616,24 @@ public class Measure3D {
 				for (int j = 0; j < this._rawImage.getHeight(); ++j) {
 					double voxelValue = imageStackSeg.getVoxel(i, j, k);
 					if (voxelValue == 255) {
-						if (!this._segmentedNucleusHisto.containsKey(imageStackRaw.getVoxel(i, j, k))) {
-							this._segmentedNucleusHisto.put(imageStackRaw.getVoxel(i, j, k), 1);
+						if (!this._segmentedNucleusHistogram.containsKey(imageStackRaw.getVoxel(i, j, k))) {
+							this._segmentedNucleusHistogram.put(imageStackRaw.getVoxel(i, j, k), 1);
 						} else {
-							this._segmentedNucleusHisto.put(imageStackRaw.getVoxel(i, j, k),
-							                                this._segmentedNucleusHisto.get(imageStackRaw.getVoxel(i,
-							                                                                                       j,
-							                                                                                       k)) +
-							                                1);
+							this._segmentedNucleusHistogram.put(imageStackRaw.getVoxel(i, j, k),
+							                                    this._segmentedNucleusHistogram.get(imageStackRaw.getVoxel(
+									                                    i,
+									                                    j,
+									                                    k)) +
+							                                    1);
 						}
 					} else {
-						if (!this._backgroundHisto.containsKey(imageStackRaw.getVoxel(i, j, k))) {
-							this._backgroundHisto.put(imageStackRaw.getVoxel(i, j, k), 1);
+						if (!this._backgroundHistogram.containsKey(imageStackRaw.getVoxel(i, j, k))) {
+							this._backgroundHistogram.put(imageStackRaw.getVoxel(i, j, k), 1);
 						} else {
-							this._backgroundHisto.put(imageStackRaw.getVoxel(i, j, k),
-							                          this._backgroundHisto.get(imageStackRaw.getVoxel(i, j, k)) + 1);
+							this._backgroundHistogram.put(imageStackRaw.getVoxel(i, j, k),
+							                              this._backgroundHistogram.get(imageStackRaw.getVoxel(i,
+							                                                                                   j,
+							                                                                                   k)) + 1);
 						}
 					}
 				}
@@ -637,14 +651,13 @@ public class Measure3D {
 	private double meanIntensity() {
 		int    numberOfVoxel = 0;
 		double mean          = 0;
-		for (Map.Entry<Double, Integer> histo2 :
-				this._segmentedNucleusHisto.entrySet()) {
-			numberOfVoxel += histo2.getValue();
-			mean += histo2.getKey() * histo2.getValue();
-			
+		for (Map.Entry<Double, Integer> histogram : this._segmentedNucleusHistogram.entrySet()) {
+			numberOfVoxel += histogram.getValue();
+			mean += histogram.getKey() * histogram.getValue();
 		}
 		return mean / numberOfVoxel;
 	}
+	
 	
 	/**
 	 * Compute mean intensity of background
@@ -663,13 +676,11 @@ public class Measure3D {
 						meanIntensity += imageStackRaw.getVoxel(i, j, k);
 						voxelCounted++;
 					}
-					
 				}
 			}
 		}
 		meanIntensity = meanIntensity / voxelCounted;
 		return meanIntensity;
-		
 	}
 	
 	
@@ -683,12 +694,9 @@ public class Measure3D {
 	private double standardDeviationIntensity(Double mean) {
 		int    numberOfVoxel = 0;
 		double std           = 0;
-		for (Map.Entry<Double, Integer> histo2 :
-				this._segmentedNucleusHisto.entrySet()) {
-			numberOfVoxel += histo2.getValue();
-			std = Math.abs((histo2.getKey() * histo2.getValue())
-			               - (histo2.getValue() * mean));
-			
+		for (Map.Entry<Double, Integer> histogram : this._segmentedNucleusHistogram.entrySet()) {
+			numberOfVoxel += histogram.getValue();
+			std = Math.abs((histogram.getKey() * histogram.getValue()) - (histogram.getValue() * mean));
 		}
 		return std / (numberOfVoxel - 1);
 		
@@ -704,7 +712,7 @@ public class Measure3D {
 	private double maxIntensity() {
 		double maxIntensity = 0;
 		for (Map.Entry<Double, Integer> entry :
-				this._segmentedNucleusHisto.entrySet()) {
+				this._segmentedNucleusHistogram.entrySet()) {
 			if (maxIntensity == 0 || entry.getKey().compareTo(maxIntensity) > 0) {
 				maxIntensity = entry.getKey();
 			}
@@ -712,6 +720,7 @@ public class Measure3D {
 		return maxIntensity;
 		
 	}
+	
 	
 	/**
 	 * Find the minimum intensity voxel of segmented object
@@ -721,7 +730,7 @@ public class Measure3D {
 	private double minIntensity() {
 		double minIntensity = 0;
 		for (Map.Entry<Double, Integer> entry :
-				this._segmentedNucleusHisto.entrySet()) {
+				this._segmentedNucleusHistogram.entrySet()) {
 			if (minIntensity == 0 || entry.getKey().compareTo(minIntensity) < 0) {
 				minIntensity = entry.getKey();
 			}
@@ -729,6 +738,7 @@ public class Measure3D {
 		return minIntensity;
 		
 	}
+	
 	
 	/**
 	 * Compute the median intensity value of raw image voxel
@@ -739,60 +749,56 @@ public class Measure3D {
 		double    voxelMedianValue = 0;
 		Histogram histogram        = new Histogram();
 		histogram.run(this._rawImage);
-		HashMap<Double, Integer> _segmentedNucleusHisto = histogram.getHistogram();
+		HashMap<Double, Integer> _segmentedNucleusHistogram = histogram.getHistogram();
 		int medianElementStop =
 				(this._rawImage.getHeight() * this._rawImage.getWidth() * this._rawImage.getNSlices()) / 2;
 		int increment = 0;
-		for (HashMap.Entry<Double, Integer> entry : _segmentedNucleusHisto.entrySet()) {
+		for (HashMap.Entry<Double, Integer> entry : _segmentedNucleusHistogram.entrySet()) {
 			increment += entry.getValue();
 			if (increment > medianElementStop) {
 				voxelMedianValue = entry.getKey();
 				break;
 			}
-			
-			
 		}
 		return voxelMedianValue;
 	}
 	
+	
 	private double medianIntensityNucleus() {
 		double voxelMedianValue     = 0;
 		int    numberOfVoxelNucleus = 0;
-		for (int f : this._segmentedNucleusHisto.values()) {
+		for (int f : this._segmentedNucleusHistogram.values()) {
 			numberOfVoxelNucleus += f;
 		}
 		int medianElementStop = (numberOfVoxelNucleus) / 2;
 		int increment         = 0;
 		for (Map.Entry<Double, Integer> entry :
-				this._segmentedNucleusHisto.entrySet()) {
+				this._segmentedNucleusHistogram.entrySet()) {
 			increment += entry.getValue();
 			if (increment > medianElementStop) {
 				voxelMedianValue = entry.getKey();
 				break;
 			}
-			
-			
 		}
 		return voxelMedianValue;
 	}
 	
+	
 	private double medianIntensityBackground() {
 		double voxelMedianValue        = 0;
 		int    numberOfVoxelBackground = 0;
-		for (int f : this._segmentedNucleusHisto.values()) {
+		for (int f : this._segmentedNucleusHistogram.values()) {
 			numberOfVoxelBackground += f;
 		}
 		int medianElementStop = (numberOfVoxelBackground) / 2;
 		int increment         = 0;
 		for (Map.Entry<Double, Integer> entry :
-				this._backgroundHisto.entrySet()) {
+				this._backgroundHistogram.entrySet()) {
 			increment += entry.getValue();
 			if (increment > medianElementStop) {
 				voxelMedianValue = entry.getKey();
 				break;
 			}
-			
-			
 		}
 		return voxelMedianValue;
 	}
@@ -804,7 +810,7 @@ public class Measure3D {
 	 * @return list of parameters compute in this method returned in tabulated format
 	 */
 	public String nucleusParameter3D() {
-		String resu = "";
+		String results;
 		histogramSegmentedNucleus();
 		// double volume = computeVolumeObject2(255);
 		
@@ -812,25 +818,23 @@ public class Measure3D {
 		double   surfaceArea    = computeSurfaceObject(255);
 		double   surfaceAreaNew = computeComplexSurface();
 		double[] tEigenValues   = computeEigenValue3D(255);
-		resu = this._rawImage.getTitle() + "\t"
-		       //  + computeVolumeObject2(255) + "\t"
-		       + computeVolumeObjectML() + "\t"
-		       + computeFlatnessAndElongation(255)[0] + "\t"
-		       + computeFlatnessAndElongation(255)[1] + "\t"
-		       + equivalentSphericalRadius(volume) + "\t"
-		       + surfaceAreaNew + "\t"
-		       + computeSphericity(volume, surfaceAreaNew) + "\t"
-		       + meanIntensity() + "\t"
-		       + meanIntensityBackground() + "\t"
-		       + standardDeviationIntensity(meanIntensity()) + "\t"
-		       + minIntensity() + "\t"
-		       + maxIntensity() + "\t"
-		       + medianComputingImage() + "\t"
-		       + medianIntensityNucleus() + "\t"
-		       + medianIntensityBackground() + "\t"
-		       + this._rawImage.getHeight() * this._rawImage.getWidth() * this._rawImage.getNSlices()
-		;
-		return resu;
+		results = this._rawImage.getTitle() + "\t"
+		          //  + computeVolumeObject2(255) + "\t"
+		          + computeVolumeObjectML() + "\t"
+		          + computeFlatnessAndElongation(255)[0] + "\t"
+		          + computeFlatnessAndElongation(255)[1] + "\t"
+		          + equivalentSphericalRadius(volume) + "\t"
+		          + surfaceAreaNew + "\t"
+		          + computeSphericity(volume, surfaceAreaNew) + "\t"
+		          + meanIntensity() + "\t"
+		          + meanIntensityBackground() + "\t"
+		          + standardDeviationIntensity(meanIntensity()) + "\t"
+		          + minIntensity() + "\t"
+		          + maxIntensity() + "\t"
+		          + medianComputingImage() + "\t"
+		          + medianIntensityNucleus() + "\t"
+		          + medianIntensityBackground() + "\t"
+		          + this._rawImage.getHeight() * this._rawImage.getWidth() * this._rawImage.getNSlices();
+		return results;
 	}
-	
 }

@@ -72,8 +72,7 @@ public class ConvexeHullDetection {
 	                                              double distanceThreshold) {
 		double      anglesSum = 0.0;
 		int         compteur  = 0;
-		VoxelRecord voxelTest = new VoxelRecord();
-		voxelTest = _p0;
+		VoxelRecord voxelTest = _p0;
 		VoxelRecord voxelPrecedent = new VoxelRecord();
 		double      xcal           = calibration.pixelWidth;
 		double      ycal           = calibration.pixelHeight;
@@ -92,25 +91,29 @@ public class ConvexeHullDetection {
 			}
 			
 			for (int i = 0; i < lVoxelBoundary.size(); i++) {
-				//IJ.log("anglesSum " +lVoxelBoundary.get(i)._i + " "+lVoxelBoundary.get(i)._j + " "+lVoxelBoundary.get(i)._k + " ");
+				// IJ.log("anglesSum " +lVoxelBoundary.get(i)._i + " "+lVoxelBoundary.get(i)._j + " "+lVoxelBoundary.get(i)._k + " ");
 				// IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" size "+lVoxelBoundary.size()+ " le i "+i);
 				if (voxelTest.compareCoordinatesTo(lVoxelBoundary.get(i)) == 1) {
 					VoxelRecord vectorCourant = new VoxelRecord();
 					vectorCourant.setLocation(lVoxelBoundary.get(i)._i - voxelTest._i,
 					                          lVoxelBoundary.get(i)._j - voxelTest._j,
 					                          lVoxelBoundary.get(i)._k - voxelTest._k);
-					if (_axesName == "xy") {
-						distance = Math.sqrt(vectorCourant._i * xcal * vectorCourant._i * xcal +
-						                     vectorCourant._j * ycal * vectorCourant._j * ycal);
-					} else if (_axesName == "xz") {
-						distance = Math.sqrt(vectorCourant._i * xcal * vectorCourant._i * xcal +
-						                     vectorCourant._k * zcal * vectorCourant._k * zcal);
-					} else if (_axesName == "yz") {
-						distance = Math.sqrt(vectorCourant._k * zcal * vectorCourant._k * zcal +
-						                     vectorCourant._j * ycal * vectorCourant._j * ycal);
+					switch (_axesName) {
+						case "xy":
+							distance = Math.sqrt(vectorCourant._i * xcal * vectorCourant._i * xcal +
+							                     vectorCourant._j * ycal * vectorCourant._j * ycal);
+							break;
+						case "xz":
+							distance = Math.sqrt(vectorCourant._i * xcal * vectorCourant._i * xcal +
+							                     vectorCourant._k * zcal * vectorCourant._k * zcal);
+							break;
+						case "yz":
+							distance = Math.sqrt(vectorCourant._k * zcal * vectorCourant._k * zcal +
+							                     vectorCourant._j * ycal * vectorCourant._j * ycal);
+							break;
 					}
-					//  IJ.log("distance " +distance+ " "+vectorCourant._i + " "+vectorCourant._k );
-					//  IJ.log("distance " + distance +"<="+ distanceThreshold);
+					// IJ.log("distance " +distance+ " "+vectorCourant._i + " "+vectorCourant._k );
+					// IJ.log("distance " + distance +"<="+ distanceThreshold);
 					if (distance <= distanceThreshold) {
 						double angle              = computeAngle(vectorTest, vectorCourant, calibration);
 						double anglePlusPiSurDeux = angle - _pi / 2;
@@ -133,7 +136,6 @@ public class ConvexeHullDetection {
 								iMin = i;
 							}
 						}
-						
 					}
 				}
 			}
@@ -168,6 +170,7 @@ public class ConvexeHullDetection {
 		return convexHull;
 	}
 	
+	
 	/**
 	 * sweetsweet sun
 	 *
@@ -190,21 +193,25 @@ public class ConvexeHullDetection {
 		double normesProduct = normeVector1 * normeVector2;
 		double sinAlpha      = 0, cosAlpha = 0;
 		
-		if (_axesName == "xy") {
-			sinAlpha = ((vector1._i * xcal) * (vector2._j * ycal) - (vector1._j * ycal) * (vector2._i * xcal)) /
-			           normesProduct;
-			cosAlpha = ((vector1._i * xcal) * (vector2._i * xcal) + (vector1._j * ycal) * (vector2._j * ycal)) /
-			           normesProduct;
-		} else if (_axesName == "xz") {
-			sinAlpha = ((vector1._i * xcal) * (vector2._k * zcal) - (vector1._k * zcal) * (vector2._i * xcal)) /
-			           normesProduct;
-			cosAlpha = ((vector1._i * xcal) * (vector2._i * xcal) + (vector1._k * zcal) * (vector2._k * zcal)) /
-			           normesProduct;
-		} else if (_axesName == "yz") {
-			sinAlpha = ((vector1._j * ycal) * (vector2._k * zcal) - (vector1._k * zcal) * (vector2._j * ycal)) /
-			           normesProduct;
-			cosAlpha = ((vector1._j * ycal) * (vector2._j * ycal) + (vector1._k * zcal) * (vector2._k * zcal)) /
-			           normesProduct;
+		switch (_axesName) {
+			case "xy":
+				sinAlpha = ((vector1._i * xcal) * (vector2._j * ycal) - (vector1._j * ycal) * (vector2._i * xcal)) /
+				           normesProduct;
+				cosAlpha = ((vector1._i * xcal) * (vector2._i * xcal) + (vector1._j * ycal) * (vector2._j * ycal)) /
+				           normesProduct;
+				break;
+			case "xz":
+				sinAlpha = ((vector1._i * xcal) * (vector2._k * zcal) - (vector1._k * zcal) * (vector2._i * xcal)) /
+				           normesProduct;
+				cosAlpha = ((vector1._i * xcal) * (vector2._i * xcal) + (vector1._k * zcal) * (vector2._k * zcal)) /
+				           normesProduct;
+				break;
+			case "yz":
+				sinAlpha = ((vector1._j * ycal) * (vector2._k * zcal) - (vector1._k * zcal) * (vector2._j * ycal)) /
+				           normesProduct;
+				cosAlpha = ((vector1._j * ycal) * (vector2._j * ycal) + (vector1._k * zcal) * (vector2._k * zcal)) /
+				           normesProduct;
+				break;
 		}
 		if (cosAlpha > 1) {
 			cosAlpha = 1;
@@ -221,6 +228,7 @@ public class ConvexeHullDetection {
 		return alpha;
 	}
 	
+	
 	/**
 	 * @param p
 	 * @param q
@@ -233,15 +241,18 @@ public class ConvexeHullDetection {
 		return Integer.signum(turn);
 	}
 	
+	
 	/** @return */
 	public String getAxes() {
 		return _axesName;
 	}
 	
+	
 	/** @param axes */
 	public void setAxes(String axes) {
 		_axesName = axes;
 	}
+	
 	
 	/** @param voxelRecord */
 	public void setInitialVoxel(VoxelRecord voxelRecord) {
@@ -278,10 +289,10 @@ public class ConvexeHullDetection {
 		int nbPixelHeight = (int) (distance / calibration.pixelHeight);
 		int x             = (int) voxelRecord._i;
 		int y             = (int) voxelRecord._j;
-		if (_axesName == "xz") {
+		if (_axesName.equals("xz")) {
 			y = (int) voxelRecord._k;
 			nbPixelHeight = (int) (distance / calibration.pixelDepth);
-		} else if (_axesName == "yz") {
+		} else if (_axesName.equals("yz")) {
 			x = (int) voxelRecord._j;
 			y = (int) voxelRecord._k;
 			nbPixelWidth = (int) (distance / calibration.pixelHeight);
@@ -305,11 +316,11 @@ public class ConvexeHullDetection {
 			vectorCourant.setLocation(record._i - nbPixelWidth,
 			                          record._j - nbPixelHeight,
 			                          0);
-			if (_axesName == "xz") {
+			if (_axesName.equals("xz")) {
 				vectorCourant.setLocation(record._i - nbPixelWidth,
 				                          0,
 				                          record._k - nbPixelHeight);
-			} else if (_axesName == "yz") {
+			} else if (_axesName.equals("yz")) {
 				vectorCourant.setLocation(0,
 				                          record._j - nbPixelWidth,
 				                          record._k - nbPixelHeight);
@@ -325,6 +336,7 @@ public class ConvexeHullDetection {
 		}
 		return angleMax;
 	}
+	
 	
 	/**
 	 * @param image

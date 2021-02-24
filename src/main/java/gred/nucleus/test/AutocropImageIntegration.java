@@ -10,22 +10,21 @@ public class AutocropImageIntegration {
 	
 	static ArrayList<String> m_test;
 	
-	public static void runAutoCrop(String imageSourceFile, String output, String pathToConfig)
-	throws Exception {
+	public static void runAutoCrop(String imageSourceFile, String output, String pathToConfig) {
 		AutocropParameters autocropParameters = new AutocropParameters(imageSourceFile, output, pathToConfig);
 		AutoCropCalling    autoCrop           = new AutoCropCalling(autocropParameters);
 		autoCrop.runFolder();
 	}
 	
-	public static void testStupid(String imageSourceFile, String output)
-	throws Exception {
+	
+	public static void testStupid(String imageSourceFile, String output) {
 		AutocropParameters autocropParameters = new AutocropParameters(imageSourceFile, output);
 		AutoCropCalling    autoCrop           = new AutoCropCalling();
 		autoCrop.runFolder();
 	}
 	
-	public static void runAutoCrop(String imageSourceFile, String output)
-	throws Exception {
+	
+	public static void runAutoCrop(String imageSourceFile, String output) {
 		//AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
 		AutocropParameters autocropParameters =
 				new AutocropParameters(imageSourceFile, output, 40, 40, 20, 0, 20, 0, 1, 1000000000);
@@ -33,12 +32,13 @@ public class AutocropImageIntegration {
 		autoCrop.runFolder();
 	}
 	
+	
 	/**
 	 * Main function of the package's tests.
 	 *
-	 * @param args
+	 * @param args arguments
 	 */
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		String pathToTest   = "/home/tridubos/Bureau/IMAGES_TEST_CICD/AUTOCROP_IMAGES/AUTOCROP_RAW";
 		String pathToOutput = "/home/tridubos/Bureau/IMAGES_TEST_CICD/AUTOCROP";
 		
@@ -67,7 +67,7 @@ public class AutocropImageIntegration {
 		//String outputTristan = "/home/tridubos/Bureau/TEST_AUTOCROP/out_test_Version";
 		
 		//OutputFileVerification fw = new OutputFileVerification();
-		//fw.GetFileResultExpeted(ExpectedResult);
+		//fw.GetFileResultExpected(ExpectedResult);
 		//fw.GetFilesOutputFolder(outputTristan);
 		//testStupid(inputOneImageTristan, outputTristan);
 		
@@ -102,6 +102,4 @@ public class AutocropImageIntegration {
 		System.out.println("Total memory (bytes): " +
 		                   Runtime.getRuntime().totalMemory() * 1e-9);
 	}
-	
-	
 }

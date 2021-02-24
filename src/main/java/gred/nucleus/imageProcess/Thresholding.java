@@ -10,6 +10,7 @@ public class Thresholding {
 	public Thresholding() {
 	}
 	
+	
 	/**
 	 * Compute the initial threshold value from OTSU method
 	 *
@@ -20,12 +21,13 @@ public class Thresholding {
 	public int computeOtsuThreshold(ImagePlus imagePlusInput) {
 		AutoThresholder autoThresholder = new AutoThresholder();
 		ImageStatistics imageStatistics = new StackStatistics(imagePlusInput);
-		int[]           tHisto          = imageStatistics.histogram;
-		return autoThresholder.getThreshold(AutoThresholder.Method.Otsu, tHisto);
+		int[]           tHistogram      = imageStatistics.histogram;
+		return autoThresholder.getThreshold(AutoThresholder.Method.Otsu, tHistogram);
 	}
 	
+	
 	/**
-	 * TODO COMMENTAIRE !!!! 2D 3D
+	 * TODO COMMENT !!!! 2D 3D
 	 *
 	 * @param imagePlusInput
 	 *
@@ -47,6 +49,5 @@ public class Thresholding {
 		return imagePlusInput;
 		
 	}
-	
 }
 

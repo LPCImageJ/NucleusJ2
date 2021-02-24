@@ -29,6 +29,7 @@ public class ComputeNucleiParameters {
 		
 	}
 	
+	
 	/**
 	 * Constructor with input and output files
 	 *
@@ -40,6 +41,7 @@ public class ComputeNucleiParameters {
 		
 		
 	}
+	
 	
 	/**
 	 * Constructor with input, output files and calibration from dialog.
@@ -60,16 +62,15 @@ public class ComputeNucleiParameters {
 	 * Compute nuclei parameters generate from segmentation ( OTSU / GIFT) Useful if parallel segmentation was use to
 	 * get results parameter in the same folder.
 	 *
-	 * @throws Exception : file exceptions
 	 */
-	public void run() throws Exception {
+	public void run() {
 		Directory directoryRawInput = new Directory(this.m_pluginParameters.getInputFolder());
 		directoryRawInput.listImageFiles(this.m_pluginParameters.getInputFolder());
 		directoryRawInput.checkIfEmpty();
 		Directory directorySegmentedInput = new Directory(this.m_pluginParameters.getOutputFolder());
 		directorySegmentedInput.listImageFiles(this.m_pluginParameters.getOutputFolder());
 		directorySegmentedInput.checkIfEmpty();
-		ArrayList<File> segmentedImages           = directorySegmentedInput.m_listeOfFiles;
+		ArrayList<File> segmentedImages           = directorySegmentedInput.m_fileList;
 		StringBuilder   outputCropGeneralInfoOTSU = new StringBuilder();
 		
 		outputCropGeneralInfoOTSU.append(this.m_pluginParameters.getAnalyseParameters()).append(getColNameResult());
@@ -81,9 +82,9 @@ public class ComputeNucleiParameters {
 				
 				Measure3D measure3D = new Measure3D(Segmented,
 				                                    Raw,
-				                                    this.m_pluginParameters.getXcalibration(Raw),
-				                                    this.m_pluginParameters.getYcalibration(Raw),
-				                                    this.m_pluginParameters.getZcalibration(Raw));
+				                                    this.m_pluginParameters.getXCalibration(Raw),
+				                                    this.m_pluginParameters.getYCalibration(Raw),
+				                                    this.m_pluginParameters.getZCalibration(Raw));
 				outputCropGeneralInfoOTSU.append(measure3D.nucleusParameter3D()).append("\n");
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -99,10 +100,12 @@ public class ComputeNucleiParameters {
 		
 	}
 	
-	public void addConfigParameters(String pathToconfig) {
-		this.m_pluginParameters.addGeneralProperties(pathToconfig);
+	
+	public void addConfigParameters(String pathToConfig) {
+		this.m_pluginParameters.addGeneralProperties(pathToConfig);
 		
 	}
+	
 	
 	/** @return columns names for results */
 	private String getColNameResult() {
@@ -123,5 +126,4 @@ public class ComputeNucleiParameters {
 		       "MedianIntensityBackground\t" +
 		       "ImageSize\n";
 	}
-	
 }

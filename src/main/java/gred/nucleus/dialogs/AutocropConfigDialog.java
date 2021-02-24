@@ -18,25 +18,21 @@ public class AutocropConfigDialog extends JFrame implements ItemListener {
 	private final JTextField maxVolume                   = new JTextField();
 	private final JTextField thresholdOTSUComputing      = new JTextField();
 	private final JTextField channelToComputeThreshold   = new JTextField();
-	private final JTextField slicesOTSUcomputing         = new JTextField();
+	private final JTextField slicesOTSUComputing         = new JTextField();
 	private final JTextField boxesPercentSurfaceToFilter = new JTextField();
-	private final JCheckBox  boxesRegroupement           = new JCheckBox();
-	private final JCheckBox  addCalibBox                 = new JCheckBox();
-	private final Container  _container;
-	private final JButton    buttonOK                    = new JButton("Done");
+	private final JCheckBox  regroupBoxes                = new JCheckBox();
+	private final JCheckBox  addCalibrationBox           = new JCheckBox();
 	private final JPanel     cropBoxPane;
-	private final AutocropDialog caller;
-	private       Boolean    isBoxesRegroupementSelected = true;
-	private       JPanel     XCalib;
-	private       JPanel     YCalib;
-	private       JPanel     ZCalib;
+	private       Boolean    isRegroupBoxesSelected      = true;
+	private       JPanel     XCalibration;
+	private       JPanel     YCalibration;
+	private       JPanel     ZCalibration;
 	
 	public AutocropConfigDialog(AutocropDialog caller) {
-		this.caller = caller;
 		this.setTitle("Autocrop NucleusJ2");
 		this.setSize(500, 350);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		_container = getContentPane();
+		Container     _container    = getContentPane();
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.rowWeights = new double[]{1.0};
 		gridBagLayout.rowHeights = new int[]{300};
@@ -44,6 +40,7 @@ public class AutocropConfigDialog extends JFrame implements ItemListener {
 		gridBagLayout.columnWidths = new int[]{180, 500};
 		
 		_container.setLayout(gridBagLayout);
+		JButton buttonOK = new JButton("Done");
 		getRootPane().setDefaultButton(buttonOK);
 
 
@@ -101,15 +98,15 @@ public class AutocropConfigDialog extends JFrame implements ItemListener {
         \*\/*/
 		
 		
-		JPanel calibPanel = new JPanel();
-		JLabel calibLabel = new JLabel("Calibration:");
-		calibLabel.setAlignmentX(0);
-		calibPanel.add(calibLabel);
-		addCalibBox.setSelected(false);
-		addCalibBox.setMinimumSize(new Dimension(100, 10));
-		addCalibBox.addItemListener(this);
-		calibPanel.add(addCalibBox);
-		cropBoxPane.add(calibPanel);
+		JPanel calibrationPanel = new JPanel();
+		JLabel calibrationLabel = new JLabel("Calibration:");
+		calibrationLabel.setAlignmentX(0);
+		calibrationPanel.add(calibrationLabel);
+		addCalibrationBox.setSelected(false);
+		addCalibrationBox.setMinimumSize(new Dimension(100, 10));
+		addCalibrationBox.addItemListener(this);
+		calibrationPanel.add(addCalibrationBox);
+		cropBoxPane.add(calibrationPanel);
 		
 		_container.add(cropBoxPane, new GridBagConstraints(0,
 		                                                   0,
@@ -168,15 +165,15 @@ public class AutocropConfigDialog extends JFrame implements ItemListener {
         \*\/*/
 		
 		
-		JPanel thresholdOSTUcomputingPanel = new JPanel();
-		thresholdOSTUcomputingPanel.setLayout(new BoxLayout(thresholdOSTUcomputingPanel, BoxLayout.X_AXIS));
-		thresholdOSTUcomputingPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-		JLabel tOTSUValue = new JLabel("Threshold OSTU computing:");
-		thresholdOSTUcomputingPanel.add(tOTSUValue);
-		thresholdOSTUcomputingPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+		JPanel thresholdOTSUComputingPanel = new JPanel();
+		thresholdOTSUComputingPanel.setLayout(new BoxLayout(thresholdOTSUComputingPanel, BoxLayout.X_AXIS));
+		thresholdOTSUComputingPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+		JLabel tOTSUValue = new JLabel("Threshold OTSU computing:");
+		thresholdOTSUComputingPanel.add(tOTSUValue);
+		thresholdOTSUComputingPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 		thresholdOTSUComputing.setText("20");
 		thresholdOTSUComputing.setMinimumSize(new Dimension(100, 10));
-		thresholdOSTUcomputingPanel.add(thresholdOTSUComputing);
+		thresholdOTSUComputingPanel.add(thresholdOTSUComputing);
 		
 		JPanel channelToComputeThresholdPanel = new JPanel();
 		channelToComputeThresholdPanel.setLayout(new BoxLayout(channelToComputeThresholdPanel, BoxLayout.X_AXIS));
@@ -188,15 +185,15 @@ public class AutocropConfigDialog extends JFrame implements ItemListener {
 		channelToComputeThreshold.setMinimumSize(new Dimension(100, 10));
 		channelToComputeThresholdPanel.add(channelToComputeThreshold);
 		
-		JPanel slicesOTSUcomputingPanel = new JPanel();
-		slicesOTSUcomputingPanel.setLayout(new BoxLayout(slicesOTSUcomputingPanel, BoxLayout.X_AXIS));
-		slicesOTSUcomputingPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+		JPanel slicesOTSUComputingPanel = new JPanel();
+		slicesOTSUComputingPanel.setLayout(new BoxLayout(slicesOTSUComputingPanel, BoxLayout.X_AXIS));
+		slicesOTSUComputingPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 		JLabel slicesOTSUValue = new JLabel("Slices OTSU computing:");
-		slicesOTSUcomputingPanel.add(slicesOTSUValue);
-		slicesOTSUcomputingPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-		slicesOTSUcomputing.setText("0");
-		slicesOTSUcomputing.setMinimumSize(new Dimension(100, 10));
-		slicesOTSUcomputingPanel.add(slicesOTSUcomputing);
+		slicesOTSUComputingPanel.add(slicesOTSUValue);
+		slicesOTSUComputingPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+		slicesOTSUComputing.setText("0");
+		slicesOTSUComputing.setMinimumSize(new Dimension(100, 10));
+		slicesOTSUComputingPanel.add(slicesOTSUComputing);
 		
 		JPanel boxesPercentSurfacePanel = new JPanel();
 		boxesPercentSurfacePanel.setLayout(new BoxLayout(boxesPercentSurfacePanel, BoxLayout.X_AXIS));
@@ -208,22 +205,22 @@ public class AutocropConfigDialog extends JFrame implements ItemListener {
 		boxesPercentSurfaceToFilter.setMinimumSize(new Dimension(100, 10));
 		boxesPercentSurfacePanel.add(boxesPercentSurfaceToFilter);
 		
-		JPanel boxesRegroupementPanel = new JPanel();
-		boxesRegroupementPanel.setLayout(new BoxLayout(boxesRegroupementPanel, BoxLayout.X_AXIS));
-		boxesRegroupementPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-		JLabel boxesRegroupementValue = new JLabel("Boxes regroupement:");
-		boxesRegroupementPanel.add(boxesRegroupementValue);
-		boxesRegroupementPanel.add(Box.createRigidArea(new Dimension(10, 0)));
-		boxesRegroupement.setSelected(true);
-		boxesRegroupement.setMinimumSize(new Dimension(100, 10));
-		boxesRegroupement.addItemListener(this);
-		boxesRegroupementPanel.add(boxesRegroupement);
+		JPanel regroupBoxesPanel = new JPanel();
+		regroupBoxesPanel.setLayout(new BoxLayout(regroupBoxesPanel, BoxLayout.X_AXIS));
+		regroupBoxesPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+		JLabel regroupBoxesValue = new JLabel("Boxes regrouping:");
+		regroupBoxesPanel.add(regroupBoxesValue);
+		regroupBoxesPanel.add(Box.createRigidArea(new Dimension(10, 0)));
+		regroupBoxes.setSelected(true);
+		regroupBoxes.setMinimumSize(new Dimension(100, 10));
+		regroupBoxes.addItemListener(this);
+		regroupBoxesPanel.add(regroupBoxes);
 		
-		volumeNucleus.add(thresholdOSTUcomputingPanel);
+		volumeNucleus.add(thresholdOTSUComputingPanel);
 		volumeNucleus.add(channelToComputeThresholdPanel);
-		volumeNucleus.add(slicesOTSUcomputingPanel);
+		volumeNucleus.add(slicesOTSUComputingPanel);
 		volumeNucleus.add(boxesPercentSurfacePanel);
-		volumeNucleus.add(boxesRegroupementPanel);
+		volumeNucleus.add(regroupBoxesPanel);
 
 
 
@@ -251,112 +248,126 @@ public class AutocropConfigDialog extends JFrame implements ItemListener {
 		
 		this.setVisible(false);
 		
-		AutocropConfigDialog.StartListener startListener = new AutocropConfigDialog.StartListener(this);
+		AutocropConfigDialog.StartListener startListener = new StartListener(this);
 		buttonOK.addActionListener(startListener);
 	}
 	
-	public String getxCropBoxSize() {
+	
+	public String getXCropBoxSize() {
 		return xCropBoxSize.getText();
 	}
 	
-	public String getyCropBoxSize() {
+	
+	public String getYCropBoxSize() {
 		return yCropBoxSize.getText();
 	}
 	
-	public String getzCropBoxSize() {
+	
+	public String getZCropBoxSize() {
 		return zCropBoxSize.getText();
 	}
 	
-	public String getxCalibration() {
+	
+	public String getXCalibration() {
 		return xCalibration.getText();
 	}
 	
-	public String getyCalibration() {
+	
+	public String getYCalibration() {
 		return yCalibration.getText();
 	}
 	
-	public String getzCalibration() {
+	
+	public String getZCalibration() {
 		return zCalibration.getText();
 	}
+	
 	
 	public String getMinVolume() {
 		return minVolume.getText();
 	}
 	
+	
 	public String getMaxVolume() {
 		return maxVolume.getText();
 	}
+	
 	
 	public String getThresholdOTSUComputing() {
 		return thresholdOTSUComputing.getText();
 	}
 	
+	
 	public String getChannelToComputeThreshold() {
 		return channelToComputeThreshold.getText();
 	}
 	
-	public String getSlicesOTSUcomputing() {
-		return slicesOTSUcomputing.getText();
+	
+	public String getSlicesOTSUComputing() {
+		return slicesOTSUComputing.getText();
 	}
+	
 	
 	public String getBoxesPercentSurfaceToFilter() {
 		return boxesPercentSurfaceToFilter.getText();
 	}
 	
-	public boolean getBoxesRegroupementSelected() {
-		return isBoxesRegroupementSelected;
+	
+	public boolean isRegroupBoxesSelected() {
+		return isRegroupBoxesSelected;
 	}
 	
-	public boolean isCalibSelected() {
-		return addCalibBox.isSelected();
+	
+	public boolean isCalibrationSelected() {
+		return addCalibrationBox.isSelected();
 	}
 	
 	
 	@Override
 	public void itemStateChanged(ItemEvent e) {
-		if (e.getSource() == boxesRegroupement) {
-			isBoxesRegroupementSelected = boxesRegroupement.isSelected();
-		} else if (e.getSource() == addCalibBox) {
-			if (addCalibBox.isSelected()) {
+		if (e.getSource() == regroupBoxes) {
+			isRegroupBoxesSelected = regroupBoxes.isSelected();
+		} else if (e.getSource() == addCalibrationBox) {
+			if (addCalibrationBox.isSelected()) {
 				
-				XCalib = new JPanel();
-				XCalib.setLayout(new BoxLayout(XCalib, BoxLayout.X_AXIS));
-				XCalib.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+				XCalibration = new JPanel();
+				XCalibration.setLayout(new BoxLayout(XCalibration, BoxLayout.X_AXIS));
+				XCalibration.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 				JLabel xBox2 = new JLabel("X:");
-				XCalib.add(xBox2);
-				XCalib.add(Box.createRigidArea(new Dimension(10, 0)));
+				XCalibration.add(xBox2);
+				XCalibration.add(Box.createRigidArea(new Dimension(10, 0)));
 				xCalibration.setText("1");
 				xCalibration.setMinimumSize(new Dimension(60, 10));
-				XCalib.add(xCalibration);
+				XCalibration.add(xCalibration);
 				
-				YCalib = new JPanel();
-				YCalib.setLayout(new BoxLayout(YCalib, BoxLayout.X_AXIS));
-				YCalib.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+				YCalibration = new JPanel();
+				YCalibration.setLayout(new BoxLayout(YCalibration, BoxLayout.X_AXIS));
+				YCalibration.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 				JLabel yBox2 = new JLabel("Y:");
-				YCalib.add(yBox2);
-				YCalib.add(Box.createRigidArea(new Dimension(10, 0)));
+				YCalibration.add(yBox2);
+				YCalibration.add(Box.createRigidArea(new Dimension(10, 0)));
 				yCalibration.setText("1");
 				yCalibration.setMinimumSize(new Dimension(60, 10));
-				YCalib.add(yCalibration);
+				YCalibration.add(yCalibration);
 				
-				ZCalib = new JPanel();
-				ZCalib.setLayout(new BoxLayout(ZCalib, BoxLayout.X_AXIS));
-				ZCalib.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+				ZCalibration = new JPanel();
+				ZCalibration.setLayout(new BoxLayout(ZCalibration, BoxLayout.X_AXIS));
+				ZCalibration.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 				JLabel zBox2 = new JLabel("Z:");
-				ZCalib.add(zBox2);
-				ZCalib.add(Box.createRigidArea(new Dimension(10, 0)));
+				ZCalibration.add(zBox2);
+				ZCalibration.add(Box.createRigidArea(new Dimension(10, 0)));
 				zCalibration.setText("1");
 				zCalibration.setMinimumSize(new Dimension(60, 10));
-				ZCalib.add(zCalibration);
+				ZCalibration.add(zCalibration);
 				
-				cropBoxPane.add(XCalib);
-				cropBoxPane.add(YCalib);
-				cropBoxPane.add(ZCalib);
+				cropBoxPane.add(XCalibration);
+				cropBoxPane.add(YCalibration);
+				cropBoxPane.add(ZCalibration);
 			} else {
 				try {
-					cropBoxPane.remove(XCalib);
-					cropBoxPane.remove(YCalib);
-					cropBoxPane.remove(ZCalib);
+					cropBoxPane.remove(XCalibration);
+					cropBoxPane.remove(YCalibration);
+					cropBoxPane.remove(ZCalibration);
 				} catch (NullPointerException nullPointerException) {
 					// Do nothing
 				}
@@ -367,13 +378,14 @@ public class AutocropConfigDialog extends JFrame implements ItemListener {
 	}
 	
 	
-	class StartListener implements ActionListener {
+	static class StartListener implements ActionListener {
 		AutocropConfigDialog _autocropDialog;
 		
-		/** @param autocropDialog */
+		/** @param autocropDialog  */
 		public StartListener(AutocropConfigDialog autocropDialog) {
 			_autocropDialog = autocropDialog;
 		}
+		
 		
 		public void actionPerformed(ActionEvent actionEvent) {
 			_autocropDialog.setVisible(false);

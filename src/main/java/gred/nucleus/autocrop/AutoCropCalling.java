@@ -6,10 +6,8 @@ import gred.nucleus.filesInputOutput.Directory;
 import gred.nucleus.filesInputOutput.FilesNames;
 import gred.nucleus.filesInputOutput.OutputTextFile;
 import ij.IJ;
-import loci.formats.FormatException;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
 
@@ -33,20 +31,20 @@ public class AutoCropCalling {
 	public AutoCropCalling() {
 	}
 	
+	
 	public AutoCropCalling(AutocropParameters autocropParameters) {
 		this.m_autocropParameters = autocropParameters;
-		this.m_outputCropGeneralInfo = autocropParameters.getAnalyseParameters() + getColnameResult();
+		this.m_outputCropGeneralInfo = autocropParameters.getAnalyseParameters() + getResultsColumnNames();
 	}
+	
 	
 	/**
 	 * Run auto crop on image's folder: -If input is a file: open the image with bio-formats plugin to obtain the metadata
 	 * then run the auto crop. -If input is directory, listed the file, foreach tif file loaded file with bio-formats, run
 	 * the auto crop.
 	 *
-	 * @throws IOException     if file problem
-	 * @throws FormatException Bio-formats exception
 	 */
-	public void runFolder() throws Exception {
+	public void runFolder() {
 		Directory directoryInput = new Directory(this.m_autocropParameters.getInputFolder());
 		directoryInput.listImageFiles(this.m_autocropParameters.getInputFolder());
 		directoryInput.checkIfEmpty();
@@ -56,11 +54,11 @@ public class AutoCropCalling {
 			System.out.println("Current file " + currentFile.getAbsolutePath());
 			String     fileImg          = currentFile.toString();
 			FilesNames outPutFilesNames = new FilesNames(fileImg);
-			this._prefix = outPutFilesNames.PrefixeNameFile();
+			this._prefix = outPutFilesNames.prefixNameFile();
 			try {
 				AutoCrop autoCrop = new AutoCrop(currentFile, this._prefix, this.m_autocropParameters);
 				autoCrop.thresholdKernels();
-				autoCrop.computeConnectcomponent();
+				autoCrop.computeConnectedComponent();
 				autoCrop.componentBorderFilter();
 				autoCrop.componentSizeFilter();
 				autoCrop.computeBoxes2();
@@ -100,10 +98,10 @@ public class AutoCropCalling {
 		File       currentFile      = new File(file);
 		String     fileImg          = currentFile.toString();
 		FilesNames outPutFilesNames = new FilesNames(fileImg);
-		this._prefix = outPutFilesNames.PrefixeNameFile();
+		this._prefix = outPutFilesNames.prefixNameFile();
 		AutoCrop autoCrop = new AutoCrop(currentFile, this._prefix, this.m_autocropParameters);
 		autoCrop.thresholdKernels();
-		autoCrop.computeConnectcomponent();
+		autoCrop.computeConnectedComponent();
 		autoCrop.componentBorderFilter();
 		autoCrop.componentSizeFilter();
 		autoCrop.computeBoxes2();
@@ -113,21 +111,22 @@ public class AutoCropCalling {
 		autoCrop.writeAnalyseInfo();
 		annotAutoCrop test = new annotAutoCrop(autoCrop.getFileCoordinates(),
 		                                       currentFile,
-		                                       this.m_autocropParameters.getOutputFolder() + currentFile.separator,
+		                                       this.m_autocropParameters.getOutputFolder() + File.separator,
 		                                       this._prefix,
 		                                       this.m_autocropParameters);
 		test.run();
 		this.m_outputCropGeneralInfo = this.m_outputCropGeneralInfo + autoCrop.getImageCropInfo();
 	}
 	
+	
 	public void runImageOmero(ImageContainer image, Long[] outputsDatImages, Client client) throws Exception {
 		String fileImg = image.getName();
 		System.out.println("Current file : " + fileImg);
 		FilesNames outPutFilesNames = new FilesNames(fileImg);
-		this._prefix = outPutFilesNames.PrefixeNameFile();
+		this._prefix = outPutFilesNames.prefixNameFile();
 		AutoCrop autoCrop = new AutoCrop(image, this.m_autocropParameters, client);
 		autoCrop.thresholdKernels();
-		autoCrop.computeConnectcomponent();
+		autoCrop.computeConnectedComponent();
 		autoCrop.componentBorderFilter();
 		autoCrop.componentSizeFilter();
 		autoCrop.computeBoxes2();
@@ -139,6 +138,7 @@ public class AutoCropCalling {
 		this.m_outputCropGeneralInfo = this.m_outputCropGeneralInfo + autoCrop.getImageCropInfo();
 	}
 	
+	
 	public void runSeveralImageOmero(List<ImageContainer> images, Long[] outputsDatImages, Client client)
 	throws Exception {
 		for (ImageContainer image : images) runImageOmero(image, outputsDatImages, client);
@@ -146,11 +146,11 @@ public class AutoCropCalling {
 	
 	
 	/**
-	 * List of columns name in csv coordinates output file.
+	 * List of columns names in csv coordinates output file.
 	 *
 	 * @return columns name
 	 */
-	public String getColnameResult() {
+	public String getResultsColumnNames() {
 		return "FileName\tNumberOfCrop\tOTSUThreshold\tDefaultOTSUThreshold\n";
 	}
 }

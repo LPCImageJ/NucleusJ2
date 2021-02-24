@@ -35,14 +35,13 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
 	/**
 	 * @param args command line argument
 	 *
-	 * @throws Exception ParseException
 	 */
-	public CLIActionOptionCmdLine(String[] args) throws Exception {
+	public CLIActionOptionCmdLine(String[] args) {
 		super(args);
 		this.m_action.setDescription(this.m_action.getDescription() + "\n" +
-		                             "computeParameters : compute paramaters \n" +
+		                             "computeParameters : compute parameters \n" +
 		                             "computeParametersDL : compute parameters for machine leaning\n" +
-		                             "generateProjection : generate projection from coodinates\n" +
+		                             "generateProjection : generate projection from coordinates\n" +
 		                             "CropFromCoordinate : crop wide-field image from coordinate\n" +
 		                             "GenerateOverlay : generate overlay from images \n");
 		
@@ -53,14 +52,15 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
 			
 		} catch (ParseException exp) {
 			System.out.println(exp.getMessage() + "\n");
-			System.out.println(getHelperInfos());
+			System.out.println(getHelperInfo());
 			System.exit(1);
 		} catch (Exception exp) {
 			System.out.println("Action option \"" + this.m_cmd.getOptionValue("action") + "\" not available" + "\n");
-			System.out.println(getHelperInfos());
+			System.out.println(getHelperInfo());
 			System.exit(1);
 		}
 	}
+	
 	
 	/**
 	 * Method to check action parameter
@@ -81,6 +81,7 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
 		actionAvailableInOmero.add("GenerateOverlay");
 		return actionAvailableInOmero.contains(action);
 	}
+	
 	
 	/** Method to check specific action parameters */
 	private void checkSpecificOptions() {
@@ -135,5 +136,4 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
 				break;
 		}
 	}
-	
 }

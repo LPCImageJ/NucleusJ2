@@ -10,42 +10,30 @@ import java.io.File;
 
 public class AutocropDialog extends JFrame implements ActionListener, ItemListener {
 	
-	private static final long         serialVersionUID    = 1L;
-	static private final String       newline             = "\n";
-	private final        JButton      _jButtonStart       = new JButton("Start");
-	private final        JButton      _jButtonQuit        = new JButton("Quit");
-	private final        JButton      _jButtonConfig      = new JButton("Config");
-	private final        Container    _container;
-	private final        JLabel       _jLabelOutput;
-	private final        JLabel       _jLabelConfig;
-	private final        JLabel       _jLabelInput;
-	private final        JTextField   _jInputFileChooser  = new JTextField();
-	private final        JTextField   _jOutputFileChooser = new JTextField();
-	private final        JTextField   _jConfigFileChooser = new JTextField();
-	private final        JFileChooser fc                  = new JFileChooser();
-	private final        JCheckBox    addConfigBox        = new JCheckBox();
-	private final        JButton      sourceButton;
-	private final        JButton      destButton;
-	private final        JLabel       defConf             = new JLabel("Default configuration");
-	private final AutocropConfigDialog autocropConfigFileDialog;
-	private final ButtonGroup  buttonGroup        = new ButtonGroup();
-	private final JRadioButton rdoDefault         = new JRadioButton();
-	private final JRadioButton rdoAddConfigFile   = new JRadioButton();
-	private final JRadioButton rdoAddConfigDialog = new JRadioButton();
-	private final String inputChooserName  = "inputChooser";
-	private final String outputChooserName = "outputChooser";
-	private final String configChooserName = "configChooser";
-	private              boolean      _start              = false;
-	private              JButton      confButton;
-	private       int                  configMode   = 0;
-	private       boolean              manualConfig = false;
-	private       File   selectedInput;
-	private       File   selectedOutput;
-	private       File   selectedConfig;
+	private static final long                 serialVersionUID    = 1L;
+	private final        JButton              _jButtonConfig      = new JButton("Config");
+	private final        Container            _container;
+	private final        JTextField           _jInputFileChooser  = new JTextField();
+	private final        JTextField           _jOutputFileChooser = new JTextField();
+	private final        JTextField           _jConfigFileChooser = new JTextField();
+	private final        JFileChooser         fc                  = new JFileChooser();
+	private final        JLabel               defConf             = new JLabel("Default configuration");
+	private final        AutocropConfigDialog autocropConfigFileDialog;
+	private final        JRadioButton         rdoDefault          = new JRadioButton();
+	private final        JRadioButton         rdoAddConfigFile    = new JRadioButton();
+	private final        JRadioButton         rdoAddConfigDialog  = new JRadioButton();
+	private final        String               inputChooserName    = "inputChooser";
+	private final        String               outputChooserName   = "outputChooser";
+	private final        String               configChooserName   = "configChooser";
+	private              boolean              _start              = false;
+	private              JButton              confButton;
+	private              int                  configMode          = 0;
 	
 	
 	/** Architecture of the graphical windows */
 	public AutocropDialog() {
+		JButton jButtonStart = new JButton("Start");
+		JButton jButtonQuit  = new JButton("Quit");
 		this.setTitle("Autocrop NucleusJ2");
 		this.setSize(500, 300);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -58,110 +46,206 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 		gridBagLayout.columnWeights = new double[]{0.0, 0.0};
 		gridBagLayout.columnWidths = new int[]{250, 250};
 		_container.setLayout(gridBagLayout);
-		
-		_jLabelInput = new JLabel();
-		_container.add(_jLabelInput, new GridBagConstraints(0, 0, 0, 0, 0.0, 0.0,
-		                                                    GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
-		                                                    new Insets(10, 10, 0, 0), 0, 0));
-		_jLabelInput.setText("Input directory:");
-		
-		_container.add(_jInputFileChooser, new GridBagConstraints(0, 0, 0, 0, 0.0, 0.0,
-		                                                          GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
-		                                                          new Insets(30, 10, 0, 0), 0, 0));
+		JLabel jLabelInput = new JLabel();
+		_container.add(jLabelInput,
+		               new GridBagConstraints(0,
+		                                      0,
+		                                      0,
+		                                      0,
+		                                      0.0,
+		                                      0.0,
+		                                      GridBagConstraints.NORTHWEST,
+		                                      GridBagConstraints.NONE,
+		                                      new Insets(10, 10, 0, 0),
+		                                      0,
+		                                      0));
+		jLabelInput.setText("Input directory:");
+		_container.add(_jInputFileChooser,
+		               new GridBagConstraints(0,
+		                                      0,
+		                                      0,
+		                                      0,
+		                                      0.0,
+		                                      0.0,
+		                                      GridBagConstraints.NORTHWEST,
+		                                      GridBagConstraints.NONE,
+		                                      new Insets(30, 10, 0, 0),
+		                                      0,
+		                                      0));
 		_jInputFileChooser.setPreferredSize(new java.awt.Dimension(300, 20));
 		_jInputFileChooser.setMinimumSize(new java.awt.Dimension(300, 20));
-		
-		sourceButton = new JButton("...");
-		_container.add(sourceButton, new GridBagConstraints(0, 0, 0, 0, 0.0, 0.0,
-		                                                    GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
-		                                                    new Insets(30, 330, 0, 0), 0, 0));
+		JButton sourceButton = new JButton("...");
+		_container.add(sourceButton,
+		               new GridBagConstraints(0,
+		                                      0,
+		                                      0,
+		                                      0,
+		                                      0.0,
+		                                      0.0,
+		                                      GridBagConstraints.NORTHWEST,
+		                                      GridBagConstraints.NONE,
+		                                      new Insets(30, 330, 0, 0),
+		                                      0,
+		                                      0));
 		sourceButton.addActionListener(this);
 		sourceButton.setName(inputChooserName);
-		
-		_jLabelOutput = new JLabel();
-		_container.add(_jLabelOutput, new GridBagConstraints(0, 1, 0, 0, 0.0, 0.0,
-		                                                     GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
-		                                                     new Insets(10, 10, 0, 0), 0, 0));
-		_jLabelOutput.setText("Output directory:");
-		_container.add(_jOutputFileChooser, new GridBagConstraints(0,
-		                                                           1,
-		                                                           0,
-		                                                           0,
-		                                                           0.0,
-		                                                           0.0,
-		                                                           GridBagConstraints.NORTHWEST,
-		                                                           GridBagConstraints.NONE,
-		                                                           new Insets(30, 10, 0, 0),
-		                                                           0,
-		                                                           0));
+		JLabel jLabelOutput = new JLabel();
+		_container.add(jLabelOutput,
+		               new GridBagConstraints(0,
+		                                      1,
+		                                      0,
+		                                      0,
+		                                      0.0,
+		                                      0.0,
+		                                      GridBagConstraints.NORTHWEST,
+		                                      GridBagConstraints.NONE,
+		                                      new Insets(10, 10, 0, 0),
+		                                      0,
+		                                      0));
+		jLabelOutput.setText("Output directory:");
+		_container.add(_jOutputFileChooser,
+		               new GridBagConstraints(0,
+		                                      1,
+		                                      0,
+		                                      0,
+		                                      0.0,
+		                                      0.0,
+		                                      GridBagConstraints.NORTHWEST,
+		                                      GridBagConstraints.NONE,
+		                                      new Insets(30, 10, 0, 0),
+		                                      0,
+		                                      0));
 		_jOutputFileChooser.setPreferredSize(new java.awt.Dimension(300, 20));
 		_jOutputFileChooser.setMinimumSize(new java.awt.Dimension(300, 20));
-		
-		destButton = new JButton("...");
-		_container.add(destButton, new GridBagConstraints(0, 1, 0, 0, 0.0, 0.0,
-		                                                  GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
-		                                                  new Insets(30, 330, 0, 0), 0, 0));
+		JButton destButton = new JButton("...");
+		_container.add(destButton,
+		               new GridBagConstraints(0,
+		                                      1,
+		                                      0,
+		                                      0,
+		                                      0.0,
+		                                      0.0,
+		                                      GridBagConstraints.NORTHWEST,
+		                                      GridBagConstraints.NONE,
+		                                      new Insets(30, 330, 0, 0),
+		                                      0,
+		                                      0));
 		destButton.addActionListener(this);
 		destButton.setName(outputChooserName);
-		
-		_jLabelConfig = new JLabel();
-		_container.add(_jLabelConfig, new GridBagConstraints(0, 2, 0, 0, 0.0, 0.0,
-		                                                     GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
-		                                                     new Insets(10, 10, 0, 0), 0, 0));
-		_jLabelConfig.setText("Config file (optional):");
+		JLabel jLabelConfig = new JLabel();
+		_container.add(jLabelConfig,
+		               new GridBagConstraints(0,
+		                                      2,
+		                                      0,
+		                                      0,
+		                                      0.0,
+		                                      0.0,
+		                                      GridBagConstraints.NORTHWEST,
+		                                      GridBagConstraints.NONE,
+		                                      new Insets(10, 10, 0, 0),
+		                                      0,
+		                                      0));
+		jLabelConfig.setText("Config file (optional):");
 //        _container.add(addConfigBox, new GridBagConstraints(0, 2, 0, 0, 0.0, 0.0,
 //                GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
 //                new Insets(10, 200, 0, 0), 0, 0));
 //        addConfigBox.addItemListener(this);
 		
+		ButtonGroup buttonGroup = new ButtonGroup();
 		buttonGroup.add(rdoDefault);
 		rdoDefault.setSelected(true);
 		rdoDefault.addItemListener(this);
 		itemStateChanged(new ItemEvent(rdoDefault, 0, rdoDefault, ItemEvent.SELECTED));
-		_container.add(rdoDefault, new GridBagConstraints(0, 2, 0, 0, 0.0, 0.0,
-		                                                  GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
-		                                                  new Insets(10, 200, 0, 0), 0, 0));
+		_container.add(rdoDefault,
+		               new GridBagConstraints(0,
+		                                      2,
+		                                      0,
+		                                      0,
+		                                      0.0,
+		                                      0.0,
+		                                      GridBagConstraints.NORTHWEST,
+		                                      GridBagConstraints.NONE,
+		                                      new Insets(10, 200, 0, 0),
+		                                      0,
+		                                      0));
 		buttonGroup.add(rdoAddConfigDialog);
 		rdoAddConfigDialog.addItemListener(this);
-		_container.add(rdoAddConfigDialog, new GridBagConstraints(0, 2, 0, 0, 0.0, 0.0,
-		                                                          GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
-		                                                          new Insets(10, 230, 0, 0), 0, 0));
+		_container.add(rdoAddConfigDialog,
+		               new GridBagConstraints(0,
+		                                      2,
+		                                      0,
+		                                      0,
+		                                      0.0,
+		                                      0.0,
+		                                      GridBagConstraints.NORTHWEST,
+		                                      GridBagConstraints.NONE,
+		                                      new Insets(10, 230, 0, 0),
+		                                      0,
+		                                      0));
 		buttonGroup.add(rdoAddConfigFile);
 		rdoAddConfigFile.addItemListener(this);
-		_container.add(rdoAddConfigFile, new GridBagConstraints(0, 2, 0, 0, 0.0, 0.0,
-		                                                        GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
-		                                                        new Insets(10, 260, 0, 0), 0, 0));
-		
-		
-		_container.add(_jButtonStart, new GridBagConstraints(0, 3, 0, 0, 0.0, 0.0,
-		                                                     GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
-		                                                     new Insets(40, 80, 0, 0), 0, 0));
-		_jButtonStart.setPreferredSize(new java.awt.Dimension(60, 21));
-		_container.add(_jButtonQuit, new GridBagConstraints(0, 3, 0, 0, 0.0, 0.0,
-		                                                    GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
-		                                                    new Insets(40, 10, 0, 0), 0, 0));
-		_jButtonQuit.setPreferredSize(new java.awt.Dimension(60, 21));
+		_container.add(rdoAddConfigFile,
+		               new GridBagConstraints(0,
+		                                      2,
+		                                      0,
+		                                      0,
+		                                      0.0,
+		                                      0.0,
+		                                      GridBagConstraints.NORTHWEST,
+		                                      GridBagConstraints.NONE,
+		                                      new Insets(10, 260, 0, 0),
+		                                      0,
+		                                      0));
+		_container.add(jButtonStart,
+		               new GridBagConstraints(0,
+		                                      3,
+		                                      0,
+		                                      0,
+		                                      0.0,
+		                                      0.0,
+		                                      GridBagConstraints.NORTHWEST,
+		                                      GridBagConstraints.NONE,
+		                                      new Insets(40, 80, 0, 0),
+		                                      0,
+		                                      0));
+		jButtonStart.setPreferredSize(new java.awt.Dimension(60, 21));
+		_container.add(jButtonQuit,
+		               new GridBagConstraints(0,
+		                                      3,
+		                                      0,
+		                                      0,
+		                                      0.0,
+		                                      0.0,
+		                                      GridBagConstraints.NORTHWEST,
+		                                      GridBagConstraints.NONE,
+		                                      new Insets(40, 10, 0, 0),
+		                                      0,
+		                                      0));
+		jButtonQuit.setPreferredSize(new java.awt.Dimension(60, 21));
 		this.setVisible(true);
-		
 		AutocropDialog.QuitListener quitListener = new AutocropDialog.QuitListener(this);
-		_jButtonQuit.addActionListener(quitListener);
+		jButtonQuit.addActionListener(quitListener);
 		AutocropDialog.StartListener startListener = new AutocropDialog.StartListener(this);
-		_jButtonStart.addActionListener(startListener);
+		jButtonStart.addActionListener(startListener);
 		AutocropDialog.ConfigListener configListener = new AutocropDialog.ConfigListener(this);
 		_jButtonConfig.addActionListener(configListener);
 	}
+	
 	
 	public boolean isStart() {
 		return _start;
 	}
 	
+	
 	public String getInput() {
 		return _jInputFileChooser.getText();
 	}
 	
+	
 	public String getOutput() {
 		return _jOutputFileChooser.getText();
 	}
+	
 	
 	public String getConfig() {
 		return _jConfigFileChooser.getText();
@@ -172,9 +256,11 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 		return configMode;
 	}
 	
+	
 	public AutocropConfigDialog getAutocropConfigFileDialog() {
 		return autocropConfigFileDialog;
 	}
+	
 	
 	public void actionPerformed(ActionEvent e) {
 		switch (((JButton) e.getSource()).getName()) {
@@ -193,15 +279,15 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 		if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			switch (((JButton) e.getSource()).getName()) {
 				case inputChooserName:
-					selectedInput = fc.getSelectedFile();
+					File selectedInput = fc.getSelectedFile();
 					_jInputFileChooser.setText(selectedInput.getPath());
 					break;
 				case outputChooserName:
-					selectedOutput = fc.getSelectedFile();
+					File selectedOutput = fc.getSelectedFile();
 					_jOutputFileChooser.setText(selectedOutput.getPath());
 					break;
 				case configChooserName:
-					selectedConfig = fc.getSelectedFile();
+					File selectedConfig = fc.getSelectedFile();
 					_jConfigFileChooser.setText(selectedConfig.getPath());
 					break;
 			}
@@ -215,50 +301,71 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 			_container.remove(defConf);
 		} else if (configMode == 1) {
 			_container.remove(_jButtonConfig);
-			if (autocropConfigFileDialog.isVisible()) {
-				autocropConfigFileDialog.setVisible(false);
-			}
+			if (autocropConfigFileDialog.isVisible()) autocropConfigFileDialog.setVisible(false);
 		} else if (configMode == 2) {
 			_container.remove(_jConfigFileChooser);
 			_container.remove(confButton);
 		}
-		
-		Object source = e.getSource();
+		Object  source       = e.getSource();
 		if (source == rdoDefault) {
-			_container.add(defConf, new GridBagConstraints(0, 2, 0, 0, 0.0, 0.0,
-			                                               GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
-			                                               new Insets(40, 10, 0, 0), 0, 0));
+			_container.add(defConf,
+			               new GridBagConstraints(0,
+			                                      2,
+			                                      0,
+			                                      0,
+			                                      0.0,
+			                                      0.0,
+			                                      GridBagConstraints.NORTHWEST,
+			                                      GridBagConstraints.NONE,
+			                                      new Insets(40, 10, 0, 0),
+			                                      0,
+			                                      0));
 			configMode = 0;
-			manualConfig = false;
 		} else if (source == rdoAddConfigDialog) {
-			_container.add(_jButtonConfig, new GridBagConstraints(0, 2, 0, 0, 0.0, 0.0,
-			                                                      GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
-			                                                      new Insets(40, 10, 0, 0), 0, 0));
-			manualConfig = true;
+			_container.add(_jButtonConfig,
+			               new GridBagConstraints(0,
+			                                      2,
+			                                      0,
+			                                      0,
+			                                      0.0,
+			                                      0.0,
+			                                      GridBagConstraints.NORTHWEST,
+			                                      GridBagConstraints.NONE,
+			                                      new Insets(40, 10, 0, 0),
+			                                      0,
+			                                      0));
 			configMode = 1;
 		} else if (source == rdoAddConfigFile) {
-			_container.add(_jConfigFileChooser, new GridBagConstraints(0,
-			                                                           2,
-			                                                           0,
-			                                                           0,
-			                                                           0.0,
-			                                                           0.0,
-			                                                           GridBagConstraints.NORTHWEST,
-			                                                           GridBagConstraints.NONE,
-			                                                           new Insets(40, 10, 0, 0),
-			                                                           0,
-			                                                           0));
+			_container.add(_jConfigFileChooser,
+			               new GridBagConstraints(0,
+			                                      2,
+			                                      0,
+			                                      0,
+			                                      0.0,
+			                                      0.0,
+			                                      GridBagConstraints.NORTHWEST,
+			                                      GridBagConstraints.NONE,
+			                                      new Insets(40, 10, 0, 0),
+			                                      0,
+			                                      0));
 			_jConfigFileChooser.setPreferredSize(new java.awt.Dimension(300, 20));
 			_jConfigFileChooser.setMinimumSize(new java.awt.Dimension(300, 20));
-			
 			confButton = new JButton("...");
-			_container.add(confButton, new GridBagConstraints(0, 2, 0, 0, 0.0, 0.0,
-			                                                  GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
-			                                                  new Insets(40, 330, 0, 0), 0, 0));
+			_container.add(confButton,
+			               new GridBagConstraints(0,
+			                                      2,
+			                                      0,
+			                                      0,
+			                                      0.0,
+			                                      0.0,
+			                                      GridBagConstraints.NORTHWEST,
+			                                      GridBagConstraints.NONE,
+			                                      new Insets(40, 330, 0, 0),
+			                                      0,
+			                                      0));
 			confButton.addActionListener(this);
 			confButton.setName(configChooserName);
 			configMode = 2;
-			manualConfig = false;
 		}
 
         /*if(addConfigBox.isSelected()){
@@ -282,15 +389,17 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 		repaint();
 	}
 	
+	
 	/** Classes listener to interact with the several elements of the window */
 	
 	class StartListener implements ActionListener {
-		AutocropDialog _autocropDialog;
+		final AutocropDialog _autocropDialog;
 		
-		/** @param autocropDialog */
+		/** @param autocropDialog  */
 		public StartListener(AutocropDialog autocropDialog) {
-			_autocropDialog = autocropDialog;
+			this._autocropDialog = autocropDialog;
 		}
+		
 		
 		public void actionPerformed(ActionEvent actionEvent) {
 			_start = true;
@@ -300,12 +409,13 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 	}
 	
 	class QuitListener implements ActionListener {
-		AutocropDialog _autocropDialog;
+		final AutocropDialog _autocropDialog;
 		
-		/** @param autocropDialog */
+		/** @param autocropDialog  */
 		public QuitListener(AutocropDialog autocropDialog) {
-			_autocropDialog = autocropDialog;
+			this._autocropDialog = autocropDialog;
 		}
+		
 		
 		public void actionPerformed(ActionEvent actionEvent) {
 			_autocropDialog.dispose();
@@ -314,12 +424,13 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 	}
 	
 	class ConfigListener implements ActionListener {
-		AutocropDialog _autocropDialog;
+		final AutocropDialog _autocropDialog;
 		
-		/** @param autocropDialog */
+		/** @param autocropDialog  */
 		public ConfigListener(AutocropDialog autocropDialog) {
-			_autocropDialog = autocropDialog;
+			this._autocropDialog = autocropDialog;
 		}
+		
 		
 		public void actionPerformed(ActionEvent actionEvent) {
 			autocropConfigFileDialog.setVisible(true);

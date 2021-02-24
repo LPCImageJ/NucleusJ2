@@ -127,27 +127,32 @@ public class CropFromCoodinateDialog extends JFrame implements ActionListener {
 		_jButtonQuit.setPreferredSize(new java.awt.Dimension(60, 21));
 		this.setVisible(true);
 		
-		CropFromCoodinateDialog.QuitListener quitListener = new CropFromCoodinateDialog.QuitListener(this);
+		CropFromCoodinateDialog.QuitListener quitListener = new QuitListener(this);
 		_jButtonQuit.addActionListener(quitListener);
 		CropFromCoodinateDialog.StartListener startListener = new CropFromCoodinateDialog.StartListener(this);
 		_jButtonStart.addActionListener(startListener);
 	}
 	
+	
 	public boolean isStart() {
 		return _start;
 	}
+	
 	
 	public String getLink() {
 		return _jLinkFileChooser.getText();
 	}
 	
+	
 	public String getImage() {
 		return _jImageChooser.getText();
 	}
 	
+	
 	public String getCoord() {
 		return _jCoordFileChooser.getText();
 	}
+	
 	
 	public void actionPerformed(ActionEvent e) {
 		if (((JButton) e.getSource()).getName().equals(linkChooserName)) {
@@ -174,13 +179,14 @@ public class CropFromCoodinateDialog extends JFrame implements ActionListener {
 			_autocropDialog = autocropDialog;
 		}
 		
+		
 		public void actionPerformed(ActionEvent actionEvent) {
 			_start = true;
 			_autocropDialog.dispose();
 		}
 	}
 	
-	class QuitListener implements ActionListener {
+	static class QuitListener implements ActionListener {
 		CropFromCoodinateDialog _autocropDialog;
 		
 		/** @param autocropDialog */
@@ -188,9 +194,9 @@ public class CropFromCoodinateDialog extends JFrame implements ActionListener {
 			_autocropDialog = autocropDialog;
 		}
 		
+		
 		public void actionPerformed(ActionEvent actionEvent) {
 			_autocropDialog.dispose();
 		}
 	}
-	
 }

@@ -12,8 +12,10 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 
 import java.io.Console;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class CLIRunActionOMERO {
 	/** List of options */
@@ -45,11 +47,12 @@ public class CLIRunActionOMERO {
 		this.m_client.disconnect();
 	}
 	
+	
 	public static void autoCropOmero(String inputDirectory,
 	                                 String outputDirectory,
 	                                 Client client,
 	                                 AutoCropCalling autoCrop) throws Exception {
-		String[] param = inputDirectory.split("/");
+		String[] param = inputDirectory.split(Pattern.quote(File.separator));
 		
 		if (param.length >= 2) {
 			Long id = Long.parseLong(param[1]);
@@ -68,7 +71,7 @@ public class CLIRunActionOMERO {
 				
 				autoCrop.runImageOmero(image, outputsDat, client);
 			} else {
-				List<ImageContainer> images = null;
+				List<ImageContainer> images;
 				
 				String name = "";
 				
@@ -103,10 +106,11 @@ public class CLIRunActionOMERO {
 		} else {
 			throw new IllegalArgumentException("Wrong input parameter : "
 			                                   + inputDirectory + "\n\n\n"
-			                                   + "Exemple format expected:\n"
+			                                   + "Example format expected:\n"
 			                                   + "dataset/OMERO_ID \n");
 		}
 	}
+	
 	
 	public void getOMEROPassword() {
 		if (this.m_cmd.hasOption("password")) {
@@ -116,8 +120,8 @@ public class CLIRunActionOMERO {
 			Console con = System.console();
 			this.m_mdp = String.valueOf(con.readPassword());
 		}
-		
 	}
+	
 	
 	public void checkOMEROConnexion() {
 		try {
@@ -132,6 +136,7 @@ public class CLIRunActionOMERO {
 			System.exit(1);
 		}
 	}
+	
 	
 	public void runAutoCropOmero() throws Exception {
 		AutocropParameters autocropParameters = new AutocropParameters(".", ".");
@@ -151,24 +156,26 @@ public class CLIRunActionOMERO {
 		}
 	}
 	
+	
 	public void runSegmentationOmero() throws Exception {
 		SegmentationParameters segmentationParameters = new SegmentationParameters(".", ".");
 		if (this.m_cmd.hasOption("config")) {
 			segmentationParameters.addGeneralProperties(this.m_cmd.getOptionValue("config"));
 			segmentationParameters.addProperties(this.m_cmd.getOptionValue("config"));
 		}
-		SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
+		SegmentationCalling otsuModified = new SegmentationCalling(segmentationParameters);
 		segmentationOmero(this.m_cmd.getOptionValue("input"),
 		                  this.m_cmd.getOptionValue("output"),
 		                  this.m_client,
-		                  otsuModif);
+		                  otsuModified);
 	}
+	
 	
 	public void segmentationOmero(String inputDirectory,
 	                              String outputDirectory,
 	                              Client client,
-	                              SegmentationCalling otsuModif) throws Exception {
-		String[] param = inputDirectory.split("/");
+	                              SegmentationCalling otsuModified) throws Exception {
+		String[] param = inputDirectory.split(Pattern.quote(File.separator));
 		
 		if (param.length >= 2) {
 			Long id = Long.parseLong(param[1]);
@@ -178,9 +185,9 @@ public class CLIRunActionOMERO {
 				try {
 					String log;
 					if (param.length == 3 && param[2].equals("ROI")) {
-						log = otsuModif.runOneImageOmeroROI(image, Long.parseLong(outputDirectory), client);
+						log = otsuModified.runOneImageOmeroROI(image, Long.parseLong(outputDirectory), client);
 					} else {
-						log = otsuModif.runOneImageOmero(image, Long.parseLong(outputDirectory), client);
+						log = otsuModified.runOneImageOmero(image, Long.parseLong(outputDirectory), client);
 					}
 					if (!(log.equals(""))) {
 						System.out.println("Nuclei which didn't pass the segmentation\n" + log);
@@ -189,7 +196,7 @@ public class CLIRunActionOMERO {
 					e.printStackTrace();
 				}
 			} else {
-				List<ImageContainer> images = null;
+				List<ImageContainer> images;
 				
 				switch (param[0]) {
 					case "dataset":
@@ -220,9 +227,9 @@ public class CLIRunActionOMERO {
 					String log;
 					if ((param.length == 3 && param[2].equals("ROI")) ||
 					    (param.length == 5 && param[4].equals("ROI"))) {
-						log = otsuModif.runSeveralImageOmeroROI(images, Long.parseLong(outputDirectory), client);
+						log = otsuModified.runSeveralImageOmeroROI(images, Long.parseLong(outputDirectory), client);
 					} else {
-						log = otsuModif.runSeveralImageOmero(images, Long.parseLong(outputDirectory), client);
+						log = otsuModified.runSeveralImageOmero(images, Long.parseLong(outputDirectory), client);
 					}
 					if (!(log.equals(""))) {
 						System.out.println("Nuclei which didn't pass the segmentation\n" + log);
@@ -235,5 +242,4 @@ public class CLIRunActionOMERO {
 			throw new IllegalArgumentException();
 		}
 	}
-	
 }

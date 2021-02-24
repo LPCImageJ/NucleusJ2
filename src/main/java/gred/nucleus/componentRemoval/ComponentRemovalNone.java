@@ -25,5 +25,4 @@ public class ComponentRemovalNone implements ComponentRemovalPredicate {
 	public boolean keepVoxelComponent(Voxel voxel, ComponentInfo componentInfo) {
 		return true;
 	}
-	
 }

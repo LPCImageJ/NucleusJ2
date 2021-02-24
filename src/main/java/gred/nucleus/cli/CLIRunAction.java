@@ -1,8 +1,8 @@
 package gred.nucleus.cli;
 
-import gred.nucleus.machineLeaningUtils.ComputeNucleiParametersML;
 import gred.nucleus.autocrop.*;
 import gred.nucleus.core.ComputeNucleiParameters;
+import gred.nucleus.machineLeaningUtils.ComputeNucleiParametersML;
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
 import org.apache.commons.cli.CommandLine;
@@ -35,20 +35,23 @@ public class CLIRunAction {
 				runCropFromCoordinates();
 				break;
 			case "GenerateOverlay":
-				runGenereOV();
+				runGenerateOV();
 				break;
 		}
 	}
 	
-	private void runGenereOV() throws Exception {
+	
+	private void runGenerateOV() throws Exception {
 		GenerateOverlay ov = new GenerateOverlay(this.m_cmd.getOptionValue("input"));
 		ov.run();
 	}
+	
 	
 	private void runCropFromCoordinates() throws Exception {
 		CropFromCoordinates test = new CropFromCoordinates(this.m_cmd.getOptionValue("input"));
 		test.runCropFromCoordinate();
 	}
+	
 	
 	private void runProjectionFromCoordinates() throws Exception {
 		if (this.m_cmd.hasOption("coordinateFiltered")) {
@@ -64,6 +67,7 @@ public class CLIRunAction {
 			projection.generateCoordinate();
 		}
 	}
+	
 	
 	private void runAutocrop() throws Exception {
 		AutocropParameters autocropParameters = new AutocropParameters(
@@ -82,6 +86,7 @@ public class CLIRunAction {
 		}
 	}
 	
+	
 	private void runSegmentation() throws Exception {
 		SegmentationParameters segmentationParameters =
 				new SegmentationParameters(this.m_cmd.getOptionValue("input"), this.m_cmd.getOptionValue("output"));
@@ -90,17 +95,17 @@ public class CLIRunAction {
 			segmentationParameters.addProperties(this.m_cmd.getOptionValue("config"));
 		}
 		if (this.m_cmd.hasOption("file")) {
-			SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
+			SegmentationCalling otsuModified = new SegmentationCalling(segmentationParameters);
 			try {
-				String log = otsuModif.runOneImage(this.m_cmd.getOptionValue("input"));
+				String log = otsuModified.runOneImage(this.m_cmd.getOptionValue("input"));
 				if (!(log.equals(""))) System.out.println("Nuclei which didn't pass the segmentation\n" + log);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		} else {
-			SegmentationCalling otsuModif = new SegmentationCalling(segmentationParameters);
+			SegmentationCalling otsuModified = new SegmentationCalling(segmentationParameters);
 			try {
-				String log = otsuModif.runSeveralImages2();
+				String log = otsuModified.runSeveralImages2();
 				if (!(log.equals(""))) System.out.println("Nuclei which didn't pass the segmentation\n" + log);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -108,17 +113,18 @@ public class CLIRunAction {
 		}
 	}
 	
-	private void runComputeNucleiParameters() throws Exception {
+	
+	private void runComputeNucleiParameters() {
 		ComputeNucleiParameters generateParameters =
 				new ComputeNucleiParameters(this.m_cmd.getOptionValue("input"), this.m_cmd.getOptionValue("input2"));
 		if (this.m_cmd.hasOption("config")) generateParameters.addConfigParameters(this.m_cmd.getOptionValue("config"));
 		generateParameters.run();
 	}
 	
+	
 	private void runComputeNucleiParametersDL() throws Exception {
 		ComputeNucleiParametersML computeParameters =
 				new ComputeNucleiParametersML(this.m_cmd.getOptionValue("input"), this.m_cmd.getOptionValue("input2"));
 		computeParameters.run();
 	}
-	
 }

@@ -19,8 +19,8 @@ public class ChromocenterSegmentationPlugin_ implements PlugIn {
 	 *
 	 */
 	public void run(String arg) {
-		int    indiceRawImage      = 0;
-		int    indiceSementedImage = 0;
+		int    indexRawImage      = 0;
+		int    indexSegmentedImage = 0;
 		double xCalibration        = 1, yCalibration = 1, zCalibration = 1;
 		String unit                = "pixel";
 		int[]  wList               = WindowManager.getIDList();
@@ -45,9 +45,9 @@ public class ChromocenterSegmentationPlugin_ implements PlugIn {
 			}
 		}
 		GenericDialog genericDialog = new GenericDialog("Chromocenter Segmentation", IJ.getInstance());
-		genericDialog.addChoice("Raw image", titles, titles[indiceRawImage]);
-		genericDialog.addChoice("Nucleus segmeneted image", titles, titles[indiceSementedImage]);
-		genericDialog.addNumericField("x calibartion", xCalibration, 3);
+		genericDialog.addChoice("Raw image", titles, titles[indexRawImage]);
+		genericDialog.addChoice("Nucleus segmented image", titles, titles[indexSegmentedImage]);
+		genericDialog.addNumericField("x calibration", xCalibration, 3);
 		genericDialog.addNumericField("y calibration", yCalibration, 3);
 		genericDialog.addNumericField("z calibration", zCalibration, 3);
 		genericDialog.addStringField("Unit", unit, 10);
@@ -69,9 +69,9 @@ public class ChromocenterSegmentationPlugin_ implements PlugIn {
 		imagePlusInput.setCalibration(calibration);
 		imagePlusSegmented.setCalibration(calibration);
 		ChromocentersEnhancement chromocentersSegmentation = new ChromocentersEnhancement();
-		ImagePlus                imagePlusContraste        =
+		ImagePlus                imagePlusContrast        =
 				chromocentersSegmentation.applyEnhanceChromocenters(imagePlusInput, imagePlusSegmented);
-		imagePlusContraste.setTitle("ContrastedImage");
-		imagePlusContraste.show();
+		imagePlusContrast.setTitle("ContrastedImage");
+		imagePlusContrast.show();
 	}
 }

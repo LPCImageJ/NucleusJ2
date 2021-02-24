@@ -14,9 +14,9 @@ import java.awt.event.WindowListener;
 
 public class FJ_Derivatives implements PlugIn, WindowListener {
 	
-	private static int xorder = 0;
-	private static int yorder = 0;
-	private static int zorder = 0;
+	private static int xOrder = 0;
+	private static int yOrder = 0;
+	private static int zOrder = 0;
 	
 	private static String scale = "1.0";
 	
@@ -24,7 +24,7 @@ public class FJ_Derivatives implements PlugIn, WindowListener {
 	
 	public void run(String arg) {
 		
-		if (!FJ.libcheck()) return;
+		if (!FJ.libCheck()) return;
 		final ImagePlus imp = FJ.imageplus();
 		if (imp == null) return;
 		
@@ -33,9 +33,9 @@ public class FJ_Derivatives implements PlugIn, WindowListener {
 		GenericDialog  gd     = new GenericDialog(FJ.name() + ": Derivatives");
 		final String[] orders = new String[11];
 		for (int i = 0; i < 11; ++i) orders[i] = String.valueOf(i);
-		gd.addChoice("x-order of differentiation:", orders, orders[xorder]);
-		gd.addChoice("y-order of differentiation:", orders, orders[yorder]);
-		gd.addChoice("z-order of differentiation:", orders, orders[zorder]);
+		gd.addChoice("x-order of differentiation:", orders, orders[xOrder]);
+		gd.addChoice("y-order of differentiation:", orders, orders[yOrder]);
+		gd.addChoice("z-order of differentiation:", orders, orders[zOrder]);
 		gd.addPanel(new Panel(), GridBagConstraints.EAST, new Insets(0, 0, 0, 0));
 		gd.addStringField("Smoothing scale:", scale);
 		
@@ -50,16 +50,18 @@ public class FJ_Derivatives implements PlugIn, WindowListener {
 		
 		if (gd.wasCanceled()) return;
 		
-		xorder = gd.getNextChoiceIndex();
-		yorder = gd.getNextChoiceIndex();
-		zorder = gd.getNextChoiceIndex();
+		xOrder = gd.getNextChoiceIndex();
+		yOrder = gd.getNextChoiceIndex();
+		zOrder = gd.getNextChoiceIndex();
 		scale = gd.getNextString();
 		
-		(new FJDerivatives()).run(imp, xorder, yorder, zorder, scale);
+		(new FJDerivatives()).run(imp, xOrder, yOrder, zOrder, scale);
 	}
+	
 	
 	public void windowActivated(final WindowEvent e) {
 	}
+	
 	
 	public void windowClosed(final WindowEvent e) {
 		
@@ -67,30 +69,34 @@ public class FJ_Derivatives implements PlugIn, WindowListener {
 		pos.y = e.getWindow().getY();
 	}
 	
+	
 	public void windowClosing(final WindowEvent e) {
 	}
+	
 	
 	public void windowDeactivated(final WindowEvent e) {
 	}
 	
+	
 	public void windowDeiconified(final WindowEvent e) {
 	}
+	
 	
 	public void windowIconified(final WindowEvent e) {
 	}
 	
+	
 	public void windowOpened(final WindowEvent e) {
 	}
-	
 }
 
 class FJDerivatives {
 	
 	void run(
 			final ImagePlus imp,
-			final int xorder,
-			final int yorder,
-			final int zorder,
+			final int xOrder,
+			final int yOrder,
+			final int zOrder,
 			final String scale
 	        ) {
 		
@@ -98,20 +104,20 @@ class FJDerivatives {
 			final Image   img     = Image.wrap(imp);
 			final Aspects aspects = img.aspects();
 			if (!FJ_Options.isotropic) img.aspects(new Aspects());
-			double scaleval;
+			double scaleVal;
 			try {
-				scaleval = Double.parseDouble(scale);
+				scaleVal = Double.parseDouble(scale);
 			} catch (Exception e) {
 				throw new IllegalArgumentException("Invalid smoothing scale value");
 			}
-			final Image          newimg = new FloatImage(img);
+			final Image          newImg = new FloatImage(img);
 			final Differentiator diff   = new Differentiator();
 			diff.messenger.log(FJ_Options.log);
 			diff.messenger.status(FJ_Options.pgs);
 			diff.progressor.display(FJ_Options.pgs);
-			diff.run(newimg, scaleval, xorder, yorder, zorder);
-			newimg.aspects(aspects);
-			FJ.show(newimg, imp);
+			diff.run(newImg, scaleVal, xOrder, yOrder, zOrder);
+			newImg.aspects(aspects);
+			FJ.show(newImg, imp);
 			FJ.close(imp);
 			
 		} catch (OutOfMemoryError e) {
@@ -125,5 +131,4 @@ class FJDerivatives {
 			
 		}
 	}
-	
 }

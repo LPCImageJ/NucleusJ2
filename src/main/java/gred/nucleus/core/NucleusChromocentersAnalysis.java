@@ -66,7 +66,7 @@ public class NucleusChromocentersAnalysis {
 		}
 		
 		if (histogram.getNbLabels() > 0) {
-			double[]       tVolumesObjects = measure3D.computeVolumeofAllObjects(imagePlusChromocenter);
+			double[]       tVolumesObjects = measure3D.computeVolumeOfAllObjects(imagePlusChromocenter);
 			RadialDistance radialDistance  = new RadialDistance();
 			double[] tBorderToBorderDistance =
 					radialDistance.computeBorderToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
@@ -149,7 +149,7 @@ public class NucleusChromocentersAnalysis {
 			text += measure3D.computeVolumeRHF(imagePlusSegmented, imagePlusChromocenter) + "\t";
 		}
 		if (histogram.getNbLabels() > 0) {
-			double[]       tVolumesObjects = measure3D.computeVolumeofAllObjects(imagePlusChromocenter);
+			double[]       tVolumesObjects = measure3D.computeVolumeOfAllObjects(imagePlusChromocenter);
 			double         volumeCcMean    = computeMeanOfTable(tVolumesObjects);
 			int            nbCc            = measure3D.getNumberOfObject(imagePlusChromocenter);
 			RadialDistance radialDistance  = new RadialDistance();
@@ -172,8 +172,9 @@ public class NucleusChromocentersAnalysis {
 		bufferedWriterOutput.close();
 	}
 	
+	
 	/**
-	 * Method wich compute the mean of the value in the table
+	 * Computes the mean of the value in the table
 	 *
 	 * @param tInput Table of value
 	 *

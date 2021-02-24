@@ -19,14 +19,14 @@ public class FJ_Structure implements PlugIn, WindowListener {
 	private static boolean middle   = false;
 	private static boolean smallest = true;
 	
-	private static String sscale = "1.0";
-	private static String iscale = "3.0";
+	private static String smoothingScale   = "1.0";
+	private static String integrationScale = "3.0";
 	
 	private static Point pos = new Point(-1, -1);
 	
 	public void run(String arg) {
 		
-		if (!FJ.libcheck()) return;
+		if (!FJ.libCheck()) return;
 		final ImagePlus imp = FJ.imageplus();
 		if (imp == null) return;
 		
@@ -37,8 +37,8 @@ public class FJ_Structure implements PlugIn, WindowListener {
 		gd.addCheckbox(" Middle eigenvalue of structure tensor    ", middle);
 		gd.addCheckbox(" Smallest eigenvalue of structure tensor    ", smallest);
 		gd.addPanel(new Panel(), GridBagConstraints.EAST, new Insets(5, 0, 0, 0));
-		gd.addStringField("                Smoothing scale:", sscale);
-		gd.addStringField("                Integration scale:", iscale);
+		gd.addStringField("                Smoothing scale:", smoothingScale);
+		gd.addStringField("                Integration scale:", integrationScale);
 		
 		if (pos.x >= 0 && pos.y >= 0) {
 			gd.centerDialog(false);
@@ -54,14 +54,16 @@ public class FJ_Structure implements PlugIn, WindowListener {
 		largest = gd.getNextBoolean();
 		middle = gd.getNextBoolean();
 		smallest = gd.getNextBoolean();
-		sscale = gd.getNextString();
-		iscale = gd.getNextString();
+		smoothingScale = gd.getNextString();
+		integrationScale = gd.getNextString();
 		
-		(new FJStructure()).run(imp, largest, middle, smallest, sscale, iscale);
+		(new FJStructure()).run(imp, largest, middle, smallest, smoothingScale, integrationScale);
 	}
+	
 	
 	public void windowActivated(final WindowEvent e) {
 	}
+	
 	
 	public void windowClosed(final WindowEvent e) {
 		
@@ -69,21 +71,25 @@ public class FJ_Structure implements PlugIn, WindowListener {
 		pos.y = e.getWindow().getY();
 	}
 	
+	
 	public void windowClosing(final WindowEvent e) {
 	}
+	
 	
 	public void windowDeactivated(final WindowEvent e) {
 	}
 	
+	
 	public void windowDeiconified(final WindowEvent e) {
 	}
+	
 	
 	public void windowIconified(final WindowEvent e) {
 	}
 	
+	
 	public void windowOpened(final WindowEvent e) {
 	}
-	
 }
 
 class FJStructure {
@@ -93,19 +99,19 @@ class FJStructure {
 			final boolean largest,
 			final boolean middle,
 			final boolean smallest,
-			final String sscale,
-			final String iscale
+			final String smoothingScale,
+			final String integrationScale
 	        ) {
 		
 		try {
-			double sscaleval, iscaleval;
+			double sScaleVal, iScaleVal;
 			try {
-				sscaleval = Double.parseDouble(sscale);
+				sScaleVal = Double.parseDouble(smoothingScale);
 			} catch (Exception e) {
 				throw new IllegalArgumentException("Invalid smoothing scale value");
 			}
 			try {
-				iscaleval = Double.parseDouble(iscale);
+				iScaleVal = Double.parseDouble(integrationScale);
 			} catch (Exception e) {
 				throw new IllegalArgumentException("Invalid integration scale value");
 			}
@@ -118,17 +124,17 @@ class FJStructure {
 			structure.messenger.status(FJ_Options.pgs);
 			structure.progressor.display(FJ_Options.pgs);
 			
-			final Vector<Image> eigenimages = structure.run(new FloatImage(img), sscaleval, iscaleval);
+			final Vector<Image> eigenImages = structure.run(new FloatImage(img), sScaleVal, iScaleVal);
 			
-			final int nrimgs = eigenimages.size();
-			for (Image eigenimage : eigenimages) eigenimage.aspects(aspects);
-			if (nrimgs == 2) {
-				if (largest) FJ.show(eigenimages.get(0), imp);
-				if (smallest) FJ.show(eigenimages.get(1), imp);
-			} else if (nrimgs == 3) {
-				if (largest) FJ.show(eigenimages.get(0), imp);
-				if (middle) FJ.show(eigenimages.get(1), imp);
-				if (smallest) FJ.show(eigenimages.get(2), imp);
+			final int nImages = eigenImages.size();
+			for (Image eigenImage : eigenImages) eigenImage.aspects(aspects);
+			if (nImages == 2) {
+				if (largest) FJ.show(eigenImages.get(0), imp);
+				if (smallest) FJ.show(eigenImages.get(1), imp);
+			} else if (nImages == 3) {
+				if (largest) FJ.show(eigenImages.get(0), imp);
+				if (middle) FJ.show(eigenImages.get(1), imp);
+				if (smallest) FJ.show(eigenImages.get(2), imp);
 			}
 			
 			FJ.close(imp);
@@ -144,5 +150,4 @@ class FJStructure {
 			
 		}
 	}
-	
 }

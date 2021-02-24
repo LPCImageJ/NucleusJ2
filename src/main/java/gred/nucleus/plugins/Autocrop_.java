@@ -4,16 +4,14 @@ import gred.nucleus.autocrop.AutoCropCalling;
 import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.dialogs.AutocropConfigDialog;
 import gred.nucleus.dialogs.AutocropDialog;
-import gred.nucleus.exceptions.fileInOut;
 import ij.IJ;
 import ij.plugin.PlugIn;
 
 import java.io.File;
-import java.io.IOException;
 
 public class Autocrop_ implements PlugIn {
 	public static void runAutoCropFolder(String imageSource, String output, String pathToConfig)
-	throws IOException, fileInOut, Exception {
+	throws Exception {
 		AutocropParameters autocropParameters = new AutocropParameters(imageSource, output, pathToConfig);
 		AutoCropCalling    autoCrop           = new AutoCropCalling(autocropParameters);
 		File               file               = new File(imageSource);
@@ -24,7 +22,8 @@ public class Autocrop_ implements PlugIn {
 		}
 	}
 	
-	public static void runAutoCropFolder(String imageSource, String output) throws IOException, fileInOut, Exception {
+	
+	public static void runAutoCropFolder(String imageSource, String output) throws Exception {
 		AutocropParameters autocropParameters = new AutocropParameters(imageSource, output);
 		AutoCropCalling    autoCrop           = new AutoCropCalling(autocropParameters);
 		File               file               = new File(imageSource);
@@ -35,31 +34,32 @@ public class Autocrop_ implements PlugIn {
 		}
 	}
 	
+	
 	public static void runAutoCropFolder(String imageSource,
 	                                     String output,
 	                                     String xCropBoxSize,
 	                                     String yCropBoxSize,
 	                                     String zCropBoxSize,
-	                                     String slicesOTSUcomputing,
-	                                     String thresholdOTSUcomputing,
+	                                     String slicesOTSUComputing,
+	                                     String thresholdOTSUComputing,
 	                                     String channelToComputeThreshold,
 	                                     String minVolumeNucleus,
 	                                     String maxVolumeNucleus,
 	                                     String boxesPercentSurfaceToFilter,
-	                                     boolean boxesRegroupement) throws IOException, fileInOut, Exception {
+	                                     boolean regroupBoxes) throws Exception {
 		
 		AutocropParameters autocropParameters = new AutocropParameters(imageSource,
 		                                                               output,
 		                                                               Integer.parseInt(xCropBoxSize),
 		                                                               Integer.parseInt(yCropBoxSize),
 		                                                               Integer.parseInt(zCropBoxSize),
-		                                                               Integer.parseInt(slicesOTSUcomputing),
-		                                                               Integer.parseInt(thresholdOTSUcomputing),
+		                                                               Integer.parseInt(slicesOTSUComputing),
+		                                                               Integer.parseInt(thresholdOTSUComputing),
 		                                                               Integer.parseInt(channelToComputeThreshold),
 		                                                               Integer.parseInt(minVolumeNucleus),
 		                                                               Integer.parseInt(maxVolumeNucleus),
 		                                                               Integer.parseInt(boxesPercentSurfaceToFilter),
-		                                                               boxesRegroupement);
+		                                                               regroupBoxes);
 		
 		AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
 		File            file     = new File(imageSource);
@@ -70,6 +70,7 @@ public class Autocrop_ implements PlugIn {
 		}
 	}
 	
+	
 	public static void runAutoCropFolder(String imageSource,
 	                                     String output,
 	                                     String xCal,
@@ -78,13 +79,13 @@ public class Autocrop_ implements PlugIn {
 	                                     String xCropBoxSize,
 	                                     String yCropBoxSize,
 	                                     String zCropBoxSize,
-	                                     String slicesOTSUcomputing,
-	                                     String thresholdOTSUcomputing,
+	                                     String slicesOTSUComputing,
+	                                     String thresholdOTSUComputing,
 	                                     String channelToComputeThreshold,
 	                                     String minVolumeNucleus,
 	                                     String maxVolumeNucleus,
 	                                     String boxesPercentSurfaceToFilter,
-	                                     boolean boxesRegroupement) throws IOException, fileInOut, Exception {
+	                                     boolean regroupBoxes) throws Exception {
 		
 		AutocropParameters autocropParameters = new AutocropParameters(imageSource,
 		                                                               output,
@@ -94,13 +95,13 @@ public class Autocrop_ implements PlugIn {
 		                                                               Integer.parseInt(xCropBoxSize),
 		                                                               Integer.parseInt(yCropBoxSize),
 		                                                               Integer.parseInt(zCropBoxSize),
-		                                                               Integer.parseInt(slicesOTSUcomputing),
-		                                                               Integer.parseInt(thresholdOTSUcomputing),
+		                                                               Integer.parseInt(slicesOTSUComputing),
+		                                                               Integer.parseInt(thresholdOTSUComputing),
 		                                                               Integer.parseInt(channelToComputeThreshold),
 		                                                               Integer.parseInt(minVolumeNucleus),
 		                                                               Integer.parseInt(maxVolumeNucleus),
 		                                                               Integer.parseInt(boxesPercentSurfaceToFilter),
-		                                                               boxesRegroupement);
+		                                                               regroupBoxes);
 		
 		AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
 		File            file     = new File(imageSource);
@@ -110,6 +111,7 @@ public class Autocrop_ implements PlugIn {
 			autoCrop.runFile(imageSource);
 		}
 	}
+	
 	
 	/**
 	 * Run method for imageJ plugin for the autocrop
@@ -152,38 +154,38 @@ public class Autocrop_ implements PlugIn {
 						}
 					} else if (autocropDialog.getConfigMode() == 1) {
 						AutocropConfigDialog acd = autocropDialog.getAutocropConfigFileDialog();
-						if (acd.isCalibSelected()) {
-							IJ.log("w/ calib");
+						if (acd.isCalibrationSelected()) {
+							IJ.log("w/ calibration");
 							runAutoCropFolder(input,
 							                  output,
-							                  acd.getxCalibration(),
-							                  acd.getyCalibration(),
-							                  acd.getzCalibration(),
-							                  acd.getxCropBoxSize(),
-							                  acd.getyCropBoxSize(),
-							                  acd.getzCropBoxSize(),
-							                  acd.getSlicesOTSUcomputing(),
+							                  acd.getXCalibration(),
+							                  acd.getYCalibration(),
+							                  acd.getZCalibration(),
+							                  acd.getXCropBoxSize(),
+							                  acd.getYCropBoxSize(),
+							                  acd.getZCropBoxSize(),
+							                  acd.getSlicesOTSUComputing(),
 							                  acd.getThresholdOTSUComputing(),
 							                  acd.getChannelToComputeThreshold(),
 							                  acd.getMinVolume(),
 							                  acd.getMaxVolume(),
 							                  acd.getBoxesPercentSurfaceToFilter(),
-							                  acd.getBoxesRegroupementSelected()
+							                  acd.isRegroupBoxesSelected()
 							                 );
 						} else {
-							IJ.log("w/out calib");
+							IJ.log("w/out calibration");
 							runAutoCropFolder(input,
 							                  output,
-							                  acd.getxCropBoxSize(),
-							                  acd.getyCropBoxSize(),
-							                  acd.getzCropBoxSize(),
-							                  acd.getSlicesOTSUcomputing(),
+							                  acd.getXCropBoxSize(),
+							                  acd.getYCropBoxSize(),
+							                  acd.getZCropBoxSize(),
+							                  acd.getSlicesOTSUComputing(),
 							                  acd.getThresholdOTSUComputing(),
 							                  acd.getChannelToComputeThreshold(),
 							                  acd.getMinVolume(),
 							                  acd.getMaxVolume(),
 							                  acd.getBoxesPercentSurfaceToFilter(),
-							                  acd.getBoxesRegroupementSelected()
+							                  acd.isRegroupBoxesSelected()
 							                 );
 						}
 					} else {

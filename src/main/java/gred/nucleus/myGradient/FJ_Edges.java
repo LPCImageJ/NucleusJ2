@@ -18,18 +18,18 @@ import java.awt.event.WindowListener;
 
 public class FJ_Edges implements PlugIn, ItemListener, WindowListener {
 	
+	private static final Point    pos    = new Point(-1, -1);
 	private static boolean compute  = true;
 	private static boolean suppress = false;
-	
-	private static String scale  = "1.0";
-	private static String lower  = "";
-	private static String higher = "";
-	private static Point pos = new Point(-1, -1);
-	private Checkbox computebox, suppressbox;
+	private static       String   scale  = "1.0";
+	private static       String   lower  = "";
+	private static       String   higher = "";
+	private              Checkbox computeBox;
+	private              Checkbox suppressBox;
 	
 	public void run(String arg) {
 		
-		if (!FJ.libcheck()) return;
+		if (!FJ.libCheck()) return;
 		final ImagePlus imp = FJ.imageplus();
 		if (imp == null) return;
 		
@@ -43,10 +43,10 @@ public class FJ_Edges implements PlugIn, ItemListener, WindowListener {
 		gd.addPanel(new Panel(), GridBagConstraints.EAST, new Insets(0, 0, 0, 0));
 		gd.addStringField("                Lower threshold value:", lower);
 		gd.addStringField("                Higher threshold value:", higher);
-		computebox = (Checkbox) gd.getCheckboxes().get(0);
-		computebox.addItemListener(this);
-		suppressbox = (Checkbox) gd.getCheckboxes().get(1);
-		suppressbox.addItemListener(this);
+		computeBox = (Checkbox) gd.getCheckboxes().get(0);
+		computeBox.addItemListener(this);
+		suppressBox = (Checkbox) gd.getCheckboxes().get(1);
+		suppressBox.addItemListener(this);
 		
 		if (pos.x >= 0 && pos.y >= 0) {
 			gd.centerDialog(false);
@@ -68,17 +68,20 @@ public class FJ_Edges implements PlugIn, ItemListener, WindowListener {
 		(new FJEdges()).run(imp, compute, scale, suppress, lower, higher);
 	}
 	
+	
 	public void itemStateChanged(final ItemEvent e) {
 		
-		if (e.getSource() == computebox) {
-			if (!computebox.getState()) suppressbox.setState(false);
-		} else if (e.getSource() == suppressbox) {
-			if (suppressbox.getState()) computebox.setState(true);
+		if (e.getSource() == computeBox) {
+			if (!computeBox.getState()) suppressBox.setState(false);
+		} else if (e.getSource() == suppressBox) {
+			if (suppressBox.getState()) computeBox.setState(true);
 		}
 	}
 	
+	
 	public void windowActivated(final WindowEvent e) {
 	}
+	
 	
 	public void windowClosed(final WindowEvent e) {
 		
@@ -86,21 +89,25 @@ public class FJ_Edges implements PlugIn, ItemListener, WindowListener {
 		pos.y = e.getWindow().getY();
 	}
 	
+	
 	public void windowClosing(final WindowEvent e) {
 	}
+	
 	
 	public void windowDeactivated(final WindowEvent e) {
 	}
 	
+	
 	public void windowDeiconified(final WindowEvent e) {
 	}
+	
 	
 	public void windowIconified(final WindowEvent e) {
 	}
 	
+	
 	public void windowOpened(final WindowEvent e) {
 	}
-	
 }
 
 class FJEdges {
@@ -115,79 +122,82 @@ class FJEdges {
 	        ) {
 		
 		try {
-			double  scaleval, lowval = 0, highval = 0;
-			boolean lowthres         = true, highthres = true;
+			double  scaleVal;
+			double  lowVal        = 0;
+			double  highVal       = 0;
+			boolean lowThreshold  = true;
+			boolean highThreshold = true;
 			try {
-				scaleval = Double.parseDouble(scale);
+				scaleVal = Double.parseDouble(scale);
 			} catch (Exception e) {
 				throw new IllegalArgumentException("Invalid smoothing scale value");
 			}
 			try {
 				if (lower.equals("")) {
-					lowthres = false;
+					lowThreshold = false;
 				} else {
-					lowval = Double.parseDouble(lower);
+					lowVal = Double.parseDouble(lower);
 				}
 			} catch (Exception e) {
 				throw new IllegalArgumentException("Invalid lower threshold value");
 			}
 			try {
 				if (higher.equals("")) {
-					highthres = false;
+					highThreshold = false;
 				} else {
-					highval = Double.parseDouble(higher);
+					highVal = Double.parseDouble(higher);
 				}
 			} catch (Exception e) {
 				throw new IllegalArgumentException("Invalid higher threshold value");
 			}
-			final int thresmode = (lowthres ? 10 : 0) + (highthres ? 1 : 0);
+			final int thresholdMode = (lowThreshold ? 10 : 0) + (highThreshold ? 1 : 0);
 			
 			final Image img    = Image.wrap(imp);
-			Image       newimg = new FloatImage(img);
+			Image       newImg = new FloatImage(img);
 			
 			double[] pls = {0, 1};
 			int      pl  = 0;
-			if ((compute || suppress) && thresmode > 0) {
+			if ((compute || suppress) && thresholdMode > 0) {
 				pls = new double[]{0, 0.9, 1};
 			}
 			final Progressor progressor = new Progressor();
 			progressor.display(FJ_Options.pgs);
 			
 			if (compute || suppress) {
-				final Aspects aspects = newimg.aspects();
-				if (!FJ_Options.isotropic) newimg.aspects(new Aspects());
+				final Aspects aspects = newImg.aspects();
+				if (!FJ_Options.isotropic) newImg.aspects(new Aspects());
 				final Edges edges = new Edges();
 				progressor.range(pls[pl], pls[++pl]);
 				edges.progressor.parent(progressor);
 				edges.messenger.log(FJ_Options.log);
 				edges.messenger.status(FJ_Options.pgs);
-				newimg = edges.run(newimg, scaleval, suppress);
-				newimg.aspects(aspects);
+				newImg = edges.run(newImg, scaleVal, suppress);
+				newImg.aspects(aspects);
 			}
 			
-			if (thresmode > 0) {
-				final Thresholder thres = new Thresholder();
+			if (thresholdMode > 0) {
+				final Thresholder thresholder = new Thresholder();
 				progressor.range(pls[pl], pls[++pl]);
-				thres.progressor.parent(progressor);
-				thres.messenger.log(FJ_Options.log);
-				thres.messenger.status(FJ_Options.pgs);
-				switch (thresmode) {
+				thresholder.progressor.parent(progressor);
+				thresholder.messenger.log(FJ_Options.log);
+				thresholder.messenger.status(FJ_Options.pgs);
+				switch (thresholdMode) {
 					case 1: {
-						thres.hard(newimg, highval);
+						thresholder.hard(newImg, highVal);
 						break;
 					}
 					case 10: {
-						thres.hard(newimg, lowval);
+						thresholder.hard(newImg, lowVal);
 						break;
 					}
 					case 11: {
-						thres.hysteresis(newimg, lowval, highval);
+						thresholder.hysteresis(newImg, lowVal, highVal);
 						break;
 					}
 				}
 			}
 			
-			FJ.show(newimg, imp);
+			FJ.show(newImg, imp);
 			FJ.close(imp);
 			
 		} catch (OutOfMemoryError e) {
@@ -201,5 +211,4 @@ class FJEdges {
 			
 		}
 	}
-	
 }

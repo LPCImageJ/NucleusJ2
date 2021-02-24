@@ -13,5 +13,4 @@ public class FJ_Website implements PlugIn {
 			FJ.error("Could not open default internet browser");
 		}
 	}
-	
 }

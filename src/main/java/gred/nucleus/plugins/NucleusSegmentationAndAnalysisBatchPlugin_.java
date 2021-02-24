@@ -24,14 +24,15 @@ public class NucleusSegmentationAndAnalysisBatchPlugin_ implements PlugIn {
 			}
 		}
 		if (_nucleusPipelineBatchDialog.isStart()) {
-			IJ.log("Begining of the segmentation of nuclei, the data are in " +
+			IJ.log("Beginning of the segmentation of nuclei, the data are in " +
 			       _nucleusPipelineBatchDialog.getRawDataDirectory());
-			SegmentationCalling otsuModif = new SegmentationCalling(_nucleusPipelineBatchDialog.getRawDataDirectory(),
-			                                                        _nucleusPipelineBatchDialog.getWorkDirectory(),
-			                                                        (short) _nucleusPipelineBatchDialog.getMinVolume(),
-			                                                        (short) _nucleusPipelineBatchDialog.getMaxVolume());
+			SegmentationCalling otsuModified =
+					new SegmentationCalling(_nucleusPipelineBatchDialog.getRawDataDirectory(),
+					                        _nucleusPipelineBatchDialog.getWorkDirectory(),
+					                        (short) _nucleusPipelineBatchDialog.getMinVolume(),
+					                        (short) _nucleusPipelineBatchDialog.getMaxVolume());
 			try {
-				String log = otsuModif.runSeveralImages2();
+				String log = otsuModified.runSeveralImages2();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -41,54 +42,63 @@ public class NucleusSegmentationAndAnalysisBatchPlugin_ implements PlugIn {
 		}
 	}
 	
-	/** @return */
+	
+	/** @return  */
 	public int getNbCpu() {
 		return _nucleusPipelineBatchDialog.getNbCpu();
 	}
 	
-	/** @return */
+	
+	/** @return  */
 	public double getZCalibration() {
 		return _nucleusPipelineBatchDialog.getZCalibration();
 	}
 	
-	/** @return */
+	
+	/** @return  */
 	public double getXCalibration() {
 		return _nucleusPipelineBatchDialog.getXCalibration();
 	}
 	
-	/** @return */
+	
+	/** @return  */
 	public double getYCalibration() {
 		return _nucleusPipelineBatchDialog.getYCalibration();
 	}
 	
-	/** @return */
+	
+	/** @return  */
 	public String getUnit() {
 		return _nucleusPipelineBatchDialog.getUnit();
 	}
 	
-	/** @return */
+	
+	/** @return  */
 	public double getMinVolume() {
 		return _nucleusPipelineBatchDialog.getMinVolume();
 	}
 	
-	/** @return */
+	
+	/** @return  */
 	public double getMaxVolume() {
 		return _nucleusPipelineBatchDialog.getMaxVolume();
 	}
 	
-	/** @return */
+	
+	/** @return  */
 	public String getWorkDirectory() {
 		return _nucleusPipelineBatchDialog.getWorkDirectory();
 	}
 	
-	/** @return */
+	
+	/** @return  */
 	public boolean is2D3DAnalysis() {
 		return _nucleusPipelineBatchDialog.is2D3DAnalysis();
 	}
 	
-	/** @return */
+	
+	/** @return  */
 	public boolean is3DAnalysis() {
 		return _nucleusPipelineBatchDialog.is3D();
 	}
-	
 }

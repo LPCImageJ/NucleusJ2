@@ -18,19 +18,20 @@ public class TestSegmentationMethods {
 /*
  public static void testStupid(ImagePlus img, short vMin, int vMax, String outputImgString ) throws FormatException {
  SegmentationParameters segmentationParameters = new SegmentationParameters();
- SegmentationCalling otsuModif = new SegmentationCalling(img, vMin, vMax, outputImgString);
+ SegmentationCalling otsuModified = new SegmentationCalling(img, vMin, vMax, outputImgString);
  otsuModif.runSeveralImages2();
  }
  */
+	
 	/**
 	 * @param input
 	 * @param output
 	 */
 	public static void testStupidSeveralImages(String input, String output) throws Exception {
 		SegmentationParameters segmentationParameters = new SegmentationParameters(input, output);
-		SegmentationCalling    otsuModif              = new SegmentationCalling(segmentationParameters);
+		SegmentationCalling    otsuModified           = new SegmentationCalling(segmentationParameters);
 		try {
-			String log = otsuModif.runSeveralImages2();
+			String log = otsuModified.runSeveralImages2();
 			if (!(log.equals(""))) {
 				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
 			}
@@ -39,11 +40,12 @@ public class TestSegmentationMethods {
 		}
 	}
 	
+	
 	public static void testStupidSeveralImages(String input, String output, String config) throws Exception {
 		SegmentationParameters segmentationParameters = new SegmentationParameters(input, output, config);
-		SegmentationCalling    otsuModif              = new SegmentationCalling(segmentationParameters);
+		SegmentationCalling    otsuModified           = new SegmentationCalling(segmentationParameters);
 		try {
-			String log = otsuModif.runSeveralImages2();
+			String log = otsuModified.runSeveralImages2();
 			if (!(log.equals(""))) {
 				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
 			}
@@ -51,6 +53,7 @@ public class TestSegmentationMethods {
 			e.printStackTrace();
 		}
 	}
+	
 	
 	/**
 	 * Main function of the package's tests.
@@ -58,7 +61,7 @@ public class TestSegmentationMethods {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		///home/titus/Bureau/data/Test_Image_Reproductibilite/IMAGE_TEST_NJ/AUTOCROP_RAW/RAW_BIOFORMATS
+		///home/titus/Bureau/data/Test_Image_Reproducibility/IMAGE_TEST_NJ/AUTOCROP_RAW/RAW_BIOFORMATS
 		String timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
 		
 		
@@ -68,14 +71,14 @@ public class TestSegmentationMethods {
 				"/home/tridubos/Bureau/TEST_SEG/Results_checked/Z_Col_cot21&17&22__w11 DAPI SIM_s3/OTSU/";
 		
 		String inputTristan =
-				"/media/tridubos/DATA1/SPERMATO/Manipe_1_57_images_input/Segmentation/Analyse_Segmentation/NucleusPB";
+				"/media/tridubos/DATA1/SPERMATO/Manip_1_57_images_input/Segmentation/Analyse_Segmentation/NucleusPB";
 		String outputTristanGift =
 				"/home/tridubos/Bureau/TEST_SEG/Test_analysis/Z_Col_cot21&17&22__w11 DAPI SIM_s3/GIFT/";
 		String outputTristanOtsu =
 				"/media/tridubos/DATA1/SPERMATO/Manipe_1_57_images_input/Segmentation/Analyse_Segmentation/Segmented";
         /*
         OutputFileVerification fw = new OutputFileVerification(ExpectedResult,inputTristan);
-        fw.GetFileResultExpeted(ExpectedResult);
+        fw.GetFileResultExpected(ExpectedResult);
         fw.GetFilesOutputFolder(inputTristan);
         */
 		String pathToTest = "/home/tridubos/Bureau/IMAGES_TEST/AUTOCROP";
@@ -127,18 +130,16 @@ public class TestSegmentationMethods {
         /*fw.GetFilesResultingOfAnalysis(inputTristan);
         fw.CompareAnalysisResult();
         OutputFileVerification fw = new OutputFileVerification();
-        fw.GetFileResultExpeted(ExpectedResult);
+        fw.GetFileResultExpected(ExpectedResult);
         fw.GetFilesOutputFolder(outputTristan);
         fw.GetFilesResultingOfAnalysis(outputTristan);
         fw.CompareAnalysisResult();
         */
 		System.err.println("The program ended normally.");
-		String timeStampend = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
+		String timestampEnd = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
 		
 		System.out.println("START :" + timeStampStart);
-		System.out.println("END :" + timeStampend);
+		System.out.println("END :" + timestampEnd);
 		
 	}
-	
-	
 }

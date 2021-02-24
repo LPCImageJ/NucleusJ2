@@ -27,5 +27,4 @@ public class ComponentRemovalBoundary implements ComponentRemovalPredicate {
 	public boolean keepVoxelComponent(Voxel voxel, ComponentInfo componentInfo) {
 		return !componentInfo.isOnTheBorder();
 	}
-	
 }

@@ -1,12 +1,13 @@
 package gred.nucleus.cli;
 
+import gred.nucleus.mains.Version;
 import org.apache.commons.cli.*;
 
 /** Generic class to handle command line option */
 public class CLIActionOptions {
 	
 	/** NucleusJ version */
-	private static final String NJversion     = "1.2.2";
+	private static final String NJ_version    = Version.get();
 	/** Path to input folder */
 	public               Option m_inputFolder = Option.builder("in")
 	                                                  .longOpt("input")
@@ -21,7 +22,7 @@ public class CLIActionOptions {
 	                                                  .desc("Path to config file\n" +
 	                                                        "To generate config file example in current folder:\n" +
 	                                                        "java -jar NucleusJ_2-" +
-	                                                        NJversion +
+	                                                        NJ_version +
 	                                                        ".jar -h configFileExample")
 	                                                  .numberOfArgs(1)
 	                                                  .build();
@@ -39,7 +40,7 @@ public class CLIActionOptions {
 	public               Option m_omero       = Option.builder("ome")
 	                                                  .longOpt("omero")
 	                                                  .type(boolean.class)
-	                                                  .desc("Use of NucleuJ2.0 in OMERO\n")
+	                                                  .desc("Use of NucleusJ2.0 in OMERO\n")
 	                                                  .build();
 	/** List of options */
 	Options           m_options = new Options();
@@ -64,28 +65,30 @@ public class CLIActionOptions {
 			this.m_cmd = this.m_parser.parse(this.m_options, argument, true);
 		} catch (ParseException exp) {
 			System.out.println(exp.getMessage() + "\n");
-			System.out.println(getHelperInfos());
+			System.out.println(getHelperInfo());
 			System.exit(1);
 		}
 	}
 	
+	
 	/** @return : helper info */
-	public String getHelperInfos() {
+	public String getHelperInfo() {
 		return "More details for available actions:\n" +
-		       "java -jar NucleusJ_2-" + NJversion + ".jar -h \n" +
-		       "java -jar NucleusJ_2-" + NJversion + ".jar -help \n\n" +
+		       "java -jar NucleusJ_2-" + NJ_version + ".jar -h \n" +
+		       "java -jar NucleusJ_2-" + NJ_version + ".jar -help \n\n" +
 		       "More details for a specific action:\n" +
-		       "java -jar NucleusJ_2-" + NJversion + ".jar -h <action>\n" +
-		       "java -jar NucleusJ_2-" + NJversion + ".jar -help <action>";
+		       "java -jar NucleusJ_2-" + NJ_version + ".jar -h <action>\n" +
+		       "java -jar NucleusJ_2-" + NJ_version + ".jar -help <action>";
 	}
+	
 	
 	/** @return list of options */
 	public Options getM_options() {
 		return this.m_options;
 	}
 	
+	
 	public CommandLine getCmd() {
 		return this.m_cmd;
 	}
-	
 }

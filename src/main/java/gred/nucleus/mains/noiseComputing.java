@@ -14,21 +14,21 @@ import java.util.HashMap;
 public class noiseComputing {
 	
 	
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		computeMeanNoise(
 				"/media/titus/DATA/ML_ANALYSE_DATA/ANALYSE_COMPARAISON_REANALYSE/129_ANNOTATION_FULL/RAW/",
 				"/media/titus/DATA/ML_ANALYSE_DATA/ANALYSE_COMPARAISON_REANALYSE/129_ANNOTATION_FULL/TMP_PARAMETERS/"
 		                );
 	}
 	
-	public static void computeMeanNoise(String RawImageSourceFile, String SegmentedImagesSourceFile)
-	throws Exception {
+	
+	public static void computeMeanNoise(String RawImageSourceFile, String SegmentedImagesSourceFile) {
 		PluginParameters pluginParameters = new PluginParameters(RawImageSourceFile, SegmentedImagesSourceFile);
 		Directory        directoryInput   = new Directory(pluginParameters.getOutputFolder());
 		directoryInput.listImageFiles(pluginParameters.getOutputFolder());
 		directoryInput.checkIfEmpty();
-		ArrayList<File> segImages   = directoryInput.m_listeOfFiles;
-		String          ResultNoise = "NucleusFileName\tMeanNoise\n";
+		ArrayList<File> segImages   = directoryInput.m_fileList;
+		StringBuilder   ResultNoise = new StringBuilder("NucleusFileName\tMeanNoise\n");
 		for (File currentFile : segImages) {
 			System.out.println("current File " + currentFile.getName());
 			ImagePlus Raw = new ImagePlus(pluginParameters.getInputFolder() +
@@ -38,13 +38,15 @@ public class noiseComputing {
 			
 			// TODO TRANSFORMATION FACTORISABLE AVEC METHODE DU DESSUS !!!!!
 			double meanNoise = meanIntensityNoise(Raw, Segmented);
-			ResultNoise = ResultNoise + currentFile.getName() + "\t" + meanNoise + "\t" + medianComputing(Raw) + "\n";
+			ResultNoise.append(currentFile.getName()).append("\t")
+			           .append(meanNoise).append("\t")
+			           .append(medianComputing(Raw)).append("\n");
 			System.out.println("Noise mean " + meanNoise);
 			
 		}
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(
 				"/media/titus/DATA/ML_ANALYSE_DATA/ANALYSE_COMPARAISON_REANALYSE/129_ANNOTATION_FULL/NoiseGIFT.csv");
-		resultFileOutputOTSU.SaveTextFile(ResultNoise);
+		resultFileOutputOTSU.SaveTextFile(ResultNoise.toString());
 	}
 	
 	
@@ -60,7 +62,6 @@ public class noiseComputing {
 						meanIntensity += imageStackRaw.getVoxel(i, j, k);
 						voxelCounted++;
 					}
-					
 				}
 			}
 		}
@@ -69,21 +70,23 @@ public class noiseComputing {
 		
 	}
 	
+	
 	public static double medianComputing(ImagePlus _Raw) {
 		double    voxelMedianValue = 0;
 		Histogram histogram        = new Histogram();
 		histogram.run(_Raw);
-		HashMap<Double, Integer> _segmentedNucleusHisto = histogram.getHistogram();
-		int                      medianElementStop      = (_Raw.getHeight() * _Raw.getWidth() * _Raw.getNSlices()) / 2;
-		int                      increment              = 0;
-		for (HashMap.Entry<Double, Integer> entry : _segmentedNucleusHisto.entrySet()) {
+		
+		HashMap<Double, Integer> _segmentedNucleusHistogram = histogram.getHistogram();
+		
+		int medianElementStop = (_Raw.getHeight() * _Raw.getWidth() * _Raw.getNSlices()) / 2;
+		int increment         = 0;
+		
+		for (HashMap.Entry<Double, Integer> entry : _segmentedNucleusHistogram.entrySet()) {
 			increment += entry.getValue();
 			if (increment > medianElementStop) {
 				voxelMedianValue = entry.getKey();
 				break;
 			}
-			
-			
 		}
 		return voxelMedianValue;
 	}

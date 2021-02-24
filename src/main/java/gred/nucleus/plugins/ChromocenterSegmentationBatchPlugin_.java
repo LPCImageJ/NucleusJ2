@@ -38,13 +38,13 @@ public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
 			if (fileList.isDirectoryOrFileExist(".+RawDataNucleus.+", tFileRawData) &&
 			    fileList.isDirectoryOrFileExist(".+SegmentedDataNucleus.+", tFileRawData)) {
 				
-				ArrayList<String> arrayListImageSegmenetedDataNucleus =
+				ArrayList<String> arrayListImageSegmentedDataNucleus =
 						fileList.fileSearchList(".+SegmentedDataNucleus.+", tFileRawData);
 				String workDirectory =
 						_chromocenterSegmentationPipelineBatchDialog.getWorkDirectory();
-				for (int i = 0; i < arrayListImageSegmenetedDataNucleus.size(); ++i) {
-					IJ.log("image" + (i + 1) + " / " + arrayListImageSegmenetedDataNucleus.size());
-					String pathImageSegmentedNucleus = arrayListImageSegmenetedDataNucleus.get(i);
+				for (int i = 0; i < arrayListImageSegmentedDataNucleus.size(); ++i) {
+					IJ.log("image" + (i + 1) + " / " + arrayListImageSegmentedDataNucleus.size());
+					String pathImageSegmentedNucleus = arrayListImageSegmentedDataNucleus.get(i);
 					String pathNucleusRaw =
 							pathImageSegmentedNucleus.replaceAll("SegmentedDataNucleus", "RawDataNucleus");
 					IJ.log(pathNucleusRaw);
@@ -75,11 +75,11 @@ public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
 							calibration = imagePlusInput.getCalibration();
 						}
 						ChromocentersEnhancement chromocenterSegmentation = new ChromocentersEnhancement();
-						ImagePlus imagePlusConstraste =
+						ImagePlus imagePlusContrast =
 								chromocenterSegmentation.applyEnhanceChromocenters(imagePlusInput, imagePlusSegmented);
-						imagePlusConstraste.setTitle(imagePlusInput.getTitle());
-						imagePlusConstraste.setCalibration(calibration);
-						saveFile(imagePlusConstraste, workDirectory + File.separator + "ContrastDataNucleus");
+						imagePlusContrast.setTitle(imagePlusInput.getTitle());
+						imagePlusContrast.setCalibration(calibration);
+						saveFile(imagePlusContrast, workDirectory + File.separator + "ContrastDataNucleus");
 					}
 				}
 				IJ.log("End of the chromocenter segmentation , the results are in " +
@@ -90,6 +90,7 @@ public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
 			}
 		}
 	}
+	
 	
 	/**
 	 * saving file method

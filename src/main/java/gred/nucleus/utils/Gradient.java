@@ -15,7 +15,7 @@ public class Gradient {
 	/**
 	 *
 	 */
-	private ArrayList<Double>[][][] _tableUnitaire;
+	private ArrayList<Double>[][][] _tableUnitary;
 	
 	@SuppressWarnings("unchecked")
 	public Gradient(ImagePlus imagePlusInput) {
@@ -23,9 +23,10 @@ public class Gradient {
 		int h = imagePlusInput.getHeight();
 		int d = imagePlusInput.getStackSize();
 		_tableGradient = (ArrayList<Double>[][][]) new ArrayList[w][h][d];
-		_tableUnitaire = (ArrayList<Double>[][][]) new ArrayList[w][h][d];
+		_tableUnitary = (ArrayList<Double>[][][]) new ArrayList[w][h][d];
 		computeGradient(imagePlusInput);
 	}
+	
 	
 	/**
 	 * @param imagePlusInput
@@ -58,29 +59,31 @@ public class Gradient {
 					list.add(dy);
 					list.add(dz);
 					_tableGradient[i][j][k] = list;
-					/*variable intermediaire*/
-					double norme = Math.sqrt(dx * dx + dy * dy + dz * dz);
+					/* temp variable */
+					double norm = Math.sqrt(dx * dx + dy * dy + dz * dz);
 					double nx    = 0, ny = 0, nz = 0;
-					if (norme > 1e-15) {
-						nx = dx / norme;
-						ny = dy / norme;
-						nz = dz / norme;
+					if (norm > 1e-15) {
+						nx = dx / norm;
+						ny = dy / norm;
+						nz = dz / norm;
 					}
 					ArrayList<Double> listN = new ArrayList<>();
 					listN.add(nx);
 					listN.add(ny);
 					listN.add(nz);
-					_tableUnitaire[i][j][k] = listN;
+					_tableUnitary[i][j][k] = listN;
 				}
 			}
 		}
 		// IJ.log("fin Gradient");
 	}
 	
+	
 	/** @return */
-	public ArrayList<Double>[][][] getUnitaire() {
-		return _tableUnitaire;
+	public ArrayList<Double>[][][] getUnitary() {
+		return _tableUnitary;
 	}
+	
 	
 	/** @return */
 	public ArrayList<Double>[][][] getGradient() {

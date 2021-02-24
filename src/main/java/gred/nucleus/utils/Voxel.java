@@ -43,6 +43,7 @@ public class Voxel {
 		this.m_coordinates[2] = z;
 	}
 	
+	
 	/**
 	 * Constructor from given coordinates
 	 *
@@ -58,6 +59,7 @@ public class Voxel {
 		this.m_value = value;
 	}
 	
+	
 	/**
 	 * Constructor
 	 *
@@ -65,11 +67,12 @@ public class Voxel {
 	 * @param y second coordinate of the voxel
 	 * @param z third coordinate of the voxel
 	 */
-	public void setCoordinates(short x, short y, short z) {
+	public void setCoordinate(short x, short y, short z) {
 		this.m_coordinates[0] = x;
 		this.m_coordinates[1] = y;
 		this.m_coordinates[2] = z;
 	}
+	
 	
 	/**
 	 * Override of the clone operation
@@ -81,14 +84,16 @@ public class Voxel {
 		throw new CloneNotSupportedException();
 	}
 	
+	
 	/**
 	 * Increments the i^th coordinates of a voxel, with i = 0, 1 or 2
 	 *
 	 * @param i the coordinate's index (0, 1 or 2)
 	 */
-	public void incrementCoord(int i) {
+	public void incrementCoordinate(int i) {
 		this.m_coordinates[i]++;
 	}
+	
 	
 	/**
 	 * sets the i^th coordinates of a voxel, with i = 0, 1 or 2
@@ -96,29 +101,32 @@ public class Voxel {
 	 * @param i     the coordinate's index (0, 1 or 2)
 	 * @param value the new value of the i^th coordinate of the voxel
 	 */
-	public void setCoord(int i, short value) {
+	public void setCoordinate(int i, short value) {
 		this.m_coordinates[i] = value;
 	}
 	
+	
 	/**
-	 * Return the i^th coordinates of a voxel, with i = 0, 1 or 2
+	 * Returns the i^th coordinates of a voxel, with i = 0, 1 or 2
 	 *
 	 * @param i the coordinate's index (0, 1 or 2)
 	 *
 	 * @return the i^th coordinate of the voxel
 	 */
-	public short getCoord(int i) {
+	public short getCoordinate(int i) {
 		return this.m_coordinates[i];
 	}
 	
+	
 	/**
-	 * Return the x coordinates of a voxel
+	 * Returns the x coordinates of a voxel
 	 *
 	 * @return the first coordinate of the voxel
 	 */
 	public short getX() {
 		return this.m_coordinates[0];
 	}
+	
 	
 	/**
 	 * sets the first coordinate of a voxel
@@ -129,14 +137,16 @@ public class Voxel {
 		this.m_coordinates[0] = value;
 	}
 	
+	
 	/**
-	 * Return the y coordinate of a voxel
+	 * Returns the y coordinate of a voxel
 	 *
 	 * @return the second coordinate of the voxel
 	 */
 	public short getY() {
 		return this.m_coordinates[1];
 	}
+	
 	
 	/**
 	 * sets the second coordinate of a voxel
@@ -147,14 +157,16 @@ public class Voxel {
 		this.m_coordinates[1] = value;
 	}
 	
+	
 	/**
-	 * Return the z coordinate of a voxel
+	 * Returns the z coordinate of a voxel
 	 *
 	 * @return the third coordinate of a voxel
 	 */
 	public short getZ() {
 		return this.m_coordinates[2];
 	}
+	
 	
 	/**
 	 * sets the third coordinate of a voxel
@@ -164,6 +176,7 @@ public class Voxel {
 	public void setZ(short value) {
 		this.m_coordinates[2] = value;
 	}
+	
 	
 	/**
 	 * Computes the coordinate by coordinate addition between two voxels
@@ -175,6 +188,7 @@ public class Voxel {
 		this.m_coordinates[1] += voxel.m_coordinates[1];
 		this.m_coordinates[2] += voxel.m_coordinates[2];
 	}
+	
 	
 	/**
 	 * Multiplies the coordinates of voxel with a different factor on each coordinates
@@ -189,6 +203,7 @@ public class Voxel {
 		this.m_coordinates[2] *= c;
 	}
 	
+	
 	/**
 	 * Multiplied the coordinates of voxel with a same factor for each coordinates
 	 *
@@ -200,6 +215,7 @@ public class Voxel {
 		this.m_coordinates[2] *= a;
 	}
 	
+	
 	/**
 	 * Returns a human readable representation of a voxel as a string
 	 *
@@ -210,9 +226,11 @@ public class Voxel {
 		return "(" + this.m_coordinates[0] + ", " + this.m_coordinates[1] + ", " + this.m_coordinates[2] + ")";
 	}
 	
+	
 	public short getValue() {
 		return m_value;
 	}
+	
 	
 	public void setValue(short m_value) {
 		this.m_value = m_value;

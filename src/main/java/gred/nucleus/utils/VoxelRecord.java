@@ -24,8 +24,9 @@ public class VoxelRecord {
 		this._k = k;
 	}
 	
+	
 	/**
-	 * Return the x coordinates of a voxel
+	 * Returns the x coordinates of a voxel
 	 *
 	 * @return
 	 */
@@ -33,8 +34,9 @@ public class VoxelRecord {
 		return _i;
 	}
 	
+	
 	/**
-	 * Return the y coordinates of a voxel
+	 * Returns the y coordinates of a voxel
 	 *
 	 * @return
 	 */
@@ -42,8 +44,9 @@ public class VoxelRecord {
 		return _j;
 	}
 	
+	
 	/**
-	 * Return the z coordinates of a voxel
+	 * Returns the z coordinates of a voxel
 	 *
 	 * @return
 	 */
@@ -51,8 +54,9 @@ public class VoxelRecord {
 		return _k;
 	}
 	
+	
 	/**
-	 * Return the voxel value
+	 * Returns the voxel value
 	 *
 	 * @return
 	 */
@@ -60,8 +64,9 @@ public class VoxelRecord {
 		return _value;
 	}
 	
+	
 	/**
-	 * Initialise the voxel value
+	 * Initializes the voxel value
 	 *
 	 * @param value
 	 */
@@ -75,7 +80,7 @@ public class VoxelRecord {
 	  -1 if value of voxel input > value voxel
 	  1 if value of voxel input < value voxel
 	  @param object a voxel
-	 * @return results of comparaison
+	 * @return results of comparison
 	 */
 
   /*public int compareTo(Object object) {
@@ -90,12 +95,12 @@ public class VoxelRecord {
   }*/
 	
 	/**
-	 * Compare the values of two voxel 0 if same voxel value -1 if value of voxel input > value voxel 1 if value of
+	 * Compares the values of two voxel 0 if same voxel value -1 if value of voxel input > value voxel 1 if value of
 	 * voxel input < value voxel
 	 *
 	 * @param object a voxel
 	 *
-	 * @return results of comparaison
+	 * @return results of comparison
 	 */
 	public int compareCoordinatesTo(Object object) {
 		VoxelRecord voxelRecord = (VoxelRecord) object;
@@ -107,8 +112,9 @@ public class VoxelRecord {
 		}
 	}
 	
+	
 	/**
-	 * Compute a addition between the coordinates between two voxel
+	 * Computes a addition between the coordinates between two voxel
 	 *
 	 * @param p a VoxelRecord
 	 */
@@ -116,8 +122,9 @@ public class VoxelRecord {
 		this.setLocation(this._i + p._i, this._j + p._j, this._k + p._k);
 	}
 	
+	
 	/**
-	 * Multiplied the coordinates of voxel with a different factor for each coordinates
+	 * Multiplies the coordinates of voxel with a different factor for each coordinates
 	 *
 	 * @param a
 	 * @param b
@@ -127,8 +134,9 @@ public class VoxelRecord {
 		this.setLocation(this._i * a, this._j * b, this._k * c);
 	}
 	
+	
 	/**
-	 * Multiplied the coordinates of voxel with a same factor for each coordinates
+	 * Multiplies the coordinates of voxel with a same factor for each coordinates
 	 *
 	 * @param a
 	 */
