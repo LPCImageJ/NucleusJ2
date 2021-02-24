@@ -6,7 +6,7 @@ import ij.measure.Calibration;
 import java.util.ArrayList;
 
 /** @author Tristan Dubos and Axel Poulet */
-public class ConvexeHullDetection {
+public class ConvexHullDetection {
 	
 	private final double      _pi       = Math.PI;
 	private       VoxelRecord _p0       = new VoxelRecord();
@@ -393,10 +393,10 @@ public class ConvexeHullDetection {
 		}
 		VoxelRecord voxelRecord = new VoxelRecord();
 		voxelRecord.setLocation(nbPixelWidth, nbPixelHeight, 0);
-		ComponentConnexe componentConnexe = new ComponentConnexe();
-		componentConnexe.setImageTable(i_c);
+		ConnectedComponents connectedComponents = new ConnectedComponents();
+		connectedComponents.setImageTable(i_c);
 		//IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" image  "+i_c.length+ " "+voxelRecord._i+ " "+voxelRecord._j + " " +image.length+ " "+image[0].length);
-		componentConnexe.computeLabelOfOneObject(1, voxelRecord);
-		return componentConnexe.getBoundaryVoxel(2);
+		connectedComponents.computeLabelOfOneObject(1, voxelRecord);
+		return connectedComponents.getBoundaryVoxel(2);
 	}
 }

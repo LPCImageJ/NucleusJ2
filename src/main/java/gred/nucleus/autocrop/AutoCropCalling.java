@@ -66,11 +66,11 @@ public class AutoCropCalling {
 				autoCrop.boxIntersection();
 				autoCrop.cropKernels2();
 				autoCrop.writeAnalyseInfo();
-				annotAutoCrop test = new annotAutoCrop(autoCrop.getFileCoordinates(),
-				                                       currentFile,
-				                                       this.m_autocropParameters.getOutputFolder(),
-				                                       this._prefix,
-				                                       this.m_autocropParameters);
+				AnnotateAutoCrop test = new AnnotateAutoCrop(autoCrop.getFileCoordinates(),
+				                                             currentFile,
+				                                             this.m_autocropParameters.getOutputFolder(),
+				                                             this._prefix,
+				                                             this.m_autocropParameters);
 				test.run();
 				this.m_outputCropGeneralInfo = this.m_outputCropGeneralInfo + autoCrop.getImageCropInfo();
 			} catch (Exception e) {
@@ -109,11 +109,11 @@ public class AutoCropCalling {
 		autoCrop.boxIntersection();
 		autoCrop.cropKernels2();
 		autoCrop.writeAnalyseInfo();
-		annotAutoCrop test = new annotAutoCrop(autoCrop.getFileCoordinates(),
-		                                       currentFile,
+		AnnotateAutoCrop test = new AnnotateAutoCrop(autoCrop.getFileCoordinates(),
+		                                             currentFile,
 		                                       this.m_autocropParameters.getOutputFolder() + File.separator,
-		                                       this._prefix,
-		                                       this.m_autocropParameters);
+		                                             this._prefix,
+		                                             this.m_autocropParameters);
 		test.run();
 		this.m_outputCropGeneralInfo = this.m_outputCropGeneralInfo + autoCrop.getImageCropInfo();
 	}

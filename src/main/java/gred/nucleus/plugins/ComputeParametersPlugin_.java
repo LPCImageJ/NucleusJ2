@@ -1,15 +1,15 @@
 package gred.nucleus.plugins;
 
 import gred.nucleus.core.ComputeNucleiParameters;
-import gred.nucleus.dialogs.computeParametersDialog;
+import gred.nucleus.dialogs.ComputeParametersDialog;
 import ij.measure.Calibration;
 import ij.plugin.PlugIn;
 
 
-public class computeParametersPlugin_ implements PlugIn {
+public class ComputeParametersPlugin_ implements PlugIn {
 	/** Run computing parameters method. */
 	public void run(String arg) {
-		computeParametersDialog _computeParametersDialog = new computeParametersDialog();
+		ComputeParametersDialog _computeParametersDialog = new ComputeParametersDialog();
 		
 		while (_computeParametersDialog.isShowing()) {
 			try {

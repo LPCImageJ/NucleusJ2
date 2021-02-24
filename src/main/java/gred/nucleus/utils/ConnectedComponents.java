@@ -2,7 +2,7 @@ package gred.nucleus.utils;
 
 import java.util.ArrayList;
 
-public class ComponentConnexe {
+public class ConnectedComponents {
 	private final ArrayList<Double> _listLabel = new ArrayList<>();
 	private       double[][]        _image;
 	private       String            _axesName;
@@ -248,7 +248,12 @@ public class ComponentConnexe {
 	 */
 	double[][] computeLabelOfOneObject(int initialLabel, VoxelRecord voxelRecord) {
 		int currentLabel = 2;
-		//	IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+ " \nstart " +labelInitial+"\n j "+voxelRecord._j+"\n i "+voxelRecord._i+ " \n "+currentLabel+ "\n euu "+_image[(int)voxelRecord._i][(int)voxelRecord._j]+" end");
+		/*IJ.log("" + getClass().getName() + " L-" + new Exception().getStackTrace()[0].getLineNumber() + " \n" +
+		       "start " + labelInitial + "\n" +
+		       "j " + voxelRecord._j + "\n" +
+		       "i " + voxelRecord._i + " \n "
+		       + currentLabel + "\n" +
+		       " euu " + _image[(int) voxelRecord._i][(int) voxelRecord._j] + " end");*/
 		breadthFirstSearch(initialLabel, voxelRecord, currentLabel);
 		return _image;
 	}

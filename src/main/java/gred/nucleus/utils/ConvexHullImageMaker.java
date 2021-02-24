@@ -16,7 +16,7 @@ import java.util.ArrayList;
  *
  * @author Tristan Dubos and Axel Poulet
  */
-public class ConvexeHullImageMaker {
+public class ConvexHullImageMaker {
 	
 	/**
 	 *
@@ -38,13 +38,13 @@ public class ConvexeHullImageMaker {
 	
 	/* Constructor
 	 * @see VoxelRecord
-	 * @see ConvexeHullImageMaker#setAxes(String) calibration Calibration of the current image analysed
+	 * @see ConvexHullImageMaker#setAxes(String) calibration Calibration of the current image analysed
 	 * @param _listLabel list of voxels of the connected component of the current stack analysed (initialised by giveTable method)
 	 */
 	
 	
 	/**
-	 * running gift wrapping on the image imput
+	 * running gift wrapping on the image input
 	 *
 	 * @return segmented image in axes concerned corrected by gift wrapping
 	 *
@@ -54,13 +54,13 @@ public class ConvexeHullImageMaker {
 		this.m_segmentationParameters = segmentationParameters;
 		_calibration = imagePlusBinary.getCalibration();
 		ImageStack imageStackInput = imagePlusBinary.getStack();
-		Measure3D mesure3d = new Measure3D(this.m_segmentationParameters.getXCal(),
+		Measure3D measure3d = new Measure3D(this.m_segmentationParameters.getXCal(),
 		                                   this.m_segmentationParameters.getYCal(),
 		                                   this.m_segmentationParameters.getZCal());
 		
 		// Calcul du rayon : PQ 1/2 du rayon
-		double      equivalentSphericalRadius = (mesure3d.equivalentSphericalRadius(imagePlusBinary) / 2);
-		VoxelRecord tVoxelRecord              = mesure3d.computeBarycenter3D(false, imagePlusBinary, 255.0);
+		double      equivalentSphericalRadius = (measure3d.equivalentSphericalRadius(imagePlusBinary) / 2);
+		VoxelRecord tVoxelRecord              = measure3d.computeBarycenter3D(false, imagePlusBinary, 255.0);
 		ImagePlus   imagePlusCorrected        = new ImagePlus();
 		ImagePlus   imagePlusBlack            = new ImagePlus();
 		int         indice, width, height;
@@ -200,7 +200,7 @@ public class ConvexeHullImageMaker {
 			vectorTest.setLocation(0, -10, 0);
 		}
 		
-		ConvexeHullDetection convexHullDetection = new ConvexeHullDetection();
+		ConvexHullDetection convexHullDetection = new ConvexHullDetection();
 		convexHullDetection.setInitialVoxel(_p0);
 		convexHullDetection.setAxes(_axesName);
 		convexHull = convexHullDetection.findConvexeHull(image,
@@ -294,10 +294,10 @@ public class ConvexeHullImageMaker {
 				}
 			}
 		}
-		ComponentConnexe componentConnexe = new ComponentConnexe();
-		componentConnexe.setImageTable(image);
-		_listLabel = componentConnexe.getListLabel(255);
-		image = componentConnexe.getImageTable();
+		ConnectedComponents connectedComponents = new ConnectedComponents();
+		connectedComponents.setImageTable(image);
+		_listLabel = connectedComponents.getListLabel(255);
+		image = connectedComponents.getImageTable();
 		return image;
 	}
 	

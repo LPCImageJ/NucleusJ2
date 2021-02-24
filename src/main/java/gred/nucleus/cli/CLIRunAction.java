@@ -55,14 +55,14 @@ public class CLIRunAction {
 	
 	private void runProjectionFromCoordinates() throws Exception {
 		if (this.m_cmd.hasOption("coordinateFiltered")) {
-			generateProjectionFromCoordinates projection =
-					new generateProjectionFromCoordinates(this.m_cmd.getOptionValue("input"),
+			GenerateProjectionFromCoordinates projection =
+					new GenerateProjectionFromCoordinates(this.m_cmd.getOptionValue("input"),
 					                                      this.m_cmd.getOptionValue("input2"),
 					                                      this.m_cmd.getOptionValue("input3"));
 			projection.generateCoordinateFiltered();
 		} else {
-			generateProjectionFromCoordinates projection =
-					new generateProjectionFromCoordinates(this.m_cmd.getOptionValue("input"),
+			GenerateProjectionFromCoordinates projection =
+					new GenerateProjectionFromCoordinates(this.m_cmd.getOptionValue("input"),
 					                                      this.m_cmd.getOptionValue("input2"));
 			projection.generateCoordinate();
 		}

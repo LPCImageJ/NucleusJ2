@@ -29,8 +29,7 @@ public class ComponentInfo {
 	
 	/**
 	 * Voxel representative of the component (one voxel in the component) Currently, this representative has minimal
-	 * depth Z
-	 * TODO extend usage using a comparison predicate possibly other that comparing depth.
+	 * depth Z TODO extend usage using a comparison predicate possibly other that comparing depth.
 	 */
 	private Voxel m_voxelRepresentant;
 	
@@ -46,7 +45,7 @@ public class ComponentInfo {
 	 * @param label                label of the connected component (i.e. color in the labels image array)
 	 * @param numberOfPoints       (initial) cardinality of the connected component.
 	 * @param voxelRepresentant    (initial) voxel representative of the component (one voxel in the component)
-	 * @param componentOnTheBorder Flag (inital) indicating whether the connected component touches the edge of the
+	 * @param componentOnTheBorder Flag (initial) indicating whether the connected component touches the edge of the
 	 *                             image.
 	 */
 	public ComponentInfo(int label, int numberOfPoints, Voxel voxelRepresentant, boolean componentOnTheBorder) {
@@ -86,13 +85,6 @@ public class ComponentInfo {
 		return this.m_numberOfPoints;
 	}
 	
-	
-	/** Increments the cardinality */
-	public void incrementNumberOfPoints() {
-		this.m_numberOfPoints++;
-	}
-	
-	
 	/**
 	 * Setter
 	 *
@@ -102,6 +94,10 @@ public class ComponentInfo {
 		this.m_numberOfPoints = numberOfPoints;
 	}
 	
+	/** Increments the cardinality */
+	public void incrementNumberOfPoints() {
+		this.m_numberOfPoints++;
+	}
 	
 	/**
 	 * Getter

@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
  *
  * @author Tristan Dubos and Axel Poulet
  */
-public class annotAutoCrop {
+public class AnnotateAutoCrop {
 	
 	/** File to process (Image input) */
 	File m_currentFile;
@@ -49,11 +49,11 @@ public class annotAutoCrop {
 	 * @throws IOException     : if imageFile cannot be opened
 	 * @throws FormatException : if something goes wrong performing a file format operation
 	 */
-	public annotAutoCrop(ArrayList<String> boxesCoordinates,
-	                     File imageFile,
-	                     String outputDirPath,
-	                     String prefix,
-	                     AutocropParameters autocropParameters)
+	public AnnotateAutoCrop(ArrayList<String> boxesCoordinates,
+	                        File imageFile,
+	                        String outputDirPath,
+	                        String prefix,
+	                        AutocropParameters autocropParameters)
 	throws IOException, FormatException {
 		this.m_autocropParameters = autocropParameters;
 		this.m_currentFile = imageFile;
@@ -78,10 +78,10 @@ public class annotAutoCrop {
 	 * @throws IOException     : if imageFile cannot be opened
 	 * @throws FormatException : if something goes wrong performing a file format operation
 	 */
-	public annotAutoCrop(ArrayList<String> boxesCoordinates,
-	                     File imageFile,
-	                     String outputDirPath,
-	                     AutocropParameters autocropParameters)
+	public AnnotateAutoCrop(ArrayList<String> boxesCoordinates,
+	                        File imageFile,
+	                        String outputDirPath,
+	                        AutocropParameters autocropParameters)
 	throws IOException, FormatException {
 		this.m_autocropParameters = autocropParameters;
 		this.m_currentFile = imageFile;

@@ -7,7 +7,7 @@ import fr.igred.omero.repository.ProjectContainer;
 import gred.nucleus.autocrop.*;
 import gred.nucleus.cli.*;
 import gred.nucleus.core.ComputeNucleiParameters;
-import gred.nucleus.exceptions.fileInOut;
+import gred.nucleus.exceptions.FileInOut;
 import gred.nucleus.machineLeaningUtils.ComputeNucleiParametersML;
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 
-public class main {
+public class Main {
 	
 	/**
 	 * Method to run autocrop with only input output folder and with default parameters which are:
@@ -65,11 +65,11 @@ public class main {
 	 * @param outputDirectory path to output folder analysis
 	 *
 	 * @throws IOException
-	 * @throws fileInOut
+	 * @throws FileInOut
 	 * @throws Exception
 	 */
 	public static void runAutoCropFile(String inputDirectory, String outputDirectory)
-	throws IOException, fileInOut, Exception {
+	throws IOException, FileInOut, Exception {
 		//AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
 		AutocropParameters autocropParameters = new AutocropParameters(inputDirectory, outputDirectory);
 		AutoCropCalling    autoCrop           = new AutoCropCalling(autocropParameters);
@@ -364,11 +364,11 @@ public class main {
 	 *
 	 * @throws IOException
 	 * @throws FormatException
-	 * @throws fileInOut
+	 * @throws FileInOut
 	 * @throws Exception
 	 */
 	public static void computeNucleusParametersDL(String rawImagesInputFolder, String segmentedImagesFolder)
-	throws IOException, FormatException, fileInOut, Exception {
+	throws IOException, FormatException, FileInOut, Exception {
 		ComputeNucleiParametersML computeParameters =
 				new ComputeNucleiParametersML(rawImagesInputFolder, segmentedImagesFolder);
 		computeParameters.run();
@@ -390,8 +390,8 @@ public class main {
 	// UN DOSSIER AVEC LES COORDONNEES
 	public static void generateProjectionFromCoordinates(String pathToCoordinates, String pathToRaw)
 	throws Exception {
-		generateProjectionFromCoordinates
-				projection = new generateProjectionFromCoordinates(pathToCoordinates, pathToRaw);
+		GenerateProjectionFromCoordinates
+				projection = new GenerateProjectionFromCoordinates(pathToCoordinates, pathToRaw);
 		projection.generateCoordinate();
 	}
 	
@@ -413,8 +413,8 @@ public class main {
 	                                                     String pathToZprojection,
 	                                                     String pathToCoordinate)
 	throws IOException, FormatException, Exception {
-		generateProjectionFromCoordinates projection =
-				new generateProjectionFromCoordinates(pathToGIFTSeg, pathToZprojection, pathToCoordinate);
+		GenerateProjectionFromCoordinates projection =
+				new GenerateProjectionFromCoordinates(pathToGIFTSeg, pathToZprojection, pathToCoordinate);
 		projection.generateCoordinateFiltered();
 	}
 	

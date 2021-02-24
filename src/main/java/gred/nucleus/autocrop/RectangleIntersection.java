@@ -19,7 +19,7 @@ import java.util.Map;
  **/
 
 
-public class rectangleIntersection {
+public class RectangleIntersection {
 	
 	
 	/** List of boxes Rectangle : xMin , yMin , width , height */
@@ -44,7 +44,7 @@ public class rectangleIntersection {
 	 * @param _boxes               : list of boxes
 	 * @param m_autocropParameters : autocrop parameters
 	 */
-	public rectangleIntersection(HashMap<Double, Box> _boxes, AutocropParameters m_autocropParameters) {
+	public RectangleIntersection(HashMap<Double, Box> _boxes, AutocropParameters m_autocropParameters) {
 		autocropParameters = m_autocropParameters;
 		for (Map.Entry<Double, Box> entry : _boxes.entrySet()) {
 			Box box       = entry.getValue();

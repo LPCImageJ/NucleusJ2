@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-public class computeParametersDialog extends JFrame implements ItemListener {
+public class ComputeParametersDialog extends JFrame implements ItemListener {
 	private static final long       serialVersionUID         = 1L;
 	private static final JButton    _jButtonWorkDirectory    = new JButton("Seg Data folder");
 	private final        JTextField _jTextFieldWorkDirectory = new JTextField();
@@ -25,7 +25,7 @@ public class computeParametersDialog extends JFrame implements ItemListener {
 	private              boolean    _start                   = false;
 	
 	/** Architecture of the graphical windows */
-	public computeParametersDialog() {
+	public ComputeParametersDialog() {
 		final Container container           = getContentPane();
 		final JLabel    jLabelWorkDirectory = new JLabel();
 		final JLabel    jLabelCalibration   = new JLabel();
@@ -192,14 +192,14 @@ public class computeParametersDialog extends JFrame implements ItemListener {
 		                                     0));
 		jButtonQuit.setPreferredSize(new java.awt.Dimension(120, 21));
 		this.setVisible(true);
-		computeParametersDialog.WorkDirectoryListener wdListener = new computeParametersDialog.WorkDirectoryListener();
+		ComputeParametersDialog.WorkDirectoryListener wdListener = new ComputeParametersDialog.WorkDirectoryListener();
 		_jButtonWorkDirectory.addActionListener(wdListener);
-		computeParametersDialog.RawDataDirectoryListener ddListener =
-				new computeParametersDialog.RawDataDirectoryListener();
+		ComputeParametersDialog.RawDataDirectoryListener ddListener =
+				new ComputeParametersDialog.RawDataDirectoryListener();
 		JButtonRawData.addActionListener(ddListener);
-		computeParametersDialog.QuitListener quitListener = new QuitListener(this);
+		ComputeParametersDialog.QuitListener quitListener = new QuitListener(this);
 		jButtonQuit.addActionListener(quitListener);
-		computeParametersDialog.StartListener startListener = new computeParametersDialog.StartListener(this);
+		ComputeParametersDialog.StartListener startListener = new ComputeParametersDialog.StartListener(this);
 		jButtonStart.addActionListener(startListener);
 	}
 	
@@ -335,10 +335,10 @@ public class computeParametersDialog extends JFrame implements ItemListener {
 	 *
 	 */
 	static class QuitListener implements ActionListener {
-		final computeParametersDialog _computeParametersDialog;
+		final ComputeParametersDialog _computeParametersDialog;
 		
 		/** @param computeParametersDialog Dialog parameters */
-		public QuitListener(computeParametersDialog computeParametersDialog) {
+		public QuitListener(ComputeParametersDialog computeParametersDialog) {
 			_computeParametersDialog = computeParametersDialog;
 		}
 		
@@ -352,10 +352,10 @@ public class computeParametersDialog extends JFrame implements ItemListener {
 	}
 	
 	class StartListener implements ActionListener {
-		final computeParametersDialog _computeParametersDialog;
+		final ComputeParametersDialog _computeParametersDialog;
 		
 		/** @param computeParametersDialog Dialog parameters */
-		public StartListener(computeParametersDialog computeParametersDialog) {
+		public StartListener(ComputeParametersDialog computeParametersDialog) {
 			_computeParametersDialog = computeParametersDialog;
 		}
 		

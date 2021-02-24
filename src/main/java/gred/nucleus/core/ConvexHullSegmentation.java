@@ -1,7 +1,7 @@
 package gred.nucleus.core;
 
 import gred.nucleus.segmentation.SegmentationParameters;
-import gred.nucleus.utils.ConvexeHullImageMaker;
+import gred.nucleus.utils.ConvexHullImageMaker;
 import ij.ImagePlus;
 import ij.ImageStack;
 
@@ -25,7 +25,7 @@ public class ConvexHullSegmentation {
 	 * @return segmented image
 	 */
 	public ImagePlus runGIFTWrapping(ImagePlus imagePlusInput, SegmentationParameters segmentationParameters) {
-		ConvexeHullImageMaker nuc = new ConvexeHullImageMaker();
+		ConvexHullImageMaker nuc = new ConvexHullImageMaker();
 		nuc.setAxes("xy");
 		ImagePlus imagePlusXY = nuc.giftWrapping(imagePlusInput, segmentationParameters);
 		nuc.setAxes("xz");

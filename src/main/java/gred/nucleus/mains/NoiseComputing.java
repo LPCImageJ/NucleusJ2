@@ -11,7 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class noiseComputing {
+public class NoiseComputing {
 	
 	
 	public static void main(String[] args) {

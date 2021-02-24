@@ -4,19 +4,15 @@ import gred.nucleus.core.Measure3D;
 import gred.nucleus.filesInputOutput.Directory;
 import gred.nucleus.filesInputOutput.OutputTextFile;
 import gred.nucleus.plugins.PluginParameters;
-import gred.nucleus.utils.Histogram;
 import ij.ImagePlus;
 import ij.ImageStack;
-import ij.io.FileSaver;
-import inra.ijpb.binary.BinaryImages;
-import inra.ijpb.label.LabelImages;
 import loci.common.DebugTools;
 import loci.plugins.BF;
 
 import java.io.File;
 import java.util.ArrayList;
 
-public class computeSegmentationParametersDL {
+public class ComputeSegmentationParameters {
 	
 	public static void computeNucleusParameters(String RawImageSourceFile,
 	                                            String SegmentedImagesSourceFile,
@@ -31,10 +27,9 @@ public class computeSegmentationParametersDL {
 		StringBuilder outputCropGeneralInfoOTSU =
 				new StringBuilder(pluginParameters.getAnalyseParameters() + getResultsColumnNames());
 		for (File currentFile : rawImages) {
-			ImagePlus Raw = new ImagePlus(currentFile.getAbsolutePath());
-			System.out.println("current File " + currentFile.getName());
-			
+			ImagePlus   Raw       = new ImagePlus(currentFile.getAbsolutePath());
 			ImagePlus[] Segmented = BF.openImagePlus(pluginParameters.getOutputFolder() + currentFile.getName());
+			
 			
 			Measure3D measure3D = new Measure3D(Segmented,
 			                                   Raw,
@@ -51,36 +46,27 @@ public class computeSegmentationParametersDL {
 	}
 	
 	
-	public static void computeNucleusParametersDL(String RawImageSourceFile, String SegmentedImagesSourceFile)
+	public static void computeNucleusParameters(String RawImageSourceFile, String SegmentedImagesSourceFile)
 	throws Exception {
 		PluginParameters pluginParameters = new PluginParameters(RawImageSourceFile, SegmentedImagesSourceFile);
-		Directory        directoryInput   = new Directory(pluginParameters.getOutputFolder());
-		directoryInput.listImageFiles(pluginParameters.getOutputFolder());
+		Directory        directoryInput   = new Directory(pluginParameters.getInputFolder());
+		directoryInput.listImageFiles(pluginParameters.getInputFolder());
 		directoryInput.checkIfEmpty();
-		ArrayList<File> segImages = directoryInput.m_fileList;
+		ArrayList<File> rawImages = directoryInput.m_fileList;
 		StringBuilder outputCropGeneralInfoOTSU =
 				new StringBuilder(pluginParameters.getAnalyseParameters() + getResultsColumnNames());
-		for (File currentFile : segImages) {
+		for (File currentFile : rawImages) {
 			System.out.println("current File " + currentFile.getName());
-			ImagePlus Raw = new ImagePlus(pluginParameters.getInputFolder() +
-			                              directoryInput.getSeparator() +
-			                              currentFile.getName());
+			
+			ImagePlus   Raw       = new ImagePlus(currentFile.getAbsolutePath());
 			ImagePlus[] Segmented = BF.openImagePlus(pluginParameters.getOutputFolder() + currentFile.getName());
-			// TODO TRANSFORMATION FACTORISABLE AVEC METHODE DU DESSUS !!!!!
-			Segmented[0] = generateSegmentedImage(Segmented[0], 1);
-			Segmented[0] = BinaryImages.componentsLabeling(Segmented[0], 26, 32);
-			LabelImages.removeBorderLabels(Segmented[0]);
-			Segmented[0] = generateSegmentedImage(Segmented[0], 1);
-			Histogram histogram = new Histogram();
-			histogram.run(Segmented[0]);
-			if (histogram.getNbLabels() > 0) {
-				Measure3D measure3D = new Measure3D(Segmented,
-				                                   Raw,
-				                                   pluginParameters.getXCalibration(Raw),
-				                                   pluginParameters.getYCalibration(Raw),
-				                                   pluginParameters.getZCalibration(Raw));
-				outputCropGeneralInfoOTSU.append(measure3D.nucleusParameter3D()).append("\tNA").append("\n");
-			}
+			Measure3D measure3D = new Measure3D(Segmented,
+			                                   Raw,
+			                                   pluginParameters.getXCalibration(Raw),
+			                                   pluginParameters.getYCalibration(Raw),
+			                                   pluginParameters.getZCalibration(Raw));
+			
+			outputCropGeneralInfoOTSU.append(measure3D.nucleusParameter3D()).append("\tNA").append("\n");
 		}
 		
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(pluginParameters.getOutputFolder()
@@ -93,44 +79,9 @@ public class computeSegmentationParametersDL {
 	
 	public static void main(String[] args) throws Exception {
 		DebugTools.enableLogging("OFF");
-		
-		computeNucleusParametersDL(
+		computeNucleusParameters(
 				"/media/titus/DATA/ML_ANALYSE_DATA/ANALYSE_COMPARAISON_REANALYSE/129_ANNOTATION_FULL/RAW",
-				"/media/titus/DATA/ML_ANALYSE_DATA/ANALYSE_COMPARAISON_REANALYSE/129_ANNOTATION_FULL/129_TRIER");
-		
-		
-	}
-	
-	
-	public static ImagePlus imageSEGTransform(ImagePlus SegmentedTMP) {
-		LabelImages.removeBorderLabels(SegmentedTMP);
-		return SegmentedTMP;
-		
-		
-	}
-	
-	
-	public static ImagePlus generateSegmentedImage(ImagePlus imagePlusInput,
-	                                               int threshold) {
-		ImageStack imageStackInput    = imagePlusInput.getStack();
-		ImagePlus  imagePlusSegmented = imagePlusInput.duplicate();
-		
-		imagePlusSegmented.setTitle(imagePlusInput.getTitle());
-		ImageStack imageStackSegmented = imagePlusSegmented.getStack();
-		for (int k = 0; k < imagePlusInput.getStackSize(); ++k) {
-			for (int i = 0; i < imagePlusInput.getWidth(); ++i) {
-				for (int j = 0; j < imagePlusInput.getHeight(); ++j) {
-					double voxelValue = imageStackInput.getVoxel(i, j, k);
-					if (voxelValue > 1) {
-						imageStackSegmented.setVoxel(i, j, k, 255);
-					} else {
-						imageStackSegmented.setVoxel(i, j, k, 0);
-					}
-				}
-			}
-		}
-		return imagePlusSegmented;
-		
+				"/media/titus/DATA/ML_ANALYSE_DATA/ANALYSE_COMPARAISON_REANALYSE/129_ANNOTATION_FULL/GIFT");
 	}
 	
 	
@@ -155,8 +106,21 @@ public class computeSegmentationParametersDL {
 	}
 	
 	
-	private static void saveFile(ImagePlus imagePlusInput, String pathFile) {
-		FileSaver fileSaver = new FileSaver(imagePlusInput);
-		fileSaver.saveAsTiffStack(pathFile);
+	public static int recomputeOTSU(ImagePlus _Raw, ImagePlus _Segmented) {
+		int        OTSUThreshold = Integer.MAX_VALUE;
+		ImageStack imageStackRaw = _Raw.getStack();
+		ImageStack imageStackSeg = _Segmented.getStack();
+		for (int k = 0; k < _Raw.getStackSize(); ++k) {
+			for (int i = 0; i < _Raw.getWidth(); ++i) {
+				for (int j = 0; j < _Raw.getHeight(); ++j) {
+					if ((imageStackSeg.getVoxel(i, j, k) == 255) &&
+					    (OTSUThreshold >= imageStackRaw.getVoxel(i, j, k))) {
+						OTSUThreshold = (int) (imageStackRaw.getVoxel(i, j, k));
+					}
+				}
+			}
+		}
+		return OTSUThreshold;
 	}
 }
+

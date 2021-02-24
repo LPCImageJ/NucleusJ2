@@ -8,7 +8,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.regex.Pattern;
 
-public class generateProjectionFromCoordinates {
+public class GenerateProjectionFromCoordinates {
 	
 	String m_pathToGIFTSeg;
 	String m_pathToZprojection;
@@ -23,7 +23,7 @@ public class generateProjectionFromCoordinates {
 	 * @param pathToCoordinates path to coordinates files from autocrop
 	 *
 	 */
-	public generateProjectionFromCoordinates(String pathToCoordinates, String pathToGIFTSeg, String pathToZprojection) {
+	public GenerateProjectionFromCoordinates(String pathToCoordinates, String pathToGIFTSeg, String pathToZprojection) {
 		this.m_pathToGIFTSeg = pathToGIFTSeg;
 		this.m_pathToZprojection = pathToZprojection;
 		this.m_pathToCoordinates = pathToCoordinates;
@@ -37,7 +37,7 @@ public class generateProjectionFromCoordinates {
 	 * @param pathToRaw         path to raw image
 	 *
 	 */
-	public generateProjectionFromCoordinates(String pathToCoordinates, String pathToRaw) {
+	public GenerateProjectionFromCoordinates(String pathToCoordinates, String pathToRaw) {
 		this.m_pathToCoordinates = pathToCoordinates;
 		this.m_pathToRaw = pathToRaw;
 	}
@@ -127,8 +127,8 @@ public class generateProjectionFromCoordinates {
 			AutocropParameters autocropParameters = new AutocropParameters(CurrentZprojection.getParent(),
 			                                                               CurrentZprojection.getParent() +
 			                                                               Zprojection.getSeparator());
-			annotAutoCrop annotAutoCrop = new annotAutoCrop(boxListsNucleiNotPass,
-			                                                CurrentZprojection,
+			AnnotateAutoCrop AnnotateAutoCrop = new AnnotateAutoCrop(boxListsNucleiNotPass,
+			                                                         CurrentZprojection,
 			                                                CurrentZprojection.getParent() +
 			                                                Zprojection.getSeparator() +
 			                                                CurrentZprojection.getName()
@@ -136,8 +136,8 @@ public class generateProjectionFromCoordinates {
 			                                                                             CurrentZprojection.getName()
 			                                                                                               .lastIndexOf(
 					                                                                                               '.')),
-			                                                autocropParameters);
-			annotAutoCrop.runAddBadCrop(boxNumber);
+			                                                         autocropParameters);
+			AnnotateAutoCrop.runAddBadCrop(boxNumber);
 		}
 	}
 	
@@ -171,12 +171,12 @@ public class generateProjectionFromCoordinates {
 			AutocropParameters autocropParameters = new AutocropParameters(CurrentRaw.getParent(),
 			                                                               CurrentRaw.getParent() +
 			                                                               RawImage.getSeparator());
-			annotAutoCrop annotAutoCrop = new annotAutoCrop(boxListsNucleiNotPass,
-			                                                CurrentRaw,
+			AnnotateAutoCrop AnnotateAutoCrop = new AnnotateAutoCrop(boxListsNucleiNotPass,
+			                                                         CurrentRaw,
 			                                                CurrentRaw.getParent() + RawImage.getSeparator(),
-			                                                prefix,
-			                                                autocropParameters);
-			annotAutoCrop.run();
+			                                                         prefix,
+			                                                         autocropParameters);
+			AnnotateAutoCrop.run();
 		}
 	}
 	

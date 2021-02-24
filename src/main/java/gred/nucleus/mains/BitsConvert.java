@@ -7,7 +7,7 @@ import ij.io.FileSaver;
 
 import java.io.File;
 
-public class bitsConvert {
+public class BitsConvert {
 	
 	public static void main(String[] args) {
 		Directory directoryInput = new Directory("/media/tridubos/DATA1/DATA/Axel_Bioinformatics/RawDataNucleus");

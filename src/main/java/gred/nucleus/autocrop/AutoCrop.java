@@ -820,7 +820,7 @@ public class AutoCrop {
 	/** Compute boxes merging if intersecting */
 	public void boxIntersection() {
 		if (this.m_autocropParameters.getBoxesRegrouping()) {
-			rectangleIntersection recompute = new rectangleIntersection(this.m_boxes, this.m_autocropParameters);
+			RectangleIntersection recompute = new RectangleIntersection(this.m_boxes, this.m_autocropParameters);
 			recompute.runRectangleRecompilation();
 			this.m_boxes = recompute.getNewBoxes();
 		}
