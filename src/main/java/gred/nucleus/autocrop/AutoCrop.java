@@ -406,56 +406,51 @@ public class AutoCrop {
      */
 
 	public void addCROP_parameter()throws Exception{
-		for (int y =0 ;y<this.m_channelNumbers;y++) {
-			int i = 0;
-			for (Map.Entry<Double, Box> entry : this.m_boxes.entrySet()) {
-				Box box = entry.getValue();
-				int xmin = box.getXMin()
-						- this.m_autocropParameters.getxCropBoxSize();
-				int ymin = box.getYMin()
-						- this.m_autocropParameters.getxCropBoxSize();
-				int zmin = box.getZMin()
-						- this.m_autocropParameters.getzCropBoxSize();
-				String coord = box.getXMin()
-						+ "_" + box.getYMin()
-						+ "_" + box.getZMin();
+		for (Map.Entry<Double, Box> entry : this.m_boxes.entrySet()) {
+			Box box = entry.getValue();
+			int xmin = box.getXMin()
+					- this.m_autocropParameters.getxCropBoxSize();
+			int ymin = box.getYMin()
+					- this.m_autocropParameters.getyCropBoxSize();
+			int zmin = box.getZMin()
+					- this.m_autocropParameters.getzCropBoxSize();
+			String coord = box.getXMin()
+					+ "_" + box.getYMin()
+					+ "_" + box.getZMin();
 
-				if (xmin <= 0)
-					xmin = 1;
-				if (ymin <= 0) { ymin = 1;}
-				if (zmin <= 0)
-					zmin = 1;
-				int width = box.getXMax()
-						+ (2 * this.m_autocropParameters.getxCropBoxSize())
-						- box.getXMin();
-				if(width>m_imageSeg.getWidth()){
-					width=m_imageSeg.getWidth()-1;
-				}
-				int height = box.getYMax()
-						+ (2 * this.m_autocropParameters.getxCropBoxSize())
-						- box.getYMin();
-				int depth = box.getZMax()
-						+ (2 * this.m_autocropParameters.getzCropBoxSize())
-						- box.getZMin();
-				if (width + xmin >= this.m_imageSeg.getWidth() || width<0)
-					width =  this.m_imageSeg.getWidth()-xmin;
-
-				if ((height + ymin) >= this.m_imageSeg.getHeight() ||(height<0)){
-					height = this.m_imageSeg.getHeight()-ymin;
-				}
-				if (depth + zmin >= this.m_imageSeg.getNSlices() || depth<0)
-					depth =  this.m_imageSeg.getNSlices()-zmin;
-				//System.out.println(ymin+" " +height +" "+this.m_imageSeg.getHeight());
-				box.setXMin((short)xmin);
-				box.setXMax((short)(xmin+width));
-				box.setYMin((short)ymin);
-
-				box.setYMax((short)(ymin+height));
-				box.setZMin((short)zmin);
-				box.setZMax((short)(zmin+depth));
-
-
+			if (xmin <= 0)
+				xmin = 1;
+			if (ymin <= 0) { ymin = 1;}
+			if (zmin <= 0)
+				zmin = 1;
+			int width = box.getXMax()
+					+ (2 * this.m_autocropParameters.getxCropBoxSize())
+					- box.getXMin();
+			if(width>m_imageSeg.getWidth()){
+				width=m_imageSeg.getWidth()-1;
 			}
+			int height = box.getYMax()
+					+ (2 * this.m_autocropParameters.getyCropBoxSize())
+					- box.getYMin();
+			int depth = box.getZMax()
+					+ (2 * this.m_autocropParameters.getzCropBoxSize())
+					- box.getZMin();
+			if (width + xmin >= this.m_imageSeg.getWidth() || width<0)
+				width =  this.m_imageSeg.getWidth()-xmin;
+
+			if ((height + ymin) >= this.m_imageSeg.getHeight() ||(height<0)){
+				height = this.m_imageSeg.getHeight()-ymin;
+			}
+			if (depth + zmin >= this.m_imageSeg.getNSlices() || depth<0)
+				depth =  this.m_imageSeg.getNSlices()-zmin;
+			//System.out.println(ymin+" " +height +" "+this.m_imageSeg.getHeight());
+			box.setXMin((short)xmin);
+			box.setXMax((short)(xmin+width));
+			box.setYMin((short)ymin);
+
+			box.setYMax((short)(ymin+height));
+			box.setZMin((short)zmin);
+			box.setZMax((short)(zmin+depth));
 		}
 	}
 	/**
