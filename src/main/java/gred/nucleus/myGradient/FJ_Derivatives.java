@@ -12,6 +12,7 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+
 public class FJ_Derivatives implements PlugIn, WindowListener {
 	
 	private static int xOrder = 0;
@@ -21,6 +22,7 @@ public class FJ_Derivatives implements PlugIn, WindowListener {
 	private static String scale = "1.0";
 	
 	private static Point pos = new Point(-1, -1);
+	
 	
 	public void run(String arg) {
 		
@@ -88,6 +90,7 @@ public class FJ_Derivatives implements PlugIn, WindowListener {
 	
 	public void windowOpened(final WindowEvent e) {
 	}
+	
 }
 
 class FJDerivatives {
@@ -131,4 +134,5 @@ class FJDerivatives {
 			
 		}
 	}
+	
 }

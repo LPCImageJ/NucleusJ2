@@ -149,7 +149,8 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements 
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.weightx = 2;
 		gc.weighty = 5;
-		gc.ipady = gc.anchor = GridBagConstraints.NORTHWEST;
+		gc.anchor = GridBagConstraints.NORTHWEST;
+		gc.ipady = GridBagConstraints.NORTHWEST;
 		JLabel calibrationLabel = new JLabel("Calibration:");
 		gc.gridx = 0;
 		gc.gridy = 0;
@@ -478,11 +479,13 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements 
 		}
 	}
 	
+	
 	/**
 	 *
 	 */
 	static class QuitListener implements ActionListener {
 		final ChromocentersAnalysisPipelineBatchDialog _chromocentersAnalysisPipelineBatchDialog;
+		
 		
 		/** @param chromocentersAnalysisPipelineBatchDialog chromocentersAnalysisPipelineBatchDialog GUI */
 		public QuitListener(ChromocentersAnalysisPipelineBatchDialog chromocentersAnalysisPipelineBatchDialog) {
@@ -496,12 +499,14 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements 
 		public void actionPerformed(ActionEvent actionEvent) {
 			_chromocentersAnalysisPipelineBatchDialog.dispose();
 		}
+		
 	}
 	
 	/** Classes listener to interact with the several elements of the window */
 	class StartListener implements ActionListener {
 		
 		final ChromocentersAnalysisPipelineBatchDialog _chromocentersAnalysisPipelineBatchDialog;
+		
 		
 		/** @param chromocentersAnalysisPipelineBatchDialog chromocentersAnalysisPipelineBatchDialog GUI */
 		public StartListener(ChromocentersAnalysisPipelineBatchDialog chromocentersAnalysisPipelineBatchDialog) {
@@ -526,6 +531,7 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements 
 				_chromocentersAnalysisPipelineBatchDialog.dispose();
 			}
 		}
+		
 	}
 	
 	/**
@@ -548,6 +554,7 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements 
 			}
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
+		
 	}
 	
 	
@@ -571,5 +578,7 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements 
 			}
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
+		
 	}
+	
 }

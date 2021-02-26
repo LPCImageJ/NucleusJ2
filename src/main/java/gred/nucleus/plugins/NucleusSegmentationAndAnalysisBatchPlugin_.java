@@ -5,14 +5,15 @@ import gred.nucleus.segmentation.SegmentationCalling;
 import ij.IJ;
 import ij.plugin.PlugIn;
 
+
 /**
- * Method to segment and analyse the nucleus on batch
- *
  * @author Tristant Dubos and Axel Poulet
+ * @deprecated Method to segment and analyse the nucleus on batch
  */
 public class NucleusSegmentationAndAnalysisBatchPlugin_ implements PlugIn {
 	NucleusSegmentationAndAnalysisBatchDialog _nucleusPipelineBatchDialog =
 			new NucleusSegmentationAndAnalysisBatchDialog();
+	
 	
 	/** TODO CHANGER LES METHODES APPELER !!!!!!! */
 	public void run(String arg) {
@@ -101,4 +102,5 @@ public class NucleusSegmentationAndAnalysisBatchPlugin_ implements PlugIn {
 	public boolean is3DAnalysis() {
 		return _nucleusPipelineBatchDialog.is3D();
 	}
+	
 }

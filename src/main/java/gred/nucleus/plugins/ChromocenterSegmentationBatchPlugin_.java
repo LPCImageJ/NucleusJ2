@@ -14,13 +14,12 @@ import ij.plugin.PlugIn;
 import java.io.File;
 import java.util.ArrayList;
 
+
 /**
- * Method to detect the chromocenters on batch using watershed 3D from morpholibJ.
- *
  * @author Tristan Dubos and Axel Poulet
+ * @deprecated Method to detect the chromocenters on batch using watershed 3D from morpholibJ.
  */
 public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
-	
 	
 	public void run(String arg) {
 		ChromocenterSegmentationPipelineBatchDialog _chromocenterSegmentationPipelineBatchDialog =
@@ -101,11 +100,11 @@ public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
 	public void saveFile(ImagePlus imagePlus, String pathFile) {
 		FileSaver fileSaver = new FileSaver(imagePlus);
 		File      file      = new File(pathFile);
-		if (file.exists()) {
+		if (file.exists() || file.mkdirs()) {
 			fileSaver.saveAsTiffStack(pathFile + File.separator + imagePlus.getTitle());
 		} else {
-			file.mkdir();
-			fileSaver.saveAsTiffStack(pathFile + File.separator + imagePlus.getTitle());
+			System.err.println("Directory does not exist and could not be created: " + pathFile);
 		}
 	}
+	
 }

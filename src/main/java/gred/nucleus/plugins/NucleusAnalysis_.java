@@ -8,10 +8,15 @@ import ij.gui.GenericDialog;
 import ij.measure.Calibration;
 import ij.plugin.PlugIn;
 
-/** @author Tristan Dubos and Axel Poulet */
+
+/**
+ * @author Tristan Dubos and Axel Poulet
+ * @deprecated
+ */
 public class NucleusAnalysis_ implements PlugIn {
 	/** image to process */
 	ImagePlus _imagePlusInput;
+	
 	
 	/**
 	 * // TODO INTEGRATION CLASS NEW MEASURE 3D
@@ -71,4 +76,5 @@ public class NucleusAnalysis_ implements PlugIn {
 		NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(imagePlusInput, imagePlusSegmented);
 		//nucleusAnalysis.nucleusParameter3D();
 	}
+	
 }

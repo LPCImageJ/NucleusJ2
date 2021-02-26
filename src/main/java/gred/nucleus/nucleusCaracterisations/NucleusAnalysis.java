@@ -18,6 +18,7 @@ public class NucleusAnalysis {
 	private String                 _results = "";
 	private SegmentationParameters m_segmentationParameters;
 	
+	
 	/**
 	 * Constructor
 	 *
@@ -70,6 +71,7 @@ public class NucleusAnalysis {
 	}
     */
 	
+	
 	/**
 	 * Setter of _results.
 	 *
@@ -78,4 +80,5 @@ public class NucleusAnalysis {
 	public void setResults(String results) {
 		this._results = results;
 	}
+	
 }

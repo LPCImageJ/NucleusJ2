@@ -8,47 +8,49 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
 
+
 public class SegmentationDialog extends JFrame implements ActionListener, ItemListener {
 	
-	private static final long                serialVersionUID          = 1L;
-	static private final String              newline                   = "\n";
-	private final        JButton             _jButtonStart             = new JButton("Start");
-	private final        JButton             _jButtonQuit              = new JButton("Quit");
-	private final        JButton             _jButtonConfig            = new JButton("Config");
-	private final        Container           _container;
-	private final        JFormattedTextField _jTextFieldXCalibration   = new JFormattedTextField(Number.class);
-	private final        JFormattedTextField _jTextFieldYCalibration   = new JFormattedTextField(Number.class);
-	private final        JFormattedTextField _jTextFieldZCalibration   = new JFormattedTextField(Number.class);
-	private final        JFormattedTextField _jTextFieldMax            = new JFormattedTextField(Number.class);
-	private final        JFormattedTextField _jTextFieldMin            = new JFormattedTextField(Number.class);
-	private final        JTextField          _jTextFieldUnit           = new JTextField();
-	private final        JLabel              _jLabelOutput;
-	private final        JLabel              _jLabelConfig;
-	private final        JLabel              _jLabelInput;
-	private final        ButtonGroup         buttonGroupChoiceAnalysis = new ButtonGroup();
-	private final        JTextField          _jInputFileChooser        = new JTextField();
-	private final        JTextField          _jOutputFileChooser       = new JTextField();
-	private final        JTextField          _jConfigFileChooser       = new JTextField();
-	private final        JFileChooser        fc                        = new JFileChooser();
-	private final        JCheckBox           addConfigBox              = new JCheckBox();
-	private final        JButton             sourceButton;
-	private final        JButton             destButton;
-	private final        JLabel              defConf                   = new JLabel("Default configuration");
-	private final SegmentationConfigDialog segmentationConfigFileDialog;
-	private final ButtonGroup  buttonGroup        = new ButtonGroup();
-	private final JRadioButton rdoDefault         = new JRadioButton();
-	private final JRadioButton rdoAddConfigFile   = new JRadioButton();
-	private final JRadioButton rdoAddConfigDialog = new JRadioButton();
-	private final String inputChooserName  = "inputChooser";
-	private final String outputChooserName = "outputChooser";
-	private final String configChooserName = "configChooser";
-	private              boolean             _start                    = false;
-	private              JButton             confButton;
-	private       int                      configMode   = 0;
-	private       boolean                  manualConfig = false;
-	private       File   selectedInput;
-	private       File   selectedOutput;
-	private       File   selectedConfig;
+	private static final long                     serialVersionUID          = 1L;
+	static private final String                   newline                   = "\n";
+	private final        JButton                  _jButtonStart             = new JButton("Start");
+	private final        JButton                  _jButtonQuit              = new JButton("Quit");
+	private final        JButton                  _jButtonConfig            = new JButton("Config");
+	private final        Container                _container;
+	private final        JFormattedTextField      _jTextFieldXCalibration   = new JFormattedTextField(Number.class);
+	private final        JFormattedTextField      _jTextFieldYCalibration   = new JFormattedTextField(Number.class);
+	private final        JFormattedTextField      _jTextFieldZCalibration   = new JFormattedTextField(Number.class);
+	private final        JFormattedTextField      _jTextFieldMax            = new JFormattedTextField(Number.class);
+	private final        JFormattedTextField      _jTextFieldMin            = new JFormattedTextField(Number.class);
+	private final        JTextField               _jTextFieldUnit           = new JTextField();
+	private final        JLabel                   _jLabelOutput;
+	private final        JLabel                   _jLabelConfig;
+	private final        JLabel                   _jLabelInput;
+	private final        ButtonGroup              buttonGroupChoiceAnalysis = new ButtonGroup();
+	private final        JTextField               _jInputFileChooser        = new JTextField();
+	private final        JTextField               _jOutputFileChooser       = new JTextField();
+	private final        JTextField               _jConfigFileChooser       = new JTextField();
+	private final        JFileChooser             fc                        = new JFileChooser();
+	private final        JCheckBox                addConfigBox              = new JCheckBox();
+	private final        JButton                  sourceButton;
+	private final        JButton                  destButton;
+	private final        JLabel                   defConf                   = new JLabel("Default configuration");
+	private final        SegmentationConfigDialog segmentationConfigFileDialog;
+	private final        ButtonGroup              buttonGroup               = new ButtonGroup();
+	private final        JRadioButton             rdoDefault                = new JRadioButton();
+	private final        JRadioButton             rdoAddConfigFile          = new JRadioButton();
+	private final        JRadioButton             rdoAddConfigDialog        = new JRadioButton();
+	private final        String                   inputChooserName          = "inputChooser";
+	private final        String                   outputChooserName         = "outputChooser";
+	private final        String                   configChooserName         = "configChooser";
+	private              boolean                  _start                    = false;
+	private              JButton                  confButton;
+	private              int                      configMode                = 0;
+	private              boolean                  manualConfig              = false;
+	private              File                     selectedInput;
+	private              File                     selectedOutput;
+	private              File                     selectedConfig;
+	
 	
 	/** Architecture of the graphical windows */
 	public SegmentationDialog() {
@@ -216,6 +218,7 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 		fc.setSelectedFile(null);
 	}
 	
+	
 	@Override
 	public void itemStateChanged(ItemEvent e) {
 		if (configMode == 0) {
@@ -272,11 +275,31 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 	}
 	
 	
+	/**
+	 *
+	 */
+	static class QuitListener implements ActionListener {
+		SegmentationDialog _segmentationDialog;
+		
+		
+		/** @param segmentationDialog  */
+		public QuitListener(SegmentationDialog segmentationDialog) {
+			_segmentationDialog = segmentationDialog;
+		}
+		
+		
+		public void actionPerformed(ActionEvent actionEvent) {
+			_segmentationDialog.dispose();
+		}
+		
+	}
+	
 	/** Classes listener to interact with the several elements of the window */
 	class StartListener implements ActionListener {
 		SegmentationDialog _segmentationDialog;
 		
-		/** @param autocropDialog */
+		
+		/** @param autocropDialog  */
 		public StartListener(SegmentationDialog autocropDialog) {
 			_segmentationDialog = autocropDialog;
 		}
@@ -286,30 +309,14 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 			_start = true;
 			_segmentationDialog.dispose();
 		}
-	}
-	
-	
-	/**
-	 *
-	 */
-	static class QuitListener implements ActionListener {
-		SegmentationDialog _segmentationDialog;
 		
-		/** @param segmentationDialog */
-		public QuitListener(SegmentationDialog segmentationDialog) {
-			_segmentationDialog = segmentationDialog;
-		}
-		
-		
-		public void actionPerformed(ActionEvent actionEvent) {
-			_segmentationDialog.dispose();
-		}
 	}
 	
 	class ConfigListener implements ActionListener {
 		SegmentationDialog _segmentationDialog;
 		
-		/** @param segmentationDialog */
+		
+		/** @param segmentationDialog  */
 		public ConfigListener(SegmentationDialog segmentationDialog) {
 			_segmentationDialog = segmentationDialog;
 		}
@@ -318,5 +325,7 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 		public void actionPerformed(ActionEvent actionEvent) {
 			segmentationConfigFileDialog.setVisible(true);
 		}
+		
 	}
+	
 }

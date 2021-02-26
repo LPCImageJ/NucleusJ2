@@ -8,6 +8,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.File;
 
+
 public class AutocropDialog extends JFrame implements ActionListener, ItemListener {
 	
 	private static final long                 serialVersionUID    = 1L;
@@ -251,6 +252,7 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 		return _jConfigFileChooser.getText();
 	}
 	
+	
 	//    public boolean isConfigBoxSelected() { return addConfigBox.isSelected(); }
 	public int getConfigMode() {
 		return configMode;
@@ -295,6 +297,7 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 		fc.setSelectedFile(null);
 	}
 	
+	
 	@Override
 	public void itemStateChanged(ItemEvent e) {
 		if (configMode == 0) {
@@ -306,7 +309,7 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 			_container.remove(_jConfigFileChooser);
 			_container.remove(confButton);
 		}
-		Object  source       = e.getSource();
+		Object source = e.getSource();
 		if (source == rdoDefault) {
 			_container.add(defConf,
 			               new GridBagConstraints(0,
@@ -395,6 +398,7 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 	class StartListener implements ActionListener {
 		final AutocropDialog _autocropDialog;
 		
+		
 		/** @param autocropDialog  */
 		public StartListener(AutocropDialog autocropDialog) {
 			this._autocropDialog = autocropDialog;
@@ -406,10 +410,12 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 			_autocropDialog.dispose();
 			autocropConfigFileDialog.dispose();
 		}
+		
 	}
 	
 	class QuitListener implements ActionListener {
 		final AutocropDialog _autocropDialog;
+		
 		
 		/** @param autocropDialog  */
 		public QuitListener(AutocropDialog autocropDialog) {
@@ -421,10 +427,12 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 			_autocropDialog.dispose();
 			autocropConfigFileDialog.dispose();
 		}
+		
 	}
 	
 	class ConfigListener implements ActionListener {
 		final AutocropDialog _autocropDialog;
+		
 		
 		/** @param autocropDialog  */
 		public ConfigListener(AutocropDialog autocropDialog) {
@@ -435,5 +443,7 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 		public void actionPerformed(ActionEvent actionEvent) {
 			autocropConfigFileDialog.setVisible(true);
 		}
+		
 	}
+	
 }

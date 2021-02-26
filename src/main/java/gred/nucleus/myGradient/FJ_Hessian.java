@@ -13,6 +13,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Vector;
 
+
 public class FJ_Hessian implements PlugIn, WindowListener {
 	
 	private static boolean largest  = true;
@@ -21,10 +22,11 @@ public class FJ_Hessian implements PlugIn, WindowListener {
 	
 	private static boolean absolute = true;
 	
-	private static String scale = "1.0";
-	private static Point pos = new Point(-1, -1);
+	private static String    scale = "1.0";
+	private static Point     pos   = new Point(-1, -1);
 	@SuppressWarnings("unused")
-	private ImagePlus imp = null;
+	private        ImagePlus imp   = null;
+	
 	
 	public void run(String arg) {
 		
@@ -93,6 +95,7 @@ public class FJ_Hessian implements PlugIn, WindowListener {
 	
 	public void windowOpened(final WindowEvent e) {
 	}
+	
 }
 
 class FJHessian {
@@ -148,4 +151,5 @@ class FJHessian {
 			
 		}
 	}
+	
 }

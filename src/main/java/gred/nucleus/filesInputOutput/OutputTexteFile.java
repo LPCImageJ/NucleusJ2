@@ -6,6 +6,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+
 public class OutputTexteFile extends FilesNames {
 	
 	public OutputTexteFile(String filePath) {
@@ -13,7 +14,10 @@ public class OutputTexteFile extends FilesNames {
 	}
 	
 	
-	/** Method to save file with verification if file already exists TODO(@DesTristus) ADD ERROR IN LOG FILE */
+	/**
+	 * Method to save file with verification if file already exists
+	 * <p> TODO(@DesTristus) ADD ERROR IN LOG FILE
+	 */
 	public void saveTextFile(String text) {
 		try {
 			BufferedWriter writer;
@@ -21,7 +25,7 @@ public class OutputTexteFile extends FilesNames {
 			writer.write(text);
 			writer.close();
 
-/*            if (!is_fileExist()) {
+/*            if (!fileExist()) {
                 BufferedWriter writer;
                 writer = new BufferedWriter(new FileWriter(new File(this._fullPathFile)));
                 writer.write(text);
@@ -33,4 +37,5 @@ public class OutputTexteFile extends FilesNames {
 		}
 		IJ.log("\n" + this._fullPathFile + " created");
 	}
+	
 }

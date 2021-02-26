@@ -6,6 +6,7 @@ import ij.ImageStack;
 import java.util.Arrays;
 import java.util.HashMap;
 
+
 /**
  * This class permit to obtain values who are on the Input image (8, 16 or 32 bits)
  *
@@ -24,6 +25,7 @@ public class Histogram {
 	 *
 	 */
 	private       int                      _nbLabel    = 0;
+	
 	
 	/**
 	 *
@@ -103,4 +105,5 @@ public class Histogram {
 	public int getNbLabels() {
 		return _nbLabel;
 	}
+	
 }

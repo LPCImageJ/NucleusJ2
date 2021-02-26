@@ -12,6 +12,7 @@ package gred.nucleus.componentRemoval;
 import gred.nucleus.connectedComponent.ComponentInfo;
 import gred.nucleus.utils.Voxel;
 
+
 /**
  * This class is intended to implement the predicate on voxels and connected components. to filter out components of a
  * binary image which touch the border.
@@ -27,4 +28,5 @@ public class ComponentRemovalBoundary implements ComponentRemovalPredicate {
 	public boolean keepVoxelComponent(Voxel voxel, ComponentInfo componentInfo) {
 		return !componentInfo.isOnTheBorder();
 	}
+	
 }

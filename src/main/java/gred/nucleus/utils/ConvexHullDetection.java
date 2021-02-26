@@ -5,6 +5,7 @@ import ij.measure.Calibration;
 
 import java.util.ArrayList;
 
+
 /** @author Tristan Dubos and Axel Poulet */
 public class ConvexHullDetection {
 	
@@ -49,13 +50,14 @@ public class ConvexHullDetection {
 	 *  et on cherche la détermination + ou - 2*k*pi qui se trouve dans [0, 2*pi[
 	 */
 	
+	
 	/**
 	 * Method to detect the ensemble of convexe hull voxels with  Jarvis march approach see :
 	 * <p>
 	 * https://fr.wikipedia.org/wiki/Marche_de_Jarvis https://en.wikipedia.org/wiki/Gift_wrapping_algorithm
 	 *
 	 * @param distanceThreshold
-	 * @param convexHull        List of voxels composing the convexe Hull : the input contain only the starting pixel
+	 * @param convexHull        List of voxels composing the convexe Hull   The input contain only the starting pixel
 	 *                          (the most down rigth of the boundary voxels)
 	 * @param image             Image contenant les voxel de la composante connexe
 	 * @param lVoxelBoundary    Liste des voxels frontiere
@@ -70,9 +72,9 @@ public class ConvexHullDetection {
 	                                              VoxelRecord vectorTest,
 	                                              Calibration calibration,
 	                                              double distanceThreshold) {
-		double      anglesSum = 0.0;
-		int         compteur  = 0;
-		VoxelRecord voxelTest = _p0;
+		double      anglesSum      = 0.0;
+		int         compteur       = 0;
+		VoxelRecord voxelTest      = _p0;
 		VoxelRecord voxelPrecedent = new VoxelRecord();
 		double      xcal           = calibration.pixelWidth;
 		double      ycal           = calibration.pixelHeight;
@@ -242,19 +244,19 @@ public class ConvexHullDetection {
 	}
 	
 	
-	/** @return */
+	/** @return  */
 	public String getAxes() {
 		return _axesName;
 	}
 	
 	
-	/** @param axes */
+	/** @param axes  */
 	public void setAxes(String axes) {
 		_axesName = axes;
 	}
 	
 	
-	/** @param voxelRecord */
+	/** @param voxelRecord  */
 	public void setInitialVoxel(VoxelRecord voxelRecord) {
 		_p0 = voxelRecord;
 	}
@@ -270,6 +272,7 @@ public class ConvexHullDetection {
 	thresholdAngle = (angleEntreZeroEt2piMax).
 	si (thresholdAngle >= _pi)
 	thresholdAngle -= 2pi */
+	
 	
 	/**
 	 * @param image
@@ -309,9 +312,9 @@ public class ConvexHullDetection {
 		//double angleMax = 0;
 		//if(nbPixelWidth>0 && nbPixelHeight>0 ) {
 		//  IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" "+nbPixelWidth + " "+nbPixelHeight+" " +x + " " + y);
-		ArrayList<VoxelRecord> listeBoundaryVoxel = getListOfInterestVoxel(image, nbPixelWidth, nbPixelHeight, x, y);
-		double                 angleMax           = 0;
-		for (VoxelRecord record : listeBoundaryVoxel) {
+		ArrayList<VoxelRecord> listBoundaryVoxel = getListOfInterestVoxel(image, nbPixelWidth, nbPixelHeight, x, y);
+		double                 angleMax          = 0;
+		for (VoxelRecord record : listBoundaryVoxel) {
 			VoxelRecord vectorCourant = new VoxelRecord();
 			vectorCourant.setLocation(record._i - nbPixelWidth,
 			                          record._j - nbPixelHeight,
@@ -399,4 +402,5 @@ public class ConvexHullDetection {
 		connectedComponents.computeLabelOfOneObject(1, voxelRecord);
 		return connectedComponents.getBoundaryVoxel(2);
 	}
+	
 }

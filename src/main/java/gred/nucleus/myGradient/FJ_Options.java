@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+
 public class FJ_Options implements PlugIn, WindowListener {
 	
 	static boolean isotropic = Prefs.get("fj.isotropic", false);
@@ -17,6 +18,7 @@ public class FJ_Options implements PlugIn, WindowListener {
 	static boolean log       = Prefs.get("fj.log", false);
 	
 	private static Point pos = new Point(-1, -1);
+	
 	
 	public void run(String arg) {
 		
@@ -117,4 +119,5 @@ public class FJ_Options implements PlugIn, WindowListener {
 	
 	public void windowOpened(final WindowEvent e) {
 	}
+	
 }

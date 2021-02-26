@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+
 public class FJ_Laplacian implements PlugIn, WindowListener {
 	
 	private static boolean compute   = true;
@@ -22,6 +23,7 @@ public class FJ_Laplacian implements PlugIn, WindowListener {
 	private static String scale = "1.0";
 	
 	private static Point pos = new Point(-1, -1);
+	
 	
 	public void run(String arg) {
 		
@@ -86,6 +88,7 @@ public class FJ_Laplacian implements PlugIn, WindowListener {
 	
 	public void windowOpened(final WindowEvent e) {
 	}
+	
 }
 
 class FJLaplacian {
@@ -120,7 +123,8 @@ class FJLaplacian {
 				final Aspects aspects = newImg.aspects();
 				if (!FJ_Options.isotropic) newImg.aspects(new Aspects());
 				final Laplacian laplace = new Laplacian();
-				progressor.range(pls[pl], pls[++pl]);
+				++pl;
+				progressor.range(pls[pl], pls[pl]);
 				laplace.progressor.parent(progressor);
 				laplace.messenger.log(FJ_Options.log);
 				laplace.messenger.status(FJ_Options.pgs);
@@ -130,7 +134,8 @@ class FJLaplacian {
 			
 			if (zeroCross) {
 				final ZeroCrosser zc = new ZeroCrosser();
-				progressor.range(pls[pl], pls[++pl]);
+				++pl;
+				progressor.range(pls[pl], pls[pl]);
 				zc.progressor.parent(progressor);
 				zc.messenger.log(FJ_Options.log);
 				zc.messenger.status(FJ_Options.pgs);
@@ -151,4 +156,5 @@ class FJLaplacian {
 			
 		}
 	}
+	
 }

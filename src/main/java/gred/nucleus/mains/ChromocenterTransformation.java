@@ -1,8 +1,8 @@
 package gred.nucleus.mains;
 
+import gred.nucleus.core.NucleusSegmentation;
 import gred.nucleus.filesInputOutput.Directory;
 import gred.nucleus.filesInputOutput.FilesNames;
-import gred.nucleus.core.NucleusSegmentation;
 import gred.nucleus.segmentation.SegmentationParameters;
 import ij.ImagePlus;
 import ij.io.FileSaver;
@@ -10,6 +10,7 @@ import ij.plugin.ChannelSplitter;
 import loci.plugins.BF;
 
 import java.io.File;
+
 
 public class ChromocenterTransformation {
 	
@@ -47,4 +48,5 @@ public class ChromocenterTransformation {
 		FileSaver fileSaver = new FileSaver(imagePlusInput);
 		fileSaver.saveAsTiffStack(pathFile);
 	}
+	
 }

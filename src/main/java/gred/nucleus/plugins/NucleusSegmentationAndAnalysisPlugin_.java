@@ -8,6 +8,7 @@ import ij.ImagePlus;
 import ij.WindowManager;
 import ij.plugin.PlugIn;
 
+
 /**
  * @author Tristan Dubos and Axel Poulet
  * @deprecated Method to segment and analyse the nucleus on one image //TODO add a parameter in GUI to chose true or
@@ -60,4 +61,5 @@ public class NucleusSegmentationAndAnalysisPlugin_ implements PlugIn {
 			}
 		}
 	}
+	
 }

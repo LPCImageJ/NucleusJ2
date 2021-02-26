@@ -42,4 +42,5 @@ public class ComputeParametersPlugin_ implements PlugIn {
 			e.printStackTrace();
 		}
 	}
+	
 }

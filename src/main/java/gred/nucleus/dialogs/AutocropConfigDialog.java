@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+
 public class AutocropConfigDialog extends JFrame implements ItemListener {
 	private final JTextField xCropBoxSize                = new JTextField();
 	private final JTextField yCropBoxSize                = new JTextField();
@@ -27,6 +28,7 @@ public class AutocropConfigDialog extends JFrame implements ItemListener {
 	private       JPanel     XCalibration;
 	private       JPanel     YCalibration;
 	private       JPanel     ZCalibration;
+	
 	
 	public AutocropConfigDialog(AutocropDialog caller) {
 		this.setTitle("Autocrop NucleusJ2");
@@ -381,6 +383,7 @@ public class AutocropConfigDialog extends JFrame implements ItemListener {
 	static class StartListener implements ActionListener {
 		AutocropConfigDialog _autocropDialog;
 		
+		
 		/** @param autocropDialog  */
 		public StartListener(AutocropConfigDialog autocropDialog) {
 			_autocropDialog = autocropDialog;
@@ -390,5 +393,7 @@ public class AutocropConfigDialog extends JFrame implements ItemListener {
 		public void actionPerformed(ActionEvent actionEvent) {
 			_autocropDialog.setVisible(false);
 		}
+		
 	}
+	
 }

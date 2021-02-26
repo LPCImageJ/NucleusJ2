@@ -15,10 +15,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+
 /**
- * Method to analyse the chromocenter on batch
- *
  * @author Tristan Dubos and Axel Poulet
+ * @deprecated Method to analyse the chromocenter on batch
  */
 public class ChromocentersAnalysisBatchPlugin_ implements PlugIn {
 	
@@ -155,4 +155,5 @@ public class ChromocentersAnalysisBatchPlugin_ implements PlugIn {
 			}
 		}
 	}
+	
 }

@@ -9,6 +9,7 @@ import java.awt.event.ItemListener;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 
+
 /**
  * Class to construct graphical interface for the nucleus segmentation in batch
  *
@@ -26,6 +27,7 @@ public class NucleusSegmentationBatchDialog extends JFrame {
 	private final        JTextField          _jTextFieldRawData       = new JTextField();
 	private              boolean             _start                   = false;
 	private              int                 _nbCpuChosen             = 1;
+	
 	
 	/** Architecture of the graphical windows */
 	public NucleusSegmentationBatchDialog() {
@@ -461,6 +463,28 @@ public class NucleusSegmentationBatchDialog extends JFrame {
 	}
 	
 	
+	/**
+	 *
+	 */
+	static class QuitListener implements ActionListener {
+		final NucleusSegmentationBatchDialog _nucleusSegmentationBatchDialog;
+		
+		
+		/** @param nucleusSegmentationBatchDialog nucleusSegmentationBatchDialog GUI */
+		public QuitListener(NucleusSegmentationBatchDialog nucleusSegmentationBatchDialog) {
+			_nucleusSegmentationBatchDialog = nucleusSegmentationBatchDialog;
+		}
+		
+		
+		/**
+		 *
+		 */
+		public void actionPerformed(ActionEvent actionEvent) {
+			_nucleusSegmentationBatchDialog.dispose();
+		}
+		
+	}
+	
 	/** Classes listener to interact with the several elements of the window */
 	class ItemState implements ItemListener {
 		/**
@@ -469,14 +493,15 @@ public class NucleusSegmentationBatchDialog extends JFrame {
 		public void itemStateChanged(ItemEvent e) {
 			setNbCpu((Integer) e.getItem());
 		}
+		
 	}
-	
 	
 	/**
 	 *
 	 */
 	class StartListener implements ActionListener {
 		final NucleusSegmentationBatchDialog _nucleusSegmentationBatchDialog;
+		
 		
 		/** @param nucleusSegmentationBatchDialog nucleusSegmentationBatchDialog GUI */
 		public StartListener(NucleusSegmentationBatchDialog nucleusSegmentationBatchDialog) {
@@ -498,29 +523,8 @@ public class NucleusSegmentationBatchDialog extends JFrame {
 				_nucleusSegmentationBatchDialog.dispose();
 			}
 		}
+		
 	}
-	
-	
-	/**
-	 *
-	 */
-	static class QuitListener implements ActionListener {
-		final NucleusSegmentationBatchDialog _nucleusSegmentationBatchDialog;
-		
-		/** @param nucleusSegmentationBatchDialog nucleusSegmentationBatchDialog GUI */
-		public QuitListener(NucleusSegmentationBatchDialog nucleusSegmentationBatchDialog) {
-			_nucleusSegmentationBatchDialog = nucleusSegmentationBatchDialog;
-		}
-		
-		
-		/**
-		 *
-		 */
-		public void actionPerformed(ActionEvent actionEvent) {
-			_nucleusSegmentationBatchDialog.dispose();
-		}
-	}
-	
 	
 	/**
 	 *
@@ -535,12 +539,13 @@ public class NucleusSegmentationBatchDialog extends JFrame {
 			jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			int returnValue = jFileChooser.showOpenDialog(getParent());
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
-				@SuppressWarnings("unused") String run = jFileChooser.getSelectedFile().getName();
-				String workDirectory = jFileChooser.getSelectedFile().getAbsolutePath();
+				@SuppressWarnings("unused") String run           = jFileChooser.getSelectedFile().getName();
+				String                             workDirectory = jFileChooser.getSelectedFile().getAbsolutePath();
 				_jTextFieldWorkDirectory.setText(workDirectory);
 			}
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
+		
 	}
 	
 	
@@ -557,11 +562,13 @@ public class NucleusSegmentationBatchDialog extends JFrame {
 			jFileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 			int returnValue = jFileChooser.showOpenDialog(getParent());
 			if (returnValue == JFileChooser.APPROVE_OPTION) {
-				@SuppressWarnings("unused") String run = jFileChooser.getSelectedFile().getName();
-				String rawDataDirectory = jFileChooser.getSelectedFile().getAbsolutePath();
+				@SuppressWarnings("unused") String run              = jFileChooser.getSelectedFile().getName();
+				String                             rawDataDirectory = jFileChooser.getSelectedFile().getAbsolutePath();
 				_jTextFieldRawData.setText(rawDataDirectory);
 			}
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
+		
 	}
+	
 }

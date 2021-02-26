@@ -6,9 +6,8 @@ import org.apache.commons.io.FilenameUtils;
 import java.io.File;
 import java.util.ArrayList;
 
+
 /** Class get to list directory and sub directory. */
-
-
 public class Directory {
 	
 	/** Directory path */
@@ -21,10 +20,9 @@ public class Directory {
 	public Boolean         m_containNdFile = false;
 	/** List of nd files */
 	public ArrayList<File> m_fileListND    = new ArrayList<>();
-	/**
-	 *
-	 */
+	/** Path separator */
 	public String          m_separator;
+	
 	
 	/**
 	 * Constructor
@@ -46,21 +44,20 @@ public class Directory {
 	/** Method to check if directory and create if doesn't */
 	public void CheckAndCreateDir() {
 		ChekSeparatorEndPath();
-		CreateDire();
-		
+		CreateDir();
 	}
 	
 	
 	/** Check if separator exist */
 	private void ChekSeparatorEndPath() {
 		if (!(this.m_dirPath.endsWith(File.separator))) {
-			this.m_dirPath = this.m_dirPath + File.separator;
+			this.m_dirPath += File.separator;
 		}
 	}
 	
 	
 	/** Method creating folder if doesn't exist. */
-	private void CreateDire() {
+	private void CreateDir() {
 		File dir = new File(this.m_dirPath);
 		if (!dir.exists()) {
 			boolean isDirCreated = dir.mkdirs();
@@ -75,7 +72,7 @@ public class Directory {
 	
 	
 	/** @return path current directory */
-	public String get_dirPath() {
+	public String getDirPath() {
 		return this.m_dirPath;
 	}
 	
@@ -162,18 +159,13 @@ public class Directory {
 	}
 	
 	
-	public String getDirPath() {
-		return this.m_directory.getPath() + File.separator;
-	}
-	
-	
 	public String getSeparator() {
 		return this.m_separator;
 	}
 	
-	/*
-	 * search a file in a list file without extension.
-	 * Use to compare 2 lists of files
+	
+	/**
+	 * Searches a file in a list file without extension. Used to compare 2 lists of files
 	 */
 	public File searchFileNameWithoutExtension(String fileName) {
 		File fileToReturn = null;
@@ -198,4 +190,5 @@ public class Directory {
 		}
 		return fileExists;
 	}
+	
 }

@@ -7,13 +7,13 @@ import java.io.File;
 
 public class FilesNames {
 	/** Path file input */
-	String _pathFile     = "";
+	String  _pathFile     = "";
 	/** File name */
-	String _fileName     = "";
+	String  _fileName     = "";
 	/** Complete pathFile */
-	String _fullPathFile = "";
+	String  _fullPathFile = "";
+	boolean _fileExists   = true;
 	
-	boolean _fileExist = true;
 	
 	public FilesNames() {
 	}
@@ -37,25 +37,24 @@ public class FilesNames {
 	/** Method to check if file exists */
 	public void CheckExistFile() {
 		File file = new File(this._fullPathFile);
-		if (!file.exists()) {
-			this._fileExist = false;
-		}
+		if (!file.exists()) this._fileExists = false;
 	}
 	
 	
-	/** return boolean true for existing file */
-	public boolean is_fileExist() {
-		return _fileExist;
+	/** @return boolean true for existing file */
+	public boolean fileExists() {
+		return _fileExists;
 	}
 	
 	
-	/** return path to file */
-	public String get_pathFile() {
+	/** @return path to file */
+	public String getPathFile() {
 		return this._pathFile;
 	}
 	
 	
-	public void set_fullPathFile(String fileName) {
+	public void setFullPathFile(String fileName) {
 		this._fullPathFile = _pathFile + fileName;
 	}
+	
 }

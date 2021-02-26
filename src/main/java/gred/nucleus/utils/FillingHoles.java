@@ -6,6 +6,7 @@ import ij.process.ImageProcessor;
 import ij.process.StackConverter;
 import inra.ijpb.binary.BinaryImages;
 
+
 /**
  * Class HolesFilling
  *
@@ -139,4 +140,5 @@ public class FillingHoles {
 		stackConverter.convertToGray8();
 		return imagePlusCorrected;
 	}
+	
 }

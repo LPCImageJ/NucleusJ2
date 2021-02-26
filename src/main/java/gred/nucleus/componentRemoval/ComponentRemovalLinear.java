@@ -12,9 +12,11 @@ package gred.nucleus.componentRemoval;
 import gred.nucleus.connectedComponent.ComponentInfo;
 import gred.nucleus.utils.Voxel;
 
+
 /**
  * This class is intended to implement the predicate on voxels and connected components to keep all components which are
- * within a thick plane. The thick plane's equation is: z >= m_x Coefficient*x + m_yCoefficient*y + m_constantCoefficient > z-m_thickness
+ * within a thick plane. The thick plane's equation is: z >= m_x Coefficient*x + m_yCoefficient*y +
+ * m_constantCoefficient > z-m_thickness
  *
  * @author Remy Malgouyres, Tristan Dubos and Axel Poulet
  */
@@ -24,6 +26,7 @@ public class ComponentRemovalLinear implements ComponentRemovalPredicate {
 	private double m_yCoefficient;
 	private double m_constantCoefficient;
 	private double m_thickness;
+	
 	
 	/**
 	 * @param xCoefficient        first coefficient of the plane's equation
@@ -53,4 +56,5 @@ public class ComponentRemovalLinear implements ComponentRemovalPredicate {
 				this.m_xCoefficient * voxel.getX() + this.m_yCoefficient * voxel.getY() + this.m_constantCoefficient;
 		return ((voxel.getZ() >= zValue) && (voxel.getZ() < zValue + this.m_thickness));
 	}
+	
 }

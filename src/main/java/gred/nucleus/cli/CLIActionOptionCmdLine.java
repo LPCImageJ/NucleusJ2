@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import static org.apache.commons.lang.Validate.isTrue;
 
+
 /** class to handle command line option */
 public class CLIActionOptionCmdLine extends CLIActionOptions {
 	
@@ -32,9 +33,9 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
 	                                            .numberOfArgs(1)
 	                                            .build();
 	
+	
 	/**
 	 * @param args command line argument
-	 *
 	 */
 	public CLIActionOptionCmdLine(String[] args) {
 		super(args);
@@ -49,7 +50,6 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
 		try {
 			this.m_cmd = this.m_parser.parse(this.m_options, args);
 			isTrue(CMDAvailableAction(this.m_cmd.getOptionValue("action")));
-			
 		} catch (ParseException exp) {
 			System.out.println(exp.getMessage() + "\n");
 			System.out.println(getHelperInfo());
@@ -136,4 +136,5 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
 				break;
 		}
 	}
+	
 }

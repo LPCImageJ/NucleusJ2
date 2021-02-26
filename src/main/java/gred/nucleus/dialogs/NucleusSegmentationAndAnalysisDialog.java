@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+
 /**
  * Class to construct graphical interface for the nucleus segmentation and analysis pipeline
  *
@@ -94,7 +95,7 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 										new Insets(20, 60, 0, 0), 0, 0
 								)
 				);
-		_jTextFieldXCalibration.setText("" + cal.pixelWidth);
+		_jTextFieldXCalibration.setText(String.valueOf(cal.pixelWidth));
 		_jTextFieldXCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
 		
 		jLabelYCalibration = new JLabel();
@@ -122,7 +123,7 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 										new Insets(45, 60, 0, 0), 0, 0
 								)
 				);
-		_jTextFieldYCalibration.setText("" + cal.pixelWidth);
+		_jTextFieldYCalibration.setText(String.valueOf(cal.pixelWidth));
 		_jTextFieldYCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
 		
 		jLabelZCalibration = new JLabel();
@@ -150,7 +151,7 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 										new Insets(70, 60, 0, 0), 0, 0
 								)
 				);
-		_jTextFieldZCalibration.setText("" + cal.pixelDepth);
+		_jTextFieldZCalibration.setText(String.valueOf(cal.pixelDepth));
 		_jTextFieldZCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
 		
 		jLabelUnit = new JLabel();
@@ -421,11 +422,13 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 		return _jRadioButton3D.isSelected();
 	}
 	
+	
 	/**
 	 *
 	 */
 	static class QuitListener implements ActionListener {
 		final NucleusSegmentationAndAnalysisDialog _nucleusSegmentationAndAnalysisDialog;
+		
 		
 		/** @param nucleusSegmentationAndAnalysisDialog nucleusSegmentationAndAnalysisDialog GUI */
 		public QuitListener(NucleusSegmentationAndAnalysisDialog nucleusSegmentationAndAnalysisDialog) {
@@ -439,12 +442,14 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 		public void actionPerformed(ActionEvent actionEvent) {
 			_nucleusSegmentationAndAnalysisDialog.dispose();
 		}
+		
 	}
 	
 	/** Classes listener to interact with the several elements of the window */
 	class StartListener implements ActionListener {
 		
 		final NucleusSegmentationAndAnalysisDialog _nucleusSegmentationAndAnalysisDialog;
+		
 		
 		/** @param nucleusSegmentationAndAnalysisDialog nucleusSegmentationAndAnalysisDialog GUI */
 		public StartListener(NucleusSegmentationAndAnalysisDialog nucleusSegmentationAndAnalysisDialog) {
@@ -459,5 +464,7 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 			_start = true;
 			_nucleusSegmentationAndAnalysisDialog.dispose();
 		}
+		
 	}
+	
 }

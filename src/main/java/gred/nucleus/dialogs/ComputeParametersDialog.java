@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+
 public class ComputeParametersDialog extends JFrame implements ItemListener {
 	private static final long       serialVersionUID         = 1L;
 	private static final JButton    _jButtonWorkDirectory    = new JButton("Seg Data folder");
@@ -23,6 +24,7 @@ public class ComputeParametersDialog extends JFrame implements ItemListener {
 	private final        JCheckBox  _addCalibrationBox       = new JCheckBox();
 	private final        JPanel     _calibration;
 	private              boolean    _start                   = false;
+	
 	
 	/** Architecture of the graphical windows */
 	public ComputeParametersDialog() {
@@ -143,7 +145,8 @@ public class ComputeParametersDialog extends JFrame implements ItemListener {
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.weightx = 2;
 		gc.weighty = 5;
-		gc.ipady = gc.anchor = GridBagConstraints.NORTHWEST;
+		gc.anchor = GridBagConstraints.NORTHWEST;
+		gc.ipady = GridBagConstraints.NORTHWEST;
 		JLabel calibrationLabel = new JLabel("Calibration:");
 		gc.gridx = 0;
 		gc.gridy = 0;
@@ -331,11 +334,13 @@ public class ComputeParametersDialog extends JFrame implements ItemListener {
 		}
 	}
 	
+	
 	/**
 	 *
 	 */
 	static class QuitListener implements ActionListener {
 		final ComputeParametersDialog _computeParametersDialog;
+		
 		
 		/** @param computeParametersDialog Dialog parameters */
 		public QuitListener(ComputeParametersDialog computeParametersDialog) {
@@ -349,10 +354,12 @@ public class ComputeParametersDialog extends JFrame implements ItemListener {
 		public void actionPerformed(ActionEvent actionEvent) {
 			_computeParametersDialog.dispose();
 		}
+		
 	}
 	
 	class StartListener implements ActionListener {
 		final ComputeParametersDialog _computeParametersDialog;
+		
 		
 		/** @param computeParametersDialog Dialog parameters */
 		public StartListener(ComputeParametersDialog computeParametersDialog) {
@@ -377,6 +384,7 @@ public class ComputeParametersDialog extends JFrame implements ItemListener {
 				_computeParametersDialog.dispose();
 			}
 		}
+		
 	}
 	
 	/**
@@ -399,6 +407,7 @@ public class ComputeParametersDialog extends JFrame implements ItemListener {
 			}
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
+		
 	}
 	
 	
@@ -422,5 +431,7 @@ public class ComputeParametersDialog extends JFrame implements ItemListener {
 			}
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
+		
 	}
+	
 }

@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+
 public class FJ_Panel implements PlugIn, ActionListener, WindowListener {
 	
 	private static Point pos = new Point(-1, -1);
@@ -18,6 +19,7 @@ public class FJ_Panel implements PlugIn, ActionListener, WindowListener {
 	private Button derivatives, edges, hessian;
 	private Button laplacian, statistics, structure;
 	private Button about, options, website;
+	
 	
 	public void run(String arg) {
 		
@@ -120,4 +122,5 @@ public class FJ_Panel implements PlugIn, ActionListener, WindowListener {
 	
 	public void windowOpened(final WindowEvent e) {
 	}
+	
 }

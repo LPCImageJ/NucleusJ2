@@ -25,6 +25,7 @@ public class MyGradient {
 	ImagePlus _imagePlusBinary;
 	private boolean mask;
 	
+	
 	public MyGradient(ImagePlus imp, ImagePlus imagePlusBinary) {
 		_imagePlus = imp;
 		_imagePlusBinary = imagePlusBinary;
@@ -36,6 +37,7 @@ public class MyGradient {
 		_imagePlus = imp;
 		mask = false;
 	}
+	
 	
 	@SuppressWarnings("unused")
 	public ImagePlus run() {
@@ -84,7 +86,8 @@ public class MyGradient {
 				if (!FJ_Options.isotropic) newImage.aspects(new Aspects());
 				final MyEdges myEdges = new MyEdges();
 				if (mask) myEdges.setMask(_imagePlusBinary);
-				progressor.range(pls[pl], pls[++pl]);
+				++pl;
+				progressor.range(pls[pl], pls[pl]);
 				myEdges.progressor.parent(progressor);
 				myEdges.messenger.log(FJ_Options.log);
 				myEdges.messenger.status(FJ_Options.pgs);
@@ -105,4 +108,5 @@ public class MyGradient {
 		//catch (Throwable e) {	FJ.error("An unidentified error occurred while running the plugin");	}
 		return newImagePlus;
 	}
+	
 }

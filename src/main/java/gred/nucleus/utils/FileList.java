@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+
 /**
  * @author Tristan Dubos and Axel Poulet
  * <p>
@@ -13,6 +14,7 @@ import java.util.regex.Pattern;
  */
 public class FileList {
 	boolean _windows;
+	
 	
 	/**
 	 *
@@ -236,4 +238,5 @@ public class FileList {
 		}
 		return arrayListFile;
 	}
+	
 }

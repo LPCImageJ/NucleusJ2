@@ -235,4 +235,5 @@ public class Voxel {
 	public void setValue(short m_value) {
 		this.m_value = m_value;
 	}
+	
 } // End of class

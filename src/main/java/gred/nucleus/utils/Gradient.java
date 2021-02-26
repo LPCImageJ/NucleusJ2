@@ -6,6 +6,7 @@ import ij.measure.Calibration;
 
 import java.util.ArrayList;
 
+
 /** @author Tristan Dubos and Axel Poulet */
 public class Gradient {
 	/**
@@ -15,7 +16,8 @@ public class Gradient {
 	/**
 	 *
 	 */
-	private ArrayList<Double>[][][] _tableUnitary;
+	private ArrayList<Double>[][][] _tableUnitNormals;
+	
 	
 	@SuppressWarnings("unchecked")
 	public Gradient(ImagePlus imagePlusInput) {
@@ -23,7 +25,7 @@ public class Gradient {
 		int h = imagePlusInput.getHeight();
 		int d = imagePlusInput.getStackSize();
 		_tableGradient = (ArrayList<Double>[][][]) new ArrayList[w][h][d];
-		_tableUnitary = (ArrayList<Double>[][][]) new ArrayList[w][h][d];
+		_tableUnitNormals = (ArrayList<Double>[][][]) new ArrayList[w][h][d];
 		computeGradient(imagePlusInput);
 	}
 	
@@ -61,7 +63,7 @@ public class Gradient {
 					_tableGradient[i][j][k] = list;
 					/* temp variable */
 					double norm = Math.sqrt(dx * dx + dy * dy + dz * dz);
-					double nx    = 0, ny = 0, nz = 0;
+					double nx   = 0, ny = 0, nz = 0;
 					if (norm > 1e-15) {
 						nx = dx / norm;
 						ny = dy / norm;
@@ -71,7 +73,7 @@ public class Gradient {
 					listN.add(nx);
 					listN.add(ny);
 					listN.add(nz);
-					_tableUnitary[i][j][k] = listN;
+					_tableUnitNormals[i][j][k] = listN;
 				}
 			}
 		}
@@ -79,14 +81,15 @@ public class Gradient {
 	}
 	
 	
-	/** @return */
-	public ArrayList<Double>[][][] getUnitary() {
-		return _tableUnitary;
+	/** @return  */
+	public ArrayList<Double>[][][] getUnitNormals() {
+		return _tableUnitNormals;
 	}
 	
 	
-	/** @return */
+	/** @return  */
 	public ArrayList<Double>[][][] getGradient() {
 		return _tableGradient;
 	}
+	
 }

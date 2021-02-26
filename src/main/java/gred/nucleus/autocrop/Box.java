@@ -21,6 +21,7 @@ public class Box {
 	/** The coordinate z max of the Box */
 	private short m_zMax;
 	
+	
 	/**
 	 * Constructor
 	 *
@@ -136,4 +137,5 @@ public class Box {
 	public void setZMax(short zMax) {
 		this.m_zMax = zMax;
 	}
+	
 }

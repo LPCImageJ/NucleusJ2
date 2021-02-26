@@ -11,6 +11,7 @@ public class VoxelRecord {
 	/** Voxel value */
 	double _value;
 	
+	
 	/**
 	 * Constructor
 	 *
@@ -94,6 +95,7 @@ public class VoxelRecord {
     	return 1;
   }*/
 	
+	
 	/**
 	 * Compares the values of two voxel 0 if same voxel value -1 if value of voxel input > value voxel 1 if value of
 	 * voxel input < value voxel
@@ -143,4 +145,5 @@ public class VoxelRecord {
 	public void multiply(double a) {
 		this.setLocation(this._i * a, this._j * a, this._k * a);
 	}
+	
 }

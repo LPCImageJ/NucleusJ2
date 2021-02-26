@@ -32,6 +32,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 	private              boolean             _start                    = false;
 	private              int                 _nbCpuChosen              = 1;
 	
+	
 	/** Architecture of the graphical windows */
 	public NucleusSegmentationAndAnalysisBatchDialog() {
 		final Container          container                 = getContentPane();
@@ -548,6 +549,28 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 	}
 	
 	
+	/**
+	 *
+	 */
+	static class QuitListener implements ActionListener {
+		NucleusSegmentationAndAnalysisBatchDialog _nucleusSegmentationAndAnalysisBatchDialog;
+		
+		
+		/** @param nucleusSegmentationAndAnalysisBatchDialog nucleusSegmentationAndAnalysisBatchDialog GUI */
+		public QuitListener(NucleusSegmentationAndAnalysisBatchDialog nucleusSegmentationAndAnalysisBatchDialog) {
+			_nucleusSegmentationAndAnalysisBatchDialog = nucleusSegmentationAndAnalysisBatchDialog;
+		}
+		
+		
+		/**
+		 *
+		 */
+		public void actionPerformed(ActionEvent actionEvent) {
+			_nucleusSegmentationAndAnalysisBatchDialog.dispose();
+		}
+		
+	}
+	
 	/** Classes listener to interact with the several elements of the window */
 	class ItemState implements ItemListener {
 		/**
@@ -556,8 +579,8 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		public void itemStateChanged(ItemEvent e) {
 			setNbCpu((Integer) e.getItem());
 		}
+		
 	}
-	
 	
 	/**
 	 *
@@ -565,6 +588,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 	class StartListener implements ActionListener {
 		
 		NucleusSegmentationAndAnalysisBatchDialog _nucleusSegmentationAndAnalysisBatchDialog;
+		
 		
 		/** @param nucleusSegmentationAndAnalysisBatchDialog nucleusSegmentationAndAnalysisBatchDialog GUI */
 		public StartListener(NucleusSegmentationAndAnalysisBatchDialog nucleusSegmentationAndAnalysisBatchDialog) {
@@ -586,29 +610,8 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 				_nucleusSegmentationAndAnalysisBatchDialog.dispose();
 			}
 		}
+		
 	}
-	
-	
-	/**
-	 *
-	 */
-	static class QuitListener implements ActionListener {
-		NucleusSegmentationAndAnalysisBatchDialog _nucleusSegmentationAndAnalysisBatchDialog;
-		
-		/** @param nucleusSegmentationAndAnalysisBatchDialog nucleusSegmentationAndAnalysisBatchDialog GUI */
-		public QuitListener(NucleusSegmentationAndAnalysisBatchDialog nucleusSegmentationAndAnalysisBatchDialog) {
-			_nucleusSegmentationAndAnalysisBatchDialog = nucleusSegmentationAndAnalysisBatchDialog;
-		}
-		
-		
-		/**
-		 *
-		 */
-		public void actionPerformed(ActionEvent actionEvent) {
-			_nucleusSegmentationAndAnalysisBatchDialog.dispose();
-		}
-	}
-	
 	
 	/**
 	 *
@@ -630,6 +633,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 			}
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
+		
 	}
 	
 	
@@ -653,5 +657,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 			}
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
+		
 	}
+	
 }

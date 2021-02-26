@@ -130,4 +130,5 @@ public class RadialDistance {
 		                                            0);
 		return imagePlusRescale;
 	}
-}	 
+	
+}

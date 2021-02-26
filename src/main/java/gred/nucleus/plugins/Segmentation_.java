@@ -10,6 +10,7 @@ import ij.plugin.PlugIn;
 import java.io.File;
 import java.io.IOException;
 
+
 public class Segmentation_ implements PlugIn {
 	public static void segmentationFolder(String inputDirectory, String outputDirectory) throws Exception {
 		SegmentationParameters segmentationParameters = new SegmentationParameters(inputDirectory, outputDirectory);
@@ -186,4 +187,5 @@ public class Segmentation_ implements PlugIn {
 			}
 		}
 	}
+	
 }

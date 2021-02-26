@@ -6,21 +6,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * This class is use to filter autocrop boxes intersecting in 2D. This process is a default option used in autocrop :
  * <p>
  * Parameter : boolean boxesRegrouping
  * <p>
  * Here we regroup boxes with a certain percentage of surface intersection : if SurfaceA intersect SurfaceB >50% &&
- * SurfaceB intersect SurfaceA >50% You can defined the percent of surface intersection parameter in Autocrop parameters
- * :
- * <p>
- * Parameter : int boxesPercentSurfaceToFilter
- **/
+ * SurfaceB intersect SurfaceA >50%
+ * <p> You can define the percent of surface intersection parameter in Autocrop parameters:
+ * <p> Parameter : int boxesPercentSurfaceToFilter
+ */
 
 
 public class RectangleIntersection {
-	
 	
 	/** List of boxes Rectangle : xMin , yMin , width , height */
 	ArrayList<Rectangle>      listRectangle      = new ArrayList<>();
@@ -37,12 +36,13 @@ public class RectangleIntersection {
 	/** Autocrop parameter */
 	AutocropParameters        autocropParameters;
 	
+	
 	/**
 	 * Constructor getting list of boxes computed in autocrop class. Initialisation of a list of 2D rectangles and a
 	 * list of Z stack associated (zMin-zMax).
 	 *
-	 * @param _boxes               : list of boxes
-	 * @param m_autocropParameters : autocrop parameters
+	 * @param _boxes               List of boxes
+	 * @param m_autocropParameters Autocrop parameters
 	 */
 	public RectangleIntersection(HashMap<Double, Box> _boxes, AutocropParameters m_autocropParameters) {
 		autocropParameters = m_autocropParameters;
@@ -61,8 +61,8 @@ public class RectangleIntersection {
 	/**
 	 * Compute the percentage of surface intersecting between r1 and r2.
 	 *
-	 * @param r1 : rectangle 1
-	 * @param r2 : rectangle 2
+	 * @param r1 Rectangle 1
+	 * @param r2 Rectangle 2
 	 *
 	 * @return percent of overlap of r1
 	 */
@@ -76,8 +76,10 @@ public class RectangleIntersection {
 	
 	
 	/**
-	 * Class to run the boxes merge process : Step 1 : detecting boxes intersections Step 2 : group rectangle
-	 * intersecting Step 3 : compile new rectangle
+	 * Class to run the boxes merge process
+	 * <p> Step 1 : detecting boxes intersections</li>
+	 * <p> Step 2 : group rectangle intersecting</li>
+	 * <p> Step 3 : compile new rectangle</li>
 	 */
 	public void runRectangleRecompilation() {
 		this.newBoxesAdded = true;
@@ -128,8 +130,8 @@ public class RectangleIntersection {
 	public void rectangleRegroup() {
 		this.finalListRectangle.clear();
 		for (Map.Entry<Integer, Integer> entry : this.countIntersect.entrySet()) {
-			StringBuilder listRectangleConnected          = new StringBuilder("" + entry.getKey());
-			String        listRectangleConnectedStartTurn = "" + entry.getKey();
+			StringBuilder listRectangleConnected          = new StringBuilder(String.valueOf(entry.getKey()));
+			String        listRectangleConnectedStartTurn = String.valueOf(entry.getKey());
 			for (int i = 0; i < this.rectangleIntersect.size(); i++) {
 				
 				String[] splitIntersect = this.rectangleIntersect.get(i).split("-");
@@ -218,7 +220,7 @@ public class RectangleIntersection {
 					                                          (int) this.listRectangle.get(tmp).getHeight()));
 				}
 				
-				maxZSlice = maxZSlice - minZSlice;
+				maxZSlice -= minZSlice;
 				listOfRectangleZSliceToAdd.add(minZSlice + "-" + maxZSlice);
 				maxWidth = (int) maxWidth - (int) xMixNewRectangle;
 				maxHeight = (int) maxHeight - (int) yMinNewRectangle;
@@ -254,9 +256,9 @@ public class RectangleIntersection {
 		
 		for (int i = 0; i < listRectangle.size(); i++) {
 			String[] zSliceTMP = this.zSlices.get(i).split("-");
-			short tmpXMax = (short) (this.listRectangle.get(i).getX() + this.listRectangle.get(i).getWidth());
-			short tmpYMax = (short) (this.listRectangle.get(i).getY() + this.listRectangle.get(i).getHeight());
-			short tmpZMax = (short) (Short.parseShort(zSliceTMP[0]) + Short.parseShort(zSliceTMP[1]));
+			short    tmpXMax   = (short) (this.listRectangle.get(i).getX() + this.listRectangle.get(i).getWidth());
+			short    tmpYMax   = (short) (this.listRectangle.get(i).getY() + this.listRectangle.get(i).getHeight());
+			short    tmpZMax   = (short) (Short.parseShort(zSliceTMP[0]) + Short.parseShort(zSliceTMP[1]));
 			if (tmpZMax == 0) {
 				tmpZMax = 1;
 			}
@@ -270,4 +272,5 @@ public class RectangleIntersection {
 		}
 		return boxes;
 	}
+	
 }

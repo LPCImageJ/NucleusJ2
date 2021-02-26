@@ -21,9 +21,6 @@ import java.util.Map;
  * StandardDeviation MinIntensity MaxIntensity OTSUThreshold
  * <p>
  * <p>
- * <p>
- * <p>
- * <p>
  * //TODO reecrire cette classe ya des choses que je fais 5 fois c'est inutil
  *
  * @author Tristan Dubos and Axel Poulet
@@ -83,19 +80,19 @@ public class Measure3D {
 						for (int kk = k - 1; kk <= k + 1; kk += 2) {
 							neighborVoxelValue = imageStackInput.getVoxel(i, j, kk);
 							if (voxelValue != neighborVoxelValue) {
-								surfaceArea = surfaceArea + this._xCal * this._yCal;
+								surfaceArea += this._xCal * this._yCal;
 							}
 						}
 						for (int ii = i - 1; ii <= i + 1; ii += 2) {
 							neighborVoxelValue = imageStackInput.getVoxel(ii, j, k);
 							if (voxelValue != neighborVoxelValue) {
-								surfaceArea = surfaceArea + this._yCal * this._zCal;
+								surfaceArea += this._yCal * this._zCal;
 							}
 						}
 						for (int jj = j - 1; jj <= j + 1; jj += 2) {
 							neighborVoxelValue = imageStackInput.getVoxel(i, jj, k);
 							if (voxelValue != neighborVoxelValue) {
-								surfaceArea = surfaceArea + this._xCal * this._zCal;
+								surfaceArea += this._xCal * this._zCal;
 							}
 						}
 					}
@@ -424,7 +421,7 @@ public class Measure3D {
 	 */
 	public double computeComplexSurface() {
 		Gradient                gradient            = new Gradient(this._rawImage);
-		ArrayList<Double>[][][] tableUnitary        = gradient.getUnitary();
+		ArrayList<Double>[][][] tableUnitary        = gradient.getUnitNormals();
 		ImageStack              imageStackSegmented = this._imageSeg[0].getStack();
 		double                  surfaceArea         = 0, voxelValue, neighborVoxelValue;
 		VoxelRecord             voxelRecordIn       = new VoxelRecord();
@@ -447,13 +444,12 @@ public class Measure3D {
 										i,
 										j,
 										kk);
-								surfaceArea = surfaceArea +
-								              computeSurfelContribution(
-										              tableUnitary[i][j][k],
-										              tableUnitary[i][j][kk],
-										              voxelRecordIn,
-										              voxelRecordOut,
-										              ((this._xCal) * (this._yCal)));
+								surfaceArea += computeSurfelContribution(
+										tableUnitary[i][j][k],
+										tableUnitary[i][j][kk],
+										voxelRecordIn,
+										voxelRecordOut,
+										((this._xCal) * (this._yCal)));
 							}
 						}
 						for (int ii = i - 1; ii <= i + 1; ii += 2) {
@@ -468,7 +464,7 @@ public class Measure3D {
 										ii,
 										j,
 										k);
-								surfaceArea = surfaceArea + computeSurfelContribution(
+								surfaceArea += computeSurfelContribution(
 										tableUnitary[i][j][k],
 										tableUnitary[ii][j][k],
 										voxelRecordIn, voxelRecordOut,
@@ -487,8 +483,7 @@ public class Measure3D {
 										i,
 										jj,
 										k);
-								surfaceArea = surfaceArea
-								              + computeSurfelContribution(
+								surfaceArea += computeSurfelContribution(
 										tableUnitary[i][j][k],
 										tableUnitary[i][jj][k],
 										voxelRecordIn,
@@ -513,7 +508,7 @@ public class Measure3D {
 	 * @return
 	 */
 	public double computeComplexSurface(ImagePlus imagePlusSegmented, Gradient gradient) {
-		ArrayList<Double>[][][] tableUnitary       = gradient.getUnitary();
+		ArrayList<Double>[][][] tableUnitary        = gradient.getUnitNormals();
 		ImageStack              imageStackSegmented = imagePlusSegmented.getStack();
 		double                  surfaceArea         = 0, voxelValue, neighborVoxelValue;
 		VoxelRecord             voxelRecordIn       = new VoxelRecord();
@@ -532,12 +527,11 @@ public class Measure3D {
 							if (voxelValue != neighborVoxelValue) {
 								voxelRecordIn.setLocation(i, j, k);
 								voxelRecordOut.setLocation(i, j, kk);
-								surfaceArea = surfaceArea +
-								              computeSurfelContribution(tableUnitary[i][j][k],
-								                                        tableUnitary[i][j][kk],
-								                                        voxelRecordIn,
-								                                        voxelRecordOut,
-								                                        ((xCalibration) * (yCalibration)));
+								surfaceArea += computeSurfelContribution(tableUnitary[i][j][k],
+								                                         tableUnitary[i][j][kk],
+								                                         voxelRecordIn,
+								                                         voxelRecordOut,
+								                                         ((xCalibration) * (yCalibration)));
 							}
 						}
 						for (int ii = i - 1; ii <= i + 1; ii += 2) {
@@ -545,12 +539,11 @@ public class Measure3D {
 							if (voxelValue != neighborVoxelValue) {
 								voxelRecordIn.setLocation(i, j, k);
 								voxelRecordOut.setLocation(ii, j, k);
-								surfaceArea = surfaceArea +
-								              computeSurfelContribution(tableUnitary[i][j][k],
-								                                        tableUnitary[ii][j][k],
-								                                        voxelRecordIn,
-								                                        voxelRecordOut,
-								                                        ((yCalibration) * (zCalibration)));
+								surfaceArea += computeSurfelContribution(tableUnitary[i][j][k],
+								                                         tableUnitary[ii][j][k],
+								                                         voxelRecordIn,
+								                                         voxelRecordOut,
+								                                         ((yCalibration) * (zCalibration)));
 							}
 						}
 						for (int jj = j - 1; jj <= j + 1; jj += 2) {
@@ -558,12 +551,11 @@ public class Measure3D {
 							if (voxelValue != neighborVoxelValue) {
 								voxelRecordIn.setLocation(i, j, k);
 								voxelRecordOut.setLocation(i, jj, k);
-								surfaceArea = surfaceArea +
-								              computeSurfelContribution(tableUnitary[i][j][k],
-								                                        tableUnitary[i][jj][k],
-								                                        voxelRecordIn,
-								                                        voxelRecordOut,
-								                                        ((xCalibration) * (zCalibration)));
+								surfaceArea += computeSurfelContribution(tableUnitary[i][j][k],
+								                                         tableUnitary[i][jj][k],
+								                                         voxelRecordIn,
+								                                         voxelRecordOut,
+								                                         ((xCalibration) * (zCalibration)));
 							}
 						}
 					}
@@ -679,7 +671,7 @@ public class Measure3D {
 				}
 			}
 		}
-		meanIntensity = meanIntensity / voxelCounted;
+		meanIntensity /= voxelCounted;
 		return meanIntensity;
 	}
 	
@@ -837,4 +829,5 @@ public class Measure3D {
 		          + this._rawImage.getHeight() * this._rawImage.getWidth() * this._rawImage.getNSlices();
 		return results;
 	}
+	
 }

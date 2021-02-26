@@ -17,6 +17,7 @@ public class ConvexHullSegmentation {
 	
 	private SegmentationParameters m_segmentationParameters;
 	
+	
 	/**
 	 * Run the gift wrapping analysis on 3D segmented image imputed for the different axis combined : XY XZ YZ
 	 *
@@ -72,4 +73,5 @@ public class ConvexHullSegmentation {
 		}
 		return imagePlusOutput;
 	}
+	
 }

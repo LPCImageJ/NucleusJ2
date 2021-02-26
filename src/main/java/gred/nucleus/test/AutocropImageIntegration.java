@@ -5,10 +5,11 @@ import gred.nucleus.autocrop.AutocropParameters;
 
 import java.util.ArrayList;
 
+
 public class AutocropImageIntegration {
 	
-	
 	static ArrayList<String> m_test;
+	
 	
 	public static void runAutoCrop(String imageSourceFile, String output, String pathToConfig) {
 		AutocropParameters autocropParameters = new AutocropParameters(imageSourceFile, output, pathToConfig);
@@ -102,4 +103,5 @@ public class AutocropImageIntegration {
 		System.out.println("Total memory (bytes): " +
 		                   Runtime.getRuntime().totalMemory() * 1e-9);
 	}
+	
 }

@@ -9,9 +9,9 @@ import ij.plugin.PlugIn;
 
 import java.io.File;
 
+
 public class Autocrop_ implements PlugIn {
-	public static void runAutoCropFolder(String imageSource, String output, String pathToConfig)
-	throws Exception {
+	public static void runAutoCropFolder(String imageSource, String output, String pathToConfig) {
 		AutocropParameters autocropParameters = new AutocropParameters(imageSource, output, pathToConfig);
 		AutoCropCalling    autoCrop           = new AutoCropCalling(autocropParameters);
 		File               file               = new File(imageSource);
@@ -23,7 +23,7 @@ public class Autocrop_ implements PlugIn {
 	}
 	
 	
-	public static void runAutoCropFolder(String imageSource, String output) throws Exception {
+	public static void runAutoCropFolder(String imageSource, String output) {
 		AutocropParameters autocropParameters = new AutocropParameters(imageSource, output);
 		AutoCropCalling    autoCrop           = new AutoCropCalling(autocropParameters);
 		File               file               = new File(imageSource);
@@ -46,7 +46,7 @@ public class Autocrop_ implements PlugIn {
 	                                     String minVolumeNucleus,
 	                                     String maxVolumeNucleus,
 	                                     String boxesPercentSurfaceToFilter,
-	                                     boolean regroupBoxes) throws Exception {
+	                                     boolean regroupBoxes) {
 		
 		AutocropParameters autocropParameters = new AutocropParameters(imageSource,
 		                                                               output,
@@ -85,7 +85,7 @@ public class Autocrop_ implements PlugIn {
 	                                     String minVolumeNucleus,
 	                                     String maxVolumeNucleus,
 	                                     String boxesPercentSurfaceToFilter,
-	                                     boolean regroupBoxes) throws Exception {
+	                                     boolean regroupBoxes) {
 		
 		AutocropParameters autocropParameters = new AutocropParameters(imageSource,
 		                                                               output,
@@ -200,4 +200,5 @@ public class Autocrop_ implements PlugIn {
 			}
 		}
 	}
+	
 }

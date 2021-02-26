@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+
 /** This class extend plugin parameters and contain the list of specific parameters available for Autocrop function. */
 public class AutocropParameters extends PluginParameters {
 	/** Minimal object volume to crop */
@@ -39,23 +40,22 @@ public class AutocropParameters extends PluginParameters {
 	/**
 	 * Constructor with default parameter
 	 *
-	 * @param inputFolder  : path folder containing Images
-	 * @param outputFolder : path folder output analyse
+	 * @param inputFolder    Path folder containing Images
+	 * @param outputFolder   Path folder output analyse
 	 */
 	public AutocropParameters(String inputFolder, String outputFolder) {
 		super(inputFolder, outputFolder);
-		
 	}
 	
 	
 	/**
 	 * Constructor with box size modifications
 	 *
-	 * @param inputFolder  : path folder containing Images
-	 * @param outputFolder : path folder output analyse
-	 * @param xCropBoxSize : number of voxels add in x axis around object
-	 * @param yCropBoxSize : number of voxels add in z axis around object
-	 * @param zCropBoxSize : number of stack add in z axis around object
+	 * @param inputFolder    Path folder containing Images
+	 * @param outputFolder   Path folder output analyse
+	 * @param xCropBoxSize   Number of voxels add in x axis around object
+	 * @param yCropBoxSize   Number of voxels add in z axis around object
+	 * @param zCropBoxSize   Number of stack add in z axis around object
 	 */
 	public AutocropParameters(String inputFolder, String outputFolder,
 	                          int xCropBoxSize,
@@ -75,16 +75,16 @@ public class AutocropParameters extends PluginParameters {
 	/**
 	 * Constructor with all manual parameters
 	 *
-	 * @param inputFolder               : path folder containing Images
-	 * @param outputFolder              : path folder output analyse
-	 * @param xCropBoxSize              : number of voxels add in x axis around object
-	 * @param yCropBoxSize              : number of voxels add in z axis around object
-	 * @param zCropBoxSize              : number of stack add in z axis around object
-	 * @param channelToComputeThreshold : channel number to compute OTSU
-	 * @param slicesOTSUComputing       : slice start to compute OTSU
-	 * @param thresholdOTSUComputing    : minimum OTSU threshold used
-	 * @param maxVolumeNucleus          : volume maximum of objects detected
-	 * @param minVolumeNucleus          : volume minimum of objects detected
+	 * @param inputFolder                 Path folder containing Images
+	 * @param outputFolder                Path folder output analyse
+	 * @param xCropBoxSize                Number of voxels add in x axis around object
+	 * @param yCropBoxSize                Number of voxels add in z axis around object
+	 * @param zCropBoxSize                Number of stack add in z axis around object
+	 * @param channelToComputeThreshold   Channel number to compute OTSU
+	 * @param slicesOTSUComputing         Slice start to compute OTSU
+	 * @param thresholdOTSUComputing      Minimum OTSU threshold used
+	 * @param maxVolumeNucleus            Volume maximum of objects detected
+	 * @param minVolumeNucleus            Volume minimum of objects detected
 	 */
 	public AutocropParameters(String inputFolder, String outputFolder,
 	                          int xCropBoxSize,
@@ -105,25 +105,24 @@ public class AutocropParameters extends PluginParameters {
 		this.m_channelToComputeThreshold = channelToComputeThreshold;
 		this.m_maxVolumeNucleus = maxVolumeNucleus;
 		this.m_minVolumeNucleus = minVolumeNucleus;
-		
 	}
 	
 	
 	/**
 	 * Constructor with all manual parameters 2
 	 *
-	 * @param inputFolder                 : path folder containing Images
-	 * @param outputFolder                : path folder output analyse
-	 * @param xCropBoxSize                : number of voxels add in x axis around object
-	 * @param yCropBoxSize                : number of voxels add in z axis around object
-	 * @param zCropBoxSize                : number of stack add in z axis around object
-	 * @param channelToComputeThreshold   : channel number to compute OTSU
-	 * @param slicesOTSUComputing         : slice start to compute OTSU
-	 * @param thresholdOTSUComputing      : minimum OTSU threshold used
-	 * @param maxVolumeNucleus            : volume maximum of objects detected
-	 * @param minVolumeNucleus            : volume minimum of objects detected
-	 * @param boxesPercentSurfaceToFilter : surface percent of boxes to groups them
-	 * @param boxesRegrouping             : activation of boxes regrouping
+	 * @param inputFolder                   Path folder containing Images
+	 * @param outputFolder                  Path folder output analyse
+	 * @param xCropBoxSize                  Number of voxels add in x axis around object
+	 * @param yCropBoxSize                  Number of voxels add in z axis around object
+	 * @param zCropBoxSize                  Number of stack add in z axis around object
+	 * @param channelToComputeThreshold     Channel number to compute OTSU
+	 * @param slicesOTSUComputing           Slice start to compute OTSU
+	 * @param thresholdOTSUComputing        Minimum OTSU threshold used
+	 * @param maxVolumeNucleus              Volume maximum of objects detected
+	 * @param minVolumeNucleus              Volume minimum of objects detected
+	 * @param boxesPercentSurfaceToFilter   Surface percent of boxes to groups them
+	 * @param boxesRegrouping               Activation of boxes regrouping
 	 */
 	public AutocropParameters(String inputFolder, String outputFolder,
 	                          int xCropBoxSize,
@@ -154,16 +153,16 @@ public class AutocropParameters extends PluginParameters {
 	/**
 	 * Constructor with box size modification and slice number used to start OTSU threshold calculation to last slice
 	 *
-	 * @param inputFolder               : path folder containing Images
-	 * @param outputFolder              : path folder output analyse
-	 * @param xCropBoxSize              : number of voxels add in x axis around object
-	 * @param yCropBoxSize              : number of voxels add in z axis around object
-	 * @param zCropBoxSize              : number of stack add in z axis around object
-	 * @param channelToComputeThreshold : channel number to compute OTSU
-	 * @param slicesOTSUComputing       : slice start to compute OTSU
-	 * @param thresholdOTSUComputing    : minimum OTSU threshold used
-	 * @param maxVolumeNucleus          : volume maximum of objects detected
-	 * @param minVolumeNucleus          : volume minimum of objects detected
+	 * @param inputFolder                 Path folder containing Images
+	 * @param outputFolder                Path folder output analyse
+	 * @param xCropBoxSize                Number of voxels add in x axis around object
+	 * @param yCropBoxSize                Number of voxels add in z axis around object
+	 * @param zCropBoxSize                Number of stack add in z axis around object
+	 * @param channelToComputeThreshold   Channel number to compute OTSU
+	 * @param slicesOTSUComputing         Slice start to compute OTSU
+	 * @param thresholdOTSUComputing      Minimum OTSU threshold used
+	 * @param maxVolumeNucleus            Volume maximum of objects detected
+	 * @param minVolumeNucleus            Volume minimum of objects detected
 	 */
 	public AutocropParameters(String inputFolder, String outputFolder,
 	                          double xCal,
@@ -194,21 +193,21 @@ public class AutocropParameters extends PluginParameters {
 	/**
 	 * Constructor with box size modification and slice number used to start OTSU threshold calculation to last slice
 	 *
-	 * @param inputFolder                 : path folder containing Images
-	 * @param outputFolder                : path folder output analyse
-	 * @param xCal                        : image calibration X
-	 * @param yCal                        : image calibration Y
-	 * @param zCal                        : image calibration Z
-	 * @param xCropBoxSize                : number of voxels add in x axis around object
-	 * @param yCropBoxSize                : number of voxels add in z axis around object
-	 * @param zCropBoxSize                : number of stack add in z axis around object
-	 * @param channelToComputeThreshold   : channel number to compute OTSU
-	 * @param slicesOTSUComputing         : slice start to compute OTSU
-	 * @param thresholdOTSUComputing      : minimum OTSU threshold used
-	 * @param maxVolumeNucleus            : volume maximum of objects detected
-	 * @param minVolumeNucleus            : volume minimum of objects detected
-	 * @param boxesPercentSurfaceToFilter : surface percent of boxes to groups them
-	 * @param regroupBoxes                : activation of boxes regrouping
+	 * @param inputFolder                   Path folder containing Images
+	 * @param outputFolder                  Path folder output analyse
+	 * @param xCal                          Image calibration X
+	 * @param yCal                          Image calibration Y
+	 * @param zCal                          Image calibration Z
+	 * @param xCropBoxSize                  Number of voxels add in x axis around object
+	 * @param yCropBoxSize                  Number of voxels add in z axis around object
+	 * @param zCropBoxSize                  Number of stack add in z axis around object
+	 * @param channelToComputeThreshold     Channel number to compute OTSU
+	 * @param slicesOTSUComputing           Slice start to compute OTSU
+	 * @param thresholdOTSUComputing        Minimum OTSU threshold used
+	 * @param maxVolumeNucleus              Volume maximum of objects detected
+	 * @param minVolumeNucleus              Volume minimum of objects detected
+	 * @param boxesPercentSurfaceToFilter   Surface percent of boxes to groups them
+	 * @param regroupBoxes                  Activation of boxes regrouping
 	 */
 	public AutocropParameters(String inputFolder, String outputFolder,
 	                          double xCal,
@@ -243,9 +242,9 @@ public class AutocropParameters extends PluginParameters {
 	/**
 	 * Constructor using input , output folders and config file (for command line execution)
 	 *
-	 * @param inputFolder      : path folder containing Images
-	 * @param outputFolder     : path folder output analyse
-	 * @param pathToConfigFile : path to the config file
+	 * @param inputFolder        Path folder containing Images
+	 * @param outputFolder       Path folder output analyse
+	 * @param pathToConfigFile   Path to the config file
 	 */
 	public AutocropParameters(String inputFolder, String outputFolder,
 	                          String pathToConfigFile) {
@@ -297,7 +296,8 @@ public class AutocropParameters extends PluginParameters {
 					this.m_minVolumeNucleus = Integer.parseInt(prop.getProperty("minVolumeNucleus"));
 					break;
 				case "boxesPercentSurfaceToFilter":
-					this.m_boxesPercentSurfaceToFilter = Integer.parseInt(prop.getProperty("boxesPercentSurfaceToFilter"));
+					this.m_boxesPercentSurfaceToFilter =
+							Integer.parseInt(prop.getProperty("boxesPercentSurfaceToFilter"));
 					break;
 				case "boxesRegrouping":
 					this.m_boxesRegrouping = Boolean.parseBoolean(prop.getProperty("boxesRegrouping"));
@@ -314,14 +314,14 @@ public class AutocropParameters extends PluginParameters {
 	 */
 	public String getAnalyseParameters() {
 		super.getAnalyseParameters();
-		this.m_headerInfo += "#X box size: " + getXCropBoxSize() + "\n"
-		                     + "#Y box size: " + getYCropBoxSize() + "\n"
-		                     + "#Z box size: " + getZCropBoxSize() + "\n"
-		                     + "#thresholdOTSUComputing: " + getThresholdOTSUComputing() + "\n"
-		                     + "#slicesOTSUComputing: " + getSlicesOTSUComputing() + "\n"
-		                     + "#channelToComputeThreshold: " + getChannelToComputeThreshold() + "\n"
-		                     + "#maxVolumeNucleus:" + getM_maxVolumeNucleus() + "\n"
-		                     + "#minVolumeNucleus: " + getM_minVolumeNucleus() + "\n";
+		this.m_headerInfo += "#X box size: " + m_xCropBoxSize + "\n"
+		                     + "#Y box size: " + m_yCropBoxSize + "\n"
+		                     + "#Z box size: " + m_zCropBoxSize + "\n"
+		                     + "#thresholdOTSUComputing: " + m_thresholdOTSUComputing + "\n"
+		                     + "#slicesOTSUComputing: " + m_slicesOTSUComputing + "\n"
+		                     + "#channelToComputeThreshold: " + m_channelToComputeThreshold + "\n"
+		                     + "#maxVolumeNucleus:" + m_maxVolumeNucleus + "\n"
+		                     + "#minVolumeNucleus: " + m_minVolumeNucleus + "\n";
 		return this.m_headerInfo;
 	}
 	
@@ -381,7 +381,7 @@ public class AutocropParameters extends PluginParameters {
 	 *
 	 * @return minimum volume
 	 */
-	public int getM_minVolumeNucleus() {
+	public int getMinVolumeNucleus() {
 		return this.m_minVolumeNucleus;
 	}
 	
@@ -391,7 +391,7 @@ public class AutocropParameters extends PluginParameters {
 	 *
 	 * @return maximum volume
 	 */
-	public int getM_maxVolumeNucleus() {
+	public int getMaxVolumeNucleus() {
 		return this.m_maxVolumeNucleus;
 	}
 	
@@ -424,4 +424,5 @@ public class AutocropParameters extends PluginParameters {
 	public int getBoxesPercentSurfaceToFilter() {
 		return this.m_boxesPercentSurfaceToFilter;
 	}
+	
 }

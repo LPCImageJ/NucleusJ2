@@ -3,6 +3,7 @@ package gred.nucleus.cli;
 import gred.nucleus.mains.Version;
 import org.apache.commons.cli.*;
 
+
 /** Generic class to handle command line option */
 public class CLIActionOptions {
 	
@@ -53,8 +54,7 @@ public class CLIActionOptions {
 	/**
 	 * Constructor with argument
 	 *
-	 * @param argument : list of command line argument
-	 *
+	 * @param argument   List of command line argument
 	 */
 	public CLIActionOptions(String[] argument) {
 		this.m_options.addOption(this.m_inputFolder);
@@ -83,7 +83,7 @@ public class CLIActionOptions {
 	
 	
 	/** @return list of options */
-	public Options getM_options() {
+	public Options getOptions() {
 		return this.m_options;
 	}
 	
@@ -91,4 +91,5 @@ public class CLIActionOptions {
 	public CommandLine getCmd() {
 		return this.m_cmd;
 	}
+	
 }

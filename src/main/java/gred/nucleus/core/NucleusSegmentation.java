@@ -38,6 +38,7 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ExecutionException;
 
+
 /**
  * Object segmentation method for 3D images. This segmentation used as initial threshold the method of Otsu, and then
  * select the object maximizing the sphericity of the segmented object.
@@ -69,6 +70,7 @@ public class NucleusSegmentation {
 	private       String                 m_outputFilesPrefix;
 	/** Segmented image */
 	private       ImagePlus[]            m_imageSeg;
+	
 	
 	/**
 	 * Constructor for the segmentation analyse for a single image.
@@ -205,7 +207,7 @@ public class NucleusSegmentation {
 	public String saveImageResult(ImagePlus[] segmentedImage) {
 		
 		this._measure3D =
-				new Measure3D(segmentedImage, this._imgRaw, getXcalibration(), getYcalibration(), getZcalibration());
+				new Measure3D(segmentedImage, this._imgRaw, getXCalibration(), getYCalibration(), getZCalibration());
 		return this._measure3D.nucleusParameter3D();
 		
 		
@@ -274,16 +276,16 @@ public class NucleusSegmentation {
 			tempSegPlus[0] = tempSeg;
 			Measure3D measure3D = new Measure3D(tempSegPlus,
 			                                    this._imgRawTransformed,
-			                                    getXcalibration(),
-			                                    getYcalibration(),
-			                                    getZcalibration());
+			                                    getXCalibration(),
+			                                    getYCalibration(),
+			                                    getZCalibration());
 			deleteArtefact(tempSeg);
 			double  volume     = measure3D.computeVolumeObject2(255);
 			boolean firstStack = isVoxelThresholded(tempSeg, 255, 0);
 			boolean lastStack  = isVoxelThresholded(tempSeg, 255, tempSeg.getStackSize() - 1);
 			if (testRelativeObjectVolume(volume, imageVolume) &&
-			    volume >= this.m_segmentationParameters.getM_minVolumeNucleus() &&
-			    volume <= this.m_segmentationParameters.getM_maxVolumeNucleus() &&
+			    volume >= this.m_segmentationParameters.getMinVolumeNucleus() &&
+			    volume <= this.m_segmentationParameters.getMaxVolumeNucleus() &&
 			    !firstStack && !lastStack) {
 				
 				double sphericity =
@@ -305,7 +307,10 @@ public class NucleusSegmentation {
 	}
 	
 	
-	/** Pre process ot the raw image : - Gaussian blur - LUT application TODO object function image transformation */
+	/**
+	 * Pre process ot the raw image : - Gaussian blur - LUT application
+	 * <p> TODO object function image transformation
+	 */
 	public void preProcessImage() {
 		
 		GaussianBlur3D.blur(this._imgRawTransformed, 0.1, 0.1, 1);
@@ -341,9 +346,9 @@ public class NucleusSegmentation {
 		double       sphericity;
 		double       volume;
 		Calibration  calibration   = imagePlusInput.getCalibration();
-		final double xCalibration  = getXcalibration();
-		final double yCalibration  = getYcalibration();
-		final double zCalibration  = getZcalibration();
+		final double xCalibration  = getXCalibration();
+		final double yCalibration  = getYCalibration();
+		final double zCalibration  = getZCalibration();
 		Measure3D    measure3D     = new Measure3D();
 		Gradient     gradient      = new Gradient(imagePlusInput);
 		final double imageVolume = xCalibration * imagePlusInput.getWidth() *
@@ -650,12 +655,12 @@ public class NucleusSegmentation {
 	
 	
 	/**
-	 * Method to get X calibration if it's present in parameters of analyse or get the metadata of the image. TODO
-	 * verifier cette methode si elle est au bonne endroit
+	 * Method to get X calibration if it's present in parameters of analyse or get the metadata of the image.
+	 * <p> TODO verifier cette methode si elle est au bon endroit
 	 *
 	 * @return X calibration
 	 */
-	public double getXcalibration() {
+	public double getXCalibration() {
 		double xCal;
 		if (this.m_segmentationParameters.m_manualParameter) {
 			xCal = this.m_segmentationParameters.getXCal();
@@ -667,12 +672,12 @@ public class NucleusSegmentation {
 	
 	
 	/**
-	 * Method to get Y calibration if it's present in parameters of analyse or get the metadata of the image. TODO
-	 * verifier cette methode si elle est au bonne endroit
+	 * Method to get Y calibration if it's present in parameters of analyse or get the metadata of the image.
+	 * <p> TODO verifier cette methode si elle est au bonne endroit
 	 *
 	 * @return Y calibration
 	 */
-	public double getYcalibration() {
+	public double getYCalibration() {
 		double yCal;
 		if (this.m_segmentationParameters.m_manualParameter) {
 			yCal = this.m_segmentationParameters.getYCal();
@@ -684,12 +689,12 @@ public class NucleusSegmentation {
 	
 	
 	/**
-	 * Method to get Y calibration if it's present in parameters of analyse or get the metadata of the image. TODO
-	 * verifier cette methode si elle est à ca place
+	 * Method to get Y calibration if it's present in parameters of analyse or get the metadata of the image.
+	 * <p> TODO verifier cette methode si elle est à sa place
 	 *
 	 * @return Z calibration
 	 */
-	public double getZcalibration() {
+	public double getZCalibration() {
 		double zCal;
 		if (this.m_segmentationParameters.getManualParameter()) {
 			zCal = this.m_segmentationParameters.getZCal();
@@ -702,7 +707,7 @@ public class NucleusSegmentation {
 	
 	/**
 	 * Method to compute the voxel volume : if it's present in parameters of analyse or get the metadata of the image.
-	 * TODO verifier cette methode si elle est à ca place
+	 * TODO verifier cette methode si elle est à sa place
 	 *
 	 * @return Z calibration
 	 */
@@ -721,30 +726,33 @@ public class NucleusSegmentation {
 	
 	/**
 	 * Method to move bad crop (truncated nucleus) to badcrop folder.
+	 * <p> TODO verifier cette methode si elle est à sa place
 	 *
-	 * @param inputPathDir folder of the input to create badcrop folder. TODO verifier cette methode si elle est à ca
-	 *                     place
+	 * @param inputPathDir folder of the input to create badcrop folder.
 	 */
 	public void checkBadCrop(String inputPathDir) {
-		if ((this._badCrop) || (this.getBestThreshold() == -1)) {
+		if ((this._badCrop) || (this._bestThreshold == -1)) {
 			File file          = new File(inputPathDir);
 			File BadCropFolder = new File(inputPathDir + File.separator + "BadCrop");
 			System.out.println("et du coup on est dedans ou quoi ...........\n" +
 			                   BadCropFolder +
 			                   ".....................................");
 			
-			if (!BadCropFolder.exists()) {
-				BadCropFolder.mkdir();
+			if (BadCropFolder.exists() || BadCropFolder.mkdir()) {
+				File    fileToMove = new File(inputPathDir + File.separator + this._imgRawTransformed.getTitle());
+				File    newFile    = new File(BadCropFolder + File.separator + this._imgRawTransformed.getTitle());
+				boolean renamed    = fileToMove.renameTo(newFile);
+				if (!renamed) System.err.println("File not renamed: " + fileToMove.getAbsolutePath());
+			} else {
+				System.err.println("Directory does not exist and could not be created: " + BadCropFolder);
 			}
-			File fileToMove = new File(inputPathDir + File.separator + this._imgRawTransformed.getTitle());
-			fileToMove.renameTo(new File(BadCropFolder + File.separator + this._imgRawTransformed.getTitle()));
 		}
 	}
 	
 	
 	public void checkBadCrop(ImageContainer image, Client client)
 	throws ServerError, DSOutOfServiceException, ExecutionException, DSAccessException {
-		if ((this._badCrop) || (this.getBestThreshold() == -1)) {
+		if ((this._badCrop) || (this._bestThreshold == -1)) {
 			List<TagAnnotationContainer> tags = client.getTags("BadCrop");
 			
 			TagAnnotationContainer tagBadCrop;
@@ -767,7 +775,7 @@ public class NucleusSegmentation {
 	public void checkBadCrop(ROIContainer roi,
 	                         Client client)
 	throws ServerError, DSOutOfServiceException {
-		if ((this._badCrop) || (this.getBestThreshold() == -1)) {
+		if ((this._badCrop) || (this._bestThreshold == -1)) {
 			for (ShapeData shape : roi.getShapes()) {
 				shape.getShapeSettings().setStroke(Color.RED);
 			}
@@ -776,9 +784,12 @@ public class NucleusSegmentation {
 	}
 	
 	
-	/** Method to save the OTSU segmented image. TODO verifier cette methode si elle est à ca place */
+	/**
+	 * Method to save the OTSU segmented image.
+	 * <p> TODO verifier cette methode si elle est à ca place
+	 */
 	public void saveOTSUSegmented() {
-		if (!isBadCrop() && getBestThreshold() != -1) {
+		if (!_badCrop && _bestThreshold != -1) {
 			String pathSegOTSU = this.m_segmentationParameters.getOutputFolder() +
 			                     "OTSU" +
 			                     File.separator +
@@ -789,10 +800,13 @@ public class NucleusSegmentation {
 	}
 	
 	
-	/** Method to save the OTSU segmented image. TODO verifier cette methode si elle est à ca place */
+	/**
+	 * Method to save the OTSU segmented image.
+	 * <p> TODO verifier cette methode si elle est à ca place
+	 */
 	public void saveOTSUSegmentedOmero(Client client, Long id)
 	throws Exception {
-		if (!isBadCrop() && getBestThreshold() != -1) {
+		if (!_badCrop && _bestThreshold != -1) {
 			String path = new java.io.File(".").getCanonicalPath() + File.separator + this.m_imageSeg[0].getTitle();
 			saveFile(this.m_imageSeg[0], path);
 			
@@ -810,16 +824,20 @@ public class NucleusSegmentation {
 			
 			otsu.importImages(client, path);
 			
-			File file = new File(path);
-			file.delete();
+			File    file    = new File(path);
+			boolean deleted = file.delete();
+			if (!deleted) System.err.println("File not deleted: " + path);
 		}
 	}
 	
 	
-	/** Method to save the OTSU segmented image. TODO verifier cette methode si elle est à ca place */
+	/**
+	 * Method to save the OTSU segmented image.
+	 * <p> TODO verifier cette methode si elle est à sa place
+	 */
 	public void saveGiftWrappingSeg() {
 		
-		if (!isBadCrop() && getBestThreshold() != -1
+		if (!_badCrop && _bestThreshold != -1
 		    && this.m_segmentationParameters.getGiftWrapping()) {
 			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
 			this.m_imageSeg[0] = nuc.runGIFTWrapping(this.m_imageSeg[0], this.m_segmentationParameters);
@@ -831,10 +849,13 @@ public class NucleusSegmentation {
 	}
 	
 	
-	/** Method to save the OTSU segmented image. TODO verifier cette methode si elle est à ca place */
+	/**
+	 * Method to save the OTSU segmented image.
+	 * <p> TODO verifier cette methode si elle est à sa place
+	 */
 	public void saveGiftWrappingSegOmero(Client client, Long id)
 	throws Exception {
-		if (!isBadCrop() && getBestThreshold() != -1
+		if (!_badCrop && _bestThreshold != -1
 		    && this.m_segmentationParameters.getGiftWrapping()) {
 			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
 			
@@ -857,20 +878,22 @@ public class NucleusSegmentation {
 			
 			gift.importImages(client, path);
 			
-			File file = new File(path);
-			file.delete();
+			File    file    = new File(path);
+			boolean deleted = file.delete();
+			if (!deleted) System.err.println("File not deleted: " + path);
 		}
 	}
 	
 	
 	/**
 	 * Method to get the parameter of the 3D parameters for OTSU segmented image if the object can't be segmented return
-	 * -1 for parameters. TODO verifier cette methode si elle est à ca place
+	 * -1 for parameters.
+	 * <p> TODO verifier cette methode si elle est à sa place
 	 *
 	 * @return
 	 */
 	public String getImageCropInfoOTSU() {
-		if (!isBadCrop() && getBestThreshold() != -1) {
+		if (!_badCrop && _bestThreshold != -1) {
 			return saveImageResult(this.m_imageSeg) + "\t" + this._bestThreshold + "\n";
 		} else {
 			return this._imgRaw.getTitle() + "\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\n";
@@ -880,15 +903,17 @@ public class NucleusSegmentation {
 	
 	/**
 	 * Method to get the parameter of the 3D parameters for Gift wrapping segmented image if the object can't be
-	 * segmented return -1 for parameters. TODO verifier DUPLICATION DE getImageCropInfoOTSU TODO a ca place ?
+	 * segmented return -1 for parameters.
+	 * <p> TODO verifier DUPLICATION DE getImageCropInfoOTSU à sa place ?
 	 *
 	 * @return
 	 */
 	public String getImageCropInfoGIFT() {
-		if (!isBadCrop() && getBestThreshold() != -1) {
+		if (!_badCrop && _bestThreshold != -1) {
 			return saveImageResult(this.m_imageSeg) + "\t" + this._bestThreshold + "\n";
 		} else {
 			return this._imgRaw.getTitle() + "\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\n";
 		}
 	}
+	
 }

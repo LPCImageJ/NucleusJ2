@@ -9,10 +9,10 @@ import ij.gui.GenericDialog;
 import ij.measure.Calibration;
 import ij.plugin.PlugIn;
 
+
 /**
- * Method to analyse the chromocenter
- *
  * @author Tristan Dubos and Axel Poulet
+ * @deprecated Method to analyse the chromocenter
  */
 public class ChromocentersAnalysisPlugin_ implements PlugIn {
 	
@@ -111,4 +111,5 @@ public class ChromocentersAnalysisPlugin_ implements PlugIn {
 			                                              );
 		}
 	}
+	
 }

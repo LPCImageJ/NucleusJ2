@@ -11,6 +11,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+
 public class NoiseComputing {
 	
 	
@@ -46,7 +47,7 @@ public class NoiseComputing {
 		}
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(
 				"/media/titus/DATA/ML_ANALYSE_DATA/ANALYSE_COMPARAISON_REANALYSE/129_ANNOTATION_FULL/NoiseGIFT.csv");
-		resultFileOutputOTSU.SaveTextFile(ResultNoise.toString());
+		resultFileOutputOTSU.saveTextFile(ResultNoise.toString());
 	}
 	
 	
@@ -65,7 +66,7 @@ public class NoiseComputing {
 				}
 			}
 		}
-		meanIntensity = meanIntensity / voxelCounted;
+		meanIntensity /= voxelCounted;
 		return meanIntensity;
 		
 	}
@@ -90,6 +91,7 @@ public class NoiseComputing {
 		}
 		return voxelMedianValue;
 	}
+	
 }
 
 

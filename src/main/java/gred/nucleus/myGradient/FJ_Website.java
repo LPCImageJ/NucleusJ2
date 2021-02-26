@@ -3,6 +3,7 @@ package gred.nucleus.myGradient;
 import ij.plugin.BrowserLauncher;
 import ij.plugin.PlugIn;
 
+
 public class FJ_Website implements PlugIn {
 	
 	public void run(String arg) {
@@ -13,4 +14,5 @@ public class FJ_Website implements PlugIn {
 			FJ.error("Could not open default internet browser");
 		}
 	}
+	
 }

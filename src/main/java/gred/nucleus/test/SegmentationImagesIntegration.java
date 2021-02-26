@@ -5,6 +5,7 @@ import gred.nucleus.segmentation.SegmentationParameters;
 
 import java.io.IOException;
 
+
 public class SegmentationImagesIntegration {
 	
 	/*
@@ -20,6 +21,7 @@ public class SegmentationImagesIntegration {
  otsuModified.runSeveralImages2();
  }
  */
+	
 	
 	/**
 	 * @param input
@@ -81,4 +83,5 @@ public class SegmentationImagesIntegration {
         */
 		System.err.println("The program ended normally.");
 	}
+	
 }

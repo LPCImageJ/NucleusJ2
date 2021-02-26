@@ -10,9 +10,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+
 public class GenerateOverlay {
 	
 	HashMap<String, String> linkOverlayProjection = new HashMap<>();
+	
 	
 	public GenerateOverlay(String linkOverlayProjection) throws Exception {
 		File    overlayProjection = new File(linkOverlayProjection);
@@ -43,9 +45,9 @@ public class GenerateOverlay {
 	
 	public void run() {
 		for (Map.Entry<String, String> listOfFile : this.linkOverlayProjection.entrySet()) {
-			File      zprojectionFile = new File(listOfFile.getValue());
-			Directory output          = new Directory(zprojectionFile.getParent() + File.separator +
-			                                          "Overlay_Projection_MERGED");
+			File zprojectionFile = new File(listOfFile.getValue());
+			Directory output = new Directory(zprojectionFile.getParent() + File.separator +
+			                                 "Overlay_Projection_MERGED");
 			output.CheckAndCreateDir();
 			ImagePlus overlay     = IJ.openImage(listOfFile.getKey());
 			ImagePlus Zprojection = IJ.openImage(listOfFile.getValue());
@@ -62,4 +64,5 @@ public class GenerateOverlay {
 			Zprojection.close();
 		}
 	}
+	
 }

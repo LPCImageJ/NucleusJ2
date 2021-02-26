@@ -9,6 +9,7 @@ import ij.plugin.PlugIn;
 
 import java.io.File;
 
+
 /**
  * @author Tristan Dubos and Axel Poulet
  * @deprecated Method to segment the nucleus on batch
@@ -16,6 +17,7 @@ import java.io.File;
 public class NucleusSegmentationBatchPlugin_ implements PlugIn {
 	
 	private NucleusSegmentationBatchDialog _nucleusSegmentationBatchDialog = new NucleusSegmentationBatchDialog();
+	
 	
 	/**
 	 *
@@ -99,4 +101,5 @@ public class NucleusSegmentationBatchPlugin_ implements PlugIn {
 	public String getWorkDirectory() {
 		return _nucleusSegmentationBatchDialog.getWorkDirectory();
 	}
+	
 }

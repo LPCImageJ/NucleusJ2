@@ -4,6 +4,7 @@ import ij.ImagePlus;
 import ij.plugin.ContrastEnhancer;
 import ij.process.*;
 
+
 public class Thresholding {
 	
 	
@@ -16,7 +17,8 @@ public class Thresholding {
 	 *
 	 * @param imagePlusInput raw image
 	 *
-	 * @return OTSU threshold TODO STRUCTURES PROBABLY NEEDED
+	 * @return OTSU threshold
+	 * <p> TODO STRUCTURES PROBABLY NEEDED
 	 */
 	public int computeOtsuThreshold(ImagePlus imagePlusInput) {
 		AutoThresholder autoThresholder = new AutoThresholder();
@@ -49,5 +51,6 @@ public class Thresholding {
 		return imagePlusInput;
 		
 	}
+	
 }
 

@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+
 /**
  * Class to construct graphical interface for the chromocenter segmentation pipeline in batch
  *
@@ -31,6 +32,7 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 	private final        JFormattedTextField _jTextFieldZCalibration  = new JFormattedTextField(Number.class);
 	private final        JTextField          _jTextFieldUnit          = new JTextField();
 	private              boolean             _start                   = false;
+	
 	
 	/** Architecture of the graphical windows */
 	public ChromocenterSegmentationPipelineBatchDialog() {
@@ -167,8 +169,8 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.weightx = 2;
 		gc.weighty = 5;
-		gc.ipady = gc.anchor = GridBagConstraints.NORTHWEST;
-		
+		gc.anchor = GridBagConstraints.NORTHWEST;
+		gc.ipady = GridBagConstraints.NORTHWEST;
 		JLabel calibrationLabel = new JLabel("Calibration:");
 		gc.gridx = 0;
 		gc.gridy = 0;
@@ -358,11 +360,13 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 		}
 	}
 	
+	
 	/**
 	 *
 	 */
 	static class QuitListener implements ActionListener {
 		final ChromocenterSegmentationPipelineBatchDialog _chromocenterSegmentationPipelineBatchDialog;
+		
 		
 		/** @param chromocenterSegmentationPipelineBatchDialog chromocenterSegmentationPipelineBatchDialog GUI */
 		public QuitListener(ChromocenterSegmentationPipelineBatchDialog chromocenterSegmentationPipelineBatchDialog) {
@@ -376,11 +380,13 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 		public void actionPerformed(ActionEvent actionEvent) {
 			_chromocenterSegmentationPipelineBatchDialog.dispose();
 		}
+		
 	}
 	
 	/** Classes listener to interact with the several elements of the window */
 	class StartListener implements ActionListener {
 		final ChromocenterSegmentationPipelineBatchDialog _chromocenterSegmentationPipelineBatchDialog;
+		
 		
 		/** @param chromocenterSegmentationPipelineBatchDialog chromocenterSegmentationPipelineBatchDialog GUI */
 		public StartListener(ChromocenterSegmentationPipelineBatchDialog chromocenterSegmentationPipelineBatchDialog) {
@@ -405,6 +411,7 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 				_chromocenterSegmentationPipelineBatchDialog.dispose();
 			}
 		}
+		
 	}
 	
 	/**
@@ -427,6 +434,7 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 			}
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
+		
 	}
 	
 	
@@ -450,5 +458,7 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 			}
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
+		
 	}
+	
 }

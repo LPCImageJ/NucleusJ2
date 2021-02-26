@@ -62,6 +62,7 @@ public class Distance_Map implements PlugInFilter {
 	public  boolean   inverse = false;
 	private ImagePlus imp;
 	
+	
 	public int setup(String arg, ImagePlus imp) {
 		this.imp = imp;
 		return DOES_8G;
@@ -71,6 +72,7 @@ public class Distance_Map implements PlugInFilter {
 	public void run(ImageProcessor ip) {
 		apply(imp);
 	}
+	
 	
 	@SuppressWarnings("static-access")
 	public void apply(ImagePlus imagePlus) {
@@ -165,15 +167,17 @@ public class Distance_Map implements PlugInFilter {
 		//imagePlus.show();
 	}
 	
+	
 	//Modified from ImageJ code by Wayne Rasband
 	String stripExtension(String name) {
-		if (name != null) {
-			int dotIndex = name.lastIndexOf(".");
+		String strippedName = name;
+		if (strippedName != null) {
+			int dotIndex = strippedName.lastIndexOf(".");
 			if (dotIndex >= 0) {
-				name = name.substring(0, dotIndex);
+				strippedName = strippedName.substring(0, dotIndex);
 			}
 		}
-		return name;
+		return strippedName;
 	}
 	
 	
@@ -181,6 +185,7 @@ public class Distance_Map implements PlugInFilter {
 		int thread, nThreads, w, h, d, thresh;
 		float[][] s;
 		byte[][]  data;
+		
 		
 		public Step1Thread(int thread, int nThreads, int w, int h, int d, int thresh, float[][] s, byte[][] data) {
 			this.thread = thread;
@@ -236,11 +241,13 @@ public class Distance_Map implements PlugInFilter {
 				}
 			}
 		}//run
+		
 	}//Step1Thread
 	
 	static class Step2Thread extends Thread {
 		int thread, nThreads, w, h, d;
 		float[][] s;
+		
 		
 		public Step2Thread(int thread, int nThreads, int w, int h, int d, float[][] s) {
 			this.thread = thread;
@@ -276,7 +283,8 @@ public class Distance_Map implements PlugInFilter {
 							min = noResult;
 							delta = j;
 							for (int y = 0; y < h; y++) {
-								test = tempS[y] + delta * delta--;
+								test = tempS[y] + delta * delta;
+								delta--;
 								if (test < min) min = test;
 							}
 							tempInt[j] = min;
@@ -288,12 +296,14 @@ public class Distance_Map implements PlugInFilter {
 				}
 			}
 		}//run
+		
 	}//Step2Thread
 	
 	class Step3Thread extends Thread {
 		int thread, nThreads, w, h, d;
 		float[][] s;
 		byte[][]  data;
+		
 		
 		public Step3Thread(int thread, int nThreads, int w, int h, int d, float[][] s, byte[][] data) {
 			this.thread = thread;
@@ -344,7 +354,8 @@ public class Distance_Map implements PlugInFilter {
 								if (zEnd < k) zEnd = k;
 								delta = k - zBegin;
 								for (int z = zBegin; z <= zEnd; z++) {
-									test = tempS[z] + delta * delta--;
+									test = tempS[z] + delta * delta;
+									delta--;
 									if (test < min) min = test;
 									//min = (test < min) ? test : min;
 								}
@@ -358,5 +369,7 @@ public class Distance_Map implements PlugInFilter {
 				}
 			}
 		}//run
+		
 	}//Step2Thread
+	
 }

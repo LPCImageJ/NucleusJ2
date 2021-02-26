@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+
 public class SegmentationConfigDialog extends JFrame implements ItemListener {
 	private final JTextField         minVolume         = new JTextField();
 	private final JTextField         maxVolume         = new JTextField();
@@ -23,6 +24,7 @@ public class SegmentationConfigDialog extends JFrame implements ItemListener {
 	private       JPanel             XCalibration;
 	private       JPanel             YCalibration;
 	private       JPanel             ZCalibration;
+	
 	
 	public SegmentationConfigDialog(SegmentationDialog caller) {
 		this.caller = caller;
@@ -231,7 +233,8 @@ public class SegmentationConfigDialog extends JFrame implements ItemListener {
 	static class StartListener implements ActionListener {
 		SegmentationConfigDialog _segmentationDialog;
 		
-		/** @param segmentationDialog */
+		
+		/** @param segmentationDialog  */
 		public StartListener(SegmentationConfigDialog segmentationDialog) {
 			_segmentationDialog = segmentationDialog;
 		}
@@ -240,5 +243,7 @@ public class SegmentationConfigDialog extends JFrame implements ItemListener {
 		public void actionPerformed(ActionEvent actionEvent) {
 			_segmentationDialog.setVisible(false);
 		}
+		
 	}
+	
 }

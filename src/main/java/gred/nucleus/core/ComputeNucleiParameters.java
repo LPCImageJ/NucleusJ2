@@ -10,9 +10,11 @@ import loci.plugins.BF;
 import java.io.File;
 import java.util.ArrayList;
 
+
 public class ComputeNucleiParameters {
 	
 	private final PluginParameters m_pluginParameters;
+	
 	
 	/**
 	 * Constructor with input, output and config files
@@ -61,7 +63,6 @@ public class ComputeNucleiParameters {
 	/**
 	 * Compute nuclei parameters generate from segmentation ( OTSU / GIFT) Useful if parallel segmentation was use to
 	 * get results parameter in the same folder.
-	 *
 	 */
 	public void run() {
 		Directory directoryRawInput = new Directory(this.m_pluginParameters.getInputFolder());
@@ -95,7 +96,7 @@ public class ComputeNucleiParameters {
 				+ directoryRawInput.getSeparator()
 				+ "result_Segmentation_Analyse.csv");
 		
-		resultFileOutputOTSU.SaveTextFile(outputCropGeneralInfoOTSU.toString());
+		resultFileOutputOTSU.saveTextFile(outputCropGeneralInfoOTSU.toString());
 		
 		
 	}
@@ -126,4 +127,5 @@ public class ComputeNucleiParameters {
 		       "MedianIntensityBackground\t" +
 		       "ImageSize\n";
 	}
+	
 }

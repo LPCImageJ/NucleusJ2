@@ -7,6 +7,7 @@ import ij.io.FileSaver;
 
 import java.io.File;
 
+
 public class BitsConvert {
 	
 	public static void main(String[] args) {
@@ -26,4 +27,5 @@ public class BitsConvert {
 		FileSaver fileSaver = new FileSaver(imagePlusInput);
 		fileSaver.saveAsTiffStack(pathFile);
 	}
+	
 }

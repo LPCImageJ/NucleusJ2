@@ -2,10 +2,12 @@ package gred.nucleus.utils;
 
 import java.util.ArrayList;
 
+
 public class ConnectedComponents {
 	private final ArrayList<Double> _listLabel = new ArrayList<>();
 	private       double[][]        _image;
 	private       String            _axesName;
+	
 	
 	/**
 	 * Iterates over the image pixels and look for these connected components
@@ -267,4 +269,5 @@ public class ConnectedComponents {
 	public ArrayList<VoxelRecord> getBoundaryVoxel(int label) {
 		return detectVoxelBoundary(label);
 	}
+	
 }

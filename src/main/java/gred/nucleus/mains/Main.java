@@ -8,7 +8,7 @@ import gred.nucleus.autocrop.*;
 import gred.nucleus.cli.*;
 import gred.nucleus.core.ComputeNucleiParameters;
 import gred.nucleus.exceptions.FileInOut;
-import gred.nucleus.machineLeaningUtils.ComputeNucleiParametersML;
+import gred.nucleus.machineLearningUtils.ComputeNucleiParametersML;
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
 import ij.ImagePlus;
@@ -63,13 +63,8 @@ public class Main {
 	 *
 	 * @param inputDirectory  path to the raw image's folder
 	 * @param outputDirectory path to output folder analysis
-	 *
-	 * @throws IOException
-	 * @throws FileInOut
-	 * @throws Exception
 	 */
-	public static void runAutoCropFile(String inputDirectory, String outputDirectory)
-	throws IOException, FileInOut, Exception {
+	public static void runAutoCropFile(String inputDirectory, String outputDirectory) {
 		//AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
 		AutocropParameters autocropParameters = new AutocropParameters(inputDirectory, outputDirectory);
 		AutoCropCalling    autoCrop           = new AutoCropCalling(autocropParameters);
@@ -159,6 +154,7 @@ public class Main {
 	
 	
 	//========================= Segmentation calling ===========================================
+	
 	
 	/**
 	 * Method to run segmentation with input folder, output folder :
@@ -341,6 +337,7 @@ public class Main {
 	
 	// TODO  configFILE FACTORISABLE AVEC computeNucleusParameters SANS CONFINGFILE
 	
+	
 	/**
 	 * Compute parameter from raw data folder and segmented data :
 	 *
@@ -355,12 +352,13 @@ public class Main {
 	
 	// TODO AJOUTER computeNucleusParametersDL avec configFILE FACTORISABLE AVEC computeNucleusParametersCONFINGFILE
 	
+	
 	/**
 	 * Compute parameters from segmented images produce by ML segmentation. During this process we keep only biggest
 	 * connected component.
 	 *
-	 * @param rawImagesInputFolder  : path raw images folder
-	 * @param segmentedImagesFolder : path segmented images folder
+	 * @param rawImagesInputFolder    Path raw images folder
+	 * @param segmentedImagesFolder   Path segmented images folder
 	 *
 	 * @throws IOException
 	 * @throws FormatException
@@ -379,8 +377,8 @@ public class Main {
 	 * Generate a projection from coordinate file. 2 steps : - 1 generate max projection from raw image - 2 draw boxes
 	 * on max projection
 	 *
-	 * @param pathToCoordinates : folder containing coordinate files
-	 * @param pathToRaw         : folder containing raw images associate
+	 * @param pathToCoordinates   Folder containing coordinate files
+	 * @param pathToRaw           Folder containing raw images associate
 	 *
 	 * @throws Exception
 	 */
@@ -399,9 +397,9 @@ public class Main {
 	/**
 	 * Method to draw missing boxes in initial projection after manual filtering.
 	 *
-	 * @param pathToGIFTSeg     : path to cropped images
-	 * @param pathToZprojection : path to projection images
-	 * @param pathToCoordinate  : path to coordinate
+	 * @param pathToGIFTSeg       Path to cropped images
+	 * @param pathToZprojection   Path to projection images
+	 * @param pathToCoordinate    Path to coordinate
 	 *
 	 * @throws IOException
 	 * @throws FormatException
@@ -468,13 +466,13 @@ public class Main {
 		System.setProperty("java.awt.headless", "false");
 		
 		if (listArgs.contains("-h") || listArgs.contains("-help")) {
-			CLIHelper command = new CLIHelper(args);
+			CLIHelper.run(args);
 		} else if ((listArgs.contains("-ome")) || (listArgs.contains("-omero"))) {
-			CLIActionOptionOMERO command        = new CLIActionOptionOMERO(args);
-			CLIRunActionOMERO    runActionOMERO = new CLIRunActionOMERO(command.getCmd());
+			CLIActionOptionOMERO command = new CLIActionOptionOMERO(args);
+			new CLIRunActionOMERO(command.getCmd());
 		} else {
 			CLIActionOptionCmdLine command = new CLIActionOptionCmdLine(args);
-			CLIRunAction           runCmd  = new CLIRunAction(command.getCmd());
+			new CLIRunAction(command.getCmd());
 		}
 	}
 	
@@ -651,6 +649,7 @@ public class Main {
 		}
 		System.out.println("Fin du programme");
 	}
+	
 }
 
 

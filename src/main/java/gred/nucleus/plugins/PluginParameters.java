@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Properties;
 
+
 public class PluginParameters {
 	
 	/** Activation of manual calibration parameter */
@@ -26,6 +27,7 @@ public class PluginParameters {
 	/** Autocrop parameters information */
 	public String  m_headerInfo;
 	
+	
 	/** Constructor with default parameter */
 	public PluginParameters() {
 	}
@@ -34,14 +36,14 @@ public class PluginParameters {
 	/**
 	 * Constructor with default parameter
 	 *
-	 * @param inputFolder  : path folder containing Images
-	 * @param outputFolder : path folder output analyse
+	 * @param inputFolder    Path folder containing Images
+	 * @param outputFolder   Path folder output analyse
 	 */
 	public PluginParameters(String inputFolder, String outputFolder) {
 		checkInputPaths(inputFolder, outputFolder);
 		Directory dirOutput = new Directory(outputFolder);
 		dirOutput.CheckAndCreateDir();
-		this.m_outputFolder = dirOutput.get_dirPath();
+		this.m_outputFolder = dirOutput.getDirPath();
 		
 		
 	}
@@ -50,17 +52,17 @@ public class PluginParameters {
 	/**
 	 * Constructor with specific calibration in x y and z
 	 *
-	 * @param inputFolder  : path folder containing Images
-	 * @param outputFolder : path folder output analyse
+	 * @param inputFolder    Path folder containing Images
+	 * @param outputFolder   Path folder output analyse
 	 * @param xCal         x calibration voxel
-	 * @param yCal         : y calibration voxel
-	 * @param zCal         : z calibration voxel
+	 * @param yCal           Y calibration voxel
+	 * @param zCal           Z calibration voxel
 	 */
 	public PluginParameters(String inputFolder, String outputFolder, double xCal, double yCal, double zCal) {
 		checkInputPaths(inputFolder, outputFolder);
 		Directory dirOutput = new Directory(outputFolder);
 		dirOutput.CheckAndCreateDir();
-		this.m_outputFolder = dirOutput.get_dirPath();
+		this.m_outputFolder = dirOutput.getDirPath();
 		this.m_manualParameter = true;
 		this.m_xCal = xCal;
 		this.m_yCal = yCal;
@@ -72,15 +74,15 @@ public class PluginParameters {
 	/**
 	 * Constructor using input , output folders and config file (for command line execution)
 	 *
-	 * @param inputFolder      : path folder containing Images
-	 * @param outputFolder     : path folder output analyse
-	 * @param pathToConfigFile : path to the config file
+	 * @param inputFolder        Path folder containing Images
+	 * @param outputFolder       Path folder output analyse
+	 * @param pathToConfigFile   Path to the config file
 	 */
 	public PluginParameters(String inputFolder, String outputFolder, String pathToConfigFile) {
 		checkInputPaths(inputFolder, outputFolder);
 		Directory dirOutput = new Directory(outputFolder);
 		dirOutput.CheckAndCreateDir();
-		this.m_outputFolder = dirOutput.get_dirPath();
+		this.m_outputFolder = dirOutput.getDirPath();
 		addGeneralProperties(pathToConfigFile);
 		
 	}
@@ -88,8 +90,8 @@ public class PluginParameters {
 	
 	public void addGeneralProperties(String pathToConfigFile) {
 		
-		Properties  prop     = new Properties();
-		InputStream is       = null;
+		Properties  prop = new Properties();
+		InputStream is   = null;
 		try {
 			is = new FileInputStream(pathToConfigFile);
 		} catch (FileNotFoundException ex) {
@@ -248,9 +250,8 @@ public class PluginParameters {
 	public double getXCalibration(ImagePlus raw) {
 		double xCal;
 		if (this.m_manualParameter) {
-			xCal = this.getXCal();
+			xCal = this.m_xCal;
 		} else {
-			
 			xCal = raw.getCalibration().pixelWidth;
 		}
 		return xCal;
@@ -260,7 +261,7 @@ public class PluginParameters {
 	public double getYCalibration(ImagePlus raw) {
 		double yCal;
 		if (this.m_manualParameter) {
-			yCal = this.getYCal();
+			yCal = this.m_yCal;
 		} else {
 			yCal = raw.getCalibration().pixelHeight;
 		}
@@ -270,11 +271,12 @@ public class PluginParameters {
 	
 	public double getZCalibration(ImagePlus raw) {
 		double zCal;
-		if (this.getManualParameter()) {
-			zCal = this.getZCal();
+		if (this.m_manualParameter) {
+			zCal = this.m_zCal;
 		} else {
 			zCal = raw.getCalibration().pixelDepth;
 		}
 		return zCal;
 	}
+	
 }

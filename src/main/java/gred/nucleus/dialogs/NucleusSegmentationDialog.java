@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+
 /**
  * Class to construct graphical interface for the nucleus segmentation
  *
@@ -88,7 +89,7 @@ public class NucleusSegmentationDialog extends JFrame {
 										new Insets(20, 60, 0, 0), 0, 0
 								)
 				);
-		_jTextFieldXCalibration.setText("" + cal.pixelWidth);
+		_jTextFieldXCalibration.setText(String.valueOf(cal.pixelWidth));
 		_jTextFieldXCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
 		
 		_jLabelYCalibration = new JLabel();
@@ -116,7 +117,7 @@ public class NucleusSegmentationDialog extends JFrame {
 										new Insets(45, 60, 0, 0), 0, 0
 								)
 				);
-		_jTextFieldYCalibration.setText("" + cal.pixelHeight);
+		_jTextFieldYCalibration.setText(String.valueOf(cal.pixelHeight));
 		_jTextFieldYCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
 		
 		_jLabelZCalibration = new JLabel();
@@ -144,7 +145,7 @@ public class NucleusSegmentationDialog extends JFrame {
 										new Insets(70, 60, 0, 0), 0, 0
 								)
 				);
-		_jTextFieldZCalibration.setText("" + cal.pixelDepth);
+		_jTextFieldZCalibration.setText(String.valueOf(cal.pixelDepth));
 		_jTextFieldZCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
 		
 		_jLabelUnit = new JLabel();
@@ -351,31 +352,12 @@ public class NucleusSegmentationDialog extends JFrame {
 	}
 	
 	
-	/** Classes listener to interact with the several elements of the window */
-	class StartListener implements ActionListener {
-		NucleusSegmentationDialog _nucleusSegmentationDialog;
-		
-		/** @param nucleusSegmentationDialog */
-		public StartListener(NucleusSegmentationDialog nucleusSegmentationDialog) {
-			_nucleusSegmentationDialog = nucleusSegmentationDialog;
-		}
-		
-		
-		/**
-		 *
-		 */
-		public void actionPerformed(ActionEvent actionEvent) {
-			_start = true;
-			_nucleusSegmentationDialog.dispose();
-		}
-	}
-	
-	
 	/**
 	 *
 	 */
 	static class QuitListener implements ActionListener {
 		NucleusSegmentationDialog _nucleusSegmentationDialog;
+		
 		
 		public QuitListener(NucleusSegmentationDialog nucleusSegmentationDialog) {
 			_nucleusSegmentationDialog = nucleusSegmentationDialog;
@@ -388,5 +370,28 @@ public class NucleusSegmentationDialog extends JFrame {
 		public void actionPerformed(ActionEvent actionEvent) {
 			_nucleusSegmentationDialog.dispose();
 		}
+		
 	}
+	
+	/** Classes listener to interact with the several elements of the window */
+	class StartListener implements ActionListener {
+		NucleusSegmentationDialog _nucleusSegmentationDialog;
+		
+		
+		/** @param nucleusSegmentationDialog  */
+		public StartListener(NucleusSegmentationDialog nucleusSegmentationDialog) {
+			_nucleusSegmentationDialog = nucleusSegmentationDialog;
+		}
+		
+		
+		/**
+		 *
+		 */
+		public void actionPerformed(ActionEvent actionEvent) {
+			_start = true;
+			_nucleusSegmentationDialog.dispose();
+		}
+		
+	}
+	
 }

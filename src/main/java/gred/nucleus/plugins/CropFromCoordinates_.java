@@ -5,13 +5,15 @@ import gred.nucleus.dialogs.CropFromCoodinateDialog;
 import ij.IJ;
 import ij.plugin.PlugIn;
 
-public class CropFromCoordinate_ implements PlugIn {
+
+public class CropFromCoordinates_ implements PlugIn {
 	
 	public static void cropFromCoordinates(String coordinateDir) throws Exception {
 		
 		CropFromCoordinates test = new CropFromCoordinates(coordinateDir);
 		test.runCropFromCoordinate();
 	}
+	
 	
 	@Override
 	public void run(String arg) {
@@ -46,4 +48,5 @@ public class CropFromCoordinate_ implements PlugIn {
 			}
 		}
 	}
+	
 }

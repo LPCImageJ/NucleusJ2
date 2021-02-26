@@ -8,9 +8,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+
 public class CropFromCoordinates {
 	
 	HashMap<String, String> coordinateToRawImage = new HashMap<>();
+	
 	
 	/**
 	 * Method to crop image with coordinate in tab file : tabulate file : pathToCoordinateFile pathToRawImageAssociate
@@ -82,4 +84,5 @@ public class CropFromCoordinates {
 		}
 		return boxLists;
 	}
+	
 }

@@ -23,6 +23,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Vector;
 
+
 public class FJ_Statistics implements PlugIn, ItemListener, WindowListener {
 	
 	private static final String[] labels = {
@@ -70,6 +71,7 @@ public class FJ_Statistics implements PlugIn, ItemListener, WindowListener {
 	private        Checkbox channelBox;
 	private        Checkbox timeBox;
 	private        Checkbox sliceBox;
+	
 	
 	@SuppressWarnings("rawtypes")
 	public void run(String arg) {
@@ -173,6 +175,7 @@ public class FJ_Statistics implements PlugIn, ItemListener, WindowListener {
 	
 	public void windowOpened(final WindowEvent e) {
 	}
+	
 }
 
 class FJStatistics {
@@ -191,6 +194,7 @@ class FJStatistics {
 	private boolean slice    = false;
 	@SuppressWarnings("unused")
 	private int     decimals = 3;
+	
 	
 	void run(
 			final ImagePlus imp,
@@ -270,11 +274,12 @@ class FJStatistics {
 				msg.status("Computing statistics per slice / time / channel...");
 				pgs.steps(dims.c * dims.t * dims.z);
 				pgs.start();
-				for (cMin.c = cMax.c = 0; cMin.c < dims.c; ++cMin.c, ++cMax.c) {
-					for (cMin.t = cMax.t = 0; cMin.t < dims.t; ++cMin.t, ++cMax.t) {
-						for (cMin.z = cMax.z = 0; cMin.z < dims.z; ++cMin.z, ++cMax.z) {
+				for (cMin.c = 0, cMax.c = 0; cMin.c < dims.c; ++cMin.c, ++cMax.c) {
+					for (cMin.t = 0, cMax.t = 0; cMin.t < dims.t; ++cMin.t, ++cMax.t) {
+						for (cMin.z = 0, cMax.z = 0; cMin.z < dims.z; ++cMin.z, ++cMax.z) {
 							stats.run(img, cMin, cMax, mask);
-							final String prelude = (++number) +
+							++number;
+							final String prelude = number +
 							                       namePrelude + "\t" +
 							                       (cMin.c + 1) + "\t" +
 							                       (cMin.t + 1) + "\t" +
@@ -292,10 +297,11 @@ class FJStatistics {
 				pgs.steps(dims.c * dims.t);
 				pgs.start();
 				cMax.z = dims.z - 1;
-				for (cMin.c = cMax.c = 0; cMin.c < dims.c; ++cMin.c, ++cMax.c) {
-					for (cMin.t = cMax.t = 0; cMin.t < dims.t; ++cMin.t, ++cMax.t) {
+				for (cMin.c = 0, cMax.c = 0; cMin.c < dims.c; ++cMin.c, ++cMax.c) {
+					for (cMin.t = 0, cMax.t = 0; cMin.t < dims.t; ++cMin.t, ++cMax.t) {
 						stats.run(img, cMin, cMax, mask);
-						final String prelude = (++number) + namePrelude + "\t" + (cMin.c + 1) + "\t" + (cMin.t + 1);
+						++number;
+						final String prelude = number + namePrelude + "\t" + (cMin.c + 1) + "\t" + (cMin.t + 1);
 						textpanel.append(prelude + results());
 						pgs.step();
 					}
@@ -309,9 +315,10 @@ class FJStatistics {
 				pgs.start();
 				cMax.z = dims.z - 1;
 				cMax.t = dims.t - 1;
-				for (cMin.c = cMax.c = 0; cMin.c < dims.c; ++cMin.c, ++cMax.c) {
+				for (cMin.c = 0, cMax.c = 0; cMin.c < dims.c; ++cMin.c, ++cMax.c) {
 					stats.run(img, cMin, cMax, mask);
-					final String prelude = (++number) + namePrelude + "\t" + (cMin.c + 1);
+					++number;
+					final String prelude = number + namePrelude + "\t" + (cMin.c + 1);
 					textpanel.append(prelude + results());
 					pgs.step();
 				}
@@ -325,7 +332,8 @@ class FJStatistics {
 				stats.messenger.status(FJ_Options.pgs);
 				stats.progressor.display(FJ_Options.pgs);
 				stats.run(img, cMin, cMax, mask);
-				final String prelude = (++number) + namePrelude;
+				++number;
+				final String prelude = number + namePrelude;
 				textpanel.append(prelude + results());
 			}
 		} catch (OutOfMemoryError e) {
@@ -370,6 +378,7 @@ class FJStatistics {
 		return cols.toString();
 	}
 	
+	
 	@SuppressWarnings("static-access")
 	private String results() {
 		
@@ -392,4 +401,5 @@ class FJStatistics {
 		
 		return res.toString();
 	}
+	
 }

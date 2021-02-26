@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
+
 public class CropFromCoodinateDialog extends JFrame implements ActionListener {
 	private static final long         serialVersionUID   = 1L;
 	static private final String       newline            = "\n";
@@ -18,17 +19,18 @@ public class CropFromCoodinateDialog extends JFrame implements ActionListener {
 	private final        JTextField   _jCoordFileChooser = new JTextField();
 	private final        JFileChooser fc                 = new JFileChooser();
 	private final        JButton      linkFileButton;
-	private final String linkChooserName  = "linkChooser";
-	private final String imageChooserName = "imageChooser";
-	private final String coordChooserName = "coordChooser";
+	private final        String       linkChooserName    = "linkChooser";
+	private final        String       imageChooserName   = "imageChooser";
+	private final        String       coordChooserName   = "coordChooser";
 	private              JLabel       _jLabelImage;
 	private              JLabel       _jLabelCoord;
 	private              boolean      _start             = false;
 	private              JButton      imageButton;
 	private              JButton      coordButton;
-	private       File   selectedInput;
-	private       File   selectedOutput;
-	private       File   selectedConfig;
+	private              File         selectedInput;
+	private              File         selectedOutput;
+	private              File         selectedConfig;
+	
 	
 	public CropFromCoodinateDialog() {
 		this.setTitle("Autocrop NucleusJ2");
@@ -170,11 +172,28 @@ public class CropFromCoodinateDialog extends JFrame implements ActionListener {
 	}
 	
 	
+	static class QuitListener implements ActionListener {
+		CropFromCoodinateDialog _autocropDialog;
+		
+		
+		/** @param autocropDialog  */
+		public QuitListener(CropFromCoodinateDialog autocropDialog) {
+			_autocropDialog = autocropDialog;
+		}
+		
+		
+		public void actionPerformed(ActionEvent actionEvent) {
+			_autocropDialog.dispose();
+		}
+		
+	}
+	
 	/** Classes listener to interact with the several elements of the window */
 	class StartListener implements ActionListener {
 		CropFromCoodinateDialog _autocropDialog;
 		
-		/** @param autocropDialog */
+		
+		/** @param autocropDialog  */
 		public StartListener(CropFromCoodinateDialog autocropDialog) {
 			_autocropDialog = autocropDialog;
 		}
@@ -184,19 +203,7 @@ public class CropFromCoodinateDialog extends JFrame implements ActionListener {
 			_start = true;
 			_autocropDialog.dispose();
 		}
+		
 	}
 	
-	static class QuitListener implements ActionListener {
-		CropFromCoodinateDialog _autocropDialog;
-		
-		/** @param autocropDialog */
-		public QuitListener(CropFromCoodinateDialog autocropDialog) {
-			_autocropDialog = autocropDialog;
-		}
-		
-		
-		public void actionPerformed(ActionEvent actionEvent) {
-			_autocropDialog.dispose();
-		}
-	}
 }

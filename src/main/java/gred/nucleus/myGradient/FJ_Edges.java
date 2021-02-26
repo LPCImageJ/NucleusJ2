@@ -16,16 +16,18 @@ import java.awt.event.ItemListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
+
 public class FJ_Edges implements PlugIn, ItemListener, WindowListener {
 	
-	private static final Point    pos    = new Point(-1, -1);
-	private static boolean compute  = true;
-	private static boolean suppress = false;
-	private static       String   scale  = "1.0";
-	private static       String   lower  = "";
-	private static       String   higher = "";
+	private static final Point    pos      = new Point(-1, -1);
+	private static       boolean  compute  = true;
+	private static       boolean  suppress = false;
+	private static       String   scale    = "1.0";
+	private static       String   lower    = "";
+	private static       String   higher   = "";
 	private              Checkbox computeBox;
 	private              Checkbox suppressBox;
+	
 	
 	public void run(String arg) {
 		
@@ -108,18 +110,17 @@ public class FJ_Edges implements PlugIn, ItemListener, WindowListener {
 	
 	public void windowOpened(final WindowEvent e) {
 	}
+	
 }
 
 class FJEdges {
 	
-	void run(
-			final ImagePlus imp,
-			final boolean compute,
-			final String scale,
-			final boolean suppress,
-			final String lower,
-			final String higher
-	        ) {
+	void run(final ImagePlus imp,
+	         final boolean compute,
+	         final String scale,
+	         final boolean suppress,
+	         final String lower,
+	         final String higher) {
 		
 		try {
 			double  scaleVal;
@@ -167,7 +168,8 @@ class FJEdges {
 				final Aspects aspects = newImg.aspects();
 				if (!FJ_Options.isotropic) newImg.aspects(new Aspects());
 				final Edges edges = new Edges();
-				progressor.range(pls[pl], pls[++pl]);
+				++pl;
+				progressor.range(pls[pl], pls[pl]);
 				edges.progressor.parent(progressor);
 				edges.messenger.log(FJ_Options.log);
 				edges.messenger.status(FJ_Options.pgs);
@@ -177,7 +179,8 @@ class FJEdges {
 			
 			if (thresholdMode > 0) {
 				final Thresholder thresholder = new Thresholder();
-				progressor.range(pls[pl], pls[++pl]);
+				++pl;
+				progressor.range(pls[pl], pls[pl]);
 				thresholder.progressor.parent(progressor);
 				thresholder.messenger.log(FJ_Options.log);
 				thresholder.messenger.status(FJ_Options.pgs);
@@ -211,4 +214,5 @@ class FJEdges {
 			
 		}
 	}
+	
 }

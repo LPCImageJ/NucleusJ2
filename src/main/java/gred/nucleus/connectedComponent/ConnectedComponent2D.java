@@ -10,94 +10,91 @@
 package gred.nucleus.connectedComponent;
 
 
+import gred.nucleus.utils.Voxel;
 import ij.ImagePlus;
 import ij.process.ImageProcessor;
-import gred.nucleus.utils.Voxel;
-
 
 import java.util.LinkedList;
 
 
 /**
  * Class dedicated to connected components labeling in 3D images
- * 
+ *
  * @author Remy Malgouyres, Tristan Dubos and Axel Poulet
- * 
- * TODO : This class has not been tested and should probably be worked out before use.
- * 
+ * <p> TODO : This class has not been tested and should probably be worked out before use.
  */
 public class ConnectedComponent2D extends ConnectedComponent {
-
+	
 	/**
 	 * Constructor from an ImageWrapper representing a binary image and the foreground color in this image
-	 * @param inputImage input (probably binary) image, the components of which to compute.
+	 *
+	 * @param inputImage      input (probably binary) image, the components of which to compute.
 	 * @param foregroundColor label of the 1's in the input image inputImage
 	 */
 	protected ConnectedComponent2D(ImagePlus inputImage, int foregroundColor) {
 		super(inputImage, foregroundColor);
 	}
-
-
+	
+	
 	/**
-	 * Performs a breadth first search of the connected component for labeling
-	 * The method goes over all the voxels in the connected component of the object
-	 * of the initial voxel.
-	 * The method sets the fields of the ComponentInfo parameter to record the status of the component.
-	 * 
-	 * @param voxelShort initial voxel of the connected component
+	 * Performs a breadth first search of the connected component for labeling The method goes over all the voxels in
+	 * the connected component of the object of the initial voxel. The method sets the fields of the ComponentInfo
+	 * parameter to record the status of the component.
+	 *
+	 * @param voxelShort   initial voxel of the connected component
 	 * @param currentLabel label to set for the voxels of the component
 	 */
-	protected void breadthFirstSearch(	Voxel voxelShort, short currentLabel, ComponentInfo componentInfo) {
-
+	protected void breadthFirstSearch(Voxel voxelShort, short currentLabel, ComponentInfo componentInfo) {
+		
 		// FIFO for the Breadth First Search algorithm
-		// LinkedList is more efficient than ArrayList 
+		// LinkedList is more efficient than ArrayList
 		// because poll() (alias Remove(0)) is constant time !!!
 		LinkedList<Voxel> voxelFifo = new LinkedList<>();
-
+		
 		// add initial voxel to the FIFO
 		voxelFifo.add(voxelShort);
 		while (!voxelFifo.isEmpty()) {
 			// Retrieve and remove the head of the FIFO
 			Voxel polledVoxelShort = voxelFifo.poll();
-			short iV = polledVoxelShort.getX();
-			short jV = polledVoxelShort.getY();
-
+			short iV               = polledVoxelShort.getX();
+			short jV               = polledVoxelShort.getY();
+			
 			//			freeVoxel();
-
+			
 			// Determine the neighborhood taking into account the image's boundaries
 			short iMin, iMax, jMin, jMax;
-			if (iV-1 >= 0)
-				iMin = (short)(iV-1);
-			else{
+			if (iV - 1 >= 0) {
+				iMin = (short) (iV - 1);
+			} else {
 				iMin = 0;
 				componentInfo.setOnTheeBorder();
 			}
-
-			if (jV-1 >= 0)
-				jMin = (short)(jV-1);
-			else{
+			
+			if (jV - 1 >= 0) {
+				jMin = (short) (jV - 1);
+			} else {
 				jMin = 0;
 				componentInfo.setOnTheeBorder();
 			}
-
-			if (iV+1 < this.m_inputImage.getWidth())
-				iMax = (short)(iV+1);
-			else{
-				iMax = (short)(this.m_inputImage.getWidth()-1);
+			
+			if (iV + 1 < this.m_inputImage.getWidth()) {
+				iMax = (short) (iV + 1);
+			} else {
+				iMax = (short) (this.m_inputImage.getWidth() - 1);
 				componentInfo.setOnTheeBorder();
 			}
-
-			if (jV+1 < this.m_inputImage.getHeight())
-				jMax = (short)(jV+1);
-			else{
-				jMax = (short)(this.m_inputImage.getHeight()-1);
+			
+			if (jV + 1 < this.m_inputImage.getHeight()) {
+				jMax = (short) (jV + 1);
+			} else {
+				jMax = (short) (this.m_inputImage.getHeight() - 1);
 				componentInfo.setOnTheeBorder();
 			}
-
+			
 			ImageProcessor imgProc = m_inputImage.getProcessor();
 			// For each neighbor :
-			for (short ii = iMin ; ii <= iMax ; ii++) {
-				for (short jj = jMin ; jj <= jMax; jj++) {
+			for (short ii = iMin; ii <= iMax; ii++) {
+				for (short jj = jMin; jj <= jMax; jj++) {
 					// If the neighbor (different from VoxelRecordShort) is a 1 and not labeled
 					if ((getLabel(ii, jj, 0) == 0) && (imgProc.get(ii, jj) == this.m_foregroundColor)) {
 						// Set the voxel's label
@@ -105,28 +102,28 @@ public class ConnectedComponent2D extends ConnectedComponent {
 						// Increment component's cardinality
 						componentInfo.incrementNumberOfPoints();
 						// Add to FIFO
-						voxelFifo.add(new Voxel(ii, jj, (short)0));
+						voxelFifo.add(new Voxel(ii, jj, (short) 0));
 					}
 				}
 			}
 		}
 	}
-
-
+	
+	
 	/** labels the connected components of the input image (attribute m_ip) */
 	@Override
 	public void doLabelConnectedComponent() {
-		short currentLabel = 0;
-		ImageProcessor imgProc = m_inputImage.getProcessor();
+		short          currentLabel = 0;
+		ImageProcessor imgProc      = m_inputImage.getProcessor();
 		for (short i = 0; i < this.m_inputImage.getWidth(); i++) {
 			for (short j = 0; j < this.m_inputImage.getHeight(); j++) {
 				if (imgProc.getPixel(i, j) == this.m_foregroundColor && getLabel(i, j, 0) == 0) {
 					currentLabel++;
 					this.m_labels[i][j][0] = currentLabel;
-					ComponentInfo componentInfo = new ComponentInfo( currentLabel, 1, new Voxel(i, j, (short) 0), false);
+					ComponentInfo componentInfo = new ComponentInfo(currentLabel, 1, new Voxel(i, j, (short) 0), false);
 					try {
-						breadthFirstSearch( new Voxel(i, j, (short)0), currentLabel, componentInfo);
-					}catch (Exception e){
+						breadthFirstSearch(new Voxel(i, j, (short) 0), currentLabel, componentInfo);
+					} catch (Exception e) {
 						e.printStackTrace();
 						System.exit(0);
 					}
@@ -135,5 +132,6 @@ public class ConnectedComponent2D extends ConnectedComponent {
 			}
 		}
 	}
+	
 } // end of class
 

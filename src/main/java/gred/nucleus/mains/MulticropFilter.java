@@ -1,13 +1,14 @@
 package gred.nucleus.mains;
 
-import gred.nucleus.filesInputOutput.Directory;
-import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.autocrop.AnnotateAutoCrop;
+import gred.nucleus.autocrop.AutocropParameters;
+import gred.nucleus.filesInputOutput.Directory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
+
 
 public class MulticropFilter {
 	
@@ -16,8 +17,8 @@ public class MulticropFilter {
 		Directory directoryCoordinates =
 				new Directory("/home/titus/Bureau/TEST_NJ/AUTOCROP/coordonneeProjection/coordonnee/");
 		Directory directoryTIF = new Directory("/home/titus/Bureau/TEST_NJ/AUTOCROP/coordonneeProjection/raw/");
-		directoryCoordinates.listAllFiles(directoryCoordinates.get_dirPath());
-		directoryTIF.listAllFiles(directoryTIF.get_dirPath());
+		directoryCoordinates.listAllFiles(directoryCoordinates.getDirPath());
+		directoryTIF.listAllFiles(directoryTIF.getDirPath());
 		for (short i = 0; i < directoryCoordinates.getNumberFiles(); ++i) {
 			File coordinateFile = directoryCoordinates.getFile(i);
 			
@@ -66,5 +67,6 @@ public class MulticropFilter {
 		}
 		return boxLists;
 	}
+	
 }
 

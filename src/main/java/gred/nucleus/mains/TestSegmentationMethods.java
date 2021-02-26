@@ -23,6 +23,7 @@ public class TestSegmentationMethods {
  }
  */
 	
+	
 	/**
 	 * @param input
 	 * @param output
@@ -142,4 +143,5 @@ public class TestSegmentationMethods {
 		System.out.println("END :" + timestampEnd);
 		
 	}
+	
 }

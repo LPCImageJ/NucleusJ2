@@ -57,11 +57,11 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 	                                            .numberOfArgs(1)
 	                                            .build();
 	
+	
 	/**
 	 * Constructor with argument
 	 *
-	 * @param argument : list of command line argument
-	 *
+	 * @param argument List of command line argument
 	 */
 	public CLIActionOptionOMERO(String[] argument) {
 		super(argument);
@@ -139,6 +139,7 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 	private Option getOutputFolder() {
 		return this.m_outputFolder;
 	}
+	
 }
 
 //        if(cmd.getOptionValue("action").equals("autocrop")) {

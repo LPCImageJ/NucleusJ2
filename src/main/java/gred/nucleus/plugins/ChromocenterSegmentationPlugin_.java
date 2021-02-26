@@ -8,10 +8,10 @@ import ij.gui.GenericDialog;
 import ij.measure.Calibration;
 import ij.plugin.PlugIn;
 
+
 /**
- * Method to detect the chromocenters on one image
- *
  * @author Poulet Axel
+ * @deprecated Method to detect the chromocenters on one image
  */
 public class ChromocenterSegmentationPlugin_ implements PlugIn {
 	
@@ -19,7 +19,7 @@ public class ChromocenterSegmentationPlugin_ implements PlugIn {
 	 *
 	 */
 	public void run(String arg) {
-		int    indexRawImage      = 0;
+		int    indexRawImage       = 0;
 		int    indexSegmentedImage = 0;
 		double xCalibration        = 1, yCalibration = 1, zCalibration = 1;
 		String unit                = "pixel";
@@ -69,9 +69,10 @@ public class ChromocenterSegmentationPlugin_ implements PlugIn {
 		imagePlusInput.setCalibration(calibration);
 		imagePlusSegmented.setCalibration(calibration);
 		ChromocentersEnhancement chromocentersSegmentation = new ChromocentersEnhancement();
-		ImagePlus                imagePlusContrast        =
+		ImagePlus imagePlusContrast =
 				chromocentersSegmentation.applyEnhanceChromocenters(imagePlusInput, imagePlusSegmented);
 		imagePlusContrast.setTitle("ContrastedImage");
 		imagePlusContrast.show();
 	}
+	
 }

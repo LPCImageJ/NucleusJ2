@@ -11,6 +11,7 @@ import ij.measure.Calibration;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+
 /**
  * Running gift wrapping for each axis combined
  *
@@ -55,8 +56,8 @@ public class ConvexHullImageMaker {
 		_calibration = imagePlusBinary.getCalibration();
 		ImageStack imageStackInput = imagePlusBinary.getStack();
 		Measure3D measure3d = new Measure3D(this.m_segmentationParameters.getXCal(),
-		                                   this.m_segmentationParameters.getYCal(),
-		                                   this.m_segmentationParameters.getZCal());
+		                                    this.m_segmentationParameters.getYCal(),
+		                                    this.m_segmentationParameters.getZCal());
 		
 		// Calcul du rayon : PQ 1/2 du rayon
 		double      equivalentSphericalRadius = (measure3d.equivalentSphericalRadius(imagePlusBinary) / 2);
@@ -320,4 +321,5 @@ public class ConvexHullImageMaker {
 	public void setAxes(String axes) {
 		_axesName = axes;
 	}
+	
 }

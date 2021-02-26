@@ -17,6 +17,7 @@ public class RegionalExtremaFilter implements PlugInFilter {
 	/** table to stock the binary mask if is necessary */
 	private double[][][] _tabMask        = null;
 	
+	
 	/**
 	 * @param arg
 	 * @param imagePlusInput
@@ -193,4 +194,5 @@ public class RegionalExtremaFilter implements PlugInFilter {
 			}
 		}
 	}
+	
 }

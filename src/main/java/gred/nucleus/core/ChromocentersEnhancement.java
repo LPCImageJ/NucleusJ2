@@ -13,6 +13,7 @@ import inra.ijpb.watershed.Watershed;
 
 import java.io.File;
 
+
 /**
  * Several method to create the image of contrasted regions
  *
@@ -30,11 +31,10 @@ public class ChromocentersEnhancement {
 	public static void saveFile(ImagePlus imagePlus, String pathFile) {
 		FileSaver fileSaver = new FileSaver(imagePlus);
 		File      file      = new File(pathFile);
-		if (file.exists()) {
+		if (file.exists() || file.mkdirs()) {
 			fileSaver.saveAsTiffStack(pathFile + File.separator + imagePlus.getTitle());
 		} else {
-			file.mkdir();
-			fileSaver.saveAsTiffStack(pathFile + File.separator + imagePlus.getTitle());
+			System.err.println("Directory does not exist and could not be created: " + pathFile);
 		}
 	}
 	
@@ -135,7 +135,7 @@ public class ChromocentersEnhancement {
 			if (tContrast[i] <= 0) {
 				tContrast[i] = 0;
 			} else {
-				tContrast[i] = tContrast[i] / neighborVolumeTotal;
+				tContrast[i] /= neighborVolumeTotal;
 			}
 		}
 		return tContrast;
@@ -224,4 +224,5 @@ public class ChromocentersEnhancement {
 		}
 		return imagePlusContrast;
 	}
+	
 }

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+
 public class SegmentationParameters extends PluginParameters {
 	/** GIFT wrapping option */
 	boolean m_giftWrapping     = true;
@@ -21,8 +22,8 @@ public class SegmentationParameters extends PluginParameters {
 	/**
 	 * Constructor with default parameter
 	 *
-	 * @param inputFolder  : path folder containing Images
-	 * @param outputFolder : path folder output analyse
+	 * @param inputFolder    Path folder containing Images
+	 * @param outputFolder   Path folder output analyse
 	 */
 	public SegmentationParameters(String inputFolder, String outputFolder) {
 		super(inputFolder, outputFolder);
@@ -61,8 +62,8 @@ public class SegmentationParameters extends PluginParameters {
 	
 	
 	public void addProperties(String pathToConfigFile) {
-		Properties  prop     = new Properties();
-		InputStream is       = null;
+		Properties  prop = new Properties();
+		InputStream is   = null;
 		try {
 			is = new FileInputStream(pathToConfigFile);
 		} catch (FileNotFoundException ex) {
@@ -101,19 +102,19 @@ public class SegmentationParameters extends PluginParameters {
 	
 	public String getAnalyseParameters() {
 		super.getAnalyseParameters();
-		this.m_headerInfo += "#maxVolumeNucleus:" + getM_maxVolumeNucleus() + "\n"
-		                     + "#minVolumeNucleus: " + getM_minVolumeNucleus() + "\n"
-		                     + "#GiftWrapping: " + getGiftWrapping() + "\n";
+		this.m_headerInfo += "#maxVolumeNucleus:" + m_maxVolumeNucleus + "\n"
+		                     + "#minVolumeNucleus: " + m_minVolumeNucleus + "\n"
+		                     + "#GiftWrapping: " + m_giftWrapping + "\n";
 		return this.m_headerInfo;
 	}
 	
 	
-	public int getM_minVolumeNucleus() {
+	public int getMinVolumeNucleus() {
 		return this.m_minVolumeNucleus;
 	}
 	
 	
-	public int getM_maxVolumeNucleus() {
+	public int getMaxVolumeNucleus() {
 		return this.m_maxVolumeNucleus;
 	}
 	
@@ -121,4 +122,5 @@ public class SegmentationParameters extends PluginParameters {
 	public boolean getGiftWrapping() {
 		return this.m_giftWrapping;
 	}
+	
 }

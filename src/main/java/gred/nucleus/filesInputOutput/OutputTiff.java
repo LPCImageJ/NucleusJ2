@@ -6,6 +6,7 @@ import ij.io.FileSaver;
 
 import java.io.File;
 
+
 public class OutputTiff extends FilesNames {
 	
 	/** Constructor to create file to output */
@@ -14,10 +15,13 @@ public class OutputTiff extends FilesNames {
 	}
 	
 	
-	/** Method to save file with verification if file already exists TODO ADD ERROR IN LOG FILE */
+	/**
+	 * Method to save file with verification if file already exists
+	 * <p> TODO ADD ERROR IN LOG FILE
+	 */
 	public void SaveImage(ImagePlus imageToSave) {
 		try {
-			if (!is_fileExist()) {
+			if (!fileExists()) {
 				if (imageToSave.getNSlices() > 1) {
 					FileSaver fileSaver = new FileSaver(imageToSave);
 					fileSaver.saveAsTiffStack(this._fullPathFile);
@@ -42,6 +46,7 @@ public class OutputTiff extends FilesNames {
 			e.printStackTrace();
 		}
 	}
+	
 }
 
 

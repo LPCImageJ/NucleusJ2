@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+
 /**
  * Several method to realise and create the outfile for the chromocenter Analysis
  *
@@ -104,4 +105,5 @@ public class ChromocenterAnalysis {
 			bufferedWriterOutput.close();
 		}
 	}
+	
 }

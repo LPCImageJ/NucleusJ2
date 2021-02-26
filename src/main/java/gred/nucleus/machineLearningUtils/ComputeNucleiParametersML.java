@@ -1,4 +1,4 @@
-package gred.nucleus.machineLeaningUtils;
+package gred.nucleus.machineLearningUtils;
 
 import gred.nucleus.core.Measure3D;
 import gred.nucleus.filesInputOutput.Directory;
@@ -14,9 +14,11 @@ import loci.plugins.BF;
 import java.io.File;
 import java.util.ArrayList;
 
+
 public class ComputeNucleiParametersML {
 	String m_rawImagesInputDirectory;
 	String m_segmentedImagesDirectory;
+	
 	
 	/**
 	 * Constructor
@@ -28,6 +30,7 @@ public class ComputeNucleiParametersML {
 		this.m_rawImagesInputDirectory = rawImagesInputDirectory;
 		this.m_segmentedImagesDirectory = segmentedImagesDirectory;
 	}
+	
 	
 	/**
 	 * Filter connected connected component if more then 1 nuclei
@@ -60,6 +63,7 @@ public class ComputeNucleiParametersML {
 		
 	}
 	
+	
 	/**
 	 * Run parameters computation parameters see Measure3D
 	 *
@@ -71,8 +75,8 @@ public class ComputeNucleiParametersML {
 		Directory directoryInput = new Directory(pluginParameters.getOutputFolder());
 		directoryInput.listImageFiles(pluginParameters.getOutputFolder());
 		directoryInput.checkIfEmpty();
-		ArrayList<File> segImages                 = directoryInput.m_fileList;
-		StringBuilder   outputCropGeneralInfoOTSU =
+		ArrayList<File> segImages = directoryInput.m_fileList;
+		StringBuilder outputCropGeneralInfoOTSU =
 				new StringBuilder(pluginParameters.getAnalyseParameters() + getResultsColumnNames());
 		for (File currentFile : segImages) {
 			System.out.println("current File " + currentFile.getName());
@@ -89,10 +93,10 @@ public class ComputeNucleiParametersML {
 			histogram.run(Segmented[0]);
 			if (histogram.getNbLabels() > 0) {
 				Measure3D measure3D = new Measure3D(Segmented,
-				                                   Raw,
-				                                   pluginParameters.getXCalibration(Raw),
-				                                   pluginParameters.getYCalibration(Raw),
-				                                   pluginParameters.getZCalibration(Raw));
+				                                    Raw,
+				                                    pluginParameters.getXCalibration(Raw),
+				                                    pluginParameters.getYCalibration(Raw),
+				                                    pluginParameters.getZCalibration(Raw));
 				outputCropGeneralInfoOTSU.append(measure3D.nucleusParameter3D()).append("\n");
 			}
 		}
@@ -100,9 +104,10 @@ public class ComputeNucleiParametersML {
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(pluginParameters.getOutputFolder()
 		                                                         + directoryInput.getSeparator()
 		                                                         + "result_Segmentation_Analyse.csv");
-		resultFileOutputOTSU.SaveTextFile(outputCropGeneralInfoOTSU.toString());
+		resultFileOutputOTSU.saveTextFile(outputCropGeneralInfoOTSU.toString());
 		
 	}
+	
 	
 	/**
 	 * @return columns names for results
@@ -128,4 +133,5 @@ public class ComputeNucleiParametersML {
 		       "ImageSize\t" +
 		       "OTSUThreshold\n";
 	}
+	
 }

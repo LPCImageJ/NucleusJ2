@@ -13,6 +13,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Vector;
 
+
 public class FJ_Structure implements PlugIn, WindowListener {
 	
 	private static boolean largest  = true;
@@ -23,6 +24,7 @@ public class FJ_Structure implements PlugIn, WindowListener {
 	private static String integrationScale = "3.0";
 	
 	private static Point pos = new Point(-1, -1);
+	
 	
 	public void run(String arg) {
 		
@@ -90,6 +92,7 @@ public class FJ_Structure implements PlugIn, WindowListener {
 	
 	public void windowOpened(final WindowEvent e) {
 	}
+	
 }
 
 class FJStructure {
@@ -150,4 +153,5 @@ class FJStructure {
 			
 		}
 	}
+	
 }

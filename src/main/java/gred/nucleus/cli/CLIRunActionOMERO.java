@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.regex.Pattern;
 
+
 public class CLIRunActionOMERO {
 	/** List of options */
 	Options     m_options = new Options();
@@ -242,4 +243,5 @@ public class CLIRunActionOMERO {
 			throw new IllegalArgumentException();
 		}
 	}
+	
 }

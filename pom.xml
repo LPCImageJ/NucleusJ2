@@ -48,7 +48,7 @@
 		<dependency>
 			<groupId>ome</groupId>
 			<artifactId>bioformats_package</artifactId>
-			<version>6.3.1</version>
+			<version>6.6.0</version>
 		</dependency>
 		<dependency>
 			<groupId>sc.fiji</groupId>
@@ -63,7 +63,7 @@
 		<dependency>
 			<groupId>fr.igred</groupId>
 			<artifactId>simple-omero-client</artifactId>
-			<version>5.6.0</version>
+			<version>5.6.1</version>
 		</dependency>
 	</dependencies>
 

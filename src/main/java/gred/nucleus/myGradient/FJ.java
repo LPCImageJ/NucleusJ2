@@ -9,6 +9,7 @@ import imagescience.image.Image;
 import imagescience.utility.I5DResource;
 import imagescience.utility.ImageScience;
 
+
 public final class FJ {
 	static final         int    SINGLE_IMAGE    = 1;
 	static final         int    IMAGE_STACK     = 2;
@@ -20,6 +21,7 @@ public final class FJ {
 	private static final String MIN_IJ_VERSION  = "1.44a";
 	private static final String MIN_IS_VERSION  = "2.4.0";
 	
+	
 	public static String name() {
 		return NAME;
 	}
@@ -28,6 +30,7 @@ public final class FJ {
 	public static String version() {
 		return VERSION;
 	}
+	
 	
 	static boolean libCheck() {
 		
@@ -48,6 +51,7 @@ public final class FJ {
 		return true;
 	}
 	
+	
 	static ImagePlus imageplus() {
 		
 		final ImagePlus imp = WindowManager.getCurrentImage();
@@ -64,6 +68,7 @@ public final class FJ {
 		
 		return imp;
 	}
+	
 	
 	static void show(final Image img, final ImagePlus imp) {
 		
@@ -108,6 +113,7 @@ public final class FJ {
 		newImagePlus.show();
 	}
 	
+	
 	static void close(final ImagePlus imp) {
 		
 		if (FJ_Options.close) {
@@ -115,6 +121,7 @@ public final class FJ {
 			imp.close();
 		}
 	}
+	
 	
 	static int type(final ImagePlus imp) {
 		
@@ -136,6 +143,7 @@ public final class FJ {
 		return type;
 	}
 	
+	
 	static void error(final String message) {
 		
 		IJ.showMessage(NAME + ": Error", message + ".");
@@ -143,8 +151,10 @@ public final class FJ {
 		IJ.showStatus("");
 	}
 	
+	
 	static void log(final String message) {
 		
 		if (FJ_Options.log) IJ.log(message);
 	}
+	
 }

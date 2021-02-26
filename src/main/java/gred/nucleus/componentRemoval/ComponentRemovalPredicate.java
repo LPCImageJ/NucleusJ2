@@ -12,6 +12,7 @@ package gred.nucleus.componentRemoval;
 import gred.nucleus.connectedComponent.ComponentInfo;
 import gred.nucleus.utils.Voxel;
 
+
 /**
  * This interface is intended for the purpose of selectively removing connected components in a binary image, according
  * to a predicate satisfied by some voxels of the component.
@@ -33,4 +34,5 @@ public interface ComponentRemovalPredicate {
 	 * @return the predicate's value
 	 */
 	boolean keepVoxelComponent(Voxel voxel, ComponentInfo componentInfo);
+	
 }

@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+
 /**
  * Several method to realise and create the outfile for the nuclear Analysis this class contains the chromocenter
  * parameters
@@ -24,6 +25,7 @@ public class NucleusChromocentersAnalysis {
 	}
 	
 	//TODO INTEGRATION CLASS NEW MEASURE 3D
+	
 	
 	/**
 	 * Analysis for one nucleus, the results are stock on the IJ log windows
@@ -185,7 +187,8 @@ public class NucleusChromocentersAnalysis {
 		for (double v : tInput) {
 			mean += v;
 		}
-		mean = mean / (tInput.length);
+		mean /= (tInput.length);
 		return mean;
 	}
+	
 }

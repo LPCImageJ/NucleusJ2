@@ -16,6 +16,7 @@ import loci.plugins.BF;
 import java.io.File;
 import java.util.ArrayList;
 
+
 public class ComputeSegmentationParametersDL {
 	
 	public static void computeNucleusParameters(String RawImageSourceFile,
@@ -37,16 +38,16 @@ public class ComputeSegmentationParametersDL {
 			ImagePlus[] Segmented = BF.openImagePlus(pluginParameters.getOutputFolder() + currentFile.getName());
 			
 			Measure3D measure3D = new Measure3D(Segmented,
-			                                   Raw,
-			                                   pluginParameters.getXCalibration(Raw),
-			                                   pluginParameters.getYCalibration(Raw),
-			                                   pluginParameters.getZCalibration(Raw));
+			                                    Raw,
+			                                    pluginParameters.getXCalibration(Raw),
+			                                    pluginParameters.getYCalibration(Raw),
+			                                    pluginParameters.getZCalibration(Raw));
 			outputCropGeneralInfoOTSU.append(measure3D.nucleusParameter3D()).append("\n");
 		}
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(pluginParameters.getOutputFolder()
 		                                                         + directoryInput.getSeparator()
 		                                                         + "result_Segmentation_Analyse.csv");
-		resultFileOutputOTSU.SaveTextFile(outputCropGeneralInfoOTSU.toString());
+		resultFileOutputOTSU.saveTextFile(outputCropGeneralInfoOTSU.toString());
 		
 	}
 	
@@ -75,10 +76,10 @@ public class ComputeSegmentationParametersDL {
 			histogram.run(Segmented[0]);
 			if (histogram.getNbLabels() > 0) {
 				Measure3D measure3D = new Measure3D(Segmented,
-				                                   Raw,
-				                                   pluginParameters.getXCalibration(Raw),
-				                                   pluginParameters.getYCalibration(Raw),
-				                                   pluginParameters.getZCalibration(Raw));
+				                                    Raw,
+				                                    pluginParameters.getXCalibration(Raw),
+				                                    pluginParameters.getYCalibration(Raw),
+				                                    pluginParameters.getZCalibration(Raw));
 				outputCropGeneralInfoOTSU.append(measure3D.nucleusParameter3D()).append("\tNA").append("\n");
 			}
 		}
@@ -86,7 +87,7 @@ public class ComputeSegmentationParametersDL {
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(pluginParameters.getOutputFolder()
 		                                                         + directoryInput.getSeparator()
 		                                                         + "result_Segmentation_Analyse.csv");
-		resultFileOutputOTSU.SaveTextFile(outputCropGeneralInfoOTSU.toString());
+		resultFileOutputOTSU.saveTextFile(outputCropGeneralInfoOTSU.toString());
 		
 	}
 	
@@ -159,4 +160,5 @@ public class ComputeSegmentationParametersDL {
 		FileSaver fileSaver = new FileSaver(imagePlusInput);
 		fileSaver.saveAsTiffStack(pathFile);
 	}
+	
 }

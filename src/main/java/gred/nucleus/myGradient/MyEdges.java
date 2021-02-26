@@ -20,6 +20,7 @@ public class MyEdges {
 	public final Differentiator differentiator = new Differentiator();
 	private      double[][][]   tabMask        = null;
 	
+	
 	/** Default constructor. */
 	public MyEdges() {
 	}
@@ -99,20 +100,24 @@ public class MyEdges {
 		
 		// Compute gradient vector:
 		logStatus("Computing Ix");
-		progressor.range(pls[pl], pls[++pl]);
+		++pl;
+		progressor.range(pls[pl], pls[pl]);
 		final Image Ix = differentiator.run(edgeImage.duplicate(), scale, 1, 0, 0);
 		logStatus("Computing Iy");
-		progressor.range(pls[pl], pls[++pl]);
+		++pl;
+		progressor.range(pls[pl], pls[pl]);
 		final Image Iy = differentiator.run(edgeImage.duplicate(), scale, 0, 1, 0);
 		logStatus("Computing Iz");
-		progressor.range(pls[pl], pls[++pl]);
+		++pl;
+		progressor.range(pls[pl], pls[pl]);
 		final Image Iz = differentiator.run(edgeImage, scale, 0, 0, 1);
 		
 		// Compute gradient magnitude (Ix is reused to save memory in case
 		//non-maxima suppression is not applied):
 		logStatus("Computing gradient magnitude");
 		progressor.steps(dims.c * dims.t * dims.z * dims.y);
-		progressor.range(pls[pl], pls[++pl]);
+		++pl;
+		progressor.range(pls[pl], pls[pl]);
 		edgeImage = nonmaxsup ? new FloatImage(dims) : Ix;
 		Ix.axes(Axes.X);
 		Iy.axes(Axes.X);
@@ -153,7 +158,8 @@ public class MyEdges {
 		if (nonmaxsup) {
 			logStatus("Suppressing non-maxima");
 			progressor.steps(dims.c * dims.t * dims.z);
-			progressor.range(pls[pl], pls[++pl]);
+			++pl;
+			progressor.range(pls[pl], pls[pl]);
 			Ix.axes(Axes.X + Axes.Y);
 			Iy.axes(Axes.X + Axes.Y);
 			Iz.axes(Axes.X + Axes.Y);
@@ -164,7 +170,8 @@ public class MyEdges {
 			final double[][]   aaIy = new double[dims.y][dims.x];
 			final double[][]   aaIz = new double[dims.y][dims.x];
 			final Coordinates  cgm  = new Coordinates();
-			cgm.y = cgm.x = -1;
+			cgm.x = -1;
+			cgm.y = -1;
 			coordinates.reset();
 			final int  dimsZm1 = dims.z - 1;
 			double[][] atmp;
@@ -271,7 +278,10 @@ public class MyEdges {
 				final double[] y0 = gm[z][0];
 				final double[] y1 = gm[z][1];
 				final double[] y2 = gm[z][2];
-				for (int x = 0; x <= dimsXp1; ++x) y0[x] = y2[x] = y1[x];
+				for (int x = 0; x <= dimsXp1; ++x) {
+					y0[x] = y1[x];
+					y2[x] = y1[x];
+				}
 			}
 		} else {
 			for (int z = 0; z < 3; ++z) {
@@ -402,4 +412,5 @@ public class MyEdges {
 		messenger.log(s);
 		messenger.status(s + "...");
 	}
+	
 }

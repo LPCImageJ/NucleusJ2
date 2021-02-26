@@ -48,10 +48,11 @@ public abstract class ConnectedComponent {
 	/** Volume of a voxel (used for component size thresholding) */
 	protected double m_voxelVolume;
 	
+	
 	/**
 	 * Initializes the fields of this instance (to be called in derived classes constructors)
 	 *
-	 * @param inputImage      : input (probably binary) image, the components of which to compute.
+	 * @param inputImage        Input (probably binary) image, the components of which to compute.
 	 * @param foregroundColor label of the 1's in the input image ip
 	 */
 	protected ConnectedComponent(ImagePlus inputImage, int foregroundColor) {
@@ -78,7 +79,7 @@ public abstract class ConnectedComponent {
 	 * Constructs a ConnectedComponent derived class instance with relevant dimension (2D or 3D). the connected
 	 * components are not labeled. Please call doConnectedComponent().
 	 *
-	 * @param inputImage      : input (probably binary) image, the components of which to compute.
+	 * @param inputImage        Input (probably binary) image, the components of which to compute.
 	 * @param foregroundColor label of the 1's in the input image inputImage
 	 *
 	 * @return an instance of a concrete derived class for ConnectedComponent
@@ -100,7 +101,7 @@ public abstract class ConnectedComponent {
 	 *    <li>Possibly remove the components with size bellow some threshold</li>
 	 * </ul>
 	 *
-	 * @param inputImage            : input (probably binary) image, the components of which to compute.
+	 * @param inputImage              Input (probably binary) image, the components of which to compute.
 	 * @param foregroundColor       label of the 1's in the input image inputImage
 	 * @param removeBorderComponent true if the components which are on the edge of the image should be removed by
 	 *                              filtering
@@ -138,7 +139,7 @@ public abstract class ConnectedComponent {
 	 *    <li>Possibly remove the components with size bellow some threshold</li>
 	 * </ul>
 	 *
-	 * @param inputImage            : input (probably binary) image, the components of which to compute.
+	 * @param inputImage              Input (probably binary) image, the components of which to compute.
 	 * @param foregroundColor       label of the 1's in the input image inputImage
 	 * @param removeBorderComponent true if the components which are on the edge of the image should be removed by
 	 *                              filtering
@@ -436,4 +437,5 @@ public abstract class ConnectedComponent {
 	public int getNumberOfComponents() {
 		return this.m_compInfo.size();
 	}
-} // end of class 
+	
+} // end of class

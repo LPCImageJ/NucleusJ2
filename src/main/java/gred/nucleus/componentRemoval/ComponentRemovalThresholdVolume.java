@@ -12,6 +12,7 @@ package gred.nucleus.componentRemoval;
 import gred.nucleus.connectedComponent.ComponentInfo;
 import gred.nucleus.utils.Voxel;
 
+
 /**
  * This class is intended to implement the predicate on voxels and connected components to filter out components with a
  * number of voxels lower than threshold.
@@ -21,6 +22,7 @@ import gred.nucleus.utils.Voxel;
 public class ComponentRemovalThresholdVolume implements ComponentRemovalPredicate {
 	
 	private int m_thresholdCardinality;
+	
 	
 	/**
 	 * @param thresholdComponentVolume minimal volume for filtering (taking into account the calibration) for the
@@ -32,9 +34,10 @@ public class ComponentRemovalThresholdVolume implements ComponentRemovalPredicat
 	}
 	
 	
-	/** @see */
+	/** @see  */
 	@Override
 	public boolean keepVoxelComponent(Voxel voxel, ComponentInfo componentInfo) {
 		return (componentInfo.getNumberOfPoints() >= this.m_thresholdCardinality);
 	}
+	
 }

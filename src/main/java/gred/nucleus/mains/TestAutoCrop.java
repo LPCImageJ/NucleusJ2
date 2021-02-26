@@ -24,8 +24,8 @@ public class TestAutoCrop {
 	 *
 	 * @param imageSourceFile the input image file on disk
 	 */
-	
 	static ArrayList<String> m_test;
+	
 	
 	public static void runAutoCropFolder(String imageSourceFile, String output, String pathToConfig) {
 		AutocropParameters autocropParameters = new AutocropParameters(imageSourceFile, output, pathToConfig);
@@ -42,7 +42,7 @@ public class TestAutoCrop {
 	}
 	
 	
-	public static void runAutoCropFile(String imageSourceFile, String output) throws Exception {
+	public static void runAutoCropFile(String imageSourceFile, String output) {
 		//AutocropParameters autocropParameters= new AutocropParameters(imageSourceFile,output);
 		AutocropParameters autocropParameters = new AutocropParameters(imageSourceFile, output);
 		AutoCropCalling    autoCrop           = new AutoCropCalling(autocropParameters);
@@ -78,4 +78,5 @@ public class TestAutoCrop {
 		System.out.println("Total memory (bytes): " +
 		                   Runtime.getRuntime().totalMemory() * 1e-9);
 	}
+	
 }

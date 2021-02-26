@@ -11,6 +11,7 @@ package gred.nucleus.connectedComponent;
 
 import gred.nucleus.utils.Voxel;
 
+
 /**
  * Represents the information relative to a connected component in a binary image.
  *
@@ -29,7 +30,8 @@ public class ComponentInfo {
 	
 	/**
 	 * Voxel representative of the component (one voxel in the component) Currently, this representative has minimal
-	 * depth Z TODO extend usage using a comparison predicate possibly other that comparing depth.
+	 * depth Z
+	 * <p> TODO extend usage using a comparison predicate possibly other that comparing depth.
 	 */
 	private Voxel m_voxelRepresentant;
 	
@@ -38,6 +40,7 @@ public class ComponentInfo {
 	 * component which touch the edge of the image.)
 	 */
 	private boolean m_componentOnTheBorder;
+	
 	
 	/**
 	 * Constructor
@@ -85,6 +88,7 @@ public class ComponentInfo {
 		return this.m_numberOfPoints;
 	}
 	
+	
 	/**
 	 * Setter
 	 *
@@ -94,10 +98,12 @@ public class ComponentInfo {
 		this.m_numberOfPoints = numberOfPoints;
 	}
 	
+	
 	/** Increments the cardinality */
 	public void incrementNumberOfPoints() {
 		this.m_numberOfPoints++;
 	}
+	
 	
 	/**
 	 * Getter
@@ -134,5 +140,6 @@ public class ComponentInfo {
 	public String toString() {
 		return "Component label : " + this.m_label + ", Number of points : " + this.m_numberOfPoints;
 	}
+	
 } // end of class ComponentInfo
 
