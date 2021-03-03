@@ -6,7 +6,6 @@ import fr.igred.omero.metadata.ROIContainer;
 import fr.igred.omero.repository.DatasetContainer;
 import gred.nucleus.filesInputOutput.Directory;
 import gred.nucleus.filesInputOutput.OutputTextFile;
-import gred.nucleus.filesInputOutput.OutputTexteFile;
 import gred.nucleus.filesInputOutput.OutputTiff;
 import gred.nucleus.imageProcess.Thresholding;
 import gred.nucleus.utils.Histogram;
@@ -323,7 +322,12 @@ public class AutoCrop {
 	
 	/**
 	 * Method to add X voxels in x y z around the connected component. X by default is 20 in x y z. Parameter can be
-	 * modified in autocrop parameters : -m_xCropBoxSize -m_yCropBoxSize -m_zCropBoxSize
+	 * modified in autocrop parameters:
+	 * <ul>
+	 *     <li>m_xCropBoxSize</li>
+	 *     <li>m_yCropBoxSize</li>
+	 *     <li>m_zCropBoxSize</li>
+	 * </ul>
 	 */
 	public void addCROP_parameter() {
 		for (Map.Entry<Double, Box> entry : this.m_boxes.entrySet()) {
@@ -713,7 +717,7 @@ public class AutoCrop {
 		                                                     File.separator +
 		                                                     this.m_outputFilesPrefix +
 		                                                     ".txt");
-		resultFileOutput.saveTextFile(this.m_infoImageAnalyse);
+		resultFileOutput.saveTextFile(this.m_infoImageAnalyse, true);
 	}
 	
 	
@@ -724,12 +728,13 @@ public class AutoCrop {
 	 */
 	public void writeAnalyseInfoOmero(Long id, Client client)
 	throws DSOutOfServiceException, IOException, DSAccessException, ExecutionException, ServerError {
-		String path =
-				new java.io.File(".").getCanonicalPath() + this.m_outputFilesPrefix + ".txt";
+		String path = new java.io.File(".").getCanonicalPath() + this.m_outputFilesPrefix + ".txt";
+		
 		File             file             = new File(path);
-		OutputTexteFile  resultFileOutput = new OutputTexteFile(path);
+		OutputTextFile   resultFileOutput = new OutputTextFile(path);
 		DatasetContainer dataset          = client.getDataset(id);
-		resultFileOutput.saveTextFile(this.m_infoImageAnalyse);
+		
+		resultFileOutput.saveTextFile(this.m_infoImageAnalyse, false);
 		dataset.addFile(client, file);
 		boolean deleted = file.delete();
 		if (!deleted) System.err.println("File not deleted: " + path);

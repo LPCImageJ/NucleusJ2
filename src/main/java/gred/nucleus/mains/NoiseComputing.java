@@ -47,7 +47,7 @@ public class NoiseComputing {
 		}
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(
 				"/media/titus/DATA/ML_ANALYSE_DATA/ANALYSE_COMPARAISON_REANALYSE/129_ANNOTATION_FULL/NoiseGIFT.csv");
-		resultFileOutputOTSU.saveTextFile(ResultNoise.toString());
+		resultFileOutputOTSU.saveTextFile(ResultNoise.toString(), true);
 	}
 	
 	

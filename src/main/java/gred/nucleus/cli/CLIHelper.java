@@ -247,7 +247,7 @@ public class CLIHelper {
 				dirOutput.getDirPath()
 				+ dirOutput.getSeparator()
 				+ fileName);
-		resultFileOutputOTSU.saveTextFile(text);
+		resultFileOutputOTSU.saveTextFile(text, true);
 	}
 	
 }

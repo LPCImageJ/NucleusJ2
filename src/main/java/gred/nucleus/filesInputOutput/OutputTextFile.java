@@ -19,13 +19,15 @@ public class OutputTextFile extends FilesNames {
 	 * Method to save file with verification if file already exists
 	 * <p> TODO(@DesTristus) ADD ERROR IN LOG FILE
 	 */
-	public void saveTextFile(String text) {
+	public void saveTextFile(String text, boolean keepExistingFile) {
 		try {
-			int i = 0;
-			while (fileExists()) {
-				setFullPathFile(prefixNameFile() + "-" + i + "." + FilenameUtils.getExtension(_fileName));
-				CheckExistFile();
-				i++;
+			if(keepExistingFile) {
+				int i = 0;
+				while (fileExists()) {
+					setFullPathFile(prefixNameFile() + "-" + i + "." + FilenameUtils.getExtension(_fileName));
+					CheckExistFile();
+					i++;
+				}
 			}
 			BufferedWriter writer;
 			writer = new BufferedWriter(new FileWriter(this._fullPathFile));

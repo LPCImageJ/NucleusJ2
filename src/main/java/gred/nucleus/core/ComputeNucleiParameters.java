@@ -96,7 +96,7 @@ public class ComputeNucleiParameters {
 				+ directoryRawInput.getSeparator()
 				+ "result_Segmentation_Analyse.csv");
 		
-		resultFileOutputOTSU.saveTextFile(outputCropGeneralInfoOTSU.toString());
+		resultFileOutputOTSU.saveTextFile(outputCropGeneralInfoOTSU.toString(), true);
 		
 		
 	}

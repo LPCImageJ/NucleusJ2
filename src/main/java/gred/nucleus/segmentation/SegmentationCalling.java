@@ -7,7 +7,6 @@ import fr.igred.omero.repository.DatasetContainer;
 import gred.nucleus.filesInputOutput.Directory;
 import gred.nucleus.filesInputOutput.FilesNames;
 import gred.nucleus.filesInputOutput.OutputTextFile;
-import gred.nucleus.filesInputOutput.OutputTexteFile;
 import gred.nucleus.core.ConvexHullSegmentation;
 import gred.nucleus.core.NucleusSegmentation;
 import gred.nucleus.nucleusCaracterisations.NucleusAnalysis;
@@ -237,14 +236,14 @@ public class SegmentationCalling {
 		                                                         + "OTSU"
 		                                                         + directoryInput.getSeparator()
 		                                                         + "result_Segmentation_Analyse_OTSU.csv");
-		resultFileOutputOTSU.saveTextFile(this.m_outputCropGeneralInfoOTSU);
+		resultFileOutputOTSU.saveTextFile(this.m_outputCropGeneralInfoOTSU, true);
 		if (this.m_segmentationParameters.getGiftWrapping()) {
 			OutputTextFile resultFileOutputGIFT = new OutputTextFile(this.m_segmentationParameters.getOutputFolder()
 			                                                         + directoryInput.getSeparator()
 			                                                         + "GIFT"
 			                                                         + directoryInput.getSeparator()
 			                                                         + "result_Segmentation_Analyse_GIFT.csv");
-			resultFileOutputGIFT.saveTextFile(this.m_outputCropGeneralInfoGIFT);
+			resultFileOutputGIFT.saveTextFile(this.m_outputCropGeneralInfoGIFT, true);
 		}
 		
 		return log;
@@ -313,8 +312,8 @@ public class SegmentationCalling {
 		
 		String path =
 				new java.io.File(".").getCanonicalPath() + dataset.getName() + "result_Segmentation_Analyse.csv";
-		OutputTexteFile resultFileOutputOTSU = new OutputTexteFile(path);
-		resultFileOutputOTSU.saveTextFile(this.m_outputCropGeneralInfoOTSU);
+		OutputTextFile resultFileOutputOTSU = new OutputTextFile(path);
+		resultFileOutputOTSU.saveTextFile(this.m_outputCropGeneralInfoOTSU, false);
 		
 		File file = new File(path);
 		dataset.addFile(client, file);
@@ -323,8 +322,8 @@ public class SegmentationCalling {
 		
 		if (this.m_segmentationParameters.getGiftWrapping()) {
 			dataset = client.getProject(output).getDatasets("GIFT").get(0);
-			OutputTexteFile resultFileOutputGIFT = new OutputTexteFile(path);
-			resultFileOutputGIFT.saveTextFile(this.m_outputCropGeneralInfoGIFT);
+			OutputTextFile resultFileOutputGIFT = new OutputTextFile(path);
+			resultFileOutputGIFT.saveTextFile(this.m_outputCropGeneralInfoGIFT, false);
 			
 			file = new File(path);
 			dataset.addFile(client, file);
@@ -375,8 +374,8 @@ public class SegmentationCalling {
 		DatasetContainer dataset = client.getProject(output).getDatasets("OTSU").get(0);
 		String path =
 				new java.io.File(".").getCanonicalPath() + "result_Segmentation_Analyse.csv";
-		OutputTexteFile resultFileOutputOTSU = new OutputTexteFile(path);
-		resultFileOutputOTSU.saveTextFile(this.m_outputCropGeneralInfoOTSU);
+		OutputTextFile resultFileOutputOTSU = new OutputTextFile(path);
+		resultFileOutputOTSU.saveTextFile(this.m_outputCropGeneralInfoOTSU, false);
 		
 		File file = new File(path);
 		dataset.addFile(client, file);
@@ -385,8 +384,8 @@ public class SegmentationCalling {
 		
 		if (this.m_segmentationParameters.getGiftWrapping()) {
 			dataset = client.getProject(output).getDatasets("GIFT").get(0);
-			OutputTexteFile resultFileOutputGIFT = new OutputTexteFile(path);
-			resultFileOutputGIFT.saveTextFile(this.m_outputCropGeneralInfoGIFT);
+			OutputTextFile resultFileOutputGIFT = new OutputTextFile(path);
+			resultFileOutputGIFT.saveTextFile(this.m_outputCropGeneralInfoGIFT, false);
 			
 			file = new File(path);
 			dataset.addFile(client, file);

@@ -42,7 +42,7 @@ public class ComputeSegmentationParameters {
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(pluginParameters.getOutputFolder()
 		                                                         + directoryInput.getSeparator()
 		                                                         + "result_Segmentation_Analyse.csv");
-		resultFileOutputOTSU.saveTextFile(outputCropGeneralInfoOTSU.toString());
+		resultFileOutputOTSU.saveTextFile(outputCropGeneralInfoOTSU.toString(), true);
 		
 	}
 	
@@ -73,7 +73,7 @@ public class ComputeSegmentationParameters {
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(pluginParameters.getOutputFolder()
 		                                                         + directoryInput.getSeparator()
 		                                                         + "result_Segmentation_Analyse.csv");
-		resultFileOutputOTSU.saveTextFile(outputCropGeneralInfoOTSU.toString());
+		resultFileOutputOTSU.saveTextFile(outputCropGeneralInfoOTSU.toString(), true);
 		
 	}
 	

@@ -51,7 +51,7 @@ public class AutoCropCalling {
 		System.out.println(this.m_autocropParameters.getInputFolder() + "result_Autocrop_Analyse");
 		OutputTextFile resultFileOutput =
 				new OutputTextFile(this.m_autocropParameters.getOutputFolder() + "result_Autocrop_Analyse.csv");
-		resultFileOutput.saveTextFile(this.m_outputCropGeneralInfo);
+		resultFileOutput.saveTextFile(this.m_outputCropGeneralInfo, true);
 	}
 	
 	
