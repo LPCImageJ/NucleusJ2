@@ -11,7 +11,6 @@ import java.util.List;
 
 import fr.igred.omero.Client;
 import fr.igred.omero.ImageContainer;
-import fr.igred.omero.repository.DatasetContainer;
 
 
 

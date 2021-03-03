@@ -466,7 +466,7 @@ public class AutoCrop {
 			this.m_outputDirPath+"nuclei");
 		dirOutput.CheckAndCreateDir();
 		this.m_infoImageAnalyse += getSpecificImageInfo() + getColoneName();
-		for (int y =0 ;y<this.m_channelNumbers;y++) {
+		for (int c =0 ;c<this.m_channelNumbers;c++) {
 			int i=0;
 			for (Map.Entry<Double , Box> entry : this.m_boxes.entrySet()) {
 				Box box =  entry.getValue();
@@ -483,10 +483,10 @@ public class AutoCrop {
 
 				ImagePlus imgResu;
 				if(this.m_rawImg.getNSlices()>1) {
-					imgResu = cropImage(xmin, ymin,zmin, width,height, depth,y);
+					imgResu = cropImage(xmin, ymin,zmin, width,height, depth,c);
 				}
 				else{
-					imgResu = cropImage2D(xmin, ymin, width, height, y);
+					imgResu = cropImage2D(xmin, ymin, width, height, c);
 				}
 
 				Calibration cal = this.m_rawImg.getCalibration();
@@ -498,7 +498,7 @@ public class AutoCrop {
 								+ "_"
 								+ i
 								+"_C"
-								+ y
+								+ c
 								+ ".tif");
 				this.m_infoImageAnalyse=this.m_infoImageAnalyse
 						+dirOutput.get_dirPath()
@@ -507,9 +507,9 @@ public class AutoCrop {
 						+ "_"
 						+ i
 						+"_C"
-						+ y
+						+ c
 						+ ".tif\t"
-						+ y  + "\t"
+						+ c  + "\t"
 						+ i + "\t"
 						+ xmin + "\t"
 						+ ymin + "\t"
@@ -528,7 +528,7 @@ public class AutoCrop {
 						+ i
 						+ ".tif");
 
-				if(y==0) {
+				if(c==0) {
 					int xmax=xmin+width;
 					int ymax=ymin+height;
 					int zmax =zmin+depth;
@@ -557,11 +557,11 @@ public class AutoCrop {
 		throws Exception {
 
 		this.m_infoImageAnalyse += getSpecificImageInfo() + getColoneName();
-		for (int y =0 ;y<this.m_channelNumbers;y++) {
+		for (int c =0 ;c<this.m_channelNumbers;c++) {
 			int i=0;
 			for (Map.Entry<Double , Box> entry : this.m_boxes.entrySet()) {
 
-				DatasetContainer dataset = client.getDataset(outputsDat[y]);
+				DatasetContainer dataset = client.getDataset(outputsDat[c]);
 
 				Box box =  entry.getValue();
 				int xmin = box.getXMin();
@@ -578,13 +578,13 @@ public class AutoCrop {
 				int xBound[] = { box.getXMin(), box.getXMax() - 1};
 				int yBound[] = { box.getYMin(), box.getYMax() - 1};
 				int zBound[] = { box.getZMin(), box.getZMax() - 1};
-				int cBound[] = { y, y };
+				int cBound[] = { c, c };
 				
 				List<ShapeData> shapes = new ArrayList<ShapeData>();
 
 				for(int z = box.getZMin(); z < box.getZMax(); z++) {
 					RectangleData rectangle = new RectangleData(xmin, ymin, width, height);
-					rectangle.setC(y);
+					rectangle.setC(c);
 					rectangle.setZ(z);
 					rectangle.setT(0);
 					rectangle.setText("" + i);
@@ -619,7 +619,7 @@ public class AutoCrop {
 						+ "_"
 						+ i
 						+ ".tif\t"
-						+ y  + "\t"
+						+ c  + "\t"
 						+ i + "\t"
 						+ xmin + "\t"
 						+ ymin + "\t"
@@ -639,7 +639,7 @@ public class AutoCrop {
 				File file = new File(path);
 				file.delete();
 
-				if(y==0) {
+				if(c==0) {
 					int xmax=xmin+width;
 					int ymax=ymin+height;
 					int zmax =zmin+depth;
@@ -670,7 +670,7 @@ public class AutoCrop {
 				this.m_outputDirPath+File.separator+"Nuclei");
 		dirOutput.CheckAndCreateDir();
         this.m_infoImageAnalyse += getSpecificImageInfo() + getColoneName();
-        for (int y =0 ;y<this.m_channelNumbers;y++) {
+        for (int c =0 ;c<this.m_channelNumbers;c++) {
 
             for (Map.Entry<Double , Box> entry : this.m_boxes.entrySet()) {
                 int i = (entry.getKey().intValue());
@@ -688,10 +688,10 @@ public class AutoCrop {
 
                 ImagePlus imgResu;
                 if(this.m_rawImg.getNSlices()>1) {
-                    imgResu = cropImage(xmin, ymin,zmin, width,height, depth,y);
+                    imgResu = cropImage(xmin, ymin,zmin, width,height, depth,c);
                 }
                 else{
-                    imgResu = cropImage2D(xmin, ymin, width, height, y);
+                    imgResu = cropImage2D(xmin, ymin, width, height, c);
                 }
 
                 Calibration cal = this.m_rawImg.getCalibration();
@@ -703,7 +703,7 @@ public class AutoCrop {
                                 + "_"
                                 + i
                                 +"_C"
-                                + y
+                                + c
                                 + ".tif");
 				this.m_infoImageAnalyse=this.m_infoImageAnalyse
 						+dirOutput.get_dirPath()
@@ -712,9 +712,9 @@ public class AutoCrop {
                         + "_"
                         + i
                         +"_C"
-                        + y
+                        + c
                         + ".tif\t"
-                        + y  + "\t"
+                        + c  + "\t"
                         + i + "\t"
                         + xmin + "\t"
                         + ymin + "\t"
@@ -733,7 +733,7 @@ public class AutoCrop {
                                 + i
                                 + ".tif");
 
-                if(y==0) {
+                if(c==0) {
                     int xmax=xmin+width;
                     int ymax=ymin+height;
                     int zmax =zmin+depth;

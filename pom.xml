@@ -17,16 +17,10 @@
 			<artifactId>jama</artifactId>
 			<version>1.0.3</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/loci/loci_plugins -->
 		<dependency>
 			<groupId>fr.inra.ijpb</groupId>
 			<artifactId>MorphoLibJ_</artifactId>
 			<version>1.4.0</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
@@ -44,12 +38,12 @@
 			<artifactId>commons-cli</artifactId>
 			<version>1.4</version>
 		</dependency>
-		
 
+		<!-- https://mvnrepository.com/artifact/ome/bioformats_package -->
 		<dependency>
 			<groupId>ome</groupId>
 			<artifactId>bioformats_package</artifactId>
-			<version>6.3.1</version>
+			<version>6.6.0</version>
 		</dependency>
 		<dependency>
 			<groupId>sc.fiji</groupId>
@@ -64,7 +58,7 @@
 		<dependency>
 			<groupId>fr.igred</groupId>
 			<artifactId>simple-omero-client</artifactId>
-			<version>5.6.0</version>
+			<version>5.6.2</version>
 		</dependency>
 	</dependencies>
 
@@ -137,9 +131,9 @@
 										<artifact>*:*</artifact>
 										<excludes>
 											<!--<exclude>plugins.config</exclude>-->
-											<exclude>META-INF/DUMMY.SF</exclude>
-											<exclude>META-INF/DUMMY.DSA</exclude>
-											<exclude>META-INF/DUMMY.RSA</exclude>
+											<exclude>META-INF/*.SF</exclude>
+											<exclude>META-INF/*.DSA</exclude>
+											<exclude>META-INF/*.RSA</exclude>
 										</excludes>
 									</filter>
 								</filters>
