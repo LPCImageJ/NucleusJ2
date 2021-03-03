@@ -20,22 +20,16 @@ import inra.ijpb.label.LabelImages;
 import loci.common.DebugTools;
 import loci.plugins.BF;
 import loci.plugins.in.ImporterOptions;
-import omero.ServerError;
-import omero.gateway.exception.DSAccessException;
-import omero.gateway.exception.DSOutOfServiceException;
 import omero.gateway.model.RectangleData;
 import omero.gateway.model.ShapeData;
-import omero.model.enums.UnitsLength;
 import org.apache.commons.io.FilenameUtils;
 
 import java.awt.*;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -463,7 +457,7 @@ public class AutoCrop {
 					rectangle.setZ(z);
 					rectangle.setT(0);
 					rectangle.setText(String.valueOf(i));
-					rectangle.getShapeSettings().getFontSize(UnitsLength.YOTTAMETER).setValue(45);
+					rectangle.getShapeSettings().getFontSize(null).setValue(45);
 					rectangle.getShapeSettings().setStroke(Color.GREEN);
 					shapes.add(rectangle);
 				}
@@ -721,23 +715,23 @@ public class AutoCrop {
 	}
 	
 	
-	/**
-	 * Write analyse info in output text file
-	 *
-	 * @throws IOException
-	 */
-	public void writeAnalyseInfoOmero(Long id, Client client)
-	throws DSOutOfServiceException, IOException, DSAccessException, ExecutionException, ServerError {
-		String path = new java.io.File(".").getCanonicalPath() + this.m_outputFilesPrefix + ".txt";
-		
-		File             file             = new File(path);
-		OutputTextFile   resultFileOutput = new OutputTextFile(path);
-		DatasetContainer dataset          = client.getDataset(id);
-		
-		resultFileOutput.saveTextFile(this.m_infoImageAnalyse, false);
-		dataset.addFile(client, file);
-		boolean deleted = file.delete();
-		if (!deleted) System.err.println("File not deleted: " + path);
+	/** Write analyse info in output text file */
+	public void writeAnalyseInfoOmero(Long id, Client client) {
+		try {
+			String path = new java.io.File(".").getCanonicalPath() + this.m_outputFilesPrefix + ".txt";
+			File             file             = new File(path);
+			OutputTextFile   resultFileOutput = new OutputTextFile(path);
+			DatasetContainer dataset          = client.getDataset(id);
+			
+			resultFileOutput.saveTextFile(this.m_infoImageAnalyse, false);
+			dataset.addFile(client, file);
+			boolean deleted = file.delete();
+			if (!deleted) System.err.println("File not deleted: " + path);
+		}
+		catch (Exception e) {
+			System.err.println("Error writing analysis information to OMERO");
+			e.printStackTrace();
+		}
 	}
 	
 	

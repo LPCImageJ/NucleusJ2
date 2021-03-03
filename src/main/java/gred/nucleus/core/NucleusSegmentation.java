@@ -25,9 +25,6 @@ import ij.process.StackStatistics;
 import inra.ijpb.binary.BinaryImages;
 import loci.common.DebugTools;
 import loci.plugins.BF;
-import omero.ServerError;
-import omero.gateway.exception.DSAccessException;
-import omero.gateway.exception.DSOutOfServiceException;
 import omero.gateway.model.RectangleData;
 import omero.gateway.model.ShapeData;
 
@@ -36,7 +33,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -143,26 +139,29 @@ public class NucleusSegmentation {
 	                           ROIContainer roi,
 	                           int i,
 	                           SegmentationParameters segmentationParameters,
-	                           Client client)
-	throws Exception {
+	                           Client client) throws Exception {
 		this.m_segmentationParameters = segmentationParameters;
 		
-		List<ShapeData> shapes = roi.getShapes();
+		List<ShapeData> shapes    = roi.getShapes();
+		RectangleData   rectangle = (RectangleData) shapes.get(0);
 		
-		RectangleData rectangle = (RectangleData) shapes.get(0);
+		int roiThickness = shapes.size();
+		int channel      = rectangle.getC();
+		int slice        = rectangle.getZ();
 		
-		int[] cBound = {rectangle.getC(), rectangle.getC()};
-		int[] zBound = {rectangle.getZ(), rectangle.getZ() + shapes.size() - 1};
-		int[] xBound = {(int) rectangle.getX(), (int) rectangle.getX() + (int) rectangle.getWidth() - 1};
-		int[] yBound = {(int) rectangle.getY(), (int) rectangle.getY() + (int) rectangle.getHeight() - 1};
+		int x      = (int) rectangle.getX();
+		int y      = (int) rectangle.getY();
+		int width  = (int) rectangle.getWidth();
+		int height = (int) rectangle.getHeight();
+		
+		int[] cBound = {channel, channel};
+		int[] zBound = {slice, slice + roiThickness - 1};
+		int[] xBound = {x, x + width - 1};
+		int[] yBound = {y, y + height - 1};
 		
 		this._imgRaw = image.toImagePlus(client, xBound, yBound, cBound, zBound, null);
 		
-		this._imgRaw.setTitle(image.getName()
-		                      + "_"
-		                      + i
-		                      + "_C"
-		                      + rectangle.getC());
+		this._imgRaw.setTitle(image.getName() + "_" + i + "_C" + rectangle.getC());
 		this._imgRawTransformed = this._imgRaw.duplicate();
 		this._imgRawTransformed.setTitle(this._imgRaw.getTitle());
 	}
@@ -179,8 +178,7 @@ public class NucleusSegmentation {
 	 */
 	public ImagePlus getImageChannel(int channelNumber) throws Exception {
 		DebugTools.enableLogging("OFF");       // DEBUG INFO BIO-FORMATS OFF
-		ImagePlus[]     currentImage = BF.openImagePlus(this.m_currentFile.getAbsolutePath());
-		ChannelSplitter splitter     = new ChannelSplitter();
+		ImagePlus[] currentImage = BF.openImagePlus(this.m_currentFile.getAbsolutePath());
 		currentImage = ChannelSplitter.split(currentImage[channelNumber]);
 		return currentImage[0];
 	}
@@ -193,7 +191,6 @@ public class NucleusSegmentation {
 	 */
 	public String saveImageResult() {
 		return this._measure3D.nucleusParameter3D();
-		
 	}
 	
 	
@@ -569,16 +566,10 @@ public class NucleusSegmentation {
 	 */
 	private void computeOpening(ImagePlus imagePlusInput) {
 		ImageStack imageStackInput = imagePlusInput.getImageStack();
-		imageStackInput = Filters3D.filter(imageStackInput,
-		                                   Filters3D.MIN,
-		                                   1,
-		                                   1,
-		                                   (float) 0.5);
-		imageStackInput = Filters3D.filter(imageStackInput,
-		                                   Filters3D.MAX,
-		                                   1,
-		                                   1,
-		                                   (float) 0.5);
+		
+		imageStackInput = Filters3D.filter(imageStackInput, Filters3D.MIN, 1, 1, 0.5f);
+		imageStackInput = Filters3D.filter(imageStackInput, Filters3D.MAX, 1, 1, 0.5f);
+		
 		imagePlusInput.setStack(imageStackInput);
 	}
 	
@@ -750,16 +741,35 @@ public class NucleusSegmentation {
 	}
 	
 	
-	public void checkBadCrop(ImageContainer image, Client client)
-	throws ServerError, DSOutOfServiceException, ExecutionException, DSAccessException {
+	public void checkBadCrop(ImageContainer image, Client client) {
 		if ((this._badCrop) || (this._bestThreshold == -1)) {
-			List<TagAnnotationContainer> tags = client.getTags("BadCrop");
+			List<TagAnnotationContainer> tags;
+			TagAnnotationContainer       tagBadCrop;
 			
-			TagAnnotationContainer tagBadCrop;
+			try {
+				tags = client.getTags("BadCrop");
+			} catch (Exception e) {
+				System.err.println("Could not get list of \"BadCrop\" tags");
+				e.printStackTrace();
+				return;
+			}
+			
 			if (tags.size() == 0) {
-				tagBadCrop = new TagAnnotationContainer(client, "BadCrop", "");
+				try {
+					tagBadCrop = new TagAnnotationContainer(client, "BadCrop", "");
+				} catch (Exception e) {
+					System.err.println("Could not create new \"BadCrop\" tag");
+					e.printStackTrace();
+					return;
+				}
 			} else {
-				tagBadCrop = tags.get(0);
+				try {
+					tagBadCrop = tags.get(0);
+				} catch (Exception e) {
+					System.err.println("Could not retrieve a \"BadCrop\" tag");
+					e.printStackTrace();
+					return;
+				}
 			}
 			
 			System.out.println("Adding Bad Crop tag");
@@ -772,15 +782,17 @@ public class NucleusSegmentation {
 	}
 	
 	
-	public void checkBadCrop(ROIContainer roi,
-	                         Client client)
-	throws ServerError, DSOutOfServiceException {
+	public void checkBadCrop(ROIContainer roi, Client client) {
 		if ((this._badCrop) || (this._bestThreshold == -1)) {
 			for (ShapeData shape : roi.getShapes()) {
 				shape.getShapeSettings().setStroke(Color.RED);
 			}
 		}
-		roi.saveROI(client);
+		try {
+			roi.saveROI(client);
+		} catch (Exception e) {
+			System.out.println("Could not save bad crop ROI id: " + roi.getId());
+		}
 	}
 	
 	
