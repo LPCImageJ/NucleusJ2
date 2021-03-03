@@ -6,7 +6,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>igred</groupId>
 	<artifactId>NucleusJ_2</artifactId>
-	<version>1.2.2</version>
+	<version>1.2.3</version>
 
 	<name>NucleusJ</name>
 	<description>Ensemble of ImageJ plugins for nuclear analysis</description>
@@ -17,16 +17,10 @@
 			<artifactId>jama</artifactId>
 			<version>1.0.3</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/loci/loci_plugins -->
 		<dependency>
 			<groupId>fr.inra.ijpb</groupId>
 			<artifactId>MorphoLibJ_</artifactId>
 			<version>1.4.0</version>
-		</dependency>
-		<dependency>
-			<groupId>commons-lang</groupId>
-			<artifactId>commons-lang</artifactId>
-			<version>1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
@@ -45,6 +39,7 @@
 			<version>1.4</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/ome/bioformats_package -->
 		<dependency>
 			<groupId>ome</groupId>
 			<artifactId>bioformats_package</artifactId>
@@ -63,7 +58,7 @@
 		<dependency>
 			<groupId>fr.igred</groupId>
 			<artifactId>simple-omero-client</artifactId>
-			<version>5.6.1</version>
+			<version>5.6.2</version>
 		</dependency>
 	</dependencies>
 
@@ -137,9 +132,9 @@
 										<artifact>*:*</artifact>
 										<excludes>
 											<!--<exclude>plugins.config</exclude>-->
-											<exclude>META-INF/DUMMY.SF</exclude>
-											<exclude>META-INF/DUMMY.DSA</exclude>
-											<exclude>META-INF/DUMMY.RSA</exclude>
+											<exclude>META-INF/*.SF</exclude>
+											<exclude>META-INF/*.DSA</exclude>
+											<exclude>META-INF/*.RSA</exclude>
 										</excludes>
 									</filter>
 								</filters>
