@@ -60,7 +60,7 @@ public class SegmentationCalling {
 	/**
 	 * Constructor for ImagePlus input
 	 *
-	 * @param segmentationParameters   List of parameters in config file.
+	 * @param segmentationParameters List of parameters in config file.
 	 */
 	public SegmentationCalling(SegmentationParameters segmentationParameters) {
 		this.m_segmentationParameters = segmentationParameters;

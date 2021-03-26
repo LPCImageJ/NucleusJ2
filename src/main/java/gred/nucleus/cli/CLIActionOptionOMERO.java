@@ -1,6 +1,5 @@
 package gred.nucleus.cli;
 
-import ome.model.units.Conversion;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.ParseException;
 
@@ -23,7 +22,7 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 	private final Option m_port         = Option.builder("pt")
 	                                            .longOpt("port")
 	                                            .required()
-	                                            .type(Conversion.Int.class)
+	                                            .type(Integer.class)
 	                                            .desc("Port used by OMERO")
 	                                            .numberOfArgs(1)
 	                                            .build();

@@ -3,6 +3,7 @@ package gred.nucleus.core;
 import fr.igred.omero.Client;
 import fr.igred.omero.ImageContainer;
 import fr.igred.omero.metadata.ROIContainer;
+import fr.igred.omero.metadata.ShapeContainer;
 import fr.igred.omero.metadata.annotation.TagAnnotationContainer;
 import fr.igred.omero.repository.DatasetContainer;
 import fr.igred.omero.repository.ProjectContainer;
@@ -25,8 +26,6 @@ import ij.process.StackStatistics;
 import inra.ijpb.binary.BinaryImages;
 import loci.common.DebugTools;
 import loci.plugins.BF;
-import omero.gateway.model.RectangleData;
-import omero.gateway.model.ShapeData;
 
 import java.awt.*;
 import java.io.File;
@@ -142,17 +141,18 @@ public class NucleusSegmentation {
 	                           Client client) throws Exception {
 		this.m_segmentationParameters = segmentationParameters;
 		
-		List<ShapeData> shapes    = roi.getShapes();
-		RectangleData   rectangle = (RectangleData) shapes.get(0);
+		List<ShapeContainer> shapes    = roi.getShapes();
+		ShapeContainer       rectangle = shapes.get(0);
 		
 		int roiThickness = shapes.size();
 		int channel      = rectangle.getC();
 		int slice        = rectangle.getZ();
 		
-		int x      = (int) rectangle.getX();
-		int y      = (int) rectangle.getY();
-		int width  = (int) rectangle.getWidth();
-		int height = (int) rectangle.getHeight();
+		double[] coordinates = rectangle.getCoordinates();
+		int x      = (int) coordinates[0];
+		int y      = (int) coordinates[1];
+		int width  = (int) coordinates[2];
+		int height = (int) coordinates[3];
 		
 		int[] cBound = {channel, channel};
 		int[] zBound = {slice, slice + roiThickness - 1};
@@ -784,8 +784,8 @@ public class NucleusSegmentation {
 	
 	public void checkBadCrop(ROIContainer roi, Client client) {
 		if ((this._badCrop) || (this._bestThreshold == -1)) {
-			for (ShapeData shape : roi.getShapes()) {
-				shape.getShapeSettings().setStroke(Color.RED);
+			for (ShapeContainer shape : roi.getShapes()) {
+				shape.setStroke(Color.RED);
 			}
 		}
 		try {

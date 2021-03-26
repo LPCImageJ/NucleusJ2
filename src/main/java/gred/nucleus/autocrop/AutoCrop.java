@@ -3,6 +3,7 @@ package gred.nucleus.autocrop;
 import fr.igred.omero.Client;
 import fr.igred.omero.ImageContainer;
 import fr.igred.omero.metadata.ROIContainer;
+import fr.igred.omero.metadata.ShapeContainer;
 import fr.igred.omero.repository.DatasetContainer;
 import gred.nucleus.filesInputOutput.Directory;
 import gred.nucleus.filesInputOutput.OutputTextFile;
@@ -20,8 +21,6 @@ import inra.ijpb.label.LabelImages;
 import loci.common.DebugTools;
 import loci.plugins.BF;
 import loci.plugins.in.ImporterOptions;
-import omero.gateway.model.RectangleData;
-import omero.gateway.model.ShapeData;
 import org.apache.commons.io.FilenameUtils;
 
 import java.awt.*;
@@ -450,15 +449,16 @@ public class AutoCrop {
 				int[]            yBound      = {box.getYMin(), box.getYMax() - 1};
 				int[]            zBound      = {box.getZMin(), box.getZMax() - 1};
 				int[]            cBound      = {c, c};
-				List<ShapeData>  shapes      = new ArrayList<>();
+				
+				List<ShapeContainer> shapes = new ArrayList<>();
 				for (int z = box.getZMin(); z < box.getZMax(); z++) {
-					RectangleData rectangle = new RectangleData(xMin, yMin, width, height);
+					ShapeContainer rectangle = new ShapeContainer(ShapeContainer.RECTANGLE);
 					rectangle.setC(c);
 					rectangle.setZ(z);
 					rectangle.setT(0);
 					rectangle.setText(String.valueOf(i));
-					rectangle.getShapeSettings().getFontSize(null).setValue(45);
-					rectangle.getShapeSettings().setStroke(Color.GREEN);
+					rectangle.setFontSize(45);
+					rectangle.setStroke(Color.GREEN);
 					shapes.add(rectangle);
 				}
 				ROIContainer roi = new ROIContainer(shapes);
@@ -718,7 +718,8 @@ public class AutoCrop {
 	/** Write analyse info in output text file */
 	public void writeAnalyseInfoOmero(Long id, Client client) {
 		try {
-			String path = new java.io.File(".").getCanonicalPath() + this.m_outputFilesPrefix + ".txt";
+			String path = new File(".").getCanonicalPath() + this.m_outputFilesPrefix + ".txt";
+			
 			File             file             = new File(path);
 			OutputTextFile   resultFileOutput = new OutputTextFile(path);
 			DatasetContainer dataset          = client.getDataset(id);
@@ -727,8 +728,7 @@ public class AutoCrop {
 			dataset.addFile(client, file);
 			boolean deleted = file.delete();
 			if (!deleted) System.err.println("File not deleted: " + path);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			System.err.println("Error writing analysis information to OMERO");
 			e.printStackTrace();
 		}
