@@ -453,6 +453,7 @@ public class AutoCrop {
 				List<ShapeContainer> shapes = new ArrayList<>();
 				for (int z = box.getZMin(); z < box.getZMax(); z++) {
 					ShapeContainer rectangle = new ShapeContainer(ShapeContainer.RECTANGLE);
+					rectangle.setRectangleCoordinates(xMin, yMin, width, height);
 					rectangle.setC(c);
 					rectangle.setZ(z);
 					rectangle.setT(0);
