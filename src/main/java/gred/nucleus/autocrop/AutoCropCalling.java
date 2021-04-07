@@ -1,7 +1,7 @@
 package gred.nucleus.autocrop;
 
 import fr.igred.omero.Client;
-import fr.igred.omero.ImageContainer;
+import fr.igred.omero.repository.ImageWrapper;
 import gred.nucleus.filesInputOutput.Directory;
 import gred.nucleus.filesInputOutput.FilesNames;
 import gred.nucleus.filesInputOutput.OutputTextFile;
@@ -91,7 +91,7 @@ public class AutoCropCalling {
 	}
 	
 	
-	public void runImageOmero(ImageContainer image, Long[] outputsDatImages, Client client) throws Exception {
+	public void runImageOmero(ImageWrapper image, Long[] outputsDatImages, Client client) throws Exception {
 		String fileImg = image.getName();
 		System.out.println("Current file : " + fileImg);
 		FilesNames outPutFilesNames = new FilesNames(fileImg);
@@ -111,9 +111,9 @@ public class AutoCropCalling {
 	}
 	
 	
-	public void runSeveralImageOmero(List<ImageContainer> images, Long[] outputsDatImages, Client client)
+	public void runSeveralImageOmero(List<ImageWrapper> images, Long[] outputsDatImages, Client client)
 	throws Exception {
-		for (ImageContainer image : images) runImageOmero(image, outputsDatImages, client);
+		for (ImageWrapper image : images) runImageOmero(image, outputsDatImages, client);
 	}
 	
 	

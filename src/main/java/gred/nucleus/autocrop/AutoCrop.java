@@ -1,10 +1,11 @@
 package gred.nucleus.autocrop;
 
 import fr.igred.omero.Client;
-import fr.igred.omero.ImageContainer;
-import fr.igred.omero.metadata.ROIContainer;
-import fr.igred.omero.metadata.ShapeContainer;
-import fr.igred.omero.repository.DatasetContainer;
+import fr.igred.omero.repository.ImageWrapper;
+import fr.igred.omero.roi.ROIWrapper;
+import fr.igred.omero.roi.RectangleWrapper;
+import fr.igred.omero.roi.ShapeList;
+import fr.igred.omero.repository.DatasetWrapper;
 import gred.nucleus.filesInputOutput.Directory;
 import gred.nucleus.filesInputOutput.OutputTextFile;
 import gred.nucleus.filesInputOutput.OutputTiff;
@@ -27,7 +28,6 @@ import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -104,7 +104,7 @@ public class AutoCrop {
 	}
 	
 	
-	public AutoCrop(ImageContainer image, AutocropParameters autocropParametersAnalyse, Client client)
+	public AutoCrop(ImageWrapper image, AutocropParameters autocropParametersAnalyse, Client client)
 	throws Exception {
 		this.m_currentFile = new File(image.getName());
 		this.m_autocropParameters = autocropParametersAnalyse;
@@ -157,7 +157,7 @@ public class AutoCrop {
 	}
 	
 	
-	public ImagePlus getImageChannelOmero(int channelNumber, ImageContainer image, Client client) throws Exception {
+	public ImagePlus getImageChannelOmero(int channelNumber, ImageWrapper image, Client client) throws Exception {
 		int[] cBound = {channelNumber, channelNumber};
 		return image.toImagePlus(client, null, null, cBound, null, null);
 	}
@@ -179,7 +179,7 @@ public class AutoCrop {
 	}
 	
 	
-	public void setChannelNumbersOmero(ImageContainer image, Client client) throws Exception {
+	public void setChannelNumbersOmero(ImageWrapper image, Client client) throws Exception {
 		DebugTools.enableLogging("OFF");      /* DEBUG INFO BIO-FORMATS OFF*/
 		int[] cBound = {this.m_autocropParameters.getChannelToComputeThreshold(),
 		                this.m_autocropParameters.getChannelToComputeThreshold()};
@@ -431,11 +431,11 @@ public class AutoCrop {
 	}
 	
 	
-	public void cropKernelsOmero(ImageContainer image, Long[] outputsDat, Client client) throws Exception {
+	public void cropKernelsOmero(ImageWrapper image, Long[] outputsDat, Client client) throws Exception {
 		this.m_infoImageAnalyse += getSpecificImageInfo() + getColumnNames();
 		for (int c = 0; c < this.m_channelNumbers; c++) {
 			for (Map.Entry<Double, Box> entry : this.m_boxes.entrySet()) {
-				DatasetContainer dataset     = client.getDataset(outputsDat[c]);
+				DatasetWrapper dataset     = client.getDataset(outputsDat[c]);
 				int              i           = entry.getKey().intValue();
 				Box              box         = entry.getValue();
 				int              xMin        = box.getXMin();
@@ -450,19 +450,16 @@ public class AutoCrop {
 				int[]            zBound      = {box.getZMin(), box.getZMax() - 1};
 				int[]            cBound      = {c, c};
 				
-				List<ShapeContainer> shapes = new ArrayList<>();
+				ShapeList shapes = new ShapeList();
 				for (int z = box.getZMin(); z < box.getZMax(); z++) {
-					ShapeContainer rectangle = new ShapeContainer(ShapeContainer.RECTANGLE);
-					rectangle.setRectangleCoordinates(xMin, yMin, width, height);
-					rectangle.setC(c);
-					rectangle.setZ(z);
-					rectangle.setT(0);
+					RectangleWrapper rectangle = new RectangleWrapper(xMin, yMin, width, height);
+					rectangle.setCZT(c, z, 0);
 					rectangle.setText(String.valueOf(i));
 					rectangle.setFontSize(45);
 					rectangle.setStroke(Color.GREEN);
 					shapes.add(rectangle);
 				}
-				ROIContainer roi = new ROIContainer(shapes);
+				ROIWrapper roi = new ROIWrapper(shapes);
 				image.saveROI(client, roi);
 				ImagePlus   croppedImage = image.toImagePlus(client, xBound, yBound, cBound, zBound, null);
 				Calibration cal          = this.m_rawImg.getCalibration();
@@ -723,7 +720,7 @@ public class AutoCrop {
 			
 			File             file             = new File(path);
 			OutputTextFile   resultFileOutput = new OutputTextFile(path);
-			DatasetContainer dataset          = client.getDataset(id);
+			DatasetWrapper dataset          = client.getDataset(id);
 			
 			resultFileOutput.saveTextFile(this.m_infoImageAnalyse, false);
 			dataset.addFile(client, file);

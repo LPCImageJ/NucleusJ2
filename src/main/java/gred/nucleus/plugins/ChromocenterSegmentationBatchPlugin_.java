@@ -17,7 +17,6 @@ import java.util.ArrayList;
 
 /**
  * @author Tristan Dubos and Axel Poulet
- * @deprecated Method to detect the chromocenters on batch using watershed 3D from morpholibJ.
  */
 public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
 	

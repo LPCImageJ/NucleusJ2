@@ -1,12 +1,13 @@
 package gred.nucleus.core;
 
 import fr.igred.omero.Client;
-import fr.igred.omero.ImageContainer;
-import fr.igred.omero.metadata.ROIContainer;
-import fr.igred.omero.metadata.ShapeContainer;
-import fr.igred.omero.metadata.annotation.TagAnnotationContainer;
-import fr.igred.omero.repository.DatasetContainer;
-import fr.igred.omero.repository.ProjectContainer;
+import fr.igred.omero.repository.ImageWrapper;
+import fr.igred.omero.roi.GenericShapeWrapper;
+import fr.igred.omero.roi.ROIWrapper;
+import fr.igred.omero.roi.RectangleWrapper;
+import fr.igred.omero.annotations.TagAnnotationWrapper;
+import fr.igred.omero.repository.DatasetWrapper;
+import fr.igred.omero.repository.ProjectWrapper;
 import gred.nucleus.filesInputOutput.Directory;
 import gred.nucleus.imageProcess.Thresholding;
 import gred.nucleus.segmentation.SegmentationParameters;
@@ -120,7 +121,7 @@ public class NucleusSegmentation {
 	}
 	
 	
-	public NucleusSegmentation(ImageContainer image, SegmentationParameters segmentationParameters, Client client)
+	public NucleusSegmentation(ImageWrapper image, SegmentationParameters segmentationParameters, Client client)
 	throws Exception {
 		this.m_segmentationParameters = segmentationParameters;
 		
@@ -134,25 +135,26 @@ public class NucleusSegmentation {
 	}
 	
 	
-	public NucleusSegmentation(ImageContainer image,
-	                           ROIContainer roi,
+	public NucleusSegmentation(ImageWrapper image,
+	                           ROIWrapper roi,
 	                           int i,
 	                           SegmentationParameters segmentationParameters,
 	                           Client client) throws Exception {
 		this.m_segmentationParameters = segmentationParameters;
 		
-		List<ShapeContainer> shapes    = roi.getShapes();
-		ShapeContainer       rectangle = shapes.get(0);
+		List<RectangleWrapper> rectangles = roi.getShapes().getElementsOf(RectangleWrapper.class);
 		
-		int roiThickness = shapes.size();
+		RectangleWrapper rectangle = rectangles.get(0);
+		
+		int roiThickness = rectangles.size();
 		int channel      = rectangle.getC();
 		int slice        = rectangle.getZ();
 		
 		double[] coordinates = rectangle.getCoordinates();
-		int x      = (int) coordinates[0];
-		int y      = (int) coordinates[1];
-		int width  = (int) coordinates[2];
-		int height = (int) coordinates[3];
+		int      x           = (int) coordinates[0];
+		int      y           = (int) coordinates[1];
+		int      width       = (int) coordinates[2];
+		int      height      = (int) coordinates[3];
 		
 		int[] cBound = {channel, channel};
 		int[] zBound = {slice, slice + roiThickness - 1};
@@ -741,10 +743,10 @@ public class NucleusSegmentation {
 	}
 	
 	
-	public void checkBadCrop(ImageContainer image, Client client) {
+	public void checkBadCrop(ImageWrapper image, Client client) {
 		if ((this._badCrop) || (this._bestThreshold == -1)) {
-			List<TagAnnotationContainer> tags;
-			TagAnnotationContainer       tagBadCrop;
+			List<TagAnnotationWrapper> tags;
+			TagAnnotationWrapper       tagBadCrop;
 			
 			try {
 				tags = client.getTags("BadCrop");
@@ -756,7 +758,7 @@ public class NucleusSegmentation {
 			
 			if (tags.size() == 0) {
 				try {
-					tagBadCrop = new TagAnnotationContainer(client, "BadCrop", "");
+					tagBadCrop = new TagAnnotationWrapper(client, "BadCrop", "");
 				} catch (Exception e) {
 					System.err.println("Could not create new \"BadCrop\" tag");
 					e.printStackTrace();
@@ -782,9 +784,9 @@ public class NucleusSegmentation {
 	}
 	
 	
-	public void checkBadCrop(ROIContainer roi, Client client) {
+	public void checkBadCrop(ROIWrapper roi, Client client) {
 		if ((this._badCrop) || (this._bestThreshold == -1)) {
-			for (ShapeContainer shape : roi.getShapes()) {
+			for (GenericShapeWrapper<?> shape : roi.getShapes()) {
 				shape.setStroke(Color.RED);
 			}
 		}
@@ -822,12 +824,12 @@ public class NucleusSegmentation {
 			String path = new java.io.File(".").getCanonicalPath() + File.separator + this.m_imageSeg[0].getTitle();
 			saveFile(this.m_imageSeg[0], path);
 			
-			ProjectContainer       project  = client.getProject(id);
-			List<DatasetContainer> datasets = project.getDatasets("OTSU");
+			ProjectWrapper       project  = client.getProject(id);
+			List<DatasetWrapper> datasets = project.getDatasets("OTSU");
 			
-			DatasetContainer otsu;
+			DatasetWrapper otsu;
 			if (datasets.size() == 0) {
-				otsu = new DatasetContainer("OTSU", "");
+				otsu = new DatasetWrapper("OTSU", "");
 				Long datasetId = project.addDataset(client, otsu).getId();
 				otsu = client.getDataset(datasetId);
 			} else {
@@ -876,12 +878,12 @@ public class NucleusSegmentation {
 			String path = new java.io.File(".").getCanonicalPath() + File.separator + this.m_imageSeg[0].getTitle();
 			saveFile(this.m_imageSeg[0], path);
 			
-			ProjectContainer       project  = client.getProject(id);
-			List<DatasetContainer> datasets = project.getDatasets("GIFT");
+			ProjectWrapper       project  = client.getProject(id);
+			List<DatasetWrapper> datasets = project.getDatasets("GIFT");
 			
-			DatasetContainer gift;
+			DatasetWrapper gift;
 			if (datasets.size() == 0) {
-				gift = new DatasetContainer("GIFT", "");
+				gift = new DatasetWrapper("GIFT", "");
 				Long datasetId = project.addDataset(client, gift).getId();
 				gift = client.getDataset(datasetId);
 			} else {

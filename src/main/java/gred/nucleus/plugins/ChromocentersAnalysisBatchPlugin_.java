@@ -18,7 +18,6 @@ import java.util.ArrayList;
 
 /**
  * @author Tristan Dubos and Axel Poulet
- * @deprecated Method to analyse the chromocenter on batch
  */
 public class ChromocentersAnalysisBatchPlugin_ implements PlugIn {
 	

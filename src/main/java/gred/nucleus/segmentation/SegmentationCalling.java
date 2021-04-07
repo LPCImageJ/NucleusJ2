@@ -1,9 +1,9 @@
 package gred.nucleus.segmentation;
 
 import fr.igred.omero.Client;
-import fr.igred.omero.ImageContainer;
-import fr.igred.omero.metadata.ROIContainer;
-import fr.igred.omero.repository.DatasetContainer;
+import fr.igred.omero.repository.ImageWrapper;
+import fr.igred.omero.roi.ROIWrapper;
+import fr.igred.omero.repository.DatasetWrapper;
 import gred.nucleus.filesInputOutput.Directory;
 import gred.nucleus.filesInputOutput.FilesNames;
 import gred.nucleus.filesInputOutput.OutputTextFile;
@@ -276,7 +276,7 @@ public class SegmentationCalling {
 	}
 	
 	
-	public String runOneImageOmero(ImageContainer image, Long output, Client client) throws Exception {
+	public String runOneImageOmero(ImageWrapper image, Long output, Client client) throws Exception {
 		String log = "";
 		
 		String fileImg = image.getName();
@@ -301,14 +301,14 @@ public class SegmentationCalling {
 	}
 	
 	
-	public String runSeveralImageOmero(List<ImageContainer> images, Long output, Client client) throws Exception {
+	public String runSeveralImageOmero(List<ImageWrapper> images, Long output, Client client) throws Exception {
 		StringBuilder log = new StringBuilder();
 		
-		for (ImageContainer image : images) {
+		for (ImageWrapper image : images) {
 			log.append(runOneImageOmero(image, output, client));
 		}
 		
-		DatasetContainer dataset = client.getProject(output).getDatasets("OTSU").get(0);
+		DatasetWrapper dataset = client.getProject(output).getDatasets("OTSU").get(0);
 		
 		String path =
 				new java.io.File(".").getCanonicalPath() + dataset.getName() + "result_Segmentation_Analyse.csv";
@@ -335,9 +335,9 @@ public class SegmentationCalling {
 	}
 	
 	
-	public String runOneImageOmeroROI(ImageContainer image, Long output, Client client) throws Exception {
+	public String runOneImageOmeroROI(ImageWrapper image, Long output, Client client) throws Exception {
 		
-		List<ROIContainer> rois = image.getROIs(client);
+		List<ROIWrapper> rois = image.getROIs(client);
 		
 		String log = "";
 		
@@ -349,7 +349,7 @@ public class SegmentationCalling {
 		
 		int i = 0;
 		
-		for (ROIContainer roi : rois) {
+		for (ROIWrapper roi : rois) {
 			System.out.println("Current ROI in process : " + i);
 			
 			NucleusSegmentation nucleusSegmentation =
@@ -371,7 +371,7 @@ public class SegmentationCalling {
 		timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
 		System.out.println("Fin :" + timeStampStart);
 		
-		DatasetContainer dataset = client.getProject(output).getDatasets("OTSU").get(0);
+		DatasetWrapper dataset = client.getProject(output).getDatasets("OTSU").get(0);
 		String path =
 				new java.io.File(".").getCanonicalPath() + "result_Segmentation_Analyse.csv";
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(path);
@@ -397,10 +397,10 @@ public class SegmentationCalling {
 	}
 	
 	
-	public String runSeveralImageOmeroROI(List<ImageContainer> images, Long output, Client client) throws Exception {
+	public String runSeveralImageOmeroROI(List<ImageWrapper> images, Long output, Client client) throws Exception {
 		StringBuilder log = new StringBuilder();
 		
-		for (ImageContainer image : images) {
+		for (ImageWrapper image : images) {
 			log.append(runOneImageOmeroROI(image, output, client));
 		}
 		

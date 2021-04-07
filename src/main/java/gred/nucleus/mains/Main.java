@@ -1,9 +1,9 @@
 package gred.nucleus.mains;
 
 import fr.igred.omero.Client;
-import fr.igred.omero.ImageContainer;
-import fr.igred.omero.repository.DatasetContainer;
-import fr.igred.omero.repository.ProjectContainer;
+import fr.igred.omero.repository.ImageWrapper;
+import fr.igred.omero.repository.DatasetWrapper;
+import fr.igred.omero.repository.ProjectWrapper;
 import gred.nucleus.autocrop.*;
 import gred.nucleus.cli.*;
 import gred.nucleus.core.ComputeNucleiParameters;
@@ -81,14 +81,14 @@ public class Main {
 		if (param.length >= 2) {
 			if (param[0].equals("image")) {
 				Long           id    = Long.parseLong(param[1]);
-				ImageContainer image = client.getImage(id);
+				ImageWrapper image = client.getImage(id);
 				
 				int sizeC = image.getPixels().getSizeC();
 				
 				Long[] outputsDat = new Long[sizeC];
 				
 				for (int i = 0; i < sizeC; i++) {
-					DatasetContainer dataset = new DatasetContainer("C" + i + "_" + image.getName(), "");
+					DatasetWrapper dataset = new DatasetWrapper("C" + i + "_" + image.getName(), "");
 					outputsDat[i] =
 							client.getProject(Long.parseLong(outputDirectory)).addDataset(client, dataset).getId();
 				}
@@ -96,12 +96,12 @@ public class Main {
 				autoCrop.runImageOmero(image, outputsDat, client);
 			} else {
 				Long                 id = Long.parseLong(param[1]);
-				List<ImageContainer> images;
+				List<ImageWrapper> images;
 				
 				String name = "";
 				
 				if (param[0].equals("dataset")) {
-					DatasetContainer dataset = client.getDataset(id);
+					DatasetWrapper dataset = client.getDataset(id);
 					
 					name = dataset.getName();
 					
@@ -121,7 +121,7 @@ public class Main {
 				Long[] outputsDat = new Long[sizeC];
 				
 				for (int i = 0; i < sizeC; i++) {
-					DatasetContainer dataset = new DatasetContainer("raw_C" + i + "_" + name, "");
+					DatasetWrapper dataset = new DatasetWrapper("raw_C" + i + "_" + name, "");
 					outputsDat[i] =
 							client.getProject(Long.parseLong(outputDirectory)).addDataset(client, dataset).getId();
 				}
@@ -237,7 +237,7 @@ public class Main {
 		if (param.length >= 2) {
 			if (param[0].equals("image")) {
 				Long           id    = Long.parseLong(param[1]);
-				ImageContainer image = client.getImage(id);
+				ImageWrapper image = client.getImage(id);
 				
 				try {
 					String log;
@@ -254,11 +254,11 @@ public class Main {
 				}
 			} else {
 				Long                 id = Long.parseLong(param[1]);
-				List<ImageContainer> images;
+				List<ImageWrapper> images;
 				
 				switch (param[0]) {
 					case "dataset":
-						DatasetContainer dataset = client.getDataset(id);
+						DatasetWrapper dataset = client.getDataset(id);
 						
 						if (param.length == 4 && param[2].equals("tag")) {
 							images = dataset.getImagesTagged(client, Long.parseLong(param[3]));
@@ -267,7 +267,7 @@ public class Main {
 						}
 						break;
 					case "project":
-						ProjectContainer project = client.getProject(id);
+						ProjectWrapper project = client.getProject(id);
 						
 						if (param.length == 4 && param[2].equals("tag")) {
 							images = project.getImagesTagged(client, Long.parseLong(param[3]));
