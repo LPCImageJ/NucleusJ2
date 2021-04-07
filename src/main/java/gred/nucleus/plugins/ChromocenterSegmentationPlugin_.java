@@ -21,7 +21,9 @@ public class ChromocenterSegmentationPlugin_ implements PlugIn {
 	public void run(String arg) {
 		int    indexRawImage       = 0;
 		int    indexSegmentedImage = 0;
-		double xCalibration        = 1, yCalibration = 1, zCalibration = 1;
+		double xCalibration        = 1;
+		double yCalibration        = 1;
+		double zCalibration        = 1;
 		String unit                = "pixel";
 		int[]  wList               = WindowManager.getIDList();
 		if (wList == null) {

@@ -3,6 +3,7 @@ package gred.nucleus.utils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -13,14 +14,14 @@ import java.util.regex.Pattern;
  * Several method on the file
  */
 public class FileList {
-	boolean _windows;
+	boolean windows;
 	
 	
 	/**
 	 *
 	 */
 	public FileList() {
-		_windows = System.getProperty("os.name").startsWith("Windows");
+		windows = System.getProperty("os.name").startsWith("Windows");
 	}
 	
 	
@@ -149,7 +150,7 @@ public class FileList {
 	 * @return
 	 */
 	public String fileSearch(String regex, File[] tFile) {
-		if (_windows) {
+		if (windows) {
 			String as  = "\\";
 			String das = "\\\\";
 			regex = regex.replace(as, das);
@@ -172,7 +173,7 @@ public class FileList {
 	 * @return
 	 */
 	public boolean isDirectoryOrFileExist(String regex, File[] tFile) {
-		if (_windows) {
+		if (windows) {
 			String as  = "\\";
 			String das = "\\\\";
 			regex = regex.replace(as, das);
@@ -195,20 +196,18 @@ public class FileList {
 	 * @return
 	 */
 	public String[] getDirectoryFiles(String directory, File[] tFile) {
-		String[]                 tRef            = directory.split(Pattern.quote(File.separator));
-		String[]                 tTemp           = new String[0];
-		ArrayList<String>        arrayList       = new ArrayList<>();
-		HashMap<String, Integer> hasMapDirectory = new HashMap<>();
+		String[]                 tRef         = directory.split(Pattern.quote(File.separator));
+		String[]                 tTemp        = new String[0];
+		ArrayList<String>        arrayList    = new ArrayList<>();
+		HashMap<String, Integer> directoryMap = new HashMap<>();
 		for (File file : tFile) {
 			String[] temp = file.toString().split(Pattern.quote(File.separator));
-			if (temp.length > tRef.length + 1) {
-				if (!hasMapDirectory.containsKey(temp[tRef.length])) {
-					hasMapDirectory.put(temp[tRef.length], 1);
-					arrayList.add(temp[tRef.length]);
-				}
+			if (temp.length > tRef.length + 1 && !directoryMap.containsKey(temp[tRef.length])) {
+				directoryMap.put(temp[tRef.length], 1);
+				arrayList.add(temp[tRef.length]);
 			}
 		}
-		if (arrayList.size() > 0) {
+		if (!arrayList.isEmpty()) {
 			tTemp = new String[arrayList.size()];
 			for (int i = 0; i < arrayList.size(); ++i) {
 				tTemp[i] = arrayList.get(i);
@@ -224,15 +223,16 @@ public class FileList {
 	 *
 	 * @return
 	 */
-	public ArrayList<String> fileSearchList(String regex, File[] tFile) {
-		if (_windows) {
+	public List<String> fileSearchList(String regex, File[] tFile) {
+		String s = regex;
+		if (windows) {
 			String as  = "\\";
 			String das = "\\\\";
-			regex = regex.replace(as, das);
+			s = s.replace(as, das);
 		}
 		ArrayList<String> arrayListFile = new ArrayList<>();
 		for (File file : tFile) {
-			if (file.toString().matches(regex)) {
+			if (file.toString().matches(s)) {
 				arrayListFile.add(file.toString());
 			}
 		}

@@ -21,7 +21,7 @@ import gred.nucleus.utils.Voxel;
  */
 public class ComponentRemovalThresholdVolume implements ComponentRemovalPredicate {
 	
-	private int m_thresholdCardinality;
+	private final int thresholdCardinality;
 	
 	
 	/**
@@ -30,14 +30,14 @@ public class ComponentRemovalThresholdVolume implements ComponentRemovalPredicat
 	 * @param unitVoxelVolume          volume of a single voxel (taking into account the image's calibration)
 	 */
 	public ComponentRemovalThresholdVolume(double thresholdComponentVolume, double unitVoxelVolume) {
-		this.m_thresholdCardinality = (int) (thresholdComponentVolume / unitVoxelVolume);
+		this.thresholdCardinality = (int) (thresholdComponentVolume / unitVoxelVolume);
 	}
 	
 	
 	/** @see  */
 	@Override
 	public boolean keepVoxelComponent(Voxel voxel, ComponentInfo componentInfo) {
-		return (componentInfo.getNumberOfPoints() >= this.m_thresholdCardinality);
+		return (componentInfo.getNumberOfPoints() >= this.thresholdCardinality);
 	}
 	
 }

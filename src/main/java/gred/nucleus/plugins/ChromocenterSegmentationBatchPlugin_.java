@@ -13,6 +13,7 @@ import ij.plugin.PlugIn;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -21,28 +22,28 @@ import java.util.ArrayList;
 public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
 	
 	public void run(String arg) {
-		ChromocenterSegmentationPipelineBatchDialog _chromocenterSegmentationPipelineBatchDialog =
+		ChromocenterSegmentationPipelineBatchDialog chromocenterSegmentationPipelineBatchDialog =
 				new ChromocenterSegmentationPipelineBatchDialog();
-		while (_chromocenterSegmentationPipelineBatchDialog.isShowing()) {
+		while (chromocenterSegmentationPipelineBatchDialog.isShowing()) {
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-		if (_chromocenterSegmentationPipelineBatchDialog.isStart()) {
+		if (chromocenterSegmentationPipelineBatchDialog.isStart()) {
 			FileList fileList     = new FileList();
-			File[]   tFileRawData = fileList.run(_chromocenterSegmentationPipelineBatchDialog.getRawDataDirectory());
+			File[]   tFileRawData = fileList.run(chromocenterSegmentationPipelineBatchDialog.getRawDataDirectory());
 			if (fileList.isDirectoryOrFileExist(".+RawDataNucleus.+", tFileRawData) &&
 			    fileList.isDirectoryOrFileExist(".+SegmentedDataNucleus.+", tFileRawData)) {
 				
-				ArrayList<String> arrayListImageSegmentedDataNucleus =
+				List<String> listImageSegmentedDataNucleus =
 						fileList.fileSearchList(".+SegmentedDataNucleus.+", tFileRawData);
 				String workDirectory =
-						_chromocenterSegmentationPipelineBatchDialog.getWorkDirectory();
-				for (int i = 0; i < arrayListImageSegmentedDataNucleus.size(); ++i) {
-					IJ.log("image" + (i + 1) + " / " + arrayListImageSegmentedDataNucleus.size());
-					String pathImageSegmentedNucleus = arrayListImageSegmentedDataNucleus.get(i);
+						chromocenterSegmentationPipelineBatchDialog.getWorkDirectory();
+				for (int i = 0; i < listImageSegmentedDataNucleus.size(); ++i) {
+					IJ.log("image" + (i + 1) + " / " + listImageSegmentedDataNucleus.size());
+					String pathImageSegmentedNucleus = listImageSegmentedDataNucleus.get(i);
 					String pathNucleusRaw =
 							pathImageSegmentedNucleus.replaceAll("SegmentedDataNucleus", "RawDataNucleus");
 					IJ.log(pathNucleusRaw);
@@ -64,11 +65,11 @@ public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
 						IJ.setMinAndMax(imagePlusInput, 0, max);
 						IJ.run(imagePlusInput, "Apply LUT", "stack");
 						Calibration calibration = new Calibration();
-						if (_chromocenterSegmentationPipelineBatchDialog.getCalibrationStatus()) {
-							calibration.pixelWidth = _chromocenterSegmentationPipelineBatchDialog.getXCalibration();
-							calibration.pixelHeight = _chromocenterSegmentationPipelineBatchDialog.getYCalibration();
-							calibration.pixelDepth = _chromocenterSegmentationPipelineBatchDialog.getZCalibration();
-							calibration.setUnit(_chromocenterSegmentationPipelineBatchDialog.getUnit());
+						if (chromocenterSegmentationPipelineBatchDialog.getCalibrationStatus()) {
+							calibration.pixelWidth = chromocenterSegmentationPipelineBatchDialog.getXCalibration();
+							calibration.pixelHeight = chromocenterSegmentationPipelineBatchDialog.getYCalibration();
+							calibration.pixelDepth = chromocenterSegmentationPipelineBatchDialog.getZCalibration();
+							calibration.setUnit(chromocenterSegmentationPipelineBatchDialog.getUnit());
 						} else {
 							calibration = imagePlusInput.getCalibration();
 						}
@@ -81,7 +82,7 @@ public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
 					}
 				}
 				IJ.log("End of the chromocenter segmentation , the results are in " +
-				       _chromocenterSegmentationPipelineBatchDialog.getWorkDirectory());
+				       chromocenterSegmentationPipelineBatchDialog.getWorkDirectory());
 			} else {
 				IJ.showMessage(
 						"There are no the two subdirectories (See the directory name) or subDirectories are empty");

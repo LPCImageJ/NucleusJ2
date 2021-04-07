@@ -103,9 +103,9 @@ public class RadialDistance {
 		for (int i = 0; i < tVoxelRecord.length; ++i) {
 			VoxelRecord voxelRecord = tVoxelRecord[i];
 			distance = imageStackDistanceMap.getVoxel(
-					(int) voxelRecord._i,
-					(int) voxelRecord._j,
-					(int) voxelRecord._k);
+					(int) voxelRecord.i,
+					(int) voxelRecord.j,
+					(int) voxelRecord.k);
 			tRadialDistance[i] = xCalibration * distance;
 		}
 		return tRadialDistance;

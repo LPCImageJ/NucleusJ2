@@ -66,11 +66,11 @@ public class FJ_Statistics implements PlugIn, ItemListener, WindowListener {
 	private static boolean time    = false;
 	private static boolean slice   = false;
 	
-	private static int      decimals = 3;
-	private static Point    pos      = new Point(-1, -1);
-	private        Checkbox channelBox;
-	private        Checkbox timeBox;
-	private        Checkbox sliceBox;
+	private static       int      decimals = 3;
+	private static final Point    pos      = new Point(-1, -1);
+	private              Checkbox channelBox;
+	private              Checkbox timeBox;
+	private              Checkbox sliceBox;
 	
 	
 	@SuppressWarnings("rawtypes")

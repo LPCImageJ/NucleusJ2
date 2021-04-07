@@ -7,12 +7,12 @@ import java.io.File;
 
 public class FilesNames {
 	/** Path file input */
-	String  _pathFile     = "";
+	String  pathFile     = "";
 	/** File name */
-	String  _fileName     = "";
+	String  fileName     = "";
 	/** Complete pathFile */
-	String  _fullPathFile = "";
-	boolean _fileExists   = true;
+	String  fullPathFile = "";
+	boolean fileExists   = true;
 	
 	
 	public FilesNames() {
@@ -21,40 +21,40 @@ public class FilesNames {
 	
 	/** Constructor to create file object */
 	public FilesNames(String filePath) {
-		this._fullPathFile = filePath;
+		this.fullPathFile = filePath;
 		File file = new File(filePath);
-		this._pathFile = file.getParent() + File.separator;
-		this._fileName = file.getName();
+		this.pathFile = file.getParent() + File.separator;
+		this.fileName = file.getName();
 		CheckExistFile();
 	}
 	
 	
 	public String prefixNameFile() {
-		return FilenameUtils.removeExtension(this._fileName);
+		return FilenameUtils.removeExtension(this.fileName);
 	}
 	
 	
 	/** Method to check if file exists */
 	public void CheckExistFile() {
-		File file = new File(this._fullPathFile);
-		if (!file.exists()) this._fileExists = false;
+		File file = new File(this.fullPathFile);
+		if (!file.exists()) this.fileExists = false;
 	}
 	
 	
 	/** @return boolean true for existing file */
 	public boolean fileExists() {
-		return _fileExists;
+		return fileExists;
 	}
 	
 	
 	/** @return path to file */
 	public String getPathFile() {
-		return this._pathFile;
+		return this.pathFile;
 	}
 	
 	
 	public void setFullPathFile(String fileName) {
-		this._fullPathFile = _pathFile + fileName;
+		this.fullPathFile = pathFile + fileName;
 	}
 	
 }

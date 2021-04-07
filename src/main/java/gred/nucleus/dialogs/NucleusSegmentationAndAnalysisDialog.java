@@ -15,17 +15,17 @@ import java.awt.event.ActionListener;
  */
 public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 	
-	private static final long                serialVersionUID        = 1L;
-	private final        JFormattedTextField _jTextFieldXCalibration = new JFormattedTextField(Number.class);
-	private final        JFormattedTextField _jTextFieldYCalibration = new JFormattedTextField(Number.class);
-	private final        JFormattedTextField _jTextFieldZCalibration = new JFormattedTextField(Number.class);
-	private final        JFormattedTextField _jTextFieldMax          = new JFormattedTextField(Number.class);
-	private final        JFormattedTextField _jTextFieldMin          = new JFormattedTextField(Number.class);
-	private final        JTextField          _jTextFieldUnit         = new JTextField();
-	private final        JRadioButton        _jRadioButton2D         = new JRadioButton("2D");
-	private final        JRadioButton        _jRadioButton3D         = new JRadioButton("3D");
-	private final        JRadioButton        _jRadioButton2D3D       = new JRadioButton("2D and 3D");
-	private              boolean             _start                  = false;
+	private static final long                serialVersionUID       = 1L;
+	private final        JFormattedTextField jTextFieldXCalibration = new JFormattedTextField(Number.class);
+	private final        JFormattedTextField jTextFieldYCalibration = new JFormattedTextField(Number.class);
+	private final        JFormattedTextField jTextFieldZCalibration = new JFormattedTextField(Number.class);
+	private final        JFormattedTextField jTextFieldMax          = new JFormattedTextField(Number.class);
+	private final        JFormattedTextField jTextFieldMin          = new JFormattedTextField(Number.class);
+	private final        JTextField          jTextFieldUnit         = new JTextField();
+	private final        JRadioButton        jRadioButton2D         = new JRadioButton("2D");
+	private final        JRadioButton        jRadioButton3D         = new JRadioButton("3D");
+	private final        JRadioButton        jRadioButton2D3D       = new JRadioButton("2D and 3D");
+	private              boolean             start                  = false;
 	
 	
 	/** Architecture of the graphical windows */
@@ -86,7 +86,7 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 		jLabelXCalibration.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
 		container.add
 				(
-						_jTextFieldXCalibration,
+						jTextFieldXCalibration,
 						new GridBagConstraints
 								(
 										0, 1, 0, 0, 0.0, 0.0,
@@ -95,8 +95,8 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 										new Insets(20, 60, 0, 0), 0, 0
 								)
 				);
-		_jTextFieldXCalibration.setText(String.valueOf(cal.pixelWidth));
-		_jTextFieldXCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
+		jTextFieldXCalibration.setText(String.valueOf(cal.pixelWidth));
+		jTextFieldXCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
 		
 		jLabelYCalibration = new JLabel();
 		container.add
@@ -114,7 +114,7 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 		jLabelYCalibration.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
 		container.add
 				(
-						_jTextFieldYCalibration,
+						jTextFieldYCalibration,
 						new GridBagConstraints
 								(
 										0, 1, 0, 0, 0.0, 0.0,
@@ -123,8 +123,8 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 										new Insets(45, 60, 0, 0), 0, 0
 								)
 				);
-		_jTextFieldYCalibration.setText(String.valueOf(cal.pixelWidth));
-		_jTextFieldYCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
+		jTextFieldYCalibration.setText(String.valueOf(cal.pixelWidth));
+		jTextFieldYCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
 		
 		jLabelZCalibration = new JLabel();
 		container.add
@@ -142,7 +142,7 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 		jLabelZCalibration.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
 		container.add
 				(
-						_jTextFieldZCalibration,
+						jTextFieldZCalibration,
 						new GridBagConstraints
 								(
 										0, 1, 0, 0, 0.0, 0.0,
@@ -151,8 +151,8 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 										new Insets(70, 60, 0, 0), 0, 0
 								)
 				);
-		_jTextFieldZCalibration.setText(String.valueOf(cal.pixelDepth));
-		_jTextFieldZCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
+		jTextFieldZCalibration.setText(String.valueOf(cal.pixelDepth));
+		jTextFieldZCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
 		
 		jLabelUnit = new JLabel();
 		container.add
@@ -170,7 +170,7 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 		jLabelUnit.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
 		container.add
 				(
-						_jTextFieldUnit,
+						jTextFieldUnit,
 						new GridBagConstraints
 								(
 										0, 1, 0, 0, 0.0, 0.0,
@@ -179,8 +179,8 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 										new Insets(95, 60, 0, 0), 0, 0
 								)
 				);
-		_jTextFieldUnit.setText(cal.getUnit());
-		_jTextFieldUnit.setPreferredSize(new java.awt.Dimension(60, 21));
+		jTextFieldUnit.setText(cal.getUnit());
+		jTextFieldUnit.setPreferredSize(new java.awt.Dimension(60, 21));
 		
 		
 		jLabelSegmentation = new JLabel();
@@ -213,7 +213,7 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 		jLabelVolumeMin.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
 		container.add
 				(
-						_jTextFieldMin,
+						jTextFieldMin,
 						new GridBagConstraints
 								(
 										0, 2, 0, 0, 0.0, 0.0,
@@ -222,8 +222,8 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 										new Insets(40, 320, 0, 0), 0, 0
 								)
 				);
-		_jTextFieldMin.setText("15");
-		_jTextFieldMin.setPreferredSize(new java.awt.Dimension(60, 21));
+		jTextFieldMin.setText("15");
+		jTextFieldMin.setPreferredSize(new java.awt.Dimension(60, 21));
 		
 		jLabelUnitText = new JLabel();
 		container.add
@@ -256,7 +256,7 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 		jLabelVolumeMax.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
 		container.add
 				(
-						_jTextFieldMax,
+						jTextFieldMax,
 						new GridBagConstraints
 								(
 										0, 2, 0, 0, 0.0, 0.0,
@@ -265,8 +265,8 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 										new Insets(70, 320, 0, 0), 0, 0
 								)
 				);
-		_jTextFieldMax.setText("2000");
-		_jTextFieldMax.setPreferredSize(new java.awt.Dimension(60, 21));
+		jTextFieldMax.setText("2000");
+		jTextFieldMax.setPreferredSize(new java.awt.Dimension(60, 21));
 		jLabelUnitText = new JLabel();
 		container.add
 				(
@@ -296,15 +296,15 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 				);
 		jLabelAnalysis.setText("Type of analysis:");
 		
-		buttonGroupChoiceAnalysis.add(_jRadioButton2D);
-		buttonGroupChoiceAnalysis.add(_jRadioButton3D);
-		buttonGroupChoiceAnalysis.add(_jRadioButton2D3D);
-		_jRadioButton2D.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		_jRadioButton3D.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		_jRadioButton2D3D.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
+		buttonGroupChoiceAnalysis.add(jRadioButton2D);
+		buttonGroupChoiceAnalysis.add(jRadioButton3D);
+		buttonGroupChoiceAnalysis.add(jRadioButton2D3D);
+		jRadioButton2D.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
+		jRadioButton3D.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
+		jRadioButton2D3D.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
 		container.add
 				(
-						_jRadioButton2D,
+						jRadioButton2D,
 						new GridBagConstraints
 								(
 										0, 2, 0, 0, 0.0, 0.0,
@@ -315,7 +315,7 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 				);
 		container.add
 				(
-						_jRadioButton3D,
+						jRadioButton3D,
 						new GridBagConstraints
 								(
 										0, 2, 0, 0, 0.0, 0.0,
@@ -326,7 +326,7 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 				);
 		container.add
 				(
-						_jRadioButton2D3D,
+						jRadioButton2D3D,
 						new GridBagConstraints
 								(
 										0, 2, 0, 0, 0.0, 0.0,
@@ -335,7 +335,7 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 										new Insets(130, 10, 0, 0), 0, 0
 								)
 				);
-		_jRadioButton2D3D.setSelected(true);
+		jRadioButton2D3D.setSelected(true);
 		
 		container.add
 				(
@@ -371,55 +371,55 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 	
 	
 	public double getXCalibration() {
-		String xCal = _jTextFieldXCalibration.getText();
+		String xCal = jTextFieldXCalibration.getText();
 		return Double.parseDouble(xCal.replaceAll(",", "."));
 	}
 	
 	
 	public double getYCalibration() {
-		String yCal = _jTextFieldYCalibration.getText();
+		String yCal = jTextFieldYCalibration.getText();
 		return Double.parseDouble(yCal.replaceAll(",", "."));
 	}
 	
 	
 	public double getZCalibration() {
-		String zCal = _jTextFieldZCalibration.getText();
+		String zCal = jTextFieldZCalibration.getText();
 		return Double.parseDouble(zCal.replaceAll(",", "."));
 	}
 	
 	
 	public String getUnit() {
-		return _jTextFieldUnit.getText();
+		return jTextFieldUnit.getText();
 	}
 	
 	
 	public double getMinVolume() {
-		return Double.parseDouble(_jTextFieldMin.getText());
+		return Double.parseDouble(jTextFieldMin.getText());
 	}
 	
 	
 	public double getMaxVolume() {
-		return Double.parseDouble(_jTextFieldMax.getText());
+		return Double.parseDouble(jTextFieldMax.getText());
 	}
 	
 	
 	public boolean isStart() {
-		return _start;
+		return start;
 	}
 	
 	
 	public boolean is2D3DAnalysis() {
-		return _jRadioButton2D3D.isSelected();
+		return jRadioButton2D3D.isSelected();
 	}
 	
 	
 	public boolean is2D() {
-		return _jRadioButton2D.isSelected();
+		return jRadioButton2D.isSelected();
 	}
 	
 	
 	public boolean is3D() {
-		return _jRadioButton3D.isSelected();
+		return jRadioButton3D.isSelected();
 	}
 	
 	
@@ -427,12 +427,12 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 	 *
 	 */
 	static class QuitListener implements ActionListener {
-		final NucleusSegmentationAndAnalysisDialog _nucleusSegmentationAndAnalysisDialog;
+		final NucleusSegmentationAndAnalysisDialog nucleusSegmentationAndAnalysisDialog;
 		
 		
 		/** @param nucleusSegmentationAndAnalysisDialog nucleusSegmentationAndAnalysisDialog GUI */
 		public QuitListener(NucleusSegmentationAndAnalysisDialog nucleusSegmentationAndAnalysisDialog) {
-			_nucleusSegmentationAndAnalysisDialog = nucleusSegmentationAndAnalysisDialog;
+			this.nucleusSegmentationAndAnalysisDialog = nucleusSegmentationAndAnalysisDialog;
 		}
 		
 		
@@ -440,7 +440,7 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 		 *
 		 */
 		public void actionPerformed(ActionEvent actionEvent) {
-			_nucleusSegmentationAndAnalysisDialog.dispose();
+			nucleusSegmentationAndAnalysisDialog.dispose();
 		}
 		
 	}
@@ -448,12 +448,12 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 	/** Classes listener to interact with the several elements of the window */
 	class StartListener implements ActionListener {
 		
-		final NucleusSegmentationAndAnalysisDialog _nucleusSegmentationAndAnalysisDialog;
+		final NucleusSegmentationAndAnalysisDialog nucleusSegmentationAndAnalysisDialog;
 		
 		
 		/** @param nucleusSegmentationAndAnalysisDialog nucleusSegmentationAndAnalysisDialog GUI */
 		public StartListener(NucleusSegmentationAndAnalysisDialog nucleusSegmentationAndAnalysisDialog) {
-			_nucleusSegmentationAndAnalysisDialog = nucleusSegmentationAndAnalysisDialog;
+			this.nucleusSegmentationAndAnalysisDialog = nucleusSegmentationAndAnalysisDialog;
 		}
 		
 		
@@ -461,8 +461,8 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 		 *
 		 */
 		public void actionPerformed(ActionEvent actionEvent) {
-			_start = true;
-			_nucleusSegmentationAndAnalysisDialog.dispose();
+			start = true;
+			nucleusSegmentationAndAnalysisDialog.dispose();
 		}
 		
 	}

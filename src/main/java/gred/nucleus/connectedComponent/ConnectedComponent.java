@@ -34,44 +34,44 @@ public abstract class ConnectedComponent {
 	/**
 	 * Input Image. The image can be modified by the filtering in the filterComponents() method
 	 */
-	protected ImagePlus m_inputImage;
+	protected ImagePlus inputImage;
 	
 	/** Color of the foreground in the input binary image */
-	protected int m_foregroundColor;
+	protected int foregroundColor;
 	
 	/** Components Information (cardinality, label, voxel representative, etc.) */
-	protected ArrayList<ComponentInfo> m_compInfo;
+	protected ArrayList<ComponentInfo> compInfo;
 	
 	/** Array containing the label of each voxel */
-	protected int[][][] m_labels;
+	protected int[][][] labels;
 	
 	/** Volume of a voxel (used for component size thresholding) */
-	protected double m_voxelVolume;
+	protected double voxelVolume;
 	
 	
 	/**
 	 * Initializes the fields of this instance (to be called in derived classes constructors)
 	 *
-	 * @param inputImage        Input (probably binary) image, the components of which to compute.
+	 * @param inputImage      Input (probably binary) image, the components of which to compute.
 	 * @param foregroundColor label of the 1's in the input image ip
 	 */
 	protected ConnectedComponent(ImagePlus inputImage, int foregroundColor) {
-		this.m_inputImage = inputImage;
-		Calibration cal = m_inputImage.getCalibration();
-		this.m_voxelVolume = cal.pixelDepth * cal.pixelWidth * cal.pixelHeight;
+		this.inputImage = inputImage;
+		Calibration cal = this.inputImage.getCalibration();
+		this.voxelVolume = cal.pixelDepth * cal.pixelWidth * cal.pixelHeight;
 		
-		//System.out.println("vol vx"+m_voxelVolume);
-		this.m_foregroundColor = foregroundColor;
-		this.m_labels =
-				new int[this.m_inputImage.getWidth()][this.m_inputImage.getHeight()][this.m_inputImage.getNSlices()];
-		for (int i = 0; i < this.m_inputImage.getWidth(); i++) {
-			for (int j = 0; j < this.m_inputImage.getHeight(); j++) {
-				for (int k = 0; k < this.m_inputImage.getNSlices(); k++) {
-					this.m_labels[i][j][k] = 0;
+		//System.out.println("vol vx" + voxelVolume);
+		this.foregroundColor = foregroundColor;
+		this.labels =
+				new int[this.inputImage.getWidth()][this.inputImage.getHeight()][this.inputImage.getNSlices()];
+		for (int i = 0; i < this.inputImage.getWidth(); i++) {
+			for (int j = 0; j < this.inputImage.getHeight(); j++) {
+				for (int k = 0; k < this.inputImage.getNSlices(); k++) {
+					this.labels[i][j][k] = 0;
 				}
 			}
 		}
-		this.m_compInfo = new ArrayList<>();
+		this.compInfo = new ArrayList<>();
 	}
 	
 	
@@ -79,7 +79,7 @@ public abstract class ConnectedComponent {
 	 * Constructs a ConnectedComponent derived class instance with relevant dimension (2D or 3D). the connected
 	 * components are not labeled. Please call doConnectedComponent().
 	 *
-	 * @param inputImage        Input (probably binary) image, the components of which to compute.
+	 * @param inputImage      Input (probably binary) image, the components of which to compute.
 	 * @param foregroundColor label of the 1's in the input image inputImage
 	 *
 	 * @return an instance of a concrete derived class for ConnectedComponent
@@ -101,7 +101,7 @@ public abstract class ConnectedComponent {
 	 *    <li>Possibly remove the components with size bellow some threshold</li>
 	 * </ul>
 	 *
-	 * @param inputImage              Input (probably binary) image, the components of which to compute.
+	 * @param inputImage            Input (probably binary) image, the components of which to compute.
 	 * @param foregroundColor       label of the 1's in the input image inputImage
 	 * @param removeBorderComponent true if the components which are on the edge of the image should be removed by
 	 *                              filtering
@@ -139,7 +139,7 @@ public abstract class ConnectedComponent {
 	 *    <li>Possibly remove the components with size bellow some threshold</li>
 	 * </ul>
 	 *
-	 * @param inputImage              Input (probably binary) image, the components of which to compute.
+	 * @param inputImage            Input (probably binary) image, the components of which to compute.
 	 * @param foregroundColor       label of the 1's in the input image inputImage
 	 * @param removeBorderComponent true if the components which are on the edge of the image should be removed by
 	 *                              filtering
@@ -187,7 +187,7 @@ public abstract class ConnectedComponent {
 	 * @return the label of the input voxel (0 if not in any connected component)
 	 */
 	public int getLabel(int x, int y) {
-		return this.m_labels[x][y][0];
+		return this.labels[x][y][0];
 	}
 	
 	
@@ -201,7 +201,7 @@ public abstract class ConnectedComponent {
 	 * @return the label of the input voxel (0 if not in any connected component)
 	 */
 	public int getLabel(int x, int y, int z) {
-		return this.m_labels[x][y][z];
+		return this.labels[x][y][z];
 	}
 	
 	
@@ -214,7 +214,7 @@ public abstract class ConnectedComponent {
 	 * @param label the label of the input voxel (0 if not in any connected component)
 	 */
 	protected void setLabel(int x, int y, int z, int label) {
-		this.m_labels[x][y][z] = label;
+		this.labels[x][y][z] = label;
 	}
 	
 	
@@ -229,7 +229,7 @@ public abstract class ConnectedComponent {
 	 */
 	public ComponentInfo getComponentInfo(short label) {
 		try {
-			ComponentInfo ci = this.m_compInfo.get(label - 1);
+			ComponentInfo ci = this.compInfo.get(label - 1);
 			if (ci.getNumberOfPoints() == 0) {
 				return null;
 			}
@@ -247,7 +247,7 @@ public abstract class ConnectedComponent {
 	 */
 	public ArrayList<Voxel> getVoxelRepresentants() {
 		ArrayList<Voxel> tabVoxels = new ArrayList<>();
-		for (ComponentInfo ci : this.m_compInfo) {
+		for (ComponentInfo ci : this.compInfo) {
 			if (ci.getNumberOfPoints() > 0) {
 				tabVoxels.add(ci.getRepresentant());
 			}
@@ -257,7 +257,7 @@ public abstract class ConnectedComponent {
 	
 	
 	/**
-	 * labels the connected components of the input image (attribute this.m_ip)
+	 * labels the connected components of the input image (attribute this.ip)
 	 *
 	 * @throws Exception in case the number of connected components exceeds the Short.MAX_VALUE (32767)
 	 */
@@ -314,28 +314,28 @@ public abstract class ConnectedComponent {
 	                                ComponentRemovalPredicate removalPredicate,
 	                                boolean keepPredicate,
 	                                boolean setRandomColors) {
-		System.out.println("La on des compO : " + this.m_voxelVolume);
+		System.out.println("La on des compO : " + this.voxelVolume);
 		
 		ArrayList<Boolean> existsVoxelSatisfyingPredicate = new ArrayList<>();
-		for (int i = 0; i < this.m_compInfo.size(); ++i) {
+		for (int i = 0; i < this.compInfo.size(); ++i) {
 			existsVoxelSatisfyingPredicate.add(Boolean.FALSE);
 		}
 		
 		// Check the predicate
 		Voxel voxelToTest = new Voxel();
 		for (voxelToTest.setX((short) 0);
-		     voxelToTest.getX() < this.m_inputImage.getWidth();
+		     voxelToTest.getX() < this.inputImage.getWidth();
 		     voxelToTest.incrementCoordinate(0)) {
 			for (voxelToTest.setY((short) 0);
-			     voxelToTest.getY() < this.m_inputImage.getHeight();
+			     voxelToTest.getY() < this.inputImage.getHeight();
 			     voxelToTest.incrementCoordinate(1)) {
 				for (voxelToTest.setZ((short) 0);
-				     voxelToTest.getZ() < this.m_inputImage.getNSlices();
+				     voxelToTest.getZ() < this.inputImage.getNSlices();
 				     voxelToTest.incrementCoordinate(2)) {
 					// get the voxel's label
 					int label = getLabel(voxelToTest.getX(), voxelToTest.getY(), voxelToTest.getZ());
 					if (label > 0) { // if not a background voxel
-						ComponentInfo ci = this.m_compInfo.get(label - 1);
+						ComponentInfo ci = this.compInfo.get(label - 1);
 						// test the predicate
 						if (removalPredicate.keepVoxelComponent(voxelToTest, ci)) {
 							existsVoxelSatisfyingPredicate.set(label - 1, Boolean.TRUE);
@@ -352,22 +352,22 @@ public abstract class ConnectedComponent {
 		// if the keep predicate is false for all the voxels
 		// and we should keep only
 		// the components with a voxel satisfying removalPredicate 
-		for (int i = 0; i < this.m_compInfo.size(); ++i) {
+		for (int i = 0; i < this.compInfo.size(); ++i) {
 			if (((!existsVoxelSatisfyingPredicate.get(i)) && keepPredicate) ||
 			    (existsVoxelSatisfyingPredicate.get(i) && !keepPredicate))
 			// remove the component
 			{
-				this.m_compInfo.get(i).setNumberOfPoints(0);
+				this.compInfo.get(i).setNumberOfPoints(0);
 			}
 		}
 		
-		int                      thresholdNVoxel  = (int) (thresholdComponentVolume / this.m_voxelVolume);
-		ArrayList<Integer>       newLabels        = new ArrayList<>(this.m_compInfo.size());
+		int                      thresholdNVoxel  = (int) (thresholdComponentVolume / this.voxelVolume);
+		ArrayList<Integer>       newLabels        = new ArrayList<>(this.compInfo.size());
 		ArrayList<ComponentInfo> newTabComponents = new ArrayList<>();
 		short                    componentsCount  = 0;
 		// For each label
-		for (int label = 1; label <= this.m_compInfo.size(); label++) {
-			ComponentInfo ci = this.m_compInfo.get(label - 1);
+		for (int label = 1; label <= this.compInfo.size(); label++) {
+			ComponentInfo ci = this.compInfo.get(label - 1);
 			// If the component survives the filtering criteria
 			if (ci != null &&
 			    ci.getNumberOfPoints() > 0 &&
@@ -387,10 +387,10 @@ public abstract class ConnectedComponent {
 		for (int i = 0; i < newTabComponents.size(); i++) {
 			componentsColors.add(100 + Math.random() * (255 - 100));
 		}
-		ImageStack imgP = m_inputImage.getStack();
-		for (int i = 0; i < this.m_inputImage.getWidth(); ++i) {
-			for (int j = 0; j < this.m_inputImage.getHeight(); ++j) {
-				for (int k = 0; k < this.m_inputImage.getNSlices(); ++k) {
+		ImageStack imgP = inputImage.getStack();
+		for (int i = 0; i < this.inputImage.getWidth(); ++i) {
+			for (int j = 0; j < this.inputImage.getHeight(); ++j) {
+				for (int k = 0; k < this.inputImage.getNSlices(); ++k) {
 					int label = getLabel(i, j, k);
 					// if not a background voxel and component not removed
 					if (label > 0 && newLabels.get(label - 1) > 0) {
@@ -409,7 +409,7 @@ public abstract class ConnectedComponent {
 				}
 			}
 		}
-		this.m_compInfo = newTabComponents;
+		this.compInfo = newTabComponents;
 	}
 	
 	
@@ -421,8 +421,8 @@ public abstract class ConnectedComponent {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Connected components of the image ").append(this.m_inputImage.getTitle()).append("\n");
-		for (ComponentInfo compInfo : this.m_compInfo) {
+		builder.append("Connected components of the image ").append(this.inputImage.getTitle()).append("\n");
+		for (ComponentInfo compInfo : this.compInfo) {
 			builder.append(compInfo).append("\n");
 		}
 		return builder.toString();
@@ -435,7 +435,7 @@ public abstract class ConnectedComponent {
 	 * @return the number of components detected.
 	 */
 	public int getNumberOfComponents() {
-		return this.m_compInfo.size();
+		return this.compInfo.size();
 	}
 	
 } // end of class

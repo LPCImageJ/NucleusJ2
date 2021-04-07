@@ -14,24 +14,24 @@ import java.awt.event.ItemListener;
  * @author Poulet Axel
  */
 public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implements ItemListener {
-	private static final long                serialVersionUID         = 1L;
-	private final        JTextField          _jTextFieldWorkDirectory = new JTextField();
-	private final        JTextField          _jTextFieldRawData       = new JTextField();
-	private final        JLabel              _jLabelUnit              = new JLabel();
-	private final        JLabel              _jLabelXCalibration      = new JLabel();
-	private final        JLabel              _jLabelYCalibration      = new JLabel();
-	private final        JLabel              _jLabelZCalibration      = new JLabel();
-	private final        JTextPane           _readUnit                = new JTextPane();
-	private final        JTextPane           _readXCalibration        = new JTextPane();
-	private final        JTextPane           _readYCalibration        = new JTextPane();
-	private final        JTextPane           _readZCalibration        = new JTextPane();
-	private final        JCheckBox           _addCalibrationBox       = new JCheckBox();
-	private final        JPanel              _calibration;
-	private final        JFormattedTextField _jTextFieldXCalibration  = new JFormattedTextField(Number.class);
-	private final        JFormattedTextField _jTextFieldYCalibration  = new JFormattedTextField(Number.class);
-	private final        JFormattedTextField _jTextFieldZCalibration  = new JFormattedTextField(Number.class);
-	private final        JTextField          _jTextFieldUnit          = new JTextField();
-	private              boolean             _start                   = false;
+	private static final long                serialVersionUID        = 1L;
+	private final        JTextField          jTextFieldWorkDirectory = new JTextField();
+	private final        JTextField          jTextFieldRawData       = new JTextField();
+	private final        JLabel              jLabelUnit              = new JLabel();
+	private final        JLabel              jLabelXCalibration      = new JLabel();
+	private final        JLabel              jLabelYCalibration      = new JLabel();
+	private final        JLabel              jLabelZCalibration      = new JLabel();
+	private final        JTextPane           readUnit                = new JTextPane();
+	private final        JTextPane           readXCalibration        = new JTextPane();
+	private final        JTextPane           readYCalibration        = new JTextPane();
+	private final        JTextPane           readZCalibration        = new JTextPane();
+	private final        JCheckBox           addCalibrationBox       = new JCheckBox();
+	private final        JPanel              calibration;
+	private final        JFormattedTextField jTextFieldXCalibration  = new JFormattedTextField(Number.class);
+	private final        JFormattedTextField jTextFieldYCalibration  = new JFormattedTextField(Number.class);
+	private final        JFormattedTextField jTextFieldZCalibration  = new JFormattedTextField(Number.class);
+	private final        JTextField          jTextFieldUnit          = new JTextField();
+	private              boolean             start                   = false;
 	
 	
 	/** Architecture of the graphical windows */
@@ -103,7 +103,7 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 		jButtonRawData.setPreferredSize(new java.awt.Dimension(120, 21));
 		jButtonRawData.setFont(new java.awt.Font("Albertus", Font.ITALIC, 10));
 		
-		container.add(_jTextFieldRawData,
+		container.add(jTextFieldRawData,
 		              new GridBagConstraints(0,
 		                                     1,
 		                                     0,
@@ -115,8 +115,8 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 		                                     new Insets(100, 160, 0, 0),
 		                                     0,
 		                                     0));
-		_jTextFieldRawData.setPreferredSize(new java.awt.Dimension(280, 21));
-		_jTextFieldRawData.setFont(new java.awt.Font("Albertus", Font.ITALIC, 10));
+		jTextFieldRawData.setPreferredSize(new java.awt.Dimension(280, 21));
+		jTextFieldRawData.setFont(new java.awt.Font("Albertus", Font.ITALIC, 10));
 		
 		container.add(jButtonWorkDirectory,
 		              new GridBagConstraints(0,
@@ -133,7 +133,7 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 		jButtonWorkDirectory.setPreferredSize(new java.awt.Dimension(120, 21));
 		jButtonWorkDirectory.setFont(new java.awt.Font("Albertus", Font.ITALIC, 10));
 		
-		container.add(_jTextFieldWorkDirectory,
+		container.add(jTextFieldWorkDirectory,
 		              new GridBagConstraints(0,
 		                                     1,
 		                                     0,
@@ -145,8 +145,8 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 		                                     new Insets(140, 160, 0, 0),
 		                                     0,
 		                                     0));
-		_jTextFieldWorkDirectory.setPreferredSize(new java.awt.Dimension(280, 21));
-		_jTextFieldWorkDirectory.setFont(new java.awt.Font("Albertus", Font.ITALIC, 10));
+		jTextFieldWorkDirectory.setPreferredSize(new java.awt.Dimension(280, 21));
+		jTextFieldWorkDirectory.setFont(new java.awt.Font("Albertus", Font.ITALIC, 10));
 		
 		jLabelCalibration = new JLabel();
 		container.add(jLabelCalibration,
@@ -163,8 +163,8 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 		                                     0));
 		
 		//jLabelCalibration.setText("Voxel Calibration:");
-		_calibration = new JPanel();
-		_calibration.setLayout(new GridBagLayout());
+		calibration = new JPanel();
+		calibration.setLayout(new GridBagLayout());
 		
 		GridBagConstraints gc = new GridBagConstraints();
 		gc.weightx = 2;
@@ -175,16 +175,16 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 		gc.gridx = 0;
 		gc.gridy = 0;
 		calibrationLabel.setAlignmentX(0);
-		_calibration.add(calibrationLabel);
+		calibration.add(calibrationLabel);
 		
 		gc.gridx = 1;
 		gc.gridy = 0;
 		
-		_addCalibrationBox.setSelected(false);
-		_addCalibrationBox.addItemListener(this);
-		_calibration.add(_addCalibrationBox, gc);
+		addCalibrationBox.setSelected(false);
+		addCalibrationBox.addItemListener(this);
+		calibration.add(addCalibrationBox, gc);
 		
-		container.add(_calibration,
+		container.add(calibration,
 		              new GridBagConstraints(0,
 		                                     2,
 		                                     2,
@@ -245,115 +245,115 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 	
 	
 	public double getXCalibration() {
-		String xCal = _readXCalibration.getText();
+		String xCal = readXCalibration.getText();
 		return Double.parseDouble(xCal.replaceAll(",", "."));
 	}
 	
 	
 	public double getYCalibration() {
-		String yCal = _readYCalibration.getText();
+		String yCal = readYCalibration.getText();
 		return Double.parseDouble(yCal.replaceAll(",", "."));
 	}
 	
 	
 	public double getZCalibration() {
-		String zCal = _readZCalibration.getText();
+		String zCal = readZCalibration.getText();
 		return Double.parseDouble(zCal.replaceAll(",", "."));
 	}
 	
 	
 	public boolean getCalibrationStatus() {
-		return _addCalibrationBox.isSelected();
+		return addCalibrationBox.isSelected();
 	}
 	
 	
 	public String getUnit() {
-		return _readUnit.getText();
+		return readUnit.getText();
 	}
 	
 	
 	public String getWorkDirectory() {
-		return _jTextFieldWorkDirectory.getText();
+		return jTextFieldWorkDirectory.getText();
 	}
 	
 	
 	public String getRawDataDirectory() {
-		return _jTextFieldRawData.getText();
+		return jTextFieldRawData.getText();
 	}
 	
 	
 	public boolean isStart() {
-		return _start;
+		return start;
 	}
 	
 	
 	public void itemStateChanged(ItemEvent e) {
-		if (e.getSource() == _addCalibrationBox) {
-			if (_addCalibrationBox.isSelected()) {
+		if (e.getSource() == addCalibrationBox) {
+			if (addCalibrationBox.isSelected()) {
 				
 				GridBagConstraints gc = new GridBagConstraints();
 				gc.insets = new Insets(0, 0, 5, 0);
 				
-				_jLabelUnit.setText("Unit :");
+				jLabelUnit.setText("Unit :");
 				gc.gridx = 0;
 				gc.gridy = 1;
-				_calibration.add(_jLabelUnit, gc);
-				_readUnit.setPreferredSize(new Dimension(100, 20));
-				_readUnit.setText("µm");
+				calibration.add(jLabelUnit, gc);
+				readUnit.setPreferredSize(new Dimension(100, 20));
+				readUnit.setText("µm");
 				gc.gridx = 1;
 				gc.gridy = 1;
-				_calibration.add(_readUnit, gc);
-				_jLabelUnit.setVisible(true);
-				_readUnit.setVisible(true);
+				calibration.add(readUnit, gc);
+				jLabelUnit.setVisible(true);
+				readUnit.setVisible(true);
 				
-				_jLabelXCalibration.setText("X :");
+				jLabelXCalibration.setText("X :");
 				gc.gridx = 0;
 				gc.gridy = 2;
-				_calibration.add(_jLabelXCalibration, gc);
-				_readXCalibration.setPreferredSize(new Dimension(100, 20));
-				_readXCalibration.setText("1");
+				calibration.add(jLabelXCalibration, gc);
+				readXCalibration.setPreferredSize(new Dimension(100, 20));
+				readXCalibration.setText("1");
 				gc.gridx = 1;
 				gc.gridy = 2;
-				_calibration.add(_readXCalibration, gc);
-				_jLabelXCalibration.setVisible(true);
-				_readXCalibration.setVisible(true);
+				calibration.add(readXCalibration, gc);
+				jLabelXCalibration.setVisible(true);
+				readXCalibration.setVisible(true);
 				
-				_jLabelYCalibration.setText("Y :");
+				jLabelYCalibration.setText("Y :");
 				gc.gridx = 0;
 				gc.gridy = 3;
-				_calibration.add(_jLabelYCalibration, gc);
-				_readYCalibration.setPreferredSize(new Dimension(100, 20));
-				_readYCalibration.setText("1");
+				calibration.add(jLabelYCalibration, gc);
+				readYCalibration.setPreferredSize(new Dimension(100, 20));
+				readYCalibration.setText("1");
 				gc.gridx = 1;
 				gc.gridy = 3;
-				_calibration.add(_readYCalibration, gc);
-				_jLabelYCalibration.setVisible(true);
-				_readYCalibration.setVisible(true);
+				calibration.add(readYCalibration, gc);
+				jLabelYCalibration.setVisible(true);
+				readYCalibration.setVisible(true);
 				
-				_jLabelZCalibration.setText("Z :");
+				jLabelZCalibration.setText("Z :");
 				gc.gridx = 0;
 				gc.gridy = 4;
-				_calibration.add(_jLabelZCalibration, gc);
-				_readZCalibration.setPreferredSize(new Dimension(100, 20));
-				_readZCalibration.setText("1");
+				calibration.add(jLabelZCalibration, gc);
+				readZCalibration.setPreferredSize(new Dimension(100, 20));
+				readZCalibration.setText("1");
 				gc.gridx = 1;
 				gc.gridy = 4;
-				_calibration.add(_readZCalibration, gc);
-				_jLabelZCalibration.setVisible(true);
-				_readZCalibration.setVisible(true);
+				calibration.add(readZCalibration, gc);
+				jLabelZCalibration.setVisible(true);
+				readZCalibration.setVisible(true);
 				
 				//pack();
 				
 			} else {
-				_jLabelXCalibration.setVisible(false);
-				_jLabelYCalibration.setVisible(false);
-				_jLabelZCalibration.setVisible(false);
-				_jLabelUnit.setVisible(false);
+				jLabelXCalibration.setVisible(false);
+				jLabelYCalibration.setVisible(false);
+				jLabelZCalibration.setVisible(false);
+				jLabelUnit.setVisible(false);
 				
-				_readXCalibration.setVisible(false);
-				_readYCalibration.setVisible(false);
-				_readZCalibration.setVisible(false);
-				_readUnit.setVisible(false);
+				readXCalibration.setVisible(false);
+				readYCalibration.setVisible(false);
+				readZCalibration.setVisible(false);
+				readUnit.setVisible(false);
 			}
 			validate();
 			repaint();
@@ -365,12 +365,12 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 	 *
 	 */
 	static class QuitListener implements ActionListener {
-		final ChromocenterSegmentationPipelineBatchDialog _chromocenterSegmentationPipelineBatchDialog;
+		final ChromocenterSegmentationPipelineBatchDialog chromocenterSegmentationPipelineBatchDialog;
 		
 		
 		/** @param chromocenterSegmentationPipelineBatchDialog chromocenterSegmentationPipelineBatchDialog GUI */
 		public QuitListener(ChromocenterSegmentationPipelineBatchDialog chromocenterSegmentationPipelineBatchDialog) {
-			_chromocenterSegmentationPipelineBatchDialog = chromocenterSegmentationPipelineBatchDialog;
+			this.chromocenterSegmentationPipelineBatchDialog = chromocenterSegmentationPipelineBatchDialog;
 		}
 		
 		
@@ -378,19 +378,19 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 		 *
 		 */
 		public void actionPerformed(ActionEvent actionEvent) {
-			_chromocenterSegmentationPipelineBatchDialog.dispose();
+			chromocenterSegmentationPipelineBatchDialog.dispose();
 		}
 		
 	}
 	
 	/** Classes listener to interact with the several elements of the window */
 	class StartListener implements ActionListener {
-		final ChromocenterSegmentationPipelineBatchDialog _chromocenterSegmentationPipelineBatchDialog;
+		final ChromocenterSegmentationPipelineBatchDialog chromocenterSegmentationPipelineBatchDialog;
 		
 		
 		/** @param chromocenterSegmentationPipelineBatchDialog chromocenterSegmentationPipelineBatchDialog GUI */
 		public StartListener(ChromocenterSegmentationPipelineBatchDialog chromocenterSegmentationPipelineBatchDialog) {
-			_chromocenterSegmentationPipelineBatchDialog = chromocenterSegmentationPipelineBatchDialog;
+			this.chromocenterSegmentationPipelineBatchDialog = chromocenterSegmentationPipelineBatchDialog;
 		}
 		
 		
@@ -398,7 +398,7 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 		 *
 		 */
 		public void actionPerformed(ActionEvent actionEvent) {
-			if (_jTextFieldWorkDirectory.getText().isEmpty() || _jTextFieldRawData.getText().isEmpty()) {
+			if (jTextFieldWorkDirectory.getText().isEmpty() || jTextFieldRawData.getText().isEmpty()) {
 				JOptionPane.showMessageDialog
 						(
 								null,
@@ -407,8 +407,8 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 								JOptionPane.ERROR_MESSAGE
 						);
 			} else {
-				_start = true;
-				_chromocenterSegmentationPipelineBatchDialog.dispose();
+				start = true;
+				chromocenterSegmentationPipelineBatchDialog.dispose();
 			}
 		}
 		
@@ -430,7 +430,7 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 				@SuppressWarnings("unused")
 				String run = jFileChooser.getSelectedFile().getName();
 				String workDirectory = jFileChooser.getSelectedFile().getAbsolutePath();
-				_jTextFieldWorkDirectory.setText(workDirectory);
+				jTextFieldWorkDirectory.setText(workDirectory);
 			}
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
@@ -454,7 +454,7 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 				@SuppressWarnings("unused")
 				String run = jFileChooser.getSelectedFile().getName();
 				String rawDataDirectory = jFileChooser.getSelectedFile().getAbsolutePath();
-				_jTextFieldRawData.setText(rawDataDirectory);
+				jTextFieldRawData.setText(rawDataDirectory);
 			}
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}

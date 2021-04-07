@@ -17,7 +17,7 @@ public class FJ_Options implements PlugIn, WindowListener {
 	static boolean pgs       = Prefs.get("fj.pgs", true);
 	static boolean log       = Prefs.get("fj.log", false);
 	
-	private static Point pos = new Point(-1, -1);
+	private static final Point pos = new Point(-1, -1);
 	
 	
 	public void run(String arg) {

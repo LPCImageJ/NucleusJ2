@@ -22,7 +22,7 @@ public class FJ_Laplacian implements PlugIn, WindowListener {
 	
 	private static String scale = "1.0";
 	
-	private static Point pos = new Point(-1, -1);
+	private static final Point pos = new Point(-1, -1);
 	
 	
 	public void run(String arg) {

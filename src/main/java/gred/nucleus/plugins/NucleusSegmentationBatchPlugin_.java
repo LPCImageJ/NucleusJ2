@@ -16,25 +16,25 @@ import java.io.File;
  */
 public class NucleusSegmentationBatchPlugin_ implements PlugIn {
 	
-	private NucleusSegmentationBatchDialog _nucleusSegmentationBatchDialog = new NucleusSegmentationBatchDialog();
+	private final NucleusSegmentationBatchDialog nucleusSegmentationBatchDialog = new NucleusSegmentationBatchDialog();
 	
 	
 	/**
 	 *
 	 */
 	public void run(String arg) {
-		while (_nucleusSegmentationBatchDialog.isShowing()) {
+		while (nucleusSegmentationBatchDialog.isShowing()) {
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-		if (_nucleusSegmentationBatchDialog.isStart()) {
+		if (nucleusSegmentationBatchDialog.isStart()) {
 			FileList fileList      = new FileList();
-			File[]   tRawImageFile = fileList.run(_nucleusSegmentationBatchDialog.getRawDataDirectory());
+			File[]   tRawImageFile = fileList.run(nucleusSegmentationBatchDialog.getRawDataDirectory());
 			if (tRawImageFile.length == 0) {
-				IJ.showMessage("There are no image in " + _nucleusSegmentationBatchDialog.getRawDataDirectory());
+				IJ.showMessage("There are no image in " + nucleusSegmentationBatchDialog.getRawDataDirectory());
 			} else {
 				if (IJ.openImage(tRawImageFile[0].toString()).getType() == ImagePlus.GRAY32) {
 					IJ.error("image format", "No images in gray scale 8bits or 16 bits in 3D");
@@ -42,10 +42,10 @@ public class NucleusSegmentationBatchPlugin_ implements PlugIn {
 				}
 				try {
 					SegmentationCalling otsuModified =
-							new SegmentationCalling(_nucleusSegmentationBatchDialog.getRawDataDirectory(),
-							                        _nucleusSegmentationBatchDialog.getWorkDirectory(),
-							                        (short) _nucleusSegmentationBatchDialog.getMinVolume(),
-							                        (short) _nucleusSegmentationBatchDialog.getMaxVolume());
+							new SegmentationCalling(nucleusSegmentationBatchDialog.getRawDataDirectory(),
+							                        nucleusSegmentationBatchDialog.getWorkDirectory(),
+							                        (short) nucleusSegmentationBatchDialog.getMinVolume(),
+							                        (short) nucleusSegmentationBatchDialog.getMaxVolume());
 					otsuModified.runOneImage();
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -57,49 +57,49 @@ public class NucleusSegmentationBatchPlugin_ implements PlugIn {
 	
 	/** @return  */
 	public int getNbCpu() {
-		return _nucleusSegmentationBatchDialog.getNbCpu();
+		return nucleusSegmentationBatchDialog.getNbCpu();
 	}
 	
 	
 	/** @return  */
 	public double getZCalibration() {
-		return _nucleusSegmentationBatchDialog.getZCalibration();
+		return nucleusSegmentationBatchDialog.getZCalibration();
 	}
 	
 	
 	/** @return  */
 	public double getXCalibration() {
-		return _nucleusSegmentationBatchDialog.getXCalibration();
+		return nucleusSegmentationBatchDialog.getXCalibration();
 	}
 	
 	
 	/** @return  */
 	public double getYCalibration() {
-		return _nucleusSegmentationBatchDialog.getYCalibration();
+		return nucleusSegmentationBatchDialog.getYCalibration();
 	}
 	
 	
 	/** @return  */
 	public String getUnit() {
-		return _nucleusSegmentationBatchDialog.getUnit();
+		return nucleusSegmentationBatchDialog.getUnit();
 	}
 	
 	
 	/** @return  */
 	public double getMinVolume() {
-		return _nucleusSegmentationBatchDialog.getMinVolume();
+		return nucleusSegmentationBatchDialog.getMinVolume();
 	}
 	
 	
 	/** @return  */
 	public double getMaxVolume() {
-		return _nucleusSegmentationBatchDialog.getMaxVolume();
+		return nucleusSegmentationBatchDialog.getMaxVolume();
 	}
 	
 	
 	/** @return  */
 	public String getWorkDirectory() {
-		return _nucleusSegmentationBatchDialog.getWorkDirectory();
+		return nucleusSegmentationBatchDialog.getWorkDirectory();
 	}
 	
 }

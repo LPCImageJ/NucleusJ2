@@ -21,30 +21,29 @@ public class OutputTextFile extends FilesNames {
 	 */
 	public void saveTextFile(String text, boolean keepExistingFile) {
 		try {
-			if(keepExistingFile) {
+			if (keepExistingFile) {
 				int i = 0;
 				while (fileExists()) {
-					setFullPathFile(prefixNameFile() + "-" + i + "." + FilenameUtils.getExtension(_fileName));
+					setFullPathFile(prefixNameFile() + "-" + i + "." + FilenameUtils.getExtension(fileName));
 					CheckExistFile();
 					i++;
 				}
 			}
-			BufferedWriter writer;
-			writer = new BufferedWriter(new FileWriter(this._fullPathFile));
-			writer.write(text);
-			writer.close();
+			try (BufferedWriter writer = new BufferedWriter(new FileWriter(this.fullPathFile))) {
+				writer.write(text);
+			}
 
-/*            if (!fileExist()) {
+            /*if (!fileExist()) {
                 BufferedWriter writer;
-                writer = new BufferedWriter(new FileWriter(new File(this._fullPathFile)));
+                writer = new BufferedWriter(new FileWriter(new File(this.fullPathFile)));
                 writer.write(text);
                 writer.close();
             }*/
 		} catch (IOException e) {
-			IJ.log("\n" + this._fullPathFile + " creation failed\n");
+			IJ.log("\n" + this.fullPathFile + " creation failed\n");
 			e.printStackTrace();
 		}
-		IJ.log("\n" + this._fullPathFile + " created\n");
+		IJ.log("\n" + this.fullPathFile + " created\n");
 	}
 	
 }

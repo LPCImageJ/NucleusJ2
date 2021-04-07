@@ -11,12 +11,12 @@ import ij.ImagePlus;
  */
 public class NucleusAnalysis {
 	/** ImagePlus raw image */
-	private ImagePlus              _imgRaw;
+	private final ImagePlus              imgRaw;
 	/** ImagePlus segmented image */
-	private ImagePlus              _imgSeg;
+	private final ImagePlus              imgSeg;
 	/** String stocking the the parameters 3D results */
-	private String                 _results = "";
-	private SegmentationParameters m_segmentationParameters;
+	private       String                 results = "";
+	private       SegmentationParameters segmentationParameters;
 	
 	
 	/**
@@ -26,15 +26,15 @@ public class NucleusAnalysis {
 	 * @param seg ImagePlus segmented
 	 */
 	public NucleusAnalysis(ImagePlus raw, ImagePlus seg) {
-		this._imgRaw = raw;
-		this._imgSeg = seg;
+		this.imgRaw = raw;
+		this.imgSeg = seg;
 	}
 	
 	
 	public NucleusAnalysis(ImagePlus raw, ImagePlus seg, SegmentationParameters segmentationParameters) {
-		this._imgRaw = raw;
-		this._imgSeg = seg;
-		this.m_segmentationParameters = segmentationParameters;
+		this.imgRaw = raw;
+		this.imgSeg = seg;
+		this.segmentationParameters = segmentationParameters;
 	}
 
     /*
@@ -73,12 +73,12 @@ public class NucleusAnalysis {
 	
 	
 	/**
-	 * Setter of _results.
+	 * Setter of results.
 	 *
 	 * @param results String
 	 */
 	public void setResults(String results) {
-		this._results = results;
+		this.results = results;
 	}
 	
 }

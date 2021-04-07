@@ -5,6 +5,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 
 /**
@@ -41,12 +42,12 @@ public class RectangleIntersection {
 	 * Constructor getting list of boxes computed in autocrop class. Initialisation of a list of 2D rectangles and a
 	 * list of Z stack associated (zMin-zMax).
 	 *
-	 * @param _boxes               List of boxes
-	 * @param m_autocropParameters Autocrop parameters
+	 * @param boxes              List of boxes
+	 * @param autocropParameters Autocrop parameters
 	 */
-	public RectangleIntersection(HashMap<Double, Box> _boxes, AutocropParameters m_autocropParameters) {
-		autocropParameters = m_autocropParameters;
-		for (Map.Entry<Double, Box> entry : _boxes.entrySet()) {
+	public RectangleIntersection(Map<Double, Box> boxes, AutocropParameters autocropParameters) {
+		this.autocropParameters = autocropParameters;
+		for (Map.Entry<Double, Box> entry : new TreeMap<>(boxes).entrySet()) {
 			Box box       = entry.getValue();
 			int boxWith   = box.getXMax() - box.getXMin();
 			int boxHeight = box.getYMax() - box.getYMin();

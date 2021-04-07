@@ -11,17 +11,17 @@ import java.util.ArrayList;
 public class Directory {
 	
 	/** Directory path */
-	public File            m_directory;
+	public File            directory;
 	/** Directory path */
-	public String          m_dirPath       = "";
+	public String          dirPath       = "";
 	/** List of files in current folder + recursive folder */
-	public ArrayList<File> m_fileList      = new ArrayList<>();
+	public ArrayList<File> fileList      = new ArrayList<>();
 	/** Check if directory contain nd files */
-	public Boolean         m_containNdFile = false;
+	public Boolean         containNdFile = false;
 	/** List of nd files */
-	public ArrayList<File> m_fileListND    = new ArrayList<>();
+	public ArrayList<File> fileListND    = new ArrayList<>();
 	/** Path separator */
-	public String          m_separator;
+	public String          separator;
 	
 	
 	/**
@@ -31,9 +31,9 @@ public class Directory {
 	 */
 	public Directory(String Path) {
 		try {
-			this.m_dirPath = Path;
-			this.m_directory = new File(this.m_dirPath);
-			this.m_separator = File.separator;
+			this.dirPath = Path;
+			this.directory = new File(this.dirPath);
+			this.separator = File.separator;
 		} catch (Exception exp) {
 			System.out.println(exp.getMessage());
 			System.exit(1);
@@ -50,21 +50,21 @@ public class Directory {
 	
 	/** Check if separator exist */
 	private void ChekSeparatorEndPath() {
-		if (!(this.m_dirPath.endsWith(File.separator))) {
-			this.m_dirPath += File.separator;
+		if (!(this.dirPath.endsWith(File.separator))) {
+			this.dirPath += File.separator;
 		}
 	}
 	
 	
 	/** Method creating folder if doesn't exist. */
 	private void CreateDir() {
-		File dir = new File(this.m_dirPath);
+		File dir = new File(this.dirPath);
 		if (!dir.exists()) {
 			boolean isDirCreated = dir.mkdirs();
 			if (isDirCreated) {
-				IJ.log("New directory : " + this.m_dirPath);
+				IJ.log("New directory : " + this.dirPath);
 			} else {
-				IJ.error(this.m_dirPath + " : directory cannot be created");
+				IJ.error(this.dirPath + " : directory cannot be created");
 				System.exit(-1);
 			}
 		}
@@ -73,7 +73,7 @@ public class Directory {
 	
 	/** @return path current directory */
 	public String getDirPath() {
-		return this.m_dirPath;
+		return this.dirPath;
 	}
 	
 	
@@ -95,10 +95,10 @@ public class Directory {
 				listImageFiles(f.getAbsolutePath());
 			} else {
 				if (!(FilenameUtils.getExtension(f.getName()).equals("txt"))) {
-					this.m_fileList.add(f);
+					this.fileList.add(f);
 					if (FilenameUtils.getExtension(f.getName()).equals("nd")) {
-						this.m_containNdFile = true;
-						this.m_fileListND.add(f);
+						this.containNdFile = true;
+						this.fileListND.add(f);
 					}
 				}
 			}
@@ -112,7 +112,7 @@ public class Directory {
 		
 		if (list != null) {
 			for (File f : list) {
-				this.m_fileList.add(f);
+				this.fileList.add(f);
 				if (f.isDirectory()) {
 					listAllFiles(f.getAbsolutePath());
 				}
@@ -123,23 +123,23 @@ public class Directory {
 	
 	/** Replace list files if ND files have been listed. */
 	public void checkAndActualiseNDFiles() {
-		if (this.m_containNdFile) {
-			this.m_fileList = this.m_fileListND;
+		if (this.containNdFile) {
+			this.fileList = this.fileListND;
 		}
 	}
 	
 	
 	/** check if input directory is empty */
 	public void checkIfEmpty() {
-		if (this.m_fileList.isEmpty()) {
-			System.err.println("Folder " + this.m_dirPath + " is empty");
+		if (this.fileList.isEmpty()) {
+			System.err.println("Folder " + this.dirPath + " is empty");
 		}
 	}
 	
 	
 	/** @return list of files */
 	public ArrayList<File> ListFiles() {
-		return this.m_fileList;
+		return this.fileList;
 	}
 	
 	
@@ -149,18 +149,18 @@ public class Directory {
 	 * @return File
 	 */
 	public File getFile(int index) {
-		return this.m_fileList.get(index);
+		return this.fileList.get(index);
 	}
 	
 	
 	/** @return number of file listed */
 	public int getNumberFiles() {
-		return this.m_fileList.size();
+		return this.fileList.size();
 	}
 	
 	
 	public String getSeparator() {
-		return this.m_separator;
+		return this.separator;
 	}
 	
 	
@@ -170,7 +170,7 @@ public class Directory {
 	public File searchFileNameWithoutExtension(String fileName) {
 		File fileToReturn = null;
 		
-		for (File f : this.m_fileList) {
+		for (File f : this.fileList) {
 			if (f.getName().substring(0, f.getName().lastIndexOf('.')).equals(fileName)) {
 				fileToReturn = f;
 			}
@@ -182,7 +182,7 @@ public class Directory {
 	public boolean checkIfFileExists(String fileName) {
 		boolean fileExists = false;
 		
-		for (File f : this.m_fileList) {
+		for (File f : this.fileList) {
 			if ((f.getName().substring(0, f.getName().lastIndexOf('.')).equals(fileName))
 			    || (f.getName().equals(fileName))) {
 				fileExists = true;

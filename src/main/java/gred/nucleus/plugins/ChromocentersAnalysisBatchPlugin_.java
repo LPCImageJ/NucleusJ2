@@ -13,7 +13,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -49,20 +49,20 @@ public class ChromocentersAnalysisBatchPlugin_ implements PlugIn {
 					rhfChoice = "Intensity";
 				}
 				
-				ArrayList<String> arrayListImageChromocenter =
-						fileList.fileSearchList(".+SegmentedDataCc.+", tFileRawImage);
+				List<String> arrayListImageChromocenter = fileList.fileSearchList(".+SegmentedDataCc.+", tFileRawImage);
+				
 				String workDirectory = chromocentersPipelineBatchDialog.getWorkDirectory();
-				String nameFileChromocenterAndNucleus =
-						workDirectory + File.separator + "NucAndCcParameters.tab";
-				String nameFileChromocenter = workDirectory + File.separator + "CcParameters.tab";
+				
+				String nameFileChromocenterAndNucleus = workDirectory + File.separator + "NucAndCcParameters.tab";
+				String nameFileChromocenter           = workDirectory + File.separator + "CcParameters.tab";
 				
 				for (int i = 0; i < arrayListImageChromocenter.size(); ++i) {
 					IJ.log("image" + (i + 1) + " / " + arrayListImageChromocenter.size());
 					String pathImageChromocenter = arrayListImageChromocenter.get(i);
 					String pathNucleusRaw =
-							pathImageChromocenter.replaceAll("SegmentedDataCc", "RawDataNucleus");
+							pathImageChromocenter.replace("SegmentedDataCc", "RawDataNucleus");
 					String pathNucleusSegmented =
-							pathImageChromocenter.replaceAll("SegmentedDataCc", "SegmentedDataNucleus");
+							pathImageChromocenter.replace("SegmentedDataCc", "SegmentedDataNucleus");
 					IJ.log(pathNucleusRaw);
 					IJ.log(pathNucleusSegmented);
 					if (fileList.isDirectoryOrFileExist(pathNucleusRaw, tFileRawImage) &&
@@ -133,14 +133,12 @@ public class ChromocentersAnalysisBatchPlugin_ implements PlugIn {
 						       " is not find in the directory SegmentedDataNucleus or RawDataNucleus, see nameProblem.txt in "
 						       +
 						       workDirectory);
-						BufferedWriter bufferedWriterLogFile;
-						try {
-							bufferedWriterLogFile = new BufferedWriter(new FileWriter(workDirectory +
-							                                                          File.separator +
-							                                                          "logNameProblem.log", true));
+						try (BufferedWriter bufferedWriterLogFile = new BufferedWriter(new FileWriter(workDirectory +
+						                                                                              File.separator +
+						                                                                              "logNameProblem.log",
+						                                                                              true))) {
 							bufferedWriterLogFile.write(pathImageChromocenter + "\n");
 							bufferedWriterLogFile.flush();
-							bufferedWriterLogFile.close();
 						} catch (IOException e) {
 							e.printStackTrace();
 						}

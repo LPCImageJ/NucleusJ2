@@ -57,7 +57,7 @@ public class GenerateOverlay {
 			overlay.show();
 			Zprojection.show();
 			IJ.run("Add Image...", overlay + " x=0 y=0 opacity=50");
-			saveFile(Zprojection, output.m_dirPath + File.separator +
+			saveFile(Zprojection, output.dirPath + File.separator +
 			                      zprojectionFile.getName().substring(0, zprojectionFile.getName().lastIndexOf('.')) +
 			                      "_MERGED.tiff");
 			overlay.close();

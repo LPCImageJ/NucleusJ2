@@ -12,12 +12,12 @@ import java.io.IOException;
 
 public class CLIRunAction {
 	/** Command line */
-	private final CommandLine m_cmd;
+	private final CommandLine cmd;
 	
 	
 	public CLIRunAction(CommandLine cmd) throws Exception {
-		this.m_cmd = cmd;
-		switch (this.m_cmd.getOptionValue("action")) {
+		this.cmd = cmd;
+		switch (this.cmd.getOptionValue("action")) {
 			case "autocrop":
 				runAutocrop();
 				break;
@@ -44,28 +44,28 @@ public class CLIRunAction {
 	
 	
 	private void runGenerateOV() throws Exception {
-		GenerateOverlay ov = new GenerateOverlay(this.m_cmd.getOptionValue("input"));
+		GenerateOverlay ov = new GenerateOverlay(this.cmd.getOptionValue("input"));
 		ov.run();
 	}
 	
 	
 	private void runCropFromCoordinates() throws Exception {
-		CropFromCoordinates test = new CropFromCoordinates(this.m_cmd.getOptionValue("input"));
+		CropFromCoordinates test = new CropFromCoordinates(this.cmd.getOptionValue("input"));
 		test.runCropFromCoordinate();
 	}
 	
 	
 	private void runProjectionFromCoordinates() throws Exception {
-		if (this.m_cmd.hasOption("coordinateFiltered")) {
+		if (this.cmd.hasOption("coordinateFiltered")) {
 			GenerateProjectionFromCoordinates projection =
-					new GenerateProjectionFromCoordinates(this.m_cmd.getOptionValue("input"),
-					                                      this.m_cmd.getOptionValue("input2"),
-					                                      this.m_cmd.getOptionValue("input3"));
+					new GenerateProjectionFromCoordinates(this.cmd.getOptionValue("input"),
+					                                      this.cmd.getOptionValue("input2"),
+					                                      this.cmd.getOptionValue("input3"));
 			projection.generateCoordinateFiltered();
 		} else {
 			GenerateProjectionFromCoordinates projection =
-					new GenerateProjectionFromCoordinates(this.m_cmd.getOptionValue("input"),
-					                                      this.m_cmd.getOptionValue("input2"));
+					new GenerateProjectionFromCoordinates(this.cmd.getOptionValue("input"),
+					                                      this.cmd.getOptionValue("input2"));
 			projection.generateCoordinate();
 		}
 	}
@@ -73,15 +73,15 @@ public class CLIRunAction {
 	
 	private void runAutocrop() {
 		AutocropParameters autocropParameters = new AutocropParameters(
-				this.m_cmd.getOptionValue("input")
-				, this.m_cmd.getOptionValue("output"));
-		if (this.m_cmd.hasOption("config")) {
-			autocropParameters.addGeneralProperties(this.m_cmd.getOptionValue("config"));
-			autocropParameters.addProperties(this.m_cmd.getOptionValue("config"));
+				this.cmd.getOptionValue("input")
+				, this.cmd.getOptionValue("output"));
+		if (this.cmd.hasOption("config")) {
+			autocropParameters.addGeneralProperties(this.cmd.getOptionValue("config"));
+			autocropParameters.addProperties(this.cmd.getOptionValue("config"));
 		}
-		if (this.m_cmd.hasOption("file")) {
+		if (this.cmd.hasOption("file")) {
 			AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
-			autoCrop.runFile(this.m_cmd.getOptionValue("file"));
+			autoCrop.runFile(this.cmd.getOptionValue("file"));
 		} else {
 			AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
 			autoCrop.runFolder();
@@ -91,15 +91,15 @@ public class CLIRunAction {
 	
 	private void runSegmentation() throws Exception {
 		SegmentationParameters segmentationParameters =
-				new SegmentationParameters(this.m_cmd.getOptionValue("input"), this.m_cmd.getOptionValue("output"));
-		if (this.m_cmd.hasOption("config")) {
-			segmentationParameters.addGeneralProperties(this.m_cmd.getOptionValue("config"));
-			segmentationParameters.addProperties(this.m_cmd.getOptionValue("config"));
+				new SegmentationParameters(this.cmd.getOptionValue("input"), this.cmd.getOptionValue("output"));
+		if (this.cmd.hasOption("config")) {
+			segmentationParameters.addGeneralProperties(this.cmd.getOptionValue("config"));
+			segmentationParameters.addProperties(this.cmd.getOptionValue("config"));
 		}
-		if (this.m_cmd.hasOption("file")) {
+		if (this.cmd.hasOption("file")) {
 			SegmentationCalling otsuModified = new SegmentationCalling(segmentationParameters);
 			try {
-				String log = otsuModified.runOneImage(this.m_cmd.getOptionValue("input"));
+				String log = otsuModified.runOneImage(this.cmd.getOptionValue("input"));
 				if (!(log.equals(""))) System.out.println("Nuclei which didn't pass the segmentation\n" + log);
 			} catch (IOException e) {
 				e.printStackTrace();
@@ -118,15 +118,15 @@ public class CLIRunAction {
 	
 	private void runComputeNucleiParameters() {
 		ComputeNucleiParameters generateParameters =
-				new ComputeNucleiParameters(this.m_cmd.getOptionValue("input"), this.m_cmd.getOptionValue("input2"));
-		if (this.m_cmd.hasOption("config")) generateParameters.addConfigParameters(this.m_cmd.getOptionValue("config"));
+				new ComputeNucleiParameters(this.cmd.getOptionValue("input"), this.cmd.getOptionValue("input2"));
+		if (this.cmd.hasOption("config")) generateParameters.addConfigParameters(this.cmd.getOptionValue("config"));
 		generateParameters.run();
 	}
 	
 	
 	private void runComputeNucleiParametersDL() throws Exception {
 		ComputeNucleiParametersML computeParameters =
-				new ComputeNucleiParametersML(this.m_cmd.getOptionValue("input"), this.m_cmd.getOptionValue("input2"));
+				new ComputeNucleiParametersML(this.cmd.getOptionValue("input"), this.cmd.getOptionValue("input2"));
 		computeParameters.run();
 	}
 	

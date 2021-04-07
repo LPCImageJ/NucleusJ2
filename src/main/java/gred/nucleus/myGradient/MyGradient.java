@@ -16,25 +16,25 @@ import imagescience.utility.Progressor;
  */
 public class MyGradient {
 	
-	private static boolean compute  = true;
-	private static boolean suppress = false;
-	private static String  scale    = "1.0";
-	private static String  lower    = "";
-	private static String  higher   = "";
-	ImagePlus _imagePlus;
-	ImagePlus _imagePlusBinary;
-	private boolean mask;
+	private static final boolean compute  = true;
+	private static final boolean suppress = false;
+	private static final String  scale    = "1.0";
+	private static final String  lower    = "";
+	private static final String  higher   = "";
+	private final        boolean mask;
+	ImagePlus imagePlus;
+	ImagePlus imagePlusBinary;
 	
 	
 	public MyGradient(ImagePlus imp, ImagePlus imagePlusBinary) {
-		_imagePlus = imp;
-		_imagePlusBinary = imagePlusBinary;
+		imagePlus = imp;
+		this.imagePlusBinary = imagePlusBinary;
 		mask = true;
 	}
 	
 	
 	public MyGradient(ImagePlus imp) {
-		_imagePlus = imp;
+		imagePlus = imp;
 		mask = false;
 	}
 	
@@ -72,7 +72,7 @@ public class MyGradient {
 				throw new IllegalArgumentException("Invalid higher threshold value");
 			}
 			final int   threshMode = (lowThreshold ? 10 : 0) + (highThreshold ? 1 : 0);
-			final Image image      = Image.wrap(_imagePlus);
+			final Image image      = Image.wrap(imagePlus);
 			Image       newImage   = new FloatImage(image);
 			double[]    pls        = {0, 1};
 			int         pl         = 0;
@@ -85,7 +85,7 @@ public class MyGradient {
 				final Aspects aspects = newImage.aspects();
 				if (!FJ_Options.isotropic) newImage.aspects(new Aspects());
 				final MyEdges myEdges = new MyEdges();
-				if (mask) myEdges.setMask(_imagePlusBinary);
+				if (mask) myEdges.setMask(imagePlusBinary);
 				++pl;
 				progressor.range(pls[pl], pls[pl]);
 				myEdges.progressor.parent(progressor);
@@ -95,10 +95,10 @@ public class MyGradient {
 				newImage.aspects(aspects);
 			}
 			newImagePlus = newImage.imageplus();
-			_imagePlus.setCalibration(newImagePlus.getCalibration());
-			final double[] min_max = newImage.extrema();
-			final double   min     = min_max[0];
-			final double   max     = min_max[1];
+			imagePlus.setCalibration(newImagePlus.getCalibration());
+			final double[] minMax = newImage.extrema();
+			final double   min    = minMax[0];
+			final double   max    = minMax[1];
 			newImagePlus.setDisplayRange(min, max);
 		} catch (OutOfMemoryError e) {
 			FJ.error("Not enough memory for this operation");

@@ -66,9 +66,9 @@ public class TestSegmentationMethods {
 		String timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
 		
 		
-		String ExpectedResult =
+		String expectedResult =
 				"/home/tridubos/Bureau/TEST_SEG/Results_checked/Z_Col_cot21&17&22__w11 DAPI SIM_s3/";
-		String ExpectedResultOutOTSU =
+		String expectedResultOutOTSU =
 				"/home/tridubos/Bureau/TEST_SEG/Results_checked/Z_Col_cot21&17&22__w11 DAPI SIM_s3/OTSU/";
 		
 		String inputTristan =
@@ -78,8 +78,8 @@ public class TestSegmentationMethods {
 		String outputTristanOtsu =
 				"/media/tridubos/DATA1/SPERMATO/Manipe_1_57_images_input/Segmentation/Analyse_Segmentation/Segmented";
         /*
-        OutputFileVerification fw = new OutputFileVerification(ExpectedResult,inputTristan);
-        fw.GetFileResultExpected(ExpectedResult);
+        OutputFileVerification fw = new OutputFileVerification(expectedResult,inputTristan);
+        fw.GetFileResultExpected(expectedResult);
         fw.GetFilesOutputFolder(inputTristan);
         */
 		String pathToTest = "/home/tridubos/Bureau/IMAGES_TEST/AUTOCROP";
@@ -127,11 +127,11 @@ public class TestSegmentationMethods {
 		
 		
 		// testStupidSeveralImages("/home/titus/Bureau/data/Noyaux/Raw", "/home/titus/Bureau/data/Noyaux/output");
-		// testStupidSeveralImages(ExpectedResult, ExpectedResult, (short)6.0, 300000000,true);
+		// testStupidSeveralImages(expectedResult, expectedResult, (short)6.0, 300000000,true);
         /*fw.GetFilesResultingOfAnalysis(inputTristan);
         fw.CompareAnalysisResult();
         OutputFileVerification fw = new OutputFileVerification();
-        fw.GetFileResultExpected(ExpectedResult);
+        fw.GetFileResultExpected(expectedResult);
         fw.GetFilesOutputFolder(outputTristan);
         fw.GetFilesResultingOfAnalysis(outputTristan);
         fw.CompareAnalysisResult();

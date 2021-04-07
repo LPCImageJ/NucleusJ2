@@ -30,10 +30,10 @@ public class MulticropFilter {
 				AutocropParameters autocropParameters =
 						new AutocropParameters(tifFile.getParent(), tifFile.getParent());
 				ArrayList<String> listOfBoxes = readCoordinatesTXT(coordinateFile);
-				AnnotateAutoCrop AnnotateAutoCrop =
+				AnnotateAutoCrop annotateAutoCrop =
 						new AnnotateAutoCrop(listOfBoxes, tifFile, tifFile.getAbsolutePath(), autocropParameters);
 				
-				AnnotateAutoCrop.run();
+				annotateAutoCrop.run();
 			}
 		}
 	}

@@ -11,11 +11,11 @@ import java.util.ArrayList;
 /** @author Philippe Andrey, Tristan Dubos and Axel Poulet */
 public class RegionalExtremaFilter implements PlugInFilter {
 	/** image to process */
-	private ImagePlus    _imagePlusInput;
+	private ImagePlus    imagePlusInput;
 	/** table to stock the values of the local minima their coordinates x, y, z */
-	private double[][][] _localMinValues = null;
+	private double[][][] localMinValues = null;
 	/** table to stock the binary mask if is necessary */
-	private double[][][] _tabMask        = null;
+	private double[][][] tabMask        = null;
 	
 	
 	/**
@@ -25,7 +25,7 @@ public class RegionalExtremaFilter implements PlugInFilter {
 	 * @return
 	 */
 	public int setup(String arg, ImagePlus imagePlusInput) {
-		this._imagePlusInput = imagePlusInput;
+		this.imagePlusInput = imagePlusInput;
 		return 0;
 	}
 	
@@ -36,7 +36,7 @@ public class RegionalExtremaFilter implements PlugInFilter {
 	 * @param imageProcessor
 	 */
 	public void run(ImageProcessor imageProcessor) {
-		applyWithMask(_imagePlusInput);
+		applyWithMask(imagePlusInput);
 	}
 	
 	
@@ -50,10 +50,10 @@ public class RegionalExtremaFilter implements PlugInFilter {
 	 * @return
 	 */
 	public ImagePlus applyWithMask(ImagePlus imagePlusInput) {
-		this._imagePlusInput = imagePlusInput;
-		double                 width          = _imagePlusInput.getWidth();
-		double                 height         = _imagePlusInput.getHeight();
-		double                 depth          = _imagePlusInput.getStackSize();
+		this.imagePlusInput = imagePlusInput;
+		double                 width          = this.imagePlusInput.getWidth();
+		double                 height         = this.imagePlusInput.getHeight();
+		double                 depth          = this.imagePlusInput.getStackSize();
 		int                    kCurrent;
 		int                    iCurrent;
 		int                    jCurrent;
@@ -63,15 +63,15 @@ public class RegionalExtremaFilter implements PlugInFilter {
 		VoxelRecord            voxelRecord    = new VoxelRecord();
 		ArrayList<VoxelRecord> arrayListVoxel = new ArrayList<>();
 		computeImageMoreOne();
-		ImagePlus  imageOutput      = _imagePlusInput.duplicate();
+		ImagePlus  imageOutput      = this.imagePlusInput.duplicate();
 		ImageStack imageStackOutput = imageOutput.getStack();
 		filterMin3DWithMask();
 		for (int k = 0; k < depth; ++k) {
 			for (int i = 0; i < width; ++i) {
 				for (int j = 0; j < height; ++j) {
 					double currentValue    = imageStackOutput.getVoxel(i, j, k);
-					double currentValueMin = _localMinValues[i][j][k];
-					if (currentValue > 0 && currentValue != currentValueMin && _tabMask[i][j][k] > 0) {
+					double currentValueMin = localMinValues[i][j][k];
+					if (currentValue > 0 && currentValue != currentValueMin && tabMask[i][j][k] > 0) {
 						imageStackOutput.setVoxel(i, j, k, 0);
 						voxelRecord.setLocation(i, j, k);
 						arrayListVoxel.add(voxelRecord);
@@ -89,7 +89,7 @@ public class RegionalExtremaFilter implements PlugInFilter {
 										    ii < width &&
 										    jj >= 0 &&
 										    jj < height &&
-										    _tabMask[ii][jj][kk] > 0) {
+										    tabMask[ii][jj][kk] > 0) {
 											if (imageStackOutput.getVoxel(ii, jj, kk) == currentValue) {
 												imageStackOutput.setVoxel(ii, jj, kk, 0);
 												voxelRecord.setLocation(ii, jj, kk);
@@ -111,10 +111,10 @@ public class RegionalExtremaFilter implements PlugInFilter {
 	
 	/** Adds one at all the voxel values of a given image */
 	public void computeImageMoreOne() {
-		double     width           = _imagePlusInput.getWidth();
-		double     height          = _imagePlusInput.getHeight();
-		double     depth           = _imagePlusInput.getStackSize();
-		ImageStack imageStackInput = _imagePlusInput.getStack();
+		double     width           = imagePlusInput.getWidth();
+		double     height          = imagePlusInput.getHeight();
+		double     depth           = imagePlusInput.getStackSize();
+		ImageStack imageStackInput = imagePlusInput.getStack();
 		for (int k = 0; k < depth; ++k) {
 			for (int i = 0; i < width; ++i) {
 				for (int j = 0; j < height; ++j) {
@@ -128,15 +128,15 @@ public class RegionalExtremaFilter implements PlugInFilter {
 	/** Filter minimum in 3D with a neighboring 3 */
 	
 	void filterMin3DWithMask() {
-		int        size1           = _imagePlusInput.getWidth();
-		int        size2           = _imagePlusInput.getHeight();
-		int        size3           = _imagePlusInput.getStackSize();
-		ImageStack imageStackInput = _imagePlusInput.getStack();
+		int        size1           = imagePlusInput.getWidth();
+		int        size2           = imagePlusInput.getHeight();
+		int        size3           = imagePlusInput.getStackSize();
+		ImageStack imageStackInput = imagePlusInput.getStack();
 		int        ii;
 		int        jj;
 		int        kk;
 		double     minValue;
-		_localMinValues = new double[size1][size2][size3];
+		localMinValues = new double[size1][size2][size3];
 		for (int k = 0; k < size3; ++k) {
 			for (int i = 0; i < size1; ++i) {
 				for (int j = 0; j < size2; ++j) {
@@ -148,8 +148,8 @@ public class RegionalExtremaFilter implements PlugInFilter {
 									for (kk = k - 1; kk <= k + 1; ++kk) {
 										if (kk >= 0 && kk < size3) {
 											if (imageStackInput.getVoxel(ii, jj, kk) < minValue &&
-											    _tabMask[i][j][k] > 0 &&
-											    _tabMask[ii][jj][kk] > 0) {
+											    tabMask[i][j][k] > 0 &&
+											    tabMask[ii][jj][kk] > 0) {
 												minValue = imageStackInput.getVoxel(ii, jj, kk);
 											}
 										}
@@ -158,7 +158,7 @@ public class RegionalExtremaFilter implements PlugInFilter {
 							}
 						}
 					}
-					_localMinValues[i][j][k] = minValue;
+					localMinValues[i][j][k] = minValue;
 				}
 			}
 		}
@@ -171,7 +171,7 @@ public class RegionalExtremaFilter implements PlugInFilter {
 	 * @param tab binary mask
 	 */
 	public void setMask(double[][][] tab) {
-		_tabMask = tab;
+		tabMask = tab;
 	}
 	
 	
@@ -185,11 +185,11 @@ public class RegionalExtremaFilter implements PlugInFilter {
 		final int  size1          = imagePlusLabel.getWidth();
 		final int  size2          = imagePlusLabel.getHeight();
 		final int  size3          = imagePlusLabel.getSize();
-		_tabMask = new double[size1][size2][size3];
+		tabMask = new double[size1][size2][size3];
 		for (int i = 0; i < size1; ++i) {
 			for (int j = 0; j < size2; ++j) {
 				for (int k = 0; k < size3; ++k) {
-					_tabMask[i][j][k] = imagePlusLabel.getVoxel(i, j, k);
+					tabMask[i][j][k] = imagePlusLabel.getVoxel(i, j, k);
 				}
 			}
 		}

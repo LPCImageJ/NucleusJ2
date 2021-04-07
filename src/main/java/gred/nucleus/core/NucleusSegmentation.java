@@ -44,28 +44,28 @@ import java.util.Map.Entry;
 public class NucleusSegmentation {
 	
 	/** Segmentation parameters for the analyse */
-	private final SegmentationParameters m_segmentationParameters;
+	private final SegmentationParameters segmentationParameters;
 	/** List of the 3D parameters computed associated to the segmented image */
-	public        Measure3D              _measure3D;
+	public        Measure3D              measure3D;
 	/** Threshold detected by the Otsu modified method */
-	private       int                    _bestThreshold = -1;
+	private       int                    bestThreshold = -1;
 	/* String stocking the file name if any nucleus is detected*/
 	/** volume min of the detected object */
-	private       int                    _vMin;
+	private       int                    vMin;
 	/** volume max of the detected object */
-	private       int                    _vMax;
+	private       int                    vMax;
 	/** ImagePlus input to process */
-	private       ImagePlus              _imgRaw;
+	private       ImagePlus              imgRaw;
 	/** ImagePlus input to process */
-	private       ImagePlus              _imgRawTransformed;
+	private final ImagePlus              imgRawTransformed;
 	/** Check if the segmentation is not in border */
-	private       boolean                _badCrop       = false;
+	private       boolean                badCrop       = false;
 	/** Current image analysed */
-	private       File                   m_currentFile;
+	private       File                   currentFile;
 	/** String containing the output prefix */
-	private       String                 m_outputFilesPrefix;
+	private       String                 outputFilesPrefix;
 	/** Segmented image */
-	private       ImagePlus[]            m_imageSeg;
+	private       ImagePlus[]            imageSeg;
 	
 	
 	/**
@@ -83,12 +83,12 @@ public class NucleusSegmentation {
 	                           int vMax,
 	                           SegmentationParameters segmentationParameters)
 	throws Exception {
-		this._vMin = vMin;
-		this._vMax = vMax;
-		this.m_segmentationParameters = segmentationParameters;
-		this._imgRaw = imgRaw;
-		this._imgRaw = getImageChannel(0);
-		this._imgRawTransformed = this._imgRaw;
+		this.vMin = vMin;
+		this.vMax = vMax;
+		this.segmentationParameters = segmentationParameters;
+		this.imgRaw = imgRaw;
+		this.imgRaw = getImageChannel(0);
+		this.imgRawTransformed = this.imgRaw;
 	}
 	
 	
@@ -105,17 +105,17 @@ public class NucleusSegmentation {
 	                           String outputFilesPrefix,
 	                           SegmentationParameters segmentationParameters)
 	throws Exception {
-		this.m_segmentationParameters = segmentationParameters;
-		this.m_currentFile = imageFile;
-		this._imgRaw = getImageChannel(0);
+		this.segmentationParameters = segmentationParameters;
+		this.currentFile = imageFile;
+		this.imgRaw = getImageChannel(0);
 		// TODO ADD CHANNEL PARAMETERS (CASE OF CHANNELS UNSPLITED)
-		this._imgRaw.setTitle(imageFile.getName());
-		this._imgRawTransformed = this._imgRaw.duplicate();
-		this._imgRawTransformed.setTitle(imageFile.getName());
-		Directory dirOutputOTSU = new Directory(this.m_segmentationParameters.getOutputFolder() + "OTSU");
+		this.imgRaw.setTitle(imageFile.getName());
+		this.imgRawTransformed = this.imgRaw.duplicate();
+		this.imgRawTransformed.setTitle(imageFile.getName());
+		Directory dirOutputOTSU = new Directory(this.segmentationParameters.getOutputFolder() + "OTSU");
 		dirOutputOTSU.CheckAndCreateDir();
-		if (this.m_segmentationParameters.getGiftWrapping()) {
-			Directory dirOutputGIFT = new Directory(this.m_segmentationParameters.getOutputFolder() + "GIFT");
+		if (this.segmentationParameters.getGiftWrapping()) {
+			Directory dirOutputGIFT = new Directory(this.segmentationParameters.getOutputFolder() + "GIFT");
 			dirOutputGIFT.CheckAndCreateDir();
 		}
 	}
@@ -123,15 +123,15 @@ public class NucleusSegmentation {
 	
 	public NucleusSegmentation(ImageWrapper image, SegmentationParameters segmentationParameters, Client client)
 	throws Exception {
-		this.m_segmentationParameters = segmentationParameters;
+		this.segmentationParameters = segmentationParameters;
 		
 		int[] cBound = {0, 0};
 		
-		this._imgRaw = image.toImagePlus(client, null, null, cBound, null, null);
+		this.imgRaw = image.toImagePlus(client, null, null, cBound, null, null);
 		// TODO ADD CHANNEL PARAMETERS (CASE OF CHANNELS UNSPLITED)
-		this._imgRaw.setTitle(image.getName());
-		this._imgRawTransformed = this._imgRaw.duplicate();
-		this._imgRawTransformed.setTitle(image.getName());
+		this.imgRaw.setTitle(image.getName());
+		this.imgRawTransformed = this.imgRaw.duplicate();
+		this.imgRawTransformed.setTitle(image.getName());
 	}
 	
 	
@@ -140,7 +140,7 @@ public class NucleusSegmentation {
 	                           int i,
 	                           SegmentationParameters segmentationParameters,
 	                           Client client) throws Exception {
-		this.m_segmentationParameters = segmentationParameters;
+		this.segmentationParameters = segmentationParameters;
 		
 		List<RectangleWrapper> rectangles = roi.getShapes().getElementsOf(RectangleWrapper.class);
 		
@@ -161,11 +161,11 @@ public class NucleusSegmentation {
 		int[] xBound = {x, x + width - 1};
 		int[] yBound = {y, y + height - 1};
 		
-		this._imgRaw = image.toImagePlus(client, xBound, yBound, cBound, zBound, null);
+		this.imgRaw = image.toImagePlus(client, xBound, yBound, cBound, zBound, null);
 		
-		this._imgRaw.setTitle(image.getName() + "_" + i + "_C" + rectangle.getC());
-		this._imgRawTransformed = this._imgRaw.duplicate();
-		this._imgRawTransformed.setTitle(this._imgRaw.getTitle());
+		this.imgRaw.setTitle(image.getName() + "_" + i + "_C" + rectangle.getC());
+		this.imgRawTransformed = this.imgRaw.duplicate();
+		this.imgRawTransformed.setTitle(this.imgRaw.getTitle());
 	}
 	
 	
@@ -180,7 +180,7 @@ public class NucleusSegmentation {
 	 */
 	public ImagePlus getImageChannel(int channelNumber) throws Exception {
 		DebugTools.enableLogging("OFF");       // DEBUG INFO BIO-FORMATS OFF
-		ImagePlus[] currentImage = BF.openImagePlus(this.m_currentFile.getAbsolutePath());
+		ImagePlus[] currentImage = BF.openImagePlus(this.currentFile.getAbsolutePath());
 		currentImage = ChannelSplitter.split(currentImage[channelNumber]);
 		return currentImage[0];
 	}
@@ -192,7 +192,7 @@ public class NucleusSegmentation {
 	 * @return list of 3D parameter computed
 	 */
 	public String saveImageResult() {
-		return this._measure3D.nucleusParameter3D();
+		return this.measure3D.nucleusParameter3D();
 	}
 	
 	
@@ -205,9 +205,9 @@ public class NucleusSegmentation {
 	 */
 	public String saveImageResult(ImagePlus[] segmentedImage) {
 		
-		this._measure3D =
-				new Measure3D(segmentedImage, this._imgRaw, getXCalibration(), getYCalibration(), getZCalibration());
-		return this._measure3D.nucleusParameter3D();
+		this.measure3D =
+				new Measure3D(segmentedImage, this.imgRaw, getXCalibration(), getYCalibration(), getZCalibration());
+		return this.measure3D.nucleusParameter3D();
 		
 		
 	}
@@ -242,39 +242,39 @@ public class NucleusSegmentation {
 	 */
 	public void findOTSUMaximisingSphericity() {
 		
-		double imageVolume = getVoxelVolume() * this._imgRaw.getWidth() *
-		                     this._imgRaw.getHeight() * this._imgRaw.getStackSize();
-		Gradient gradient       = new Gradient(this._imgRaw);
+		double imageVolume = getVoxelVolume() * this.imgRaw.getWidth() *
+		                     this.imgRaw.getHeight() * this.imgRaw.getStackSize();
+		Gradient gradient       = new Gradient(this.imgRaw);
 		double   bestSphericity = -1;
 		ArrayList<Integer> arrayListThreshold = computeMinMaxThreshold(
-				this._imgRawTransformed);  // methode OTSU
+				this.imgRawTransformed);  // methode OTSU
 		for (int t = arrayListThreshold.get(0); t <= arrayListThreshold.get(1); ++t) {
 			ImagePlus tempSeg;
-			tempSeg = generateSegmentedImage(this._imgRawTransformed, t);
+			tempSeg = generateSegmentedImage(this.imgRawTransformed, t);
 			
 			tempSeg = BinaryImages.componentsLabeling(tempSeg, 26, 32);
-			Calibration cal = this._imgRaw.getCalibration();
-			if (this.m_segmentationParameters.getManualParameter()) {
+			Calibration cal = this.imgRaw.getCalibration();
+			if (this.segmentationParameters.getManualParameter()) {
 				//TODO ADD UNITS
 				cal.setXUnit("µm");
-				cal.pixelWidth = this.m_segmentationParameters.getXCal();
+				cal.pixelWidth = this.segmentationParameters.getXCal();
 				cal.setYUnit("µm");
-				cal.pixelHeight = this.m_segmentationParameters.getYCal();
+				cal.pixelHeight = this.segmentationParameters.getYCal();
 				cal.setZUnit("µm");
-				cal.pixelDepth = this.m_segmentationParameters.getZCal();
+				cal.pixelDepth = this.segmentationParameters.getZCal();
 			} else {
 				cal.setXUnit("µm");
-				cal.pixelWidth = this._imgRaw.getCalibration().pixelWidth;
+				cal.pixelWidth = this.imgRaw.getCalibration().pixelWidth;
 				cal.setYUnit("µm");
-				cal.pixelHeight = this._imgRaw.getCalibration().pixelHeight;
+				cal.pixelHeight = this.imgRaw.getCalibration().pixelHeight;
 				cal.setZUnit("µm");
-				cal.pixelDepth = this._imgRaw.getCalibration().pixelDepth;
+				cal.pixelDepth = this.imgRaw.getCalibration().pixelDepth;
 			}
 			tempSeg.setCalibration(cal);
 			ImagePlus[] tempSegPlus = new ImagePlus[1];
 			tempSegPlus[0] = tempSeg;
 			Measure3D measure3D = new Measure3D(tempSegPlus,
-			                                    this._imgRawTransformed,
+			                                    this.imgRawTransformed,
 			                                    getXCalibration(),
 			                                    getYCalibration(),
 			                                    getZCalibration());
@@ -283,25 +283,25 @@ public class NucleusSegmentation {
 			boolean firstStack = isVoxelThresholded(tempSeg, 255, 0);
 			boolean lastStack  = isVoxelThresholded(tempSeg, 255, tempSeg.getStackSize() - 1);
 			if (testRelativeObjectVolume(volume, imageVolume) &&
-			    volume >= this.m_segmentationParameters.getMinVolumeNucleus() &&
-			    volume <= this.m_segmentationParameters.getMaxVolumeNucleus() &&
+			    volume >= this.segmentationParameters.getMinVolumeNucleus() &&
+			    volume <= this.segmentationParameters.getMaxVolumeNucleus() &&
 			    !firstStack && !lastStack) {
 				
 				double sphericity =
 						measure3D.computeSphericity(volume, measure3D.computeComplexSurface(tempSeg, gradient));
 				if (sphericity > bestSphericity) {
-					this._bestThreshold = t;
+					this.bestThreshold = t;
 					bestSphericity = sphericity;
-					this._bestThreshold = t;
-					this.m_imageSeg = tempSegPlus;
-					this.m_imageSeg[0].setTitle(this._imgRawTransformed.getTitle());
+					this.bestThreshold = t;
+					this.imageSeg = tempSegPlus;
+					this.imageSeg[0].setTitle(this.imgRawTransformed.getTitle());
 				}
 			}
 		}
 		
-		if (this._bestThreshold != -1) {
-			morphologicalCorrection(this.m_imageSeg[0]);
-			checkBorder(this.m_imageSeg[0]);
+		if (this.bestThreshold != -1) {
+			morphologicalCorrection(this.imageSeg[0]);
+			checkBorder(this.imageSeg[0]);
 		}
 	}
 	
@@ -312,22 +312,22 @@ public class NucleusSegmentation {
 	 */
 	public void preProcessImage() {
 		
-		GaussianBlur3D.blur(this._imgRawTransformed, 0.1, 0.1, 1);
-		ImageStack imageStack = this._imgRawTransformed.getStack();
+		GaussianBlur3D.blur(this.imgRawTransformed, 0.1, 0.1, 1);
+		ImageStack imageStack = this.imgRawTransformed.getStack();
 		int        max        = 0;
-		for (int k = 0; k < this._imgRawTransformed.getStackSize(); ++k) {
-			for (int b = 0; b < this._imgRawTransformed.getWidth(); ++b) {
-				for (int j = 0; j < this._imgRawTransformed.getHeight(); ++j) {
+		for (int k = 0; k < this.imgRawTransformed.getStackSize(); ++k) {
+			for (int b = 0; b < this.imgRawTransformed.getWidth(); ++b) {
+				for (int j = 0; j < this.imgRawTransformed.getHeight(); ++j) {
 					if (max < imageStack.getVoxel(b, j, k)) {
 						max = (int) imageStack.getVoxel(b, j, k);
 					}
 				}
 			}
 		}
-		IJ.setMinAndMax(this._imgRawTransformed, 0, max);
-		IJ.run(this._imgRawTransformed, "Apply LUT", "stack");
-		if (this._imgRaw.getType() == ImagePlus.GRAY16) {
-			StackConverter stackConverter = new StackConverter(this._imgRawTransformed);
+		IJ.setMinAndMax(this.imgRawTransformed, 0, max);
+		IJ.run(this.imgRawTransformed, "Apply LUT", "stack");
+		if (this.imgRaw.getType() == ImagePlus.GRAY16) {
+			StackConverter stackConverter = new StackConverter(this.imgRawTransformed);
 			stackConverter.convertToGray8();
 		}
 	}
@@ -366,14 +366,14 @@ public class NucleusSegmentation {
 			boolean lastStack  = isVoxelThresholded(imagePlusSegmentedTemp, 255, imagePlusInput.getStackSize() - 1);
 			//boolean xyBorder;
 			if (testRelativeObjectVolume(volume, imageVolume) &&
-			    volume >= _vMin &&
-			    volume <= _vMax && !firstStack
+			    volume >= vMin &&
+			    volume <= vMax && !firstStack
 			    && !lastStack) {
 				sphericity = measure3D.computeSphericity(volume,
 				                                         measure3D.computeComplexSurface(imagePlusSegmentedTemp,
 				                                                                         gradient));
 				if (sphericity > sphericityMax) {
-					_bestThreshold = t;
+					bestThreshold = t;
 					sphericityMax = sphericity;
 					StackConverter stackConverter = new StackConverter(imagePlusSegmentedTemp);
 					stackConverter.convertToGray8();
@@ -384,7 +384,7 @@ public class NucleusSegmentation {
 		
 		ImageStack imageStackInput = imagePlusSegmented.getImageStack();
 		
-		if (_bestThreshold != -1) morphologicalCorrection(imagePlusSegmented);
+		if (bestThreshold != -1) morphologicalCorrection(imagePlusSegmented);
 		
 		checkBorder(imagePlusSegmented);
 		
@@ -434,7 +434,7 @@ public class NucleusSegmentation {
 				for (int i = 0; i < imagePlusInput.getWidth(); i++) {
 					for (int j = 0; j < imagePlusInput.getHeight(); j++) {
 						if (imageStackInput.getVoxel(i, j, k) == 255.0) {
-							this._badCrop = true;
+							this.badCrop = true;
 						}
 					}
 				}
@@ -444,7 +444,7 @@ public class NucleusSegmentation {
 			     i += (imagePlusInput.getWidth()) - 1) {
 				for (int j = 0; j < imagePlusInput.getHeight(); j++) {
 					if (imageStackInput.getVoxel(i, j, k) == 255.0) {
-						this._badCrop = true;
+						this.badCrop = true;
 					}
 				}
 			}
@@ -453,7 +453,7 @@ public class NucleusSegmentation {
 				
 				for (int i = 0; i < imagePlusInput.getWidth(); i++) {
 					if (imageStackInput.getVoxel(i, j, k) == 255.0) {
-						this._badCrop = true;
+						this.badCrop = true;
 					}
 				}
 			}
@@ -467,7 +467,7 @@ public class NucleusSegmentation {
 	 * @return True if the nucleus is partial
 	 */
 	public boolean isBadCrop() {
-		return this._badCrop;
+		return this.badCrop;
 	}
 	
 	
@@ -582,7 +582,7 @@ public class NucleusSegmentation {
 	 * @return the final threshold value
 	 */
 	public int getBestThreshold() {
-		return _bestThreshold;
+		return bestThreshold;
 	}
 	
 	
@@ -655,10 +655,10 @@ public class NucleusSegmentation {
 	 */
 	public double getXCalibration() {
 		double xCal;
-		if (this.m_segmentationParameters.m_manualParameter) {
-			xCal = this.m_segmentationParameters.getXCal();
+		if (this.segmentationParameters.manualParameter) {
+			xCal = this.segmentationParameters.getXCal();
 		} else {
-			xCal = this._imgRawTransformed.getCalibration().pixelWidth;
+			xCal = this.imgRawTransformed.getCalibration().pixelWidth;
 		}
 		return xCal;
 	}
@@ -672,10 +672,10 @@ public class NucleusSegmentation {
 	 */
 	public double getYCalibration() {
 		double yCal;
-		if (this.m_segmentationParameters.m_manualParameter) {
-			yCal = this.m_segmentationParameters.getYCal();
+		if (this.segmentationParameters.manualParameter) {
+			yCal = this.segmentationParameters.getYCal();
 		} else {
-			yCal = this._imgRawTransformed.getCalibration().pixelHeight;
+			yCal = this.imgRawTransformed.getCalibration().pixelHeight;
 		}
 		return yCal;
 	}
@@ -689,10 +689,10 @@ public class NucleusSegmentation {
 	 */
 	public double getZCalibration() {
 		double zCal;
-		if (this.m_segmentationParameters.getManualParameter()) {
-			zCal = this.m_segmentationParameters.getZCal();
+		if (this.segmentationParameters.getManualParameter()) {
+			zCal = this.segmentationParameters.getZCal();
 		} else {
-			zCal = this._imgRawTransformed.getCalibration().pixelDepth;
+			zCal = this.imgRawTransformed.getCalibration().pixelDepth;
 		}
 		return zCal;
 	}
@@ -706,10 +706,10 @@ public class NucleusSegmentation {
 	 */
 	public double getVoxelVolume() {
 		double calibration;
-		if (this.m_segmentationParameters.m_manualParameter) {
-			calibration = m_segmentationParameters.getVoxelVolume();
+		if (this.segmentationParameters.manualParameter) {
+			calibration = segmentationParameters.getVoxelVolume();
 		} else {
-			Calibration cal = this._imgRawTransformed.getCalibration();
+			Calibration cal = this.imgRawTransformed.getCalibration();
 			calibration = cal.pixelDepth * cal.pixelWidth * cal.pixelHeight;
 		}
 		
@@ -724,7 +724,7 @@ public class NucleusSegmentation {
 	 * @param inputPathDir folder of the input to create badcrop folder.
 	 */
 	public void checkBadCrop(String inputPathDir) {
-		if ((this._badCrop) || (this._bestThreshold == -1)) {
+		if ((this.badCrop) || (this.bestThreshold == -1)) {
 			File file          = new File(inputPathDir);
 			File BadCropFolder = new File(inputPathDir + File.separator + "BadCrop");
 			System.out.println("et du coup on est dedans ou quoi ...........\n" +
@@ -732,8 +732,8 @@ public class NucleusSegmentation {
 			                   ".....................................");
 			
 			if (BadCropFolder.exists() || BadCropFolder.mkdir()) {
-				File    fileToMove = new File(inputPathDir + File.separator + this._imgRawTransformed.getTitle());
-				File    newFile    = new File(BadCropFolder + File.separator + this._imgRawTransformed.getTitle());
+				File    fileToMove = new File(inputPathDir + File.separator + this.imgRawTransformed.getTitle());
+				File    newFile    = new File(BadCropFolder + File.separator + this.imgRawTransformed.getTitle());
 				boolean renamed    = fileToMove.renameTo(newFile);
 				if (!renamed) System.err.println("File not renamed: " + fileToMove.getAbsolutePath());
 			} else {
@@ -744,7 +744,7 @@ public class NucleusSegmentation {
 	
 	
 	public void checkBadCrop(ImageWrapper image, Client client) {
-		if ((this._badCrop) || (this._bestThreshold == -1)) {
+		if ((this.badCrop) || (this.bestThreshold == -1)) {
 			List<TagAnnotationWrapper> tags;
 			TagAnnotationWrapper       tagBadCrop;
 			
@@ -785,7 +785,7 @@ public class NucleusSegmentation {
 	
 	
 	public void checkBadCrop(ROIWrapper roi, Client client) {
-		if ((this._badCrop) || (this._bestThreshold == -1)) {
+		if ((this.badCrop) || (this.bestThreshold == -1)) {
 			for (GenericShapeWrapper<?> shape : roi.getShapes()) {
 				shape.setStroke(Color.RED);
 			}
@@ -803,12 +803,12 @@ public class NucleusSegmentation {
 	 * <p> TODO verifier cette methode si elle est à ca place
 	 */
 	public void saveOTSUSegmented() {
-		if (!_badCrop && _bestThreshold != -1) {
-			String pathSegOTSU = this.m_segmentationParameters.getOutputFolder() +
+		if (!badCrop && bestThreshold != -1) {
+			String pathSegOTSU = this.segmentationParameters.getOutputFolder() +
 			                     "OTSU" +
 			                     File.separator +
-			                     this.m_imageSeg[0].getTitle();
-			saveFile(this.m_imageSeg[0], pathSegOTSU);
+			                     this.imageSeg[0].getTitle();
+			saveFile(this.imageSeg[0], pathSegOTSU);
 			
 		}
 	}
@@ -818,17 +818,17 @@ public class NucleusSegmentation {
 	 * Method to save the OTSU segmented image.
 	 * <p> TODO verifier cette methode si elle est à ca place
 	 */
-	public void saveOTSUSegmentedOmero(Client client, Long id)
+	public void saveOTSUSegmentedOMERO(Client client, Long id)
 	throws Exception {
-		if (!_badCrop && _bestThreshold != -1) {
-			String path = new java.io.File(".").getCanonicalPath() + File.separator + this.m_imageSeg[0].getTitle();
-			saveFile(this.m_imageSeg[0], path);
+		if (!badCrop && bestThreshold != -1) {
+			String path = new java.io.File(".").getCanonicalPath() + File.separator + this.imageSeg[0].getTitle();
+			saveFile(this.imageSeg[0], path);
 			
 			ProjectWrapper       project  = client.getProject(id);
 			List<DatasetWrapper> datasets = project.getDatasets("OTSU");
 			
 			DatasetWrapper otsu;
-			if (datasets.size() == 0) {
+			if (datasets.isEmpty()) {
 				otsu = new DatasetWrapper("OTSU", "");
 				Long datasetId = project.addDataset(client, otsu).getId();
 				otsu = client.getDataset(datasetId);
@@ -851,14 +851,14 @@ public class NucleusSegmentation {
 	 */
 	public void saveGiftWrappingSeg() {
 		
-		if (!_badCrop && _bestThreshold != -1
-		    && this.m_segmentationParameters.getGiftWrapping()) {
+		if (!badCrop && bestThreshold != -1
+		    && this.segmentationParameters.getGiftWrapping()) {
 			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
-			this.m_imageSeg[0] = nuc.runGIFTWrapping(this.m_imageSeg[0], this.m_segmentationParameters);
+			this.imageSeg[0] = nuc.runGIFTWrapping(this.imageSeg[0], this.segmentationParameters);
 			String pathSegGIFT =
-					this.m_segmentationParameters.getOutputFolder() + "GIFT" + File.separator + this._imgRaw.getTitle();
-			this.m_imageSeg[0].setTitle(pathSegGIFT);
-			saveFile(this.m_imageSeg[0], pathSegGIFT);
+					this.segmentationParameters.getOutputFolder() + "GIFT" + File.separator + this.imgRaw.getTitle();
+			this.imageSeg[0].setTitle(pathSegGIFT);
+			saveFile(this.imageSeg[0], pathSegGIFT);
 		}
 	}
 	
@@ -867,16 +867,16 @@ public class NucleusSegmentation {
 	 * Method to save the OTSU segmented image.
 	 * <p> TODO verifier cette methode si elle est à sa place
 	 */
-	public void saveGiftWrappingSegOmero(Client client, Long id)
+	public void saveGiftWrappingSegOMERO(Client client, Long id)
 	throws Exception {
-		if (!_badCrop && _bestThreshold != -1
-		    && this.m_segmentationParameters.getGiftWrapping()) {
+		if (!badCrop && bestThreshold != -1
+		    && this.segmentationParameters.getGiftWrapping()) {
 			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
 			
-			this.m_imageSeg[0] = nuc.runGIFTWrapping(this.m_imageSeg[0], this.m_segmentationParameters);
+			this.imageSeg[0] = nuc.runGIFTWrapping(this.imageSeg[0], this.segmentationParameters);
 			
-			String path = new java.io.File(".").getCanonicalPath() + File.separator + this.m_imageSeg[0].getTitle();
-			saveFile(this.m_imageSeg[0], path);
+			String path = new java.io.File(".").getCanonicalPath() + File.separator + this.imageSeg[0].getTitle();
+			saveFile(this.imageSeg[0], path);
 			
 			ProjectWrapper       project  = client.getProject(id);
 			List<DatasetWrapper> datasets = project.getDatasets("GIFT");
@@ -907,10 +907,10 @@ public class NucleusSegmentation {
 	 * @return
 	 */
 	public String getImageCropInfoOTSU() {
-		if (!_badCrop && _bestThreshold != -1) {
-			return saveImageResult(this.m_imageSeg) + "\t" + this._bestThreshold + "\n";
+		if (!badCrop && bestThreshold != -1) {
+			return saveImageResult(this.imageSeg) + "\t" + this.bestThreshold + "\n";
 		} else {
-			return this._imgRaw.getTitle() + "\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\n";
+			return this.imgRaw.getTitle() + "\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\n";
 		}
 	}
 	
@@ -923,10 +923,10 @@ public class NucleusSegmentation {
 	 * @return
 	 */
 	public String getImageCropInfoGIFT() {
-		if (!_badCrop && _bestThreshold != -1) {
-			return saveImageResult(this.m_imageSeg) + "\t" + this._bestThreshold + "\n";
+		if (!badCrop && bestThreshold != -1) {
+			return saveImageResult(this.imageSeg) + "\t" + this.bestThreshold + "\n";
 		} else {
-			return this._imgRaw.getTitle() + "\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\n";
+			return this.imgRaw.getTitle() + "\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\t-1\n";
 		}
 	}
 	

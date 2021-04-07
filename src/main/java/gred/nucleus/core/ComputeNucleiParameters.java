@@ -13,7 +13,7 @@ import java.util.ArrayList;
 
 public class ComputeNucleiParameters {
 	
-	private final PluginParameters m_pluginParameters;
+	private final PluginParameters pluginParameters;
 	
 	
 	/**
@@ -26,7 +26,7 @@ public class ComputeNucleiParameters {
 	public ComputeNucleiParameters(String rawImagesInputDirectory,
 	                               String segmentedImagesDirectory,
 	                               String pathToConfig) {
-		this.m_pluginParameters = new PluginParameters(rawImagesInputDirectory, segmentedImagesDirectory, pathToConfig);
+		this.pluginParameters = new PluginParameters(rawImagesInputDirectory, segmentedImagesDirectory, pathToConfig);
 		
 		
 	}
@@ -39,7 +39,7 @@ public class ComputeNucleiParameters {
 	 * @param segmentedImagesDirectory path to segmented images associated
 	 */
 	public ComputeNucleiParameters(String rawImagesInputDirectory, String segmentedImagesDirectory) {
-		this.m_pluginParameters = new PluginParameters(rawImagesInputDirectory, segmentedImagesDirectory);
+		this.pluginParameters = new PluginParameters(rawImagesInputDirectory, segmentedImagesDirectory);
 		
 		
 	}
@@ -54,8 +54,8 @@ public class ComputeNucleiParameters {
 	 */
 	public ComputeNucleiParameters(String rawImagesInputDirectory, String segmentedImagesDirectory,
 	                               Calibration cal) {
-		this.m_pluginParameters = new PluginParameters(rawImagesInputDirectory, segmentedImagesDirectory,
-		                                               cal.pixelWidth, cal.pixelHeight, cal.pixelDepth);
+		this.pluginParameters = new PluginParameters(rawImagesInputDirectory, segmentedImagesDirectory,
+		                                             cal.pixelWidth, cal.pixelHeight, cal.pixelDepth);
 		
 	}
 	
@@ -65,34 +65,34 @@ public class ComputeNucleiParameters {
 	 * get results parameter in the same folder.
 	 */
 	public void run() {
-		Directory directoryRawInput = new Directory(this.m_pluginParameters.getInputFolder());
-		directoryRawInput.listImageFiles(this.m_pluginParameters.getInputFolder());
+		Directory directoryRawInput = new Directory(this.pluginParameters.getInputFolder());
+		directoryRawInput.listImageFiles(this.pluginParameters.getInputFolder());
 		directoryRawInput.checkIfEmpty();
-		Directory directorySegmentedInput = new Directory(this.m_pluginParameters.getOutputFolder());
-		directorySegmentedInput.listImageFiles(this.m_pluginParameters.getOutputFolder());
+		Directory directorySegmentedInput = new Directory(this.pluginParameters.getOutputFolder());
+		directorySegmentedInput.listImageFiles(this.pluginParameters.getOutputFolder());
 		directorySegmentedInput.checkIfEmpty();
-		ArrayList<File> segmentedImages           = directorySegmentedInput.m_fileList;
+		ArrayList<File> segmentedImages           = directorySegmentedInput.fileList;
 		StringBuilder   outputCropGeneralInfoOTSU = new StringBuilder();
 		
-		outputCropGeneralInfoOTSU.append(this.m_pluginParameters.getAnalyseParameters()).append(getColNameResult());
+		outputCropGeneralInfoOTSU.append(this.pluginParameters.getAnalysisParameters()).append(getColNameResult());
 		
 		for (File f : segmentedImages) {
-			ImagePlus Raw = new ImagePlus(this.m_pluginParameters.getInputFolder() + File.separator + f.getName());
+			ImagePlus raw = new ImagePlus(this.pluginParameters.getInputFolder() + File.separator + f.getName());
 			try {
-				ImagePlus[] Segmented = BF.openImagePlus(f.getAbsolutePath());
+				ImagePlus[] segmented = BF.openImagePlus(f.getAbsolutePath());
 				
-				Measure3D measure3D = new Measure3D(Segmented,
-				                                    Raw,
-				                                    this.m_pluginParameters.getXCalibration(Raw),
-				                                    this.m_pluginParameters.getYCalibration(Raw),
-				                                    this.m_pluginParameters.getZCalibration(Raw));
+				Measure3D measure3D = new Measure3D(segmented,
+				                                    raw,
+				                                    this.pluginParameters.getXCalibration(raw),
+				                                    this.pluginParameters.getYCalibration(raw),
+				                                    this.pluginParameters.getZCalibration(raw));
 				outputCropGeneralInfoOTSU.append(measure3D.nucleusParameter3D()).append("\n");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(
-				this.m_pluginParameters.getOutputFolder()
+				this.pluginParameters.getOutputFolder()
 				+ directoryRawInput.getSeparator()
 				+ "result_Segmentation_Analyse.csv");
 		
@@ -103,7 +103,7 @@ public class ComputeNucleiParameters {
 	
 	
 	public void addConfigParameters(String pathToConfig) {
-		this.m_pluginParameters.addGeneralProperties(pathToConfig);
+		this.pluginParameters.addGeneralProperties(pathToConfig);
 		
 	}
 	

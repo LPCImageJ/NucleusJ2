@@ -8,7 +8,7 @@ import java.util.ArrayList;
 
 public class AutocropImageIntegration {
 	
-	static ArrayList<String> m_test;
+	static ArrayList<String> test;
 	
 	
 	public static void runAutoCrop(String imageSourceFile, String output, String pathToConfig) {

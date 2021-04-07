@@ -7,9 +7,9 @@ package gred.nucleus.utils;
  */
 public class VoxelRecord {
 	/** Coordinates voxel */
-	public double _i, _j, _k;
+	public double i, j, k;
 	/** Voxel value */
-	double _value;
+	double value;
 	
 	
 	/**
@@ -20,9 +20,9 @@ public class VoxelRecord {
 	 * @param k Coordinates z of voxel
 	 */
 	public void setLocation(double i, double j, double k) {
-		this._i = i;
-		this._j = j;
-		this._k = k;
+		this.i = i;
+		this.j = j;
+		this.k = k;
 	}
 	
 	
@@ -32,7 +32,7 @@ public class VoxelRecord {
 	 * @return
 	 */
 	public double getI() {
-		return _i;
+		return i;
 	}
 	
 	
@@ -42,7 +42,7 @@ public class VoxelRecord {
 	 * @return
 	 */
 	public double getJ() {
-		return _j;
+		return j;
 	}
 	
 	
@@ -52,7 +52,7 @@ public class VoxelRecord {
 	 * @return
 	 */
 	public double getK() {
-		return _k;
+		return k;
 	}
 	
 	
@@ -62,7 +62,7 @@ public class VoxelRecord {
 	 * @return
 	 */
 	public double getValue() {
-		return _value;
+		return value;
 	}
 	
 	
@@ -72,7 +72,7 @@ public class VoxelRecord {
 	 * @param value
 	 */
 	public void setValue(double value) {
-		this._value = value;
+		this.value = value;
 	}
 	
 	/*
@@ -80,16 +80,16 @@ public class VoxelRecord {
 	  0 if same voxel value
 	  -1 if value of voxel input > value voxel
 	  1 if value of voxel input < value voxel
-	  @param object a voxel
+	 * @param object a voxel
 	 * @return results of comparison
 	 */
 
   /*public int compareTo(Object object) {
     VoxelRecord voxelRecord = (VoxelRecord)object;
 
-    if ( _value == voxelRecord._value )
+    if (value == voxelRecord.value)
     	return 0;
-    else if ( _value < voxelRecord._value )
+    else if (value < voxelRecord.value)
     	return -1;
     else
     	return 1;
@@ -107,7 +107,7 @@ public class VoxelRecord {
 	public int compareCoordinatesTo(Object object) {
 		VoxelRecord voxelRecord = (VoxelRecord) object;
 		
-		if (_i == voxelRecord._i && _j == voxelRecord._j && _k == voxelRecord._k) {
+		if (i == voxelRecord.i && j == voxelRecord.j && k == voxelRecord.k) {
 			return 0;
 		} else {
 			return 1;
@@ -121,7 +121,7 @@ public class VoxelRecord {
 	 * @param p a VoxelRecord
 	 */
 	public void shiftCoordinates(VoxelRecord p) {
-		this.setLocation(this._i + p._i, this._j + p._j, this._k + p._k);
+		this.setLocation(this.i + p.i, this.j + p.j, this.k + p.k);
 	}
 	
 	
@@ -133,7 +133,7 @@ public class VoxelRecord {
 	 * @param c
 	 */
 	public void multiply(double a, double b, double c) {
-		this.setLocation(this._i * a, this._j * b, this._k * c);
+		this.setLocation(this.i * a, this.j * b, this.k * c);
 	}
 	
 	
@@ -143,7 +143,7 @@ public class VoxelRecord {
 	 * @param a
 	 */
 	public void multiply(double a) {
-		this.setLocation(this._i * a, this._j * a, this._k * a);
+		this.setLocation(this.i * a, this.j * a, this.k * a);
 	}
 	
 }

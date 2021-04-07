@@ -8,61 +8,61 @@ import org.apache.commons.cli.*;
 public class CLIActionOptions {
 	
 	/** NucleusJ version */
-	private static final String NJ_version    = Version.get();
+	private static final String NJ_version  = Version.get();
 	/** Path to input folder */
-	public               Option m_inputFolder = Option.builder("in")
-	                                                  .longOpt("input")
-	                                                  .required()
-	                                                  .type(String.class)
-	                                                  .numberOfArgs(1)
-	                                                  .build();
+	public               Option inputFolder = Option.builder("in")
+	                                                .longOpt("input")
+	                                                .required()
+	                                                .type(String.class)
+	                                                .numberOfArgs(1)
+	                                                .build();
 	/** Path to config file */
-	public               Option m_configFile  = Option.builder("c")
-	                                                  .longOpt("config")
-	                                                  .type(String.class)
-	                                                  .desc("Path to config file\n" +
-	                                                        "To generate config file example in current folder:\n" +
-	                                                        "java -jar NucleusJ_2-" +
-	                                                        NJ_version +
-	                                                        ".jar -h configFileExample")
-	                                                  .numberOfArgs(1)
-	                                                  .build();
+	public               Option configFile  = Option.builder("c")
+	                                                .longOpt("config")
+	                                                .type(String.class)
+	                                                .desc("Path to config file\n" +
+	                                                      "To generate config file example in current folder:\n" +
+	                                                      "java -jar NucleusJ_2-" +
+	                                                      NJ_version +
+	                                                      ".jar -h configFileExample")
+	                                                .numberOfArgs(1)
+	                                                .build();
 	/** List of available actions */
-	public               Option m_action      = Option.builder("a")
-	                                                  .longOpt("action")
-	                                                  .required()
-	                                                  .type(String.class)
-	                                                  .desc("Action available:\n" +
-	                                                        "autocrop : crop wide field images\n" +
-	                                                        "segmentation : nucleus segmentation\n")
-	                                                  .numberOfArgs(1)
-	                                                  .build();
+	public               Option action      = Option.builder("a")
+	                                                .longOpt("action")
+	                                                .required()
+	                                                .type(String.class)
+	                                                .desc("Action available:\n" +
+	                                                      "autocrop : crop wide field images\n" +
+	                                                      "segmentation : nucleus segmentation\n")
+	                                                .numberOfArgs(1)
+	                                                .build();
 	/** OMERO activate */
-	public               Option m_omero       = Option.builder("ome")
-	                                                  .longOpt("omero")
-	                                                  .type(boolean.class)
-	                                                  .desc("Use of NucleusJ2.0 in OMERO\n")
-	                                                  .build();
+	public               Option omero       = Option.builder("ome")
+	                                                .longOpt("omero")
+	                                                .type(boolean.class)
+	                                                .desc("Use of NucleusJ2.0 in OMERO\n")
+	                                                .build();
 	/** List of options */
-	Options           m_options = new Options();
+	Options           options = new Options();
 	/** Command line */
-	CommandLine       m_cmd;
+	CommandLine       cmd;
 	/** Command line parser */
-	CommandLineParser m_parser  = new DefaultParser();
+	CommandLineParser parser  = new DefaultParser();
 	
 	
 	/**
 	 * Constructor with argument
 	 *
-	 * @param argument   List of command line argument
+	 * @param argument List of command line argument
 	 */
 	public CLIActionOptions(String[] argument) {
-		this.m_options.addOption(this.m_inputFolder);
-		this.m_options.addOption(this.m_configFile);
-		this.m_options.addOption(this.m_action);
-		this.m_options.addOption(this.m_omero);
+		this.options.addOption(this.inputFolder);
+		this.options.addOption(this.configFile);
+		this.options.addOption(this.action);
+		this.options.addOption(this.omero);
 		try {
-			this.m_cmd = this.m_parser.parse(this.m_options, argument, true);
+			this.cmd = this.parser.parse(this.options, argument, true);
 		} catch (ParseException exp) {
 			System.out.println(exp.getMessage() + "\n");
 			System.out.println(getHelperInfo());
@@ -84,12 +84,12 @@ public class CLIActionOptions {
 	
 	/** @return list of options */
 	public Options getOptions() {
-		return this.m_options;
+		return this.options;
 	}
 	
 	
 	public CommandLine getCmd() {
-		return this.m_cmd;
+		return this.cmd;
 	}
 	
 }

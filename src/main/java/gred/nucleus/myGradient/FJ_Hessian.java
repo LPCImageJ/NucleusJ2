@@ -22,10 +22,10 @@ public class FJ_Hessian implements PlugIn, WindowListener {
 	
 	private static boolean absolute = true;
 	
-	private static String    scale = "1.0";
-	private static Point     pos   = new Point(-1, -1);
+	private static       String    scale = "1.0";
+	private static final Point     pos   = new Point(-1, -1);
 	@SuppressWarnings("unused")
-	private        ImagePlus imp   = null;
+	private final        ImagePlus imp   = null;
 	
 	
 	public void run(String arg) {

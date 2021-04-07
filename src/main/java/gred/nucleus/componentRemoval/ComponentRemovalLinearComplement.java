@@ -16,17 +16,17 @@ import gred.nucleus.utils.Voxel;
 /**
  * This class is intended to implement the predicate on voxels and connected components to keep all components which are
  * outside a thick plane. The thick plane's equation is:
- * <p> z <= m_xCoefficient*x + m_yCoefficient*y + m_constantCoefficient
+ * <p> z <= xCoefficient*x + yCoefficient*y + constantCoefficient
  * <p> or
- * <p> z > m_thickness + m_xCoefficient*x + m_yCoefficient*y + m_constantCoefficient
+ * <p> z > thickness + xCoefficient*x + yCoefficient*y + constantCoefficient
  *
  * @author Remy Malgouyres, Tristan Dubos and Axel Poulet
  */
 public class ComponentRemovalLinearComplement implements ComponentRemovalPredicate {
-	private double m_xCoefficient;
-	private double m_yCoefficient;
-	private double m_constantCoefficient;
-	private double m_thickness;
+	private final double xCoefficient;
+	private final double yCoefficient;
+	private final double constantCoefficient;
+	private final double thickness;
 	
 	
 	/**
@@ -39,10 +39,10 @@ public class ComponentRemovalLinearComplement implements ComponentRemovalPredica
 	                                        double yCoefficient,
 	                                        double constantCoefficient,
 	                                        double thickness) {
-		this.m_xCoefficient = xCoefficient;
-		this.m_yCoefficient = yCoefficient;
-		this.m_constantCoefficient = constantCoefficient;
-		this.m_thickness = thickness;
+		this.xCoefficient = xCoefficient;
+		this.yCoefficient = yCoefficient;
+		this.constantCoefficient = constantCoefficient;
+		this.thickness = thickness;
 	}
 	
 	
@@ -52,8 +52,8 @@ public class ComponentRemovalLinearComplement implements ComponentRemovalPredica
 	@Override
 	public boolean keepVoxelComponent(Voxel voxel, ComponentInfo componentInfo) {
 		double zValue =
-				this.m_xCoefficient * voxel.getX() + this.m_yCoefficient * voxel.getY() + this.m_constantCoefficient;
-		return ((voxel.getZ() < zValue) || (voxel.getZ() >= zValue + this.m_thickness));
+				this.xCoefficient * voxel.getX() + this.yCoefficient * voxel.getY() + this.constantCoefficient;
+		return ((voxel.getZ() < zValue) || (voxel.getZ() >= zValue + this.thickness));
 	}
 	
 }

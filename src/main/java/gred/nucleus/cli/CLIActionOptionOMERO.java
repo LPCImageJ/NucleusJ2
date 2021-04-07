@@ -11,50 +11,50 @@ import static org.apache.commons.lang.Validate.isTrue;
 /** Inherited class to handle OMERO command line option */
 public class CLIActionOptionOMERO extends CLIActionOptions {
 	/** Host name server */
-	private final Option m_hostname     = Option.builder("ho")
-	                                            .longOpt("hostname")
-	                                            .required()
-	                                            .type(String.class)
-	                                            .desc("Hostname of the OMERO server")
-	                                            .numberOfArgs(1)
-	                                            .build();
+	private final Option hostname     = Option.builder("ho")
+	                                          .longOpt("hostname")
+	                                          .required()
+	                                          .type(String.class)
+	                                          .desc("Hostname of the OMERO server")
+	                                          .numberOfArgs(1)
+	                                          .build();
 	/** Server port connexion */
-	private final Option m_port         = Option.builder("pt")
-	                                            .longOpt("port")
-	                                            .required()
-	                                            .type(Integer.class)
-	                                            .desc("Port used by OMERO")
-	                                            .numberOfArgs(1)
-	                                            .build();
+	private final Option port         = Option.builder("pt")
+	                                          .longOpt("port")
+	                                          .required()
+	                                          .type(Integer.class)
+	                                          .desc("Port used by OMERO")
+	                                          .numberOfArgs(1)
+	                                          .build();
 	/** username connexion */
-	private final Option m_username     = Option.builder("u")
-	                                            .longOpt("username")
-	                                            .type(String.class)
-	                                            .desc("Username in OMERO")
-	                                            .numberOfArgs(1)
-	                                            .build();
+	private final Option username     = Option.builder("u")
+	                                          .longOpt("username")
+	                                          .type(String.class)
+	                                          .desc("Username in OMERO")
+	                                          .numberOfArgs(1)
+	                                          .build();
 	/** OMERO password connexion */
-	private final Option m_password     = Option.builder("p")
-	                                            .longOpt("password")
-	                                            .type(String.class)
-	                                            .desc("Password in OMERO")
-	                                            .numberOfArgs(1)
-	                                            .build();
+	private final Option password     = Option.builder("p")
+	                                          .longOpt("password")
+	                                          .type(String.class)
+	                                          .desc("Password in OMERO")
+	                                          .numberOfArgs(1)
+	                                          .build();
 	/** Group user connexion */
-	private final Option m_group        = Option.builder("g")
-	                                            .longOpt("group")
-	                                            .required()
-	                                            .type(String.class)
-	                                            .desc("Group in OMERO")
-	                                            .numberOfArgs(1)
-	                                            .build();
+	private final Option group        = Option.builder("g")
+	                                          .longOpt("group")
+	                                          .required()
+	                                          .type(String.class)
+	                                          .desc("Group in OMERO")
+	                                          .numberOfArgs(1)
+	                                          .build();
 	/** Path to output folder */
-	private final Option m_outputFolder = Option.builder("out")
-	                                            .longOpt("output")
-	                                            .type(String.class)
-	                                            .desc("Path to output folder containing images to analyse\n")
-	                                            .numberOfArgs(1)
-	                                            .build();
+	private final Option outputFolder = Option.builder("out")
+	                                          .longOpt("output")
+	                                          .type(String.class)
+	                                          .desc("Path to output folder containing images to analyse\n")
+	                                          .numberOfArgs(1)
+	                                          .build();
 	
 	
 	/**
@@ -64,22 +64,22 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 	 */
 	public CLIActionOptionOMERO(String[] argument) {
 		super(argument);
-		this.m_options.addOption(this.m_action);
-		this.m_options.addOption(this.m_outputFolder);
-		this.m_options.addOption(this.m_port);
-		this.m_options.addOption(this.m_hostname);
-		this.m_options.addOption(this.m_username);
-		this.m_options.addOption(this.m_password);
-		this.m_options.addOption(this.m_group);
-		this.m_inputFolder.setDescription(
+		this.options.addOption(this.action);
+		this.options.addOption(this.outputFolder);
+		this.options.addOption(this.port);
+		this.options.addOption(this.hostname);
+		this.options.addOption(this.username);
+		this.options.addOption(this.password);
+		this.options.addOption(this.group);
+		this.inputFolder.setDescription(
 				"OMERO  inputs 2 information separated with slash separator :  " +
 				"Type input: dataset, project, image, tag " +
 				"Input id number" + "\n" +
 				"Example : " + "\n" +
 				"          dataset/1622");
 		try {
-			this.m_cmd = this.m_parser.parse(this.m_options, argument);
-			isTrue(OMEROAvailableAction(this.m_cmd.getOptionValue("action")));
+			this.cmd = this.parser.parse(this.options, argument);
+			isTrue(availableActionOMERO(this.cmd.getOptionValue("action")));
 			
 		} catch (ParseException exp) {
 			System.out.println(exp.getMessage() + "\n");
@@ -87,7 +87,7 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 			System.exit(1);
 		} catch (Exception exp) {
 			System.out.println("Action option \"" +
-			                   this.m_cmd.getOptionValue("action") +
+			                   this.cmd.getOptionValue("action") +
 			                   "\" not available" + "\n");
 			System.out.println(getHelperInfo());
 			System.exit(1);
@@ -102,41 +102,41 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 	 *
 	 * @return boolean existing action
 	 */
-	private static boolean OMEROAvailableAction(String action) {
-		ArrayList<String> actionAvailableInOmero = new ArrayList<>();
-		actionAvailableInOmero.add("autocrop");
-		actionAvailableInOmero.add("segmentation");
-		return actionAvailableInOmero.contains(action);
+	private static boolean availableActionOMERO(String action) {
+		ArrayList<String> actionAvailableInOMERO = new ArrayList<>();
+		actionAvailableInOMERO.add("autocrop");
+		actionAvailableInOMERO.add("segmentation");
+		return actionAvailableInOMERO.contains(action);
 	}
 	
 	
 	private Option getGroup() {
-		return this.m_group;
+		return this.group;
 	}
 	
 	
 	private Option getHostname() {
-		return this.m_hostname;
+		return this.hostname;
 	}
 	
 	
 	private Option getPort() {
-		return this.m_port;
+		return this.port;
 	}
 	
 	
 	private Option getUsername() {
-		return this.m_username;
+		return this.username;
 	}
 	
 	
 	private Option getPassword() {
-		return this.m_password;
+		return this.password;
 	}
 	
 	
 	private Option getOutputFolder() {
-		return this.m_outputFolder;
+		return this.outputFolder;
 	}
 	
 }

@@ -9,9 +9,9 @@ import java.util.ArrayList;
 /** @author Tristan Dubos and Axel Poulet */
 public class ConvexHullDetection {
 	
-	private final double      _pi       = Math.PI;
-	private       VoxelRecord _p0       = new VoxelRecord();
-	private       String      _axesName = "";
+	private final double      pi       = Math.PI;
+	private       VoxelRecord p0       = new VoxelRecord();
+	private       String      axesName = "";
 	/*
 	 * 1) On calcule l'angle alpha comme précédemment :
 	 * double acos = Math.acos(cosAlpha)
@@ -74,22 +74,22 @@ public class ConvexHullDetection {
 	                                              double distanceThreshold) {
 		double      anglesSum      = 0.0;
 		int         compteur       = 0;
-		VoxelRecord voxelTest      = _p0;
+		VoxelRecord voxelTest      = p0;
 		VoxelRecord voxelPrecedent = new VoxelRecord();
 		double      xcal           = calibration.pixelWidth;
 		double      ycal           = calibration.pixelHeight;
 		double      zcal           = calibration.pixelDepth;
-		while (anglesSum < 2 * _pi + 1) {
+		while (anglesSum < 2 * pi + 1) {
 			double      angleMin          = 0;
 			double      maxLength         = 0;
 			double      distance          = 0;
-			double      angleMinPiSurDeux = 2 * _pi;
+			double      angleMinPiSurDeux = 2 * pi;
 			VoxelRecord voxelMin          = new VoxelRecord();
 			int         iMin              = 0;
 			if (compteur != 0) {
-				vectorTest.setLocation(voxelTest._i - voxelPrecedent._i,
-				                       voxelTest._j - voxelPrecedent._j,
-				                       voxelTest._k - voxelPrecedent._k);
+				vectorTest.setLocation(voxelTest.i - voxelPrecedent.i,
+				                       voxelTest.j - voxelPrecedent.j,
+				                       voxelTest.k - voxelPrecedent.k);
 			}
 			
 			for (int i = 0; i < lVoxelBoundary.size(); i++) {
@@ -97,30 +97,30 @@ public class ConvexHullDetection {
 				// IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" size "+lVoxelBoundary.size()+ " le i "+i);
 				if (voxelTest.compareCoordinatesTo(lVoxelBoundary.get(i)) == 1) {
 					VoxelRecord vectorCourant = new VoxelRecord();
-					vectorCourant.setLocation(lVoxelBoundary.get(i)._i - voxelTest._i,
-					                          lVoxelBoundary.get(i)._j - voxelTest._j,
-					                          lVoxelBoundary.get(i)._k - voxelTest._k);
-					switch (_axesName) {
+					vectorCourant.setLocation(lVoxelBoundary.get(i).i - voxelTest.i,
+					                          lVoxelBoundary.get(i).j - voxelTest.j,
+					                          lVoxelBoundary.get(i).k - voxelTest.k);
+					switch (axesName) {
 						case "xy":
-							distance = Math.sqrt(vectorCourant._i * xcal * vectorCourant._i * xcal +
-							                     vectorCourant._j * ycal * vectorCourant._j * ycal);
+							distance = Math.sqrt(vectorCourant.i * xcal * vectorCourant.i * xcal +
+							                     vectorCourant.j * ycal * vectorCourant.j * ycal);
 							break;
 						case "xz":
-							distance = Math.sqrt(vectorCourant._i * xcal * vectorCourant._i * xcal +
-							                     vectorCourant._k * zcal * vectorCourant._k * zcal);
+							distance = Math.sqrt(vectorCourant.i * xcal * vectorCourant.i * xcal +
+							                     vectorCourant.k * zcal * vectorCourant.k * zcal);
 							break;
 						case "yz":
-							distance = Math.sqrt(vectorCourant._k * zcal * vectorCourant._k * zcal +
-							                     vectorCourant._j * ycal * vectorCourant._j * ycal);
+							distance = Math.sqrt(vectorCourant.k * zcal * vectorCourant.k * zcal +
+							                     vectorCourant.j * ycal * vectorCourant.j * ycal);
 							break;
 					}
 					// IJ.log("distance " +distance+ " "+vectorCourant._i + " "+vectorCourant._k );
 					// IJ.log("distance " + distance +"<="+ distanceThreshold);
 					if (distance <= distanceThreshold) {
 						double angle              = computeAngle(vectorTest, vectorCourant, calibration);
-						double anglePlusPiSurDeux = angle - _pi / 2;
-						if (anglePlusPiSurDeux <= -_pi) {
-							anglePlusPiSurDeux += 2 * _pi;
+						double anglePlusPiSurDeux = angle - pi / 2;
+						if (anglePlusPiSurDeux <= -pi) {
+							anglePlusPiSurDeux += 2 * pi;
 						}
 						double threshold = angleThreshold(image, voxelTest, vectorTest, calibration, distanceThreshold);
 						if (anglePlusPiSurDeux <= angleMinPiSurDeux) {
@@ -150,11 +150,11 @@ public class ConvexHullDetection {
 			lVoxelBoundary.remove(iMin);
 			
 			anglesSum += angleMin;
-			if (voxelMin.compareCoordinatesTo(_p0) == 0) {
+			if (voxelMin.compareCoordinatesTo(p0) == 0) {
 				break;
 			}
 			
-			if (anglesSum <= 2 * _pi) {
+			if (anglesSum <= 2 * pi) {
 				convexHull.add(voxelMin);
 				//IJ.log("point num: "+compteur+" "+_p0._i+" "+_p0._j+" "+_p0._k+" angle: "+angleMinPiSurDeux+" distance: "+maxLength+" angle sum"+anglesSum);
 			}
@@ -186,32 +186,32 @@ public class ConvexHullDetection {
 		double xcal = calibration.pixelWidth;
 		double ycal = calibration.pixelHeight;
 		double zcal = calibration.pixelDepth;
-		double normeVector1 = Math.sqrt(vector1._i * xcal * vector1._i * xcal +
-		                                vector1._j * ycal * vector1._j * ycal +
-		                                vector1._k * zcal * vector1._k * zcal);
-		double normeVector2 = Math.sqrt(vector2._i * xcal * vector2._i * xcal +
-		                                vector2._j * ycal * vector2._j * ycal +
-		                                vector2._k * zcal * vector2._k * zcal);
+		double normeVector1 = Math.sqrt(vector1.i * xcal * vector1.i * xcal +
+		                                vector1.j * ycal * vector1.j * ycal +
+		                                vector1.k * zcal * vector1.k * zcal);
+		double normeVector2 = Math.sqrt(vector2.i * xcal * vector2.i * xcal +
+		                                vector2.j * ycal * vector2.j * ycal +
+		                                vector2.k * zcal * vector2.k * zcal);
 		double normesProduct = normeVector1 * normeVector2;
 		double sinAlpha      = 0, cosAlpha = 0;
 		
-		switch (_axesName) {
+		switch (axesName) {
 			case "xy":
-				sinAlpha = ((vector1._i * xcal) * (vector2._j * ycal) - (vector1._j * ycal) * (vector2._i * xcal)) /
+				sinAlpha = ((vector1.i * xcal) * (vector2.j * ycal) - (vector1.j * ycal) * (vector2.i * xcal)) /
 				           normesProduct;
-				cosAlpha = ((vector1._i * xcal) * (vector2._i * xcal) + (vector1._j * ycal) * (vector2._j * ycal)) /
+				cosAlpha = ((vector1.i * xcal) * (vector2.i * xcal) + (vector1.j * ycal) * (vector2.j * ycal)) /
 				           normesProduct;
 				break;
 			case "xz":
-				sinAlpha = ((vector1._i * xcal) * (vector2._k * zcal) - (vector1._k * zcal) * (vector2._i * xcal)) /
+				sinAlpha = ((vector1.i * xcal) * (vector2.k * zcal) - (vector1.k * zcal) * (vector2.i * xcal)) /
 				           normesProduct;
-				cosAlpha = ((vector1._i * xcal) * (vector2._i * xcal) + (vector1._k * zcal) * (vector2._k * zcal)) /
+				cosAlpha = ((vector1.i * xcal) * (vector2.i * xcal) + (vector1.k * zcal) * (vector2.k * zcal)) /
 				           normesProduct;
 				break;
 			case "yz":
-				sinAlpha = ((vector1._j * ycal) * (vector2._k * zcal) - (vector1._k * zcal) * (vector2._j * ycal)) /
+				sinAlpha = ((vector1.j * ycal) * (vector2.k * zcal) - (vector1.k * zcal) * (vector2.j * ycal)) /
 				           normesProduct;
-				cosAlpha = ((vector1._j * ycal) * (vector2._j * ycal) + (vector1._k * zcal) * (vector2._k * zcal)) /
+				cosAlpha = ((vector1.j * ycal) * (vector2.j * ycal) + (vector1.k * zcal) * (vector2.k * zcal)) /
 				           normesProduct;
 				break;
 		}
@@ -239,26 +239,26 @@ public class ConvexHullDetection {
 	 * @return
 	 */
 	int orientation(VoxelRecord p, VoxelRecord q, VoxelRecord r) {
-		int turn = (int) ((q._i - p._i) * (r._j - p._j) - (r._i - p._i) * (q._j - p._j));
+		int turn = (int) ((q.i - p.i) * (r.j - p.j) - (r.i - p.i) * (q.j - p.j));
 		return Integer.signum(turn);
 	}
 	
 	
 	/** @return  */
 	public String getAxes() {
-		return _axesName;
+		return axesName;
 	}
 	
 	
 	/** @param axes  */
 	public void setAxes(String axes) {
-		_axesName = axes;
+		axesName = axes;
 	}
 	
 	
 	/** @param voxelRecord  */
 	public void setInitialVoxel(VoxelRecord voxelRecord) {
-		_p0 = voxelRecord;
+		p0 = voxelRecord;
 	}
 
 	/*Soit d notre seuil de distance et C(v, D) le carré de centre v et de rayon d (dans le plan considéré).
@@ -267,10 +267,10 @@ public class ConvexHullDetection {
 	Mettre v (où plutôt le voxel qui lui correspond qui doit être le centre de I_c) à 1.
 	Etiqueter à 2 la composante connexe des 1 qui contient v dans I_c (faire un parcours breadthFirstSerach comme l'autre jour)
 	Pour chaque voxel  w du bord de I_c qui est à 2, calculer 
-	double angleEntreZeroEt2pi = computeAngle(vectorTest,w-v,calibration) + _pi
+	double angleEntreZeroEt2pi = computeAngle(vectorTest,w-v,calibration) + pi
 	Calculer angleEntreZeroEt2piMax le maximum des angles obtenus.
 	thresholdAngle = (angleEntreZeroEt2piMax).
-	si (thresholdAngle >= _pi)
+	si (thresholdAngle >= pi)
 	thresholdAngle -= 2pi */
 	
 	
@@ -290,14 +290,14 @@ public class ConvexHullDetection {
 	                              double distance) {
 		int nbPixelWidth  = (int) (distance / calibration.pixelWidth);
 		int nbPixelHeight = (int) (distance / calibration.pixelHeight);
-		int x             = (int) voxelRecord._i;
-		int y             = (int) voxelRecord._j;
-		if (_axesName.equals("xz")) {
-			y = (int) voxelRecord._k;
+		int x             = (int) voxelRecord.i;
+		int y             = (int) voxelRecord.j;
+		if (axesName.equals("xz")) {
+			y = (int) voxelRecord.k;
 			nbPixelHeight = (int) (distance / calibration.pixelDepth);
-		} else if (_axesName.equals("yz")) {
-			x = (int) voxelRecord._j;
-			y = (int) voxelRecord._k;
+		} else if (axesName.equals("yz")) {
+			x = (int) voxelRecord.j;
+			y = (int) voxelRecord.k;
 			nbPixelWidth = (int) (distance / calibration.pixelHeight);
 			nbPixelHeight = (int) (distance / calibration.pixelDepth);
 		}
@@ -316,26 +316,26 @@ public class ConvexHullDetection {
 		double                 angleMax          = 0;
 		for (VoxelRecord record : listBoundaryVoxel) {
 			VoxelRecord vectorCourant = new VoxelRecord();
-			vectorCourant.setLocation(record._i - nbPixelWidth,
-			                          record._j - nbPixelHeight,
+			vectorCourant.setLocation(record.i - nbPixelWidth,
+			                          record.j - nbPixelHeight,
 			                          0);
-			if (_axesName.equals("xz")) {
-				vectorCourant.setLocation(record._i - nbPixelWidth,
+			if (axesName.equals("xz")) {
+				vectorCourant.setLocation(record.i - nbPixelWidth,
 				                          0,
-				                          record._k - nbPixelHeight);
-			} else if (_axesName.equals("yz")) {
+				                          record.k - nbPixelHeight);
+			} else if (axesName.equals("yz")) {
 				vectorCourant.setLocation(0,
-				                          record._j - nbPixelWidth,
-				                          record._k - nbPixelHeight);
+				                          record.j - nbPixelWidth,
+				                          record.k - nbPixelHeight);
 			}
-			double angleEntreZeroEt2pi = computeAngle(vectorTest, vectorCourant, calibration) + _pi;
+			double angleEntreZeroEt2pi = computeAngle(vectorTest, vectorCourant, calibration) + pi;
 			//IJ.log("AngleTest "+ angleEntreZeroEt2pi );
 			if (angleEntreZeroEt2pi > angleMax) {
 				angleMax = angleEntreZeroEt2pi;
 			}
 		}
-		if (angleMax > _pi) {
-			angleMax -= 2 * _pi;
+		if (angleMax > pi) {
+			angleMax -= 2 * pi;
 		}
 		return angleMax;
 	}
@@ -345,21 +345,21 @@ public class ConvexHullDetection {
 	 * @param image
 	 * @param nbPixelWidth
 	 * @param nbPixelHeight
-	 * @param i_InterestVoxel
-	 * @param j_InterestVoxel
+	 * @param iInterestVoxel
+	 * @param jInterestVoxel
 	 *
 	 * @return
 	 */
 	private ArrayList<VoxelRecord> getListOfInterestVoxel(double[][] image,
 	                                                      int nbPixelWidth,
 	                                                      int nbPixelHeight,
-	                                                      int i_InterestVoxel,
-	                                                      int j_InterestVoxel) {
-		double value     = image[i_InterestVoxel][j_InterestVoxel];
-		int    minWidth  = i_InterestVoxel - nbPixelWidth;
-		int    maxWidth  = i_InterestVoxel + nbPixelWidth;
-		int    minHeight = j_InterestVoxel - nbPixelHeight;
-		int    maxHeight = j_InterestVoxel + nbPixelHeight;
+	                                                      int iInterestVoxel,
+	                                                      int jInterestVoxel) {
+		double value     = image[iInterestVoxel][jInterestVoxel];
+		int    minWidth  = iInterestVoxel - nbPixelWidth;
+		int    maxWidth  = iInterestVoxel + nbPixelWidth;
+		int    minHeight = jInterestVoxel - nbPixelHeight;
+		int    maxHeight = jInterestVoxel + nbPixelHeight;
 		if (minWidth < 0) {
 			minWidth = 0;
 		}
@@ -374,18 +374,18 @@ public class ConvexHullDetection {
 		}
 		double[][] i_c = new double[nbPixelWidth * 2][nbPixelHeight * 2];
 		/*
-        IJ.log(" i "+ i_InterestVoxel + " j "+j_InterestVoxel+"\n");
+        IJ.log(" i "+ iInterestVoxel + " j "+jInterestVoxel+"\n");
 		IJ.log("Image 1 "+image.length + " x "+image[0].length+"\n");
         IJ.log("minWidth "+minWidth + " maxWidth "+maxWidth+"\n");
         IJ.log("minHeight "+minHeight + " maxHeight "+maxHeight+"\n");
         */
-		//IJ.log("HA "   +minWidth+" max "+maxWidth+" i_InterestVoxel "+i_InterestVoxel+" "+maxHeight+" ers "+i_c.length + " nbPixelWidth "+nbPixelWidth +" nbPixelHeight " +nbPixelHeight);
+		//IJ.log("HA "   +minWidth+" max "+maxWidth+" iInterestVoxel "+iInterestVoxel+" "+maxHeight+" ers "+i_c.length + " nbPixelWidth "+nbPixelWidth +" nbPixelHeight " +nbPixelHeight);
 		int k = 0;
-		for (i_InterestVoxel = minWidth; i_InterestVoxel < maxWidth; ++i_InterestVoxel) {
+		for (iInterestVoxel = minWidth; iInterestVoxel < maxWidth; ++iInterestVoxel) {
 			int l = 0;
-			for (j_InterestVoxel = minHeight; j_InterestVoxel < maxHeight; ++j_InterestVoxel) {
-				//IJ.log("HB "+ i_InterestVoxel +"  "+ j_InterestVoxel+ " "+image[i_InterestVoxel][j_InterestVoxel]+  " "+i_c[k][l]);
-				if (image[i_InterestVoxel][j_InterestVoxel] == value) {
+			for (jInterestVoxel = minHeight; jInterestVoxel < maxHeight; ++jInterestVoxel) {
+				//IJ.log("HB "+ iInterestVoxel +"  "+ jInterestVoxel+ " "+image[iInterestVoxel][jInterestVoxel]+  " "+i_c[k][l]);
+				if (image[iInterestVoxel][jInterestVoxel] == value) {
 					i_c[k][l] = 0;
 				} else {
 					i_c[k][l] = 1;

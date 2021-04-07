@@ -62,7 +62,10 @@ public class ConnectedComponent2D extends ConnectedComponent {
 			//			freeVoxel();
 			
 			// Determine the neighborhood taking into account the image's boundaries
-			short iMin, iMax, jMin, jMax;
+			short iMin;
+			short iMax;
+			short jMin;
+			short jMax;
 			if (iV - 1 >= 0) {
 				iMin = (short) (iV - 1);
 			} else {
@@ -77,26 +80,26 @@ public class ConnectedComponent2D extends ConnectedComponent {
 				componentInfo.setOnTheeBorder();
 			}
 			
-			if (iV + 1 < this.m_inputImage.getWidth()) {
+			if (iV + 1 < this.inputImage.getWidth()) {
 				iMax = (short) (iV + 1);
 			} else {
-				iMax = (short) (this.m_inputImage.getWidth() - 1);
+				iMax = (short) (this.inputImage.getWidth() - 1);
 				componentInfo.setOnTheeBorder();
 			}
 			
-			if (jV + 1 < this.m_inputImage.getHeight()) {
+			if (jV + 1 < this.inputImage.getHeight()) {
 				jMax = (short) (jV + 1);
 			} else {
-				jMax = (short) (this.m_inputImage.getHeight() - 1);
+				jMax = (short) (this.inputImage.getHeight() - 1);
 				componentInfo.setOnTheeBorder();
 			}
 			
-			ImageProcessor imgProc = m_inputImage.getProcessor();
+			ImageProcessor imgProc = inputImage.getProcessor();
 			// For each neighbor :
 			for (short ii = iMin; ii <= iMax; ii++) {
 				for (short jj = jMin; jj <= jMax; jj++) {
 					// If the neighbor (different from VoxelRecordShort) is a 1 and not labeled
-					if ((getLabel(ii, jj, 0) == 0) && (imgProc.get(ii, jj) == this.m_foregroundColor)) {
+					if ((getLabel(ii, jj, 0) == 0) && (imgProc.get(ii, jj) == this.foregroundColor)) {
 						// Set the voxel's label
 						setLabel(ii, jj, 0, currentLabel);
 						// Increment component's cardinality
@@ -110,16 +113,16 @@ public class ConnectedComponent2D extends ConnectedComponent {
 	}
 	
 	
-	/** labels the connected components of the input image (attribute m_ip) */
+	/** labels the connected components of the input image (attribute ip) */
 	@Override
 	public void doLabelConnectedComponent() {
 		short          currentLabel = 0;
-		ImageProcessor imgProc      = m_inputImage.getProcessor();
-		for (short i = 0; i < this.m_inputImage.getWidth(); i++) {
-			for (short j = 0; j < this.m_inputImage.getHeight(); j++) {
-				if (imgProc.getPixel(i, j) == this.m_foregroundColor && getLabel(i, j, 0) == 0) {
+		ImageProcessor imgProc      = inputImage.getProcessor();
+		for (short i = 0; i < this.inputImage.getWidth(); i++) {
+			for (short j = 0; j < this.inputImage.getHeight(); j++) {
+				if (imgProc.getPixel(i, j) == this.foregroundColor && getLabel(i, j, 0) == 0) {
 					currentLabel++;
-					this.m_labels[i][j][0] = currentLabel;
+					this.labels[i][j][0] = currentLabel;
 					ComponentInfo componentInfo = new ComponentInfo(currentLabel, 1, new Voxel(i, j, (short) 0), false);
 					try {
 						breadthFirstSearch(new Voxel(i, j, (short) 0), currentLabel, componentInfo);
@@ -127,7 +130,7 @@ public class ConnectedComponent2D extends ConnectedComponent {
 						e.printStackTrace();
 						System.exit(0);
 					}
-					this.m_compInfo.add(componentInfo);
+					this.compInfo.add(componentInfo);
 				}
 			}
 		}

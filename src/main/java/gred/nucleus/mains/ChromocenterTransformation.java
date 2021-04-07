@@ -32,8 +32,8 @@ public class ChromocenterTransformation {
 			String     prefix           = outPutFilesNames.prefixNameFile();
 			NucleusSegmentation nucleusSegmentation =
 					new NucleusSegmentation(currentFile, prefix, segmentationParameters);
-			ImagePlus[]     currentImage = BF.openImagePlus(currentFile.getAbsolutePath());
-			ChannelSplitter splitter     = new ChannelSplitter();
+			ImagePlus[] currentImage = BF.openImagePlus(currentFile.getAbsolutePath());
+			
 			currentImage = ChannelSplitter.split(currentImage[0]);
 			ImagePlus toto = currentImage[0];
 			ImagePlus out  = nucleusSegmentation.generateSegmentedImage(toto, 0);

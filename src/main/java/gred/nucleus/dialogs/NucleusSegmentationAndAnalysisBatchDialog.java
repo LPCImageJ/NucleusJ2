@@ -17,20 +17,20 @@ import java.lang.management.OperatingSystemMXBean;
  */
 public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 	
-	private static final long                serialVersionUID          = 1L;
-	private final        JFormattedTextField _jTextFieldXCalibration   = new JFormattedTextField(Number.class);
-	private final        JFormattedTextField _jTextFieldYCalibration   = new JFormattedTextField(Number.class);
-	private final        JFormattedTextField _jTextFieldZCalibration   = new JFormattedTextField(Number.class);
-	private final        JFormattedTextField _jTextFieldMax            = new JFormattedTextField(Number.class);
-	private final        JFormattedTextField _jTextFieldMin            = new JFormattedTextField(Number.class);
-	private final        JTextField          _jTextFieldUnit           = new JTextField();
-	private final        JTextField          _jTextFieldWorkDirectory  = new JTextField();
-	private final        JTextField          _jTextFieldRawData        = new JTextField();
-	private final        JRadioButton        _jRadioButton2DAnalysis   = new JRadioButton("2D");
-	private final        JRadioButton        _jRadioButton3DAnalysis   = new JRadioButton("3D");
-	private final        JRadioButton        _jRadioButton2D3DAnalysis = new JRadioButton("2D and 3D");
-	private              boolean             _start                    = false;
-	private              int                 _nbCpuChosen              = 1;
+	private static final long                serialVersionUID         = 1L;
+	private final        JFormattedTextField jTextFieldXCalibration   = new JFormattedTextField(Number.class);
+	private final        JFormattedTextField jTextFieldYCalibration   = new JFormattedTextField(Number.class);
+	private final        JFormattedTextField jTextFieldZCalibration   = new JFormattedTextField(Number.class);
+	private final        JFormattedTextField jTextFieldMax            = new JFormattedTextField(Number.class);
+	private final        JFormattedTextField jTextFieldMin            = new JFormattedTextField(Number.class);
+	private final        JTextField          jTextFieldUnit           = new JTextField();
+	private final        JTextField          jTextFieldWorkDirectory  = new JTextField();
+	private final        JTextField          jTextFieldRawData        = new JTextField();
+	private final        JRadioButton        jRadioButton2DAnalysis   = new JRadioButton("2D");
+	private final        JRadioButton        jRadioButton3DAnalysis   = new JRadioButton("3D");
+	private final        JRadioButton        jRadioButton2D3DAnalysis = new JRadioButton("2D and 3D");
+	private              boolean             start                    = false;
+	private              int                 nbCpuChosen              = 1;
 	
 	
 	/** Architecture of the graphical windows */
@@ -93,7 +93,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		jButtonRawData.setPreferredSize(new java.awt.Dimension(120, 21));
 		jButtonRawData.setFont(new java.awt.Font("Albertus", Font.ITALIC, 10));
 		
-		container.add(_jTextFieldRawData,
+		container.add(jTextFieldRawData,
 		              new GridBagConstraints(0,
 		                                     1,
 		                                     0,
@@ -105,8 +105,8 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		                                     new Insets(30, 160, 0, 0),
 		                                     0,
 		                                     0));
-		_jTextFieldRawData.setPreferredSize(new java.awt.Dimension(280, 21));
-		_jTextFieldRawData.setFont(new java.awt.Font("Albertus", Font.ITALIC, 10));
+		jTextFieldRawData.setPreferredSize(new java.awt.Dimension(280, 21));
+		jTextFieldRawData.setFont(new java.awt.Font("Albertus", Font.ITALIC, 10));
 		
 		container.add(jButtonWorkDirectory,
 		              new GridBagConstraints(0,
@@ -123,7 +123,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		jButtonWorkDirectory.setPreferredSize(new java.awt.Dimension(120, 21));
 		jButtonWorkDirectory.setFont(new java.awt.Font("Albertus", Font.ITALIC, 10));
 		
-		container.add(_jTextFieldWorkDirectory,
+		container.add(jTextFieldWorkDirectory,
 		              new GridBagConstraints(0,
 		                                     1,
 		                                     0,
@@ -135,8 +135,8 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		                                     new Insets(60, 160, 0, 0),
 		                                     0,
 		                                     0));
-		_jTextFieldWorkDirectory.setPreferredSize(new java.awt.Dimension(280, 21));
-		_jTextFieldWorkDirectory.setFont(new java.awt.Font("Albertus", Font.ITALIC, 10));
+		jTextFieldWorkDirectory.setPreferredSize(new java.awt.Dimension(280, 21));
+		jTextFieldWorkDirectory.setFont(new java.awt.Font("Albertus", Font.ITALIC, 10));
 		
 		container.add(jLabelCalibration,
 		              new GridBagConstraints(0,
@@ -167,7 +167,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		                                     0));
 		jLabelXCalibration.setText("x :");
 		jLabelXCalibration.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		container.add(_jTextFieldXCalibration,
+		container.add(jTextFieldXCalibration,
 		              new GridBagConstraints(0,
 		                                     2,
 		                                     0,
@@ -179,8 +179,8 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		                                     new Insets(40, 60, 0, 0),
 		                                     0,
 		                                     0));
-		_jTextFieldXCalibration.setText("1");
-		_jTextFieldXCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
+		jTextFieldXCalibration.setText("1");
+		jTextFieldXCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
 		
 		container.add(jLabelYCalibration,
 		              new GridBagConstraints(0,
@@ -196,7 +196,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		                                     0));
 		jLabelYCalibration.setText("y :");
 		jLabelYCalibration.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		container.add(_jTextFieldYCalibration,
+		container.add(jTextFieldYCalibration,
 		              new GridBagConstraints(0,
 		                                     2,
 		                                     0,
@@ -208,8 +208,8 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		                                     new Insets(65, 60, 0, 0),
 		                                     0,
 		                                     0));
-		_jTextFieldYCalibration.setText("1");
-		_jTextFieldYCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
+		jTextFieldYCalibration.setText("1");
+		jTextFieldYCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
 		
 		container.add(jLabelZCalibration,
 		              new GridBagConstraints(0,
@@ -225,7 +225,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		                                     0));
 		jLabelZCalibration.setText("z :");
 		jLabelZCalibration.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		container.add(_jTextFieldZCalibration,
+		container.add(jTextFieldZCalibration,
 		              new GridBagConstraints(0,
 		                                     2,
 		                                     0,
@@ -237,8 +237,8 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		                                     new Insets(90, 60, 0, 0),
 		                                     0,
 		                                     0));
-		_jTextFieldZCalibration.setText("1");
-		_jTextFieldZCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
+		jTextFieldZCalibration.setText("1");
+		jTextFieldZCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
 		
 		container.add(jLabelUnit,
 		              new GridBagConstraints(0,
@@ -254,7 +254,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		                                     0));
 		jLabelUnit.setText("unit :");
 		jLabelUnit.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		container.add(_jTextFieldUnit,
+		container.add(jTextFieldUnit,
 		              new GridBagConstraints(0,
 		                                     2,
 		                                     0,
@@ -266,8 +266,8 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		                                     new Insets(115, 60, 0, 0),
 		                                     0,
 		                                     0));
-		_jTextFieldUnit.setText("pixel");
-		_jTextFieldUnit.setPreferredSize(new java.awt.Dimension(60, 21));
+		jTextFieldUnit.setText("pixel");
+		jTextFieldUnit.setPreferredSize(new java.awt.Dimension(60, 21));
 		
 		container.add(jLabelSegmentation,
 		              new GridBagConstraints(0,
@@ -297,7 +297,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		                                     0));
 		jLabelVolumeMin.setText("Minimum volume of the segmented nucleus :");
 		jLabelVolumeMin.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		container.add(_jTextFieldMin,
+		container.add(jTextFieldMin,
 		              new GridBagConstraints(0,
 		                                     3,
 		                                     0,
@@ -309,8 +309,8 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		                                     new Insets(40, 320, 0, 0),
 		                                     0,
 		                                     0));
-		_jTextFieldMin.setText("15");
-		_jTextFieldMin.setPreferredSize(new java.awt.Dimension(60, 21));
+		jTextFieldMin.setText("15");
+		jTextFieldMin.setPreferredSize(new java.awt.Dimension(60, 21));
 		
 		container.add(jLabelVolumeMax,
 		              new GridBagConstraints(0,
@@ -326,7 +326,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		                                     0));
 		jLabelVolumeMax.setText("Maximum volume of the segmented nucleus :");
 		jLabelVolumeMax.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		container.add(_jTextFieldMax,
+		container.add(jTextFieldMax,
 		              new GridBagConstraints(0,
 		                                     3,
 		                                     0,
@@ -338,8 +338,8 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		                                     new Insets(70, 320, 0, 0),
 		                                     0,
 		                                     0));
-		_jTextFieldMax.setText("2000");
-		_jTextFieldMax.setPreferredSize(new java.awt.Dimension(60, 21));
+		jTextFieldMax.setText("2000");
+		jTextFieldMax.setPreferredSize(new java.awt.Dimension(60, 21));
 		
 		container.add(jLabelAnalysis,
 		              new GridBagConstraints(0,
@@ -355,13 +355,13 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		                                     0));
 		jLabelAnalysis.setText("Type of analysis:");
 		
-		buttonGroupChoiceAnalysis.add(_jRadioButton2DAnalysis);
-		buttonGroupChoiceAnalysis.add(_jRadioButton3DAnalysis);
-		buttonGroupChoiceAnalysis.add(_jRadioButton2D3DAnalysis);
-		_jRadioButton2DAnalysis.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		_jRadioButton3DAnalysis.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		_jRadioButton2D3DAnalysis.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		container.add(_jRadioButton2DAnalysis,
+		buttonGroupChoiceAnalysis.add(jRadioButton2DAnalysis);
+		buttonGroupChoiceAnalysis.add(jRadioButton3DAnalysis);
+		buttonGroupChoiceAnalysis.add(jRadioButton2D3DAnalysis);
+		jRadioButton2DAnalysis.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
+		jRadioButton3DAnalysis.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
+		jRadioButton2D3DAnalysis.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
+		container.add(jRadioButton2DAnalysis,
 		              new GridBagConstraints(0,
 		                                     3,
 		                                     0,
@@ -373,7 +373,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		                                     new Insets(130, 170, 0, 0),
 		                                     0,
 		                                     0));
-		container.add(_jRadioButton3DAnalysis,
+		container.add(jRadioButton3DAnalysis,
 		              new GridBagConstraints(0,
 		                                     3,
 		                                     0,
@@ -385,7 +385,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		                                     new Insets(130, 120, 0, 0),
 		                                     0,
 		                                     0));
-		container.add(_jRadioButton2D3DAnalysis,
+		container.add(jRadioButton2D3DAnalysis,
 		              new GridBagConstraints(0,
 		                                     3,
 		                                     0,
@@ -397,7 +397,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		                                     new Insets(130, 10, 0, 0),
 		                                     0,
 		                                     0));
-		_jRadioButton2D3DAnalysis.setSelected(true);
+		jRadioButton2D3DAnalysis.setSelected(true);
 		
 		OperatingSystemMXBean bean   = ManagementFactory.getOperatingSystemMXBean();
 		int                   nbProc = bean.getAvailableProcessors();
@@ -477,75 +477,75 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 	
 	
 	public int getNbCpu() {
-		return _nbCpuChosen;
+		return nbCpuChosen;
 	}
 	
 	
 	public void setNbCpu(int nb) {
-		_nbCpuChosen = nb;
+		nbCpuChosen = nb;
 	}
 	
 	
 	public double getXCalibration() {
-		String xCal = _jTextFieldXCalibration.getText();
+		String xCal = jTextFieldXCalibration.getText();
 		return Double.parseDouble(xCal.replaceAll(",", "."));
 	}
 	
 	
 	public double getYCalibration() {
-		String yCal = _jTextFieldYCalibration.getText();
+		String yCal = jTextFieldYCalibration.getText();
 		return Double.parseDouble(yCal.replaceAll(",", "."));
 	}
 	
 	
 	public double getZCalibration() {
-		String zCal = _jTextFieldZCalibration.getText();
+		String zCal = jTextFieldZCalibration.getText();
 		return Double.parseDouble(zCal.replaceAll(",", "."));
 	}
 	
 	
 	public String getUnit() {
-		return _jTextFieldUnit.getText();
+		return jTextFieldUnit.getText();
 	}
 	
 	
 	public double getMinVolume() {
-		return Double.parseDouble(_jTextFieldMin.getText());
+		return Double.parseDouble(jTextFieldMin.getText());
 	}
 	
 	
 	public double getMaxVolume() {
-		return Double.parseDouble(_jTextFieldMax.getText());
+		return Double.parseDouble(jTextFieldMax.getText());
 	}
 	
 	
 	public String getWorkDirectory() {
-		return _jTextFieldWorkDirectory.getText();
+		return jTextFieldWorkDirectory.getText();
 	}
 	
 	
 	public String getRawDataDirectory() {
-		return _jTextFieldRawData.getText();
+		return jTextFieldRawData.getText();
 	}
 	
 	
 	public boolean isStart() {
-		return _start;
+		return start;
 	}
 	
 	
 	public boolean is2D3DAnalysis() {
-		return _jRadioButton2D3DAnalysis.isSelected();
+		return jRadioButton2D3DAnalysis.isSelected();
 	}
 	
 	
 	public boolean is2D() {
-		return _jRadioButton2DAnalysis.isSelected();
+		return jRadioButton2DAnalysis.isSelected();
 	}
 	
 	
 	public boolean is3D() {
-		return _jRadioButton3DAnalysis.isSelected();
+		return jRadioButton3DAnalysis.isSelected();
 	}
 	
 	
@@ -553,12 +553,12 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 	 *
 	 */
 	static class QuitListener implements ActionListener {
-		NucleusSegmentationAndAnalysisBatchDialog _nucleusSegmentationAndAnalysisBatchDialog;
+		NucleusSegmentationAndAnalysisBatchDialog nucleusSegmentationAndAnalysisBatchDialog;
 		
 		
 		/** @param nucleusSegmentationAndAnalysisBatchDialog nucleusSegmentationAndAnalysisBatchDialog GUI */
 		public QuitListener(NucleusSegmentationAndAnalysisBatchDialog nucleusSegmentationAndAnalysisBatchDialog) {
-			_nucleusSegmentationAndAnalysisBatchDialog = nucleusSegmentationAndAnalysisBatchDialog;
+			this.nucleusSegmentationAndAnalysisBatchDialog = nucleusSegmentationAndAnalysisBatchDialog;
 		}
 		
 		
@@ -566,7 +566,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		 *
 		 */
 		public void actionPerformed(ActionEvent actionEvent) {
-			_nucleusSegmentationAndAnalysisBatchDialog.dispose();
+			nucleusSegmentationAndAnalysisBatchDialog.dispose();
 		}
 		
 	}
@@ -587,12 +587,12 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 	 */
 	class StartListener implements ActionListener {
 		
-		NucleusSegmentationAndAnalysisBatchDialog _nucleusSegmentationAndAnalysisBatchDialog;
+		NucleusSegmentationAndAnalysisBatchDialog nucleusSegmentationAndAnalysisBatchDialog;
 		
 		
 		/** @param nucleusSegmentationAndAnalysisBatchDialog nucleusSegmentationAndAnalysisBatchDialog GUI */
 		public StartListener(NucleusSegmentationAndAnalysisBatchDialog nucleusSegmentationAndAnalysisBatchDialog) {
-			_nucleusSegmentationAndAnalysisBatchDialog = nucleusSegmentationAndAnalysisBatchDialog;
+			this.nucleusSegmentationAndAnalysisBatchDialog = nucleusSegmentationAndAnalysisBatchDialog;
 		}
 		
 		
@@ -600,14 +600,14 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 		 *
 		 */
 		public void actionPerformed(ActionEvent actionEvent) {
-			if (_jTextFieldWorkDirectory.getText().isEmpty() || _jTextFieldRawData.getText().isEmpty()) {
+			if (jTextFieldWorkDirectory.getText().isEmpty() || jTextFieldRawData.getText().isEmpty()) {
 				JOptionPane.showMessageDialog(null,
 				                              "You did not choose a work directory or the raw data",
 				                              "Error",
 				                              JOptionPane.ERROR_MESSAGE);
 			} else {
-				_start = true;
-				_nucleusSegmentationAndAnalysisBatchDialog.dispose();
+				start = true;
+				nucleusSegmentationAndAnalysisBatchDialog.dispose();
 			}
 		}
 		
@@ -629,7 +629,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 				@SuppressWarnings("unused")
 				String run = jFileChooser.getSelectedFile().getName();
 				String workDirectory = jFileChooser.getSelectedFile().getAbsolutePath();
-				_jTextFieldWorkDirectory.setText(workDirectory);
+				jTextFieldWorkDirectory.setText(workDirectory);
 			}
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
@@ -653,7 +653,7 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 				@SuppressWarnings("unused")
 				String run = jFileChooser.getSelectedFile().getName();
 				String rawDataDirectory = jFileChooser.getSelectedFile().getAbsolutePath();
-				_jTextFieldRawData.setText(rawDataDirectory);
+				jTextFieldRawData.setText(rawDataDirectory);
 			}
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}

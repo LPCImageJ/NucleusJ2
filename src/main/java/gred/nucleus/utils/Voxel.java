@@ -19,13 +19,13 @@ package gred.nucleus.utils;
 public class Voxel {
 	
 	/** Integer valued coordinates of the voxel */
-	private final short[] m_coordinates;
-	private       short   m_value;
+	private final short[] coordinates;
+	private       short   value;
 	
 	
 	/** Creates an uninitialized voxel */
 	public Voxel() {
-		this.m_coordinates = new short[3];
+		this.coordinates = new short[3];
 	}
 	
 	
@@ -37,10 +37,10 @@ public class Voxel {
 	 * @param z third coordinate of the voxel
 	 */
 	public Voxel(short x, short y, short z) {
-		this.m_coordinates = new short[3];
-		this.m_coordinates[0] = x;
-		this.m_coordinates[1] = y;
-		this.m_coordinates[2] = z;
+		this.coordinates = new short[3];
+		this.coordinates[0] = x;
+		this.coordinates[1] = y;
+		this.coordinates[2] = z;
 	}
 	
 	
@@ -52,11 +52,11 @@ public class Voxel {
 	 * @param z third coordinate of the voxel
 	 */
 	public Voxel(short x, short y, short z, short value) {
-		this.m_coordinates = new short[3];
-		this.m_coordinates[0] = x;
-		this.m_coordinates[1] = y;
-		this.m_coordinates[2] = z;
-		this.m_value = value;
+		this.coordinates = new short[3];
+		this.coordinates[0] = x;
+		this.coordinates[1] = y;
+		this.coordinates[2] = z;
+		this.value = value;
 	}
 	
 	
@@ -68,9 +68,9 @@ public class Voxel {
 	 * @param z third coordinate of the voxel
 	 */
 	public void setCoordinate(short x, short y, short z) {
-		this.m_coordinates[0] = x;
-		this.m_coordinates[1] = y;
-		this.m_coordinates[2] = z;
+		this.coordinates[0] = x;
+		this.coordinates[1] = y;
+		this.coordinates[2] = z;
 	}
 	
 	
@@ -91,7 +91,7 @@ public class Voxel {
 	 * @param i the coordinate's index (0, 1 or 2)
 	 */
 	public void incrementCoordinate(int i) {
-		this.m_coordinates[i]++;
+		this.coordinates[i]++;
 	}
 	
 	
@@ -102,7 +102,7 @@ public class Voxel {
 	 * @param value the new value of the i^th coordinate of the voxel
 	 */
 	public void setCoordinate(int i, short value) {
-		this.m_coordinates[i] = value;
+		this.coordinates[i] = value;
 	}
 	
 	
@@ -114,7 +114,7 @@ public class Voxel {
 	 * @return the i^th coordinate of the voxel
 	 */
 	public short getCoordinate(int i) {
-		return this.m_coordinates[i];
+		return this.coordinates[i];
 	}
 	
 	
@@ -124,7 +124,7 @@ public class Voxel {
 	 * @return the first coordinate of the voxel
 	 */
 	public short getX() {
-		return this.m_coordinates[0];
+		return this.coordinates[0];
 	}
 	
 	
@@ -134,7 +134,7 @@ public class Voxel {
 	 * @param value the new value of the first coordinate of the voxel
 	 */
 	public void setX(short value) {
-		this.m_coordinates[0] = value;
+		this.coordinates[0] = value;
 	}
 	
 	
@@ -144,7 +144,7 @@ public class Voxel {
 	 * @return the second coordinate of the voxel
 	 */
 	public short getY() {
-		return this.m_coordinates[1];
+		return this.coordinates[1];
 	}
 	
 	
@@ -154,7 +154,7 @@ public class Voxel {
 	 * @param value the new value of the first coordinate of the voxel
 	 */
 	public void setY(short value) {
-		this.m_coordinates[1] = value;
+		this.coordinates[1] = value;
 	}
 	
 	
@@ -164,7 +164,7 @@ public class Voxel {
 	 * @return the third coordinate of a voxel
 	 */
 	public short getZ() {
-		return this.m_coordinates[2];
+		return this.coordinates[2];
 	}
 	
 	
@@ -174,7 +174,7 @@ public class Voxel {
 	 * @param value the new value of the first coordinate of the voxel
 	 */
 	public void setZ(short value) {
-		this.m_coordinates[2] = value;
+		this.coordinates[2] = value;
 	}
 	
 	
@@ -184,9 +184,9 @@ public class Voxel {
 	 * @param voxel another voxel
 	 */
 	public void shiftCoordinates(Voxel voxel) {
-		this.m_coordinates[0] += voxel.m_coordinates[0];
-		this.m_coordinates[1] += voxel.m_coordinates[1];
-		this.m_coordinates[2] += voxel.m_coordinates[2];
+		this.coordinates[0] += voxel.coordinates[0];
+		this.coordinates[1] += voxel.coordinates[1];
+		this.coordinates[2] += voxel.coordinates[2];
 	}
 	
 	
@@ -198,9 +198,9 @@ public class Voxel {
 	 * @param c factor on the third coordinate
 	 */
 	public void multiply(short a, short b, short c) {
-		this.m_coordinates[0] *= a;
-		this.m_coordinates[1] *= b;
-		this.m_coordinates[2] *= c;
+		this.coordinates[0] *= a;
+		this.coordinates[1] *= b;
+		this.coordinates[2] *= c;
 	}
 	
 	
@@ -210,9 +210,9 @@ public class Voxel {
 	 * @param a factor for all the coordinates
 	 */
 	public void multiply(short a) {
-		this.m_coordinates[0] *= a;
-		this.m_coordinates[1] *= a;
-		this.m_coordinates[2] *= a;
+		this.coordinates[0] *= a;
+		this.coordinates[1] *= a;
+		this.coordinates[2] *= a;
 	}
 	
 	
@@ -223,17 +223,17 @@ public class Voxel {
 	 */
 	@Override
 	public String toString() {
-		return "(" + this.m_coordinates[0] + ", " + this.m_coordinates[1] + ", " + this.m_coordinates[2] + ")";
+		return "(" + this.coordinates[0] + ", " + this.coordinates[1] + ", " + this.coordinates[2] + ")";
 	}
 	
 	
 	public short getValue() {
-		return m_value;
+		return value;
 	}
 	
 	
-	public void setValue(short m_value) {
-		this.m_value = m_value;
+	public void setValue(short value) {
+		this.value = value;
 	}
 	
 } // End of class

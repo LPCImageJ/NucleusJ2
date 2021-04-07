@@ -12,7 +12,7 @@ import loci.plugins.BF;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 
@@ -26,24 +26,24 @@ import java.util.regex.Pattern;
  */
 public class AnnotateAutoCrop {
 	
-	/** File to process (Image input) */
-	File m_currentFile;
-	/** ImagePlus of the Z projection */
-	private ImagePlus          m_zProjection;
 	/** List of the coordinate boxes of cropped nucleus */
-	private ArrayList<String>  m_boxCoordinates;
+	private final List<String>       boxCoordinates;
 	/** the path of the directory where image with boxes is saved */
-	private String             m_outputDirPath;
+	private final String             outputDirPath;
 	/** Parameters crop analyse */
-	private AutocropParameters m_autocropParameters;
+	private final AutocropParameters autocropParameters;
+	/** File to process (Image input) */
+	File currentFile;
+	/** ImagePlus of the Z projection */
+	private ImagePlus zProjection;
 	/** The prefix of the names of the output cropped images, which are automatically numbered */
-	private String             m_outputFilesPrefix;
+	private String    outputFilesPrefix;
 	
 	
 	/**
 	 * Constructor for autocrop
 	 *
-	 * @param boxesCoordinates   ArrayList of coordinates (coordinates of nuclei cropped)
+	 * @param boxesCoordinates   List of coordinates (coordinates of nuclei cropped)
 	 * @param imageFile          File of current image analysed
 	 * @param outputDirPath      Path to the output folder
 	 * @param autocropParameters Autocrop parameters used to crop nuclei
@@ -52,15 +52,15 @@ public class AnnotateAutoCrop {
 	 * @throws IOException     if imageFile cannot be opened
 	 * @throws FormatException if something goes wrong performing a file format operation
 	 */
-	public AnnotateAutoCrop(ArrayList<String> boxesCoordinates,
+	public AnnotateAutoCrop(List<String> boxesCoordinates,
 	                        File imageFile,
 	                        String outputDirPath,
 	                        String prefix,
 	                        AutocropParameters autocropParameters)
 	throws IOException, FormatException {
 		this(boxesCoordinates, imageFile, outputDirPath, autocropParameters);
-		this.m_outputFilesPrefix = prefix;
-		Directory dirOutput = new Directory(this.m_outputDirPath + "zprojection");
+		this.outputFilesPrefix = prefix;
+		Directory dirOutput = new Directory(this.outputDirPath + "zprojection");
 		dirOutput.CheckAndCreateDir();
 	}
 	
@@ -68,7 +68,7 @@ public class AnnotateAutoCrop {
 	/**
 	 * Constructor for re-generate projection after segmentation
 	 *
-	 * @param boxesCoordinates   ArrayList of coordinates (coordinates of nuclei cropped)
+	 * @param boxesCoordinates   List of coordinates (coordinates of nuclei cropped)
 	 * @param imageFile          File of current image analysed
 	 * @param outputDirPath      Path to the output folder
 	 * @param autocropParameters Autocrop parameters used to crop nuclei
@@ -76,17 +76,17 @@ public class AnnotateAutoCrop {
 	 * @throws IOException     If imageFile cannot be opened
 	 * @throws FormatException If something goes wrong performing a file format operation
 	 */
-	public AnnotateAutoCrop(ArrayList<String> boxesCoordinates,
+	public AnnotateAutoCrop(List<String> boxesCoordinates,
 	                        File imageFile,
 	                        String outputDirPath,
 	                        AutocropParameters autocropParameters)
 	throws IOException, FormatException {
-		this.m_autocropParameters = autocropParameters;
-		this.m_currentFile = imageFile;
-		this.m_zProjection =
-				BF.openImagePlus(imageFile.getAbsolutePath())[this.m_autocropParameters.getSlicesOTSUComputing()];
-		this.m_boxCoordinates = boxesCoordinates;
-		this.m_outputDirPath = outputDirPath;
+		this.autocropParameters = autocropParameters;
+		this.currentFile = imageFile;
+		this.zProjection =
+				BF.openImagePlus(imageFile.getAbsolutePath())[this.autocropParameters.getSlicesOTSUComputing()];
+		this.boxCoordinates = boxesCoordinates;
+		this.outputDirPath = outputDirPath;
 	}
 	
 	
@@ -94,19 +94,19 @@ public class AnnotateAutoCrop {
 	 * Main method to generate Z projection of wide field 3D image. Parameter use are max intensity projection
 	 * (projectionMax method) and contrast modification of 0,3.
 	 */
-	public void runAddBadCrop(ArrayList<Integer> _box) {
-		IJ.run(this.m_zProjection, "Enhance Contrast", "saturated=0.35");
-		IJ.run(this.m_zProjection, "RGB Color", "");
-		ZProjector zProjectionTmp = new ZProjector(this.m_zProjection);
+	public void runAddBadCrop(List<Integer> box) {
+		IJ.run(this.zProjection, "Enhance Contrast", "saturated=0.35");
+		IJ.run(this.zProjection, "RGB Color", "");
+		ZProjector zProjectionTmp = new ZProjector(this.zProjection);
 		
-		for (String m_boxCoordinate : this.m_boxCoordinates) {
-			String[] splitLine = m_boxCoordinate.split("\\t");
+		for (String boxCoordinate : this.boxCoordinates) {
+			String[] splitLine = boxCoordinate.split("\\t");
 			String[] fileName  = splitLine[0].split(Pattern.quote(File.separator));
-			String[] Name      = fileName[fileName.length - 1].split("_");
-			addBadCropBoxToZProjection(m_boxCoordinate, Integer.parseInt(Name[Name.length - 2]));
+			String[] name      = fileName[fileName.length - 1].split("_");
+			addBadCropBoxToZProjection(boxCoordinate, Integer.parseInt(name[name.length - 2]));
 		}
-		String outFileZBox = this.m_outputDirPath + "_BAD_CROP_LESS.tif";
-		saveFile(this.m_zProjection, outFileZBox);
+		String outFileZBox = this.outputDirPath + "_BAD_CROP_LESS.tif";
+		saveFile(this.zProjection, outFileZBox);
 	}
 	
 	
@@ -115,24 +115,23 @@ public class AnnotateAutoCrop {
 	 * (projectionMax method) and contrast modification of 0,3.
 	 */
 	public void run() {
-		ZProjector zProjectionTmp = new ZProjector(this.m_zProjection);
-		this.m_zProjection = projectionMax(zProjectionTmp);
+		ZProjector zProjectionTmp = new ZProjector(this.zProjection);
+		this.zProjection = projectionMax(zProjectionTmp);
 		adjustContrast(0.3);
-		for (String m_boxCoordinate : this.m_boxCoordinates) {
-			String[] splitLine = m_boxCoordinate.split("\\t");
+		for (String boxCoordinate : this.boxCoordinates) {
+			String[] splitLine = boxCoordinate.split("\\t");
 			String[] fileName  = splitLine[0].split(Pattern.quote(File.separator));
-			String[] Name      = fileName[fileName.length - 1].split("_");
-			System.out.println("le truc qui merde " +
-			                   m_boxCoordinate + "\n" +
+			String[] name      = fileName[fileName.length - 1].split("_");
+			System.out.println(boxCoordinate + "\n" +
 			                   splitLine[0] + "\n" +
-			                   Integer.parseInt(Name[Name.length - 2]));
-			addBoxCropToZProjection(m_boxCoordinate, Integer.parseInt(Name[Name.length - 2]));
+			                   Integer.parseInt(name[name.length - 2]));
+			addBoxCropToZProjection(boxCoordinate, Integer.parseInt(name[name.length - 2]));
 		}
-		String outFileZBox = this.m_outputDirPath + File.separator +
+		String outFileZBox = this.outputDirPath + File.separator +
 		                     "zprojection" + File.separator +
-		                     m_outputFilesPrefix + "_Zprojection.tif";
+		                     outputFilesPrefix + "_Zprojection.tif";
 		System.out.println("outFileZBox " + outFileZBox);
-		saveFile(this.m_zProjection, outFileZBox);
+		saveFile(this.zProjection, outFileZBox);
 	}
 	
 	
@@ -151,7 +150,7 @@ public class AnnotateAutoCrop {
 	/**
 	 * Method to project 3D stack to 2D images using Max method projection.
 	 *
-	 * @param project   Raw data
+	 * @param project Raw data
 	 *
 	 * @return Z projection
 	 */
@@ -165,8 +164,8 @@ public class AnnotateAutoCrop {
 	/**
 	 * Draw box from coordinate in the Z projection image and add the crop number.
 	 *
-	 * @param coordinateList   List of coordinate of the current box of nucleus crop
-	 * @param boxNumber        Number of the crop in the list (used in the output of nucleus crop)
+	 * @param coordinateList List of coordinate of the current box of nucleus crop
+	 * @param boxNumber      Number of the crop in the list (used in the output of nucleus crop)
 	 */
 	private void addBoxCropToZProjection(String coordinateList, int boxNumber) {
 		String[] currentBox = coordinateList.split("\t");
@@ -179,10 +178,10 @@ public class AnnotateAutoCrop {
 		IJ.setForegroundColor(0, 0, 0);
 		IJ.run("Line Width...", "line=4");
 		/* Set draw current box*/
-		this.m_zProjection.setRoi(Integer.parseInt(currentBox[1]),
-		                          Integer.parseInt(currentBox[3]),
-		                          withBox, heightBox);
-		IJ.run(this.m_zProjection, "Draw", "stack");
+		this.zProjection.setRoi(Integer.parseInt(currentBox[1]),
+		                        Integer.parseInt(currentBox[3]),
+		                        withBox, heightBox);
+		IJ.run(this.zProjection, "Draw", "stack");
 		
 		
 		/* Calculation of the coordinate to add nuclei Number */
@@ -199,9 +198,9 @@ public class AnnotateAutoCrop {
 		                           yBorder,
 		                           Integer.toString(boxNumber),
 		                           font);
-		this.m_zProjection.setRoi(left);
+		this.zProjection.setRoi(left);
 		/* Draw the nucleus number aside the box */
-		IJ.run(this.m_zProjection, "Draw", "stack");
+		IJ.run(this.zProjection, "Draw", "stack");
 	}
 	
 	
@@ -215,15 +214,15 @@ public class AnnotateAutoCrop {
 		/* Line size parameter */
 		
 		/* !!!!!!!!!!! on contrast la projection sinon elle est en GRIS ?????? */
-		//IJ.run(this.m_zProjection, "Enhance Contrast", "saturated=0.35");
-		//IJ.run(this.m_zProjection, "RGB Color", "");
+		//IJ.run(this.zProjection, "Enhance Contrast", "saturated=0.35");
+		//IJ.run(this.zProjection, "RGB Color", "");
 		IJ.setForegroundColor(255, 0, 0);
 		IJ.run("Line Width...", "line=4");
 		/* Set draw current box*/
-		this.m_zProjection.setRoi(Integer.parseInt(currentBox[1]),
-		                          Integer.parseInt(currentBox[3]),
-		                          withBox, heightBox);
-		IJ.run(this.m_zProjection, "Draw", "stack");
+		this.zProjection.setRoi(Integer.parseInt(currentBox[1]),
+		                        Integer.parseInt(currentBox[3]),
+		                        withBox, heightBox);
+		IJ.run(this.zProjection, "Draw", "stack");
 		
 		
 		/* Calculation of the coordinate to add nuclei Number */
@@ -242,20 +241,20 @@ public class AnnotateAutoCrop {
 		                           yBorder,
 		                           Integer.toString(boxNumber),
 		                           font);
-		this.m_zProjection.setRoi(left);
+		this.zProjection.setRoi(left);
 		/* Draw the nucleus number aside the box */
-		IJ.run(this.m_zProjection, "Draw", "stack");
+		IJ.run(this.zProjection, "Draw", "stack");
 	}
 	
 	
 	/**
 	 * Method to Contrast the images values and invert the LUT.
 	 *
-	 * @param contrast   Double number for contrast
+	 * @param contrast Double number for contrast
 	 */
 	private void adjustContrast(double contrast) {
-		IJ.run(this.m_zProjection, "Enhance Contrast...", "saturated=" + contrast);
-		IJ.run(this.m_zProjection, "Invert LUT", "");
+		IJ.run(this.zProjection, "Enhance Contrast...", "saturated=" + contrast);
+		IJ.run(this.zProjection, "Invert LUT", "");
 	}
 	
 }

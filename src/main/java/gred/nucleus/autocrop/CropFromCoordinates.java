@@ -42,10 +42,10 @@ public class CropFromCoordinates {
 			File rawImage       = new File(listOfFile.getValue());
 			AutocropParameters autocropParameters =
 					new AutocropParameters(rawImage.getParent(), rawImage.getParent());
-			HashMap<Double, Box> m_boxes          = readCoordinatesTXT(coordinateFile);
+			HashMap<Double, Box> boxes            = readCoordinatesTXT(coordinateFile);
 			FilesNames           outPutFilesNames = new FilesNames(listOfFile.getValue());
-			String               _prefix          = outPutFilesNames.prefixNameFile();
-			AutoCrop             autoCrop         = new AutoCrop(rawImage, _prefix, autocropParameters, m_boxes);
+			String               prefix           = outPutFilesNames.prefixNameFile();
+			AutoCrop             autoCrop         = new AutoCrop(rawImage, prefix, autocropParameters, boxes);
 			autoCrop.cropKernels3();
 		}
 	}

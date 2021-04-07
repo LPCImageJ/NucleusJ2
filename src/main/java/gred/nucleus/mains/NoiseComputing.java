@@ -23,42 +23,42 @@ public class NoiseComputing {
 	}
 	
 	
-	public static void computeMeanNoise(String RawImageSourceFile, String SegmentedImagesSourceFile) {
-		PluginParameters pluginParameters = new PluginParameters(RawImageSourceFile, SegmentedImagesSourceFile);
+	public static void computeMeanNoise(String rawImageSourceFile, String segmentedImagesSourceFile) {
+		PluginParameters pluginParameters = new PluginParameters(rawImageSourceFile, segmentedImagesSourceFile);
 		Directory        directoryInput   = new Directory(pluginParameters.getOutputFolder());
 		directoryInput.listImageFiles(pluginParameters.getOutputFolder());
 		directoryInput.checkIfEmpty();
-		ArrayList<File> segImages   = directoryInput.m_fileList;
-		StringBuilder   ResultNoise = new StringBuilder("NucleusFileName\tMeanNoise\n");
+		ArrayList<File> segImages   = directoryInput.fileList;
+		StringBuilder   resultNoise = new StringBuilder("NucleusFileName\tMeanNoise\n");
 		for (File currentFile : segImages) {
 			System.out.println("current File " + currentFile.getName());
-			ImagePlus Raw = new ImagePlus(pluginParameters.getInputFolder() +
+			ImagePlus raw = new ImagePlus(pluginParameters.getInputFolder() +
 			                              directoryInput.getSeparator() +
 			                              currentFile.getName());
-			ImagePlus Segmented = new ImagePlus(pluginParameters.getOutputFolder() + currentFile.getName());
+			ImagePlus segmented = new ImagePlus(pluginParameters.getOutputFolder() + currentFile.getName());
 			
 			// TODO TRANSFORMATION FACTORISABLE AVEC METHODE DU DESSUS !!!!!
-			double meanNoise = meanIntensityNoise(Raw, Segmented);
-			ResultNoise.append(currentFile.getName()).append("\t")
+			double meanNoise = meanIntensityNoise(raw, segmented);
+			resultNoise.append(currentFile.getName()).append("\t")
 			           .append(meanNoise).append("\t")
-			           .append(medianComputing(Raw)).append("\n");
+			           .append(medianComputing(raw)).append("\n");
 			System.out.println("Noise mean " + meanNoise);
 			
 		}
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(
 				"/media/titus/DATA/ML_ANALYSE_DATA/ANALYSE_COMPARAISON_REANALYSE/129_ANNOTATION_FULL/NoiseGIFT.csv");
-		resultFileOutputOTSU.saveTextFile(ResultNoise.toString(), true);
+		resultFileOutputOTSU.saveTextFile(resultNoise.toString(), true);
 	}
 	
 	
-	private static double meanIntensityNoise(ImagePlus _Raw, ImagePlus _Segmented) {
+	private static double meanIntensityNoise(ImagePlus raw, ImagePlus segmented) {
 		double     meanIntensity = 0;
 		int        voxelCounted  = 0;
-		ImageStack imageStackRaw = _Raw.getStack();
-		ImageStack imageStackSeg = _Segmented.getStack();
-		for (int k = 0; k < _Raw.getStackSize(); ++k) {
-			for (int i = 0; i < _Raw.getWidth(); ++i) {
-				for (int j = 0; j < _Raw.getHeight(); ++j) {
+		ImageStack imageStackRaw = raw.getStack();
+		ImageStack imageStackSeg = segmented.getStack();
+		for (int k = 0; k < raw.getStackSize(); ++k) {
+			for (int i = 0; i < raw.getWidth(); ++i) {
+				for (int j = 0; j < raw.getHeight(); ++j) {
 					if (imageStackSeg.getVoxel(i, j, k) == 0) {
 						meanIntensity += imageStackRaw.getVoxel(i, j, k);
 						voxelCounted++;
@@ -72,17 +72,17 @@ public class NoiseComputing {
 	}
 	
 	
-	public static double medianComputing(ImagePlus _Raw) {
+	public static double medianComputing(ImagePlus raw) {
 		double    voxelMedianValue = 0;
 		Histogram histogram        = new Histogram();
-		histogram.run(_Raw);
+		histogram.run(raw);
 		
-		HashMap<Double, Integer> _segmentedNucleusHistogram = histogram.getHistogram();
+		HashMap<Double, Integer> segmentedNucleusHistogram = histogram.getHistogram();
 		
-		int medianElementStop = (_Raw.getHeight() * _Raw.getWidth() * _Raw.getNSlices()) / 2;
+		int medianElementStop = (raw.getHeight() * raw.getWidth() * raw.getNSlices()) / 2;
 		int increment         = 0;
 		
-		for (HashMap.Entry<Double, Integer> entry : _segmentedNucleusHistogram.entrySet()) {
+		for (HashMap.Entry<Double, Integer> entry : segmentedNucleusHistogram.entrySet()) {
 			increment += entry.getValue();
 			if (increment > medianElementStop) {
 				voxelMedianValue = entry.getKey();

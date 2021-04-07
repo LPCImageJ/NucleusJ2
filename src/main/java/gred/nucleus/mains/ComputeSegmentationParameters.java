@@ -15,28 +15,28 @@ import java.util.ArrayList;
 
 public class ComputeSegmentationParameters {
 	
-	public static void computeNucleusParameters(String RawImageSourceFile,
-	                                            String SegmentedImagesSourceFile,
+	public static void computeNucleusParameters(String rawImageSourceFile,
+	                                            String segmentedImagesSourceFile,
 	                                            String pathToConfig)
 	throws Exception {
 		PluginParameters pluginParameters =
-				new PluginParameters(RawImageSourceFile, SegmentedImagesSourceFile, pathToConfig);
+				new PluginParameters(rawImageSourceFile, segmentedImagesSourceFile, pathToConfig);
 		Directory directoryInput = new Directory(pluginParameters.getInputFolder());
 		directoryInput.listImageFiles(pluginParameters.getInputFolder());
 		directoryInput.checkIfEmpty();
-		ArrayList<File> rawImages = directoryInput.m_fileList;
+		ArrayList<File> rawImages = directoryInput.fileList;
 		StringBuilder outputCropGeneralInfoOTSU =
-				new StringBuilder(pluginParameters.getAnalyseParameters() + getResultsColumnNames());
+				new StringBuilder(pluginParameters.getAnalysisParameters() + getResultsColumnNames());
 		for (File currentFile : rawImages) {
-			ImagePlus   Raw       = new ImagePlus(currentFile.getAbsolutePath());
-			ImagePlus[] Segmented = BF.openImagePlus(pluginParameters.getOutputFolder() + currentFile.getName());
+			ImagePlus   raw       = new ImagePlus(currentFile.getAbsolutePath());
+			ImagePlus[] segmented = BF.openImagePlus(pluginParameters.getOutputFolder() + currentFile.getName());
 			
 			
-			Measure3D measure3D = new Measure3D(Segmented,
-			                                    Raw,
-			                                    pluginParameters.getXCalibration(Raw),
-			                                    pluginParameters.getYCalibration(Raw),
-			                                    pluginParameters.getZCalibration(Raw));
+			Measure3D measure3D = new Measure3D(segmented,
+			                                    raw,
+			                                    pluginParameters.getXCalibration(raw),
+			                                    pluginParameters.getYCalibration(raw),
+			                                    pluginParameters.getZCalibration(raw));
 			outputCropGeneralInfoOTSU.append(measure3D.nucleusParameter3D()).append("\n");
 		}
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(pluginParameters.getOutputFolder()
@@ -47,25 +47,25 @@ public class ComputeSegmentationParameters {
 	}
 	
 	
-	public static void computeNucleusParameters(String RawImageSourceFile, String SegmentedImagesSourceFile)
+	public static void computeNucleusParameters(String rawImageSourceFile, String segmentedImagesSourceFile)
 	throws Exception {
-		PluginParameters pluginParameters = new PluginParameters(RawImageSourceFile, SegmentedImagesSourceFile);
+		PluginParameters pluginParameters = new PluginParameters(rawImageSourceFile, segmentedImagesSourceFile);
 		Directory        directoryInput   = new Directory(pluginParameters.getInputFolder());
 		directoryInput.listImageFiles(pluginParameters.getInputFolder());
 		directoryInput.checkIfEmpty();
-		ArrayList<File> rawImages = directoryInput.m_fileList;
+		ArrayList<File> rawImages = directoryInput.fileList;
 		StringBuilder outputCropGeneralInfoOTSU =
-				new StringBuilder(pluginParameters.getAnalyseParameters() + getResultsColumnNames());
+				new StringBuilder(pluginParameters.getAnalysisParameters() + getResultsColumnNames());
 		for (File currentFile : rawImages) {
 			System.out.println("current File " + currentFile.getName());
 			
-			ImagePlus   Raw       = new ImagePlus(currentFile.getAbsolutePath());
-			ImagePlus[] Segmented = BF.openImagePlus(pluginParameters.getOutputFolder() + currentFile.getName());
-			Measure3D measure3D = new Measure3D(Segmented,
-			                                    Raw,
-			                                    pluginParameters.getXCalibration(Raw),
-			                                    pluginParameters.getYCalibration(Raw),
-			                                    pluginParameters.getZCalibration(Raw));
+			ImagePlus   raw       = new ImagePlus(currentFile.getAbsolutePath());
+			ImagePlus[] segmented = BF.openImagePlus(pluginParameters.getOutputFolder() + currentFile.getName());
+			Measure3D measure3D = new Measure3D(segmented,
+			                                    raw,
+			                                    pluginParameters.getXCalibration(raw),
+			                                    pluginParameters.getYCalibration(raw),
+			                                    pluginParameters.getZCalibration(raw));
 			
 			outputCropGeneralInfoOTSU.append(measure3D.nucleusParameter3D()).append("\tNA").append("\n");
 		}
@@ -107,21 +107,21 @@ public class ComputeSegmentationParameters {
 	}
 	
 	
-	public static int recomputeOTSU(ImagePlus _Raw, ImagePlus _Segmented) {
-		int        OTSUThreshold = Integer.MAX_VALUE;
-		ImageStack imageStackRaw = _Raw.getStack();
-		ImageStack imageStackSeg = _Segmented.getStack();
-		for (int k = 0; k < _Raw.getStackSize(); ++k) {
-			for (int i = 0; i < _Raw.getWidth(); ++i) {
-				for (int j = 0; j < _Raw.getHeight(); ++j) {
+	public static int recomputeOTSU(ImagePlus raw, ImagePlus segmented) {
+		int        otsuThreshold = Integer.MAX_VALUE;
+		ImageStack imageStackRaw = raw.getStack();
+		ImageStack imageStackSeg = segmented.getStack();
+		for (int k = 0; k < raw.getStackSize(); ++k) {
+			for (int i = 0; i < raw.getWidth(); ++i) {
+				for (int j = 0; j < raw.getHeight(); ++j) {
 					if ((imageStackSeg.getVoxel(i, j, k) == 255) &&
-					    (OTSUThreshold >= imageStackRaw.getVoxel(i, j, k))) {
-						OTSUThreshold = (int) (imageStackRaw.getVoxel(i, j, k));
+					    (otsuThreshold >= imageStackRaw.getVoxel(i, j, k))) {
+						otsuThreshold = (int) (imageStackRaw.getVoxel(i, j, k));
 					}
 				}
 			}
 		}
-		return OTSUThreshold;
+		return otsuThreshold;
 	}
 	
 }

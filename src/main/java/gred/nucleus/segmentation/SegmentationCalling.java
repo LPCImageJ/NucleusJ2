@@ -37,20 +37,20 @@ import java.util.List;
  * @author Tristan Dubos and Axel Poulet
  */
 public class SegmentationCalling {
-	String _prefix = "";
+	String prefix = "";
 	/** ImagePlus raw image */
-	private ImagePlus _imgInput = new ImagePlus();
+	private ImagePlus imgInput = new ImagePlus();
 	/** ImagePlus segmented image */
-	private ImagePlus _imgSeg   = new ImagePlus();
+	private ImagePlus imgSeg   = new ImagePlus();
 	/** String of of the path for the output files */
-	private String    _output;
+	private String    output;
 	/** String of the input dir for several nuclei analysis */
-	private String    _inputDir = "";
+	private String    inputDir = "";
 	
-	private SegmentationParameters m_segmentationParameters;
+	private SegmentationParameters segmentationParameters;
 	
-	private String m_outputCropGeneralInfoOTSU;
-	private String m_outputCropGeneralInfoGIFT;
+	private String outputCropGeneralInfoOTSU;
+	private String outputCropGeneralInfoGIFT;
 	
 	
 	public SegmentationCalling() {
@@ -63,21 +63,21 @@ public class SegmentationCalling {
 	 * @param segmentationParameters List of parameters in config file.
 	 */
 	public SegmentationCalling(SegmentationParameters segmentationParameters) {
-		this.m_segmentationParameters = segmentationParameters;
-		this.m_outputCropGeneralInfoOTSU =
-				this.m_segmentationParameters.getAnalyseParameters() + getResultsColumnNames();
-		this.m_outputCropGeneralInfoGIFT =
-				this.m_segmentationParameters.getAnalyseParameters() + getResultsColumnNames();
+		this.segmentationParameters = segmentationParameters;
+		this.outputCropGeneralInfoOTSU =
+				this.segmentationParameters.getAnalysisParameters() + getResultsColumnNames();
+		this.outputCropGeneralInfoGIFT =
+				this.segmentationParameters.getAnalysisParameters() + getResultsColumnNames();
 	}
 	
 	
 	public SegmentationCalling(String inputDir, String outputDir) {
-		this._inputDir = inputDir;
-		this._output = outputDir;
-		this.m_outputCropGeneralInfoOTSU =
-				this.m_segmentationParameters.getAnalyseParameters() + getResultsColumnNames();
-		this.m_outputCropGeneralInfoGIFT =
-				this.m_segmentationParameters.getAnalyseParameters() + getResultsColumnNames();
+		this.inputDir = inputDir;
+		this.output = outputDir;
+		this.outputCropGeneralInfoOTSU =
+				this.segmentationParameters.getAnalysisParameters() + getResultsColumnNames();
+		this.outputCropGeneralInfoGIFT =
+				this.segmentationParameters.getAnalysisParameters() + getResultsColumnNames();
 	}
 	
 	
@@ -90,10 +90,10 @@ public class SegmentationCalling {
 	 * @param outputImg String of of the path to save the img of the segmented nucleus.
 	 */
 	public SegmentationCalling(ImagePlus img, short vMin, int vMax, String outputImg) {
-		this.m_segmentationParameters.setMinVolumeNucleus(vMin);
-		this.m_segmentationParameters.setMaxVolumeNucleus(vMax);
-		this._imgInput = img;
-		this._output = outputImg + File.separator + "Segmented" + this._imgInput.getTitle();
+		this.segmentationParameters.setMinVolumeNucleus(vMin);
+		this.segmentationParameters.setMaxVolumeNucleus(vMax);
+		this.imgInput = img;
+		this.output = outputImg + File.separator + "Segmented" + this.imgInput.getTitle();
 	}
 	
 	
@@ -105,9 +105,9 @@ public class SegmentationCalling {
 	 * @param vMax volume max of the detected object
 	 */
 	public SegmentationCalling(ImagePlus img, short vMin, int vMax) {
-		this.m_segmentationParameters.setMinVolumeNucleus(vMin);
-		this.m_segmentationParameters.setMaxVolumeNucleus(vMax);
-		this._imgInput = img;
+		this.segmentationParameters.setMinVolumeNucleus(vMin);
+		this.segmentationParameters.setMaxVolumeNucleus(vMax);
+		this.imgInput = img;
 	}
 	
 	
@@ -120,13 +120,13 @@ public class SegmentationCalling {
 	 * @param vMax      volume max of the detected object
 	 */
 	public SegmentationCalling(String inputDir, String outputDir, short vMin, int vMax) {
-		this.m_segmentationParameters.setMinVolumeNucleus(vMin);
-		this.m_segmentationParameters.setMaxVolumeNucleus(vMax);
-		this._inputDir = inputDir;
-		this._output = outputDir;
-		Directory dirOutput = new Directory(this._output);
+		this.segmentationParameters.setMinVolumeNucleus(vMin);
+		this.segmentationParameters.setMaxVolumeNucleus(vMax);
+		this.inputDir = inputDir;
+		this.output = outputDir;
+		Directory dirOutput = new Directory(this.output);
 		dirOutput.CheckAndCreateDir();
-		this._output = dirOutput.getDirPath();
+		this.output = dirOutput.getDirPath();
 	}
 	
 	
@@ -140,11 +140,11 @@ public class SegmentationCalling {
 	 * detected a log message is print in teh console
 	 */
 	public int runOneImage() throws Exception {
-		ImagePlus imgSeg = this._imgInput;
+		ImagePlus imgSeg = this.imgInput;
 		NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(imgSeg,
-		                                                                  this.m_segmentationParameters.getMinVolumeNucleus(),
-		                                                                  this.m_segmentationParameters.getMaxVolumeNucleus(),
-		                                                                  this.m_segmentationParameters);
+		                                                                  this.segmentationParameters.getMinVolumeNucleus(),
+		                                                                  this.segmentationParameters.getMaxVolumeNucleus(),
+		                                                                  this.segmentationParameters);
 		
 		Calibration cal = imgSeg.getCalibration();
 		if (imgSeg.getType() == ImagePlus.GRAY16) {
@@ -154,24 +154,24 @@ public class SegmentationCalling {
 		imgSeg = nucleusSegmentation.applySegmentation(imgSeg);
 		if (nucleusSegmentation.getBestThreshold() == -1) {
 			System.out.println("Segmentation error: \nNo object is detected between " +
-			                   this.m_segmentationParameters.getMinVolumeNucleus() +
+			                   this.segmentationParameters.getMinVolumeNucleus() +
 			                   "and" +
-			                   this.m_segmentationParameters.getMaxVolumeNucleus());
+			                   this.segmentationParameters.getMaxVolumeNucleus());
 		} else {
 			System.out.println("otsu modified threshold: " + nucleusSegmentation.getBestThreshold() + "\n");
-			if (this.m_segmentationParameters.getGiftWrapping()) {
+			if (this.segmentationParameters.getGiftWrapping()) {
 				ConvexHullSegmentation nuc = new ConvexHullSegmentation();
-				imgSeg = nuc.runGIFTWrapping(imgSeg, this.m_segmentationParameters);
+				imgSeg = nuc.runGIFTWrapping(imgSeg, this.segmentationParameters);
 			}
-			imgSeg.setTitle(this._output);
-			if (!this._output.equals("")) {
-				saveFile(imgSeg, this._output);
+			imgSeg.setTitle(this.output);
+			if (!this.output.equals("")) {
+				saveFile(imgSeg, this.output);
 			}
 			NucleusAnalysis nucleusAnalysis =
-					new NucleusAnalysis(this._imgInput, imgSeg, this.m_segmentationParameters);
+					new NucleusAnalysis(this.imgInput, imgSeg, this.segmentationParameters);
 			// System.out.println(nucleusAnalysis.nucleusParameter3D());
 		}
-		this._imgSeg = imgSeg;
+		this.imgSeg = imgSeg;
 		return nucleusSegmentation.getBestThreshold();
 	}
 	
@@ -182,7 +182,7 @@ public class SegmentationCalling {
 	 * @return
 	 */
 	public ImagePlus getImageSegmented() {
-		return this._imgSeg;
+		return this.imgSeg;
 	}
 	
 	
@@ -203,14 +203,14 @@ public class SegmentationCalling {
 	 */
 	public String runSeveralImages2() throws Exception {
 		String    log            = "";
-		Directory directoryInput = new Directory(this.m_segmentationParameters.getInputFolder());
-		directoryInput.listImageFiles(this.m_segmentationParameters.getInputFolder());
+		Directory directoryInput = new Directory(this.segmentationParameters.getInputFolder());
+		directoryInput.listImageFiles(this.segmentationParameters.getInputFolder());
 		directoryInput.checkIfEmpty();
 		for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
 			File       currentFile      = directoryInput.getFile(i);
 			String     fileImg          = currentFile.toString();
 			FilesNames outPutFilesNames = new FilesNames(fileImg);
-			this._prefix = outPutFilesNames.prefixNameFile();
+			this.prefix = outPutFilesNames.prefixNameFile();
 			System.out.println("Current image in process " + currentFile);
 			
 			String timeStampStart =
@@ -218,32 +218,32 @@ public class SegmentationCalling {
 			System.out.println("Start :" + timeStampStart);
 			
 			NucleusSegmentation nucleusSegmentation =
-					new NucleusSegmentation(currentFile, this._prefix, this.m_segmentationParameters);
+					new NucleusSegmentation(currentFile, this.prefix, this.segmentationParameters);
 			nucleusSegmentation.preProcessImage();
 			nucleusSegmentation.findOTSUMaximisingSphericity();
-			nucleusSegmentation.checkBadCrop(this.m_segmentationParameters.m_inputFolder);
+			nucleusSegmentation.checkBadCrop(this.segmentationParameters.inputFolder);
 			nucleusSegmentation.saveOTSUSegmented();
-			this.m_outputCropGeneralInfoOTSU += nucleusSegmentation.getImageCropInfoOTSU();
+			this.outputCropGeneralInfoOTSU += nucleusSegmentation.getImageCropInfoOTSU();
 			nucleusSegmentation.saveGiftWrappingSeg();
-			this.m_outputCropGeneralInfoGIFT += nucleusSegmentation.getImageCropInfoGIFT();
+			this.outputCropGeneralInfoGIFT += nucleusSegmentation.getImageCropInfoGIFT();
 			
 			timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
 			System.out.println("Fin :" + timeStampStart);
 			
 		}
-		OutputTextFile resultFileOutputOTSU = new OutputTextFile(this.m_segmentationParameters.getOutputFolder()
+		OutputTextFile resultFileOutputOTSU = new OutputTextFile(this.segmentationParameters.getOutputFolder()
 		                                                         + directoryInput.getSeparator()
 		                                                         + "OTSU"
 		                                                         + directoryInput.getSeparator()
 		                                                         + "result_Segmentation_Analyse_OTSU.csv");
-		resultFileOutputOTSU.saveTextFile(this.m_outputCropGeneralInfoOTSU, true);
-		if (this.m_segmentationParameters.getGiftWrapping()) {
-			OutputTextFile resultFileOutputGIFT = new OutputTextFile(this.m_segmentationParameters.getOutputFolder()
+		resultFileOutputOTSU.saveTextFile(this.outputCropGeneralInfoOTSU, true);
+		if (this.segmentationParameters.getGiftWrapping()) {
+			OutputTextFile resultFileOutputGIFT = new OutputTextFile(this.segmentationParameters.getOutputFolder()
 			                                                         + directoryInput.getSeparator()
 			                                                         + "GIFT"
 			                                                         + directoryInput.getSeparator()
 			                                                         + "result_Segmentation_Analyse_GIFT.csv");
-			resultFileOutputGIFT.saveTextFile(this.m_outputCropGeneralInfoGIFT, true);
+			resultFileOutputGIFT.saveTextFile(this.outputCropGeneralInfoGIFT, true);
 		}
 		
 		return log;
@@ -255,20 +255,20 @@ public class SegmentationCalling {
 		File       currentFile      = new File(filePath);
 		String     fileImg          = currentFile.toString();
 		FilesNames outPutFilesNames = new FilesNames(fileImg);
-		this._prefix = outPutFilesNames.prefixNameFile();
+		this.prefix = outPutFilesNames.prefixNameFile();
 		System.out.println("Current image in process " + currentFile);
 		
 		String timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
 		System.out.println("Start :" + timeStampStart);
 		NucleusSegmentation nucleusSegmentation =
-				new NucleusSegmentation(currentFile, this._prefix, this.m_segmentationParameters);
+				new NucleusSegmentation(currentFile, this.prefix, this.segmentationParameters);
 		nucleusSegmentation.preProcessImage();
 		nucleusSegmentation.findOTSUMaximisingSphericity();
-		nucleusSegmentation.checkBadCrop(this.m_segmentationParameters.m_inputFolder);
+		nucleusSegmentation.checkBadCrop(this.segmentationParameters.inputFolder);
 		nucleusSegmentation.saveOTSUSegmented();
-		this.m_outputCropGeneralInfoOTSU += nucleusSegmentation.getImageCropInfoOTSU();
+		this.outputCropGeneralInfoOTSU += nucleusSegmentation.getImageCropInfoOTSU();
 		nucleusSegmentation.saveGiftWrappingSeg();
-		this.m_outputCropGeneralInfoGIFT += nucleusSegmentation.getImageCropInfoGIFT();
+		this.outputCropGeneralInfoGIFT += nucleusSegmentation.getImageCropInfoGIFT();
 		
 		timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
 		System.out.println("Fin :" + timeStampStart);
@@ -276,7 +276,7 @@ public class SegmentationCalling {
 	}
 	
 	
-	public String runOneImageOmero(ImageWrapper image, Long output, Client client) throws Exception {
+	public String runOneImageOMERO(ImageWrapper image, Long output, Client client) throws Exception {
 		String log = "";
 		
 		String fileImg = image.getName();
@@ -284,15 +284,15 @@ public class SegmentationCalling {
 		
 		String timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
 		System.out.println("Start :" + timeStampStart);
-		NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(image, this.m_segmentationParameters, client);
+		NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(image, this.segmentationParameters, client);
 		nucleusSegmentation.preProcessImage();
 		nucleusSegmentation.findOTSUMaximisingSphericity();
 		nucleusSegmentation.checkBadCrop(image, client);
 		
-		nucleusSegmentation.saveOTSUSegmentedOmero(client, output);
-		this.m_outputCropGeneralInfoOTSU += nucleusSegmentation.getImageCropInfoOTSU();
-		nucleusSegmentation.saveGiftWrappingSegOmero(client, output);
-		this.m_outputCropGeneralInfoGIFT += nucleusSegmentation.getImageCropInfoGIFT();
+		nucleusSegmentation.saveOTSUSegmentedOMERO(client, output);
+		this.outputCropGeneralInfoOTSU += nucleusSegmentation.getImageCropInfoOTSU();
+		nucleusSegmentation.saveGiftWrappingSegOMERO(client, output);
+		this.outputCropGeneralInfoGIFT += nucleusSegmentation.getImageCropInfoGIFT();
 		
 		timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
 		System.out.println("Fin :" + timeStampStart);
@@ -301,11 +301,11 @@ public class SegmentationCalling {
 	}
 	
 	
-	public String runSeveralImageOmero(List<ImageWrapper> images, Long output, Client client) throws Exception {
+	public String runSeveralImageOMERO(List<ImageWrapper> images, Long output, Client client) throws Exception {
 		StringBuilder log = new StringBuilder();
 		
 		for (ImageWrapper image : images) {
-			log.append(runOneImageOmero(image, output, client));
+			log.append(runOneImageOMERO(image, output, client));
 		}
 		
 		DatasetWrapper dataset = client.getProject(output).getDatasets("OTSU").get(0);
@@ -313,17 +313,17 @@ public class SegmentationCalling {
 		String path =
 				new java.io.File(".").getCanonicalPath() + dataset.getName() + "result_Segmentation_Analyse.csv";
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(path);
-		resultFileOutputOTSU.saveTextFile(this.m_outputCropGeneralInfoOTSU, false);
+		resultFileOutputOTSU.saveTextFile(this.outputCropGeneralInfoOTSU, false);
 		
 		File file = new File(path);
 		dataset.addFile(client, file);
 		boolean deleted = file.delete();
 		if (!deleted) System.err.println("File not deleted: " + path);
 		
-		if (this.m_segmentationParameters.getGiftWrapping()) {
+		if (this.segmentationParameters.getGiftWrapping()) {
 			dataset = client.getProject(output).getDatasets("GIFT").get(0);
 			OutputTextFile resultFileOutputGIFT = new OutputTextFile(path);
-			resultFileOutputGIFT.saveTextFile(this.m_outputCropGeneralInfoGIFT, false);
+			resultFileOutputGIFT.saveTextFile(this.outputCropGeneralInfoGIFT, false);
 			
 			file = new File(path);
 			dataset.addFile(client, file);
@@ -335,7 +335,7 @@ public class SegmentationCalling {
 	}
 	
 	
-	public String runOneImageOmeroROI(ImageWrapper image, Long output, Client client) throws Exception {
+	public String runOneImageOMERObyROIs(ImageWrapper image, Long output, Client client) throws Exception {
 		
 		List<ROIWrapper> rois = image.getROIs(client);
 		
@@ -353,17 +353,17 @@ public class SegmentationCalling {
 			System.out.println("Current ROI in process : " + i);
 			
 			NucleusSegmentation nucleusSegmentation =
-					new NucleusSegmentation(image, roi, i, this.m_segmentationParameters, client);
+					new NucleusSegmentation(image, roi, i, this.segmentationParameters, client);
 			nucleusSegmentation.preProcessImage();
 			nucleusSegmentation.findOTSUMaximisingSphericity();
 			nucleusSegmentation.checkBadCrop(roi, client);
 			
 			
-			nucleusSegmentation.saveOTSUSegmentedOmero(client, output);
-			this.m_outputCropGeneralInfoOTSU += nucleusSegmentation.getImageCropInfoOTSU();
+			nucleusSegmentation.saveOTSUSegmentedOMERO(client, output);
+			this.outputCropGeneralInfoOTSU += nucleusSegmentation.getImageCropInfoOTSU();
 			
-			nucleusSegmentation.saveGiftWrappingSegOmero(client, output);
-			this.m_outputCropGeneralInfoGIFT += nucleusSegmentation.getImageCropInfoGIFT();
+			nucleusSegmentation.saveGiftWrappingSegOMERO(client, output);
+			this.outputCropGeneralInfoGIFT += nucleusSegmentation.getImageCropInfoGIFT();
 			
 			i++;
 		}
@@ -375,17 +375,17 @@ public class SegmentationCalling {
 		String path =
 				new java.io.File(".").getCanonicalPath() + "result_Segmentation_Analyse.csv";
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(path);
-		resultFileOutputOTSU.saveTextFile(this.m_outputCropGeneralInfoOTSU, false);
+		resultFileOutputOTSU.saveTextFile(this.outputCropGeneralInfoOTSU, false);
 		
 		File file = new File(path);
 		dataset.addFile(client, file);
 		boolean deleted = file.delete();
 		if (!deleted) System.err.println("File not deleted: " + path);
 		
-		if (this.m_segmentationParameters.getGiftWrapping()) {
+		if (this.segmentationParameters.getGiftWrapping()) {
 			dataset = client.getProject(output).getDatasets("GIFT").get(0);
 			OutputTextFile resultFileOutputGIFT = new OutputTextFile(path);
-			resultFileOutputGIFT.saveTextFile(this.m_outputCropGeneralInfoGIFT, false);
+			resultFileOutputGIFT.saveTextFile(this.outputCropGeneralInfoGIFT, false);
 			
 			file = new File(path);
 			dataset.addFile(client, file);
@@ -397,11 +397,11 @@ public class SegmentationCalling {
 	}
 	
 	
-	public String runSeveralImageOmeroROI(List<ImageWrapper> images, Long output, Client client) throws Exception {
+	public String runSeveralImageOMERObyROIs(List<ImageWrapper> images, Long output, Client client) throws Exception {
 		StringBuilder log = new StringBuilder();
 		
 		for (ImageWrapper image : images) {
-			log.append(runOneImageOmeroROI(image, output, client));
+			log.append(runOneImageOMERObyROIs(image, output, client));
 		}
 		
 		return log.toString();

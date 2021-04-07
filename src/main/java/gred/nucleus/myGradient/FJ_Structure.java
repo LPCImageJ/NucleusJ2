@@ -23,7 +23,7 @@ public class FJ_Structure implements PlugIn, WindowListener {
 	private static String smoothingScale   = "1.0";
 	private static String integrationScale = "3.0";
 	
-	private static Point pos = new Point(-1, -1);
+	private static final Point pos = new Point(-1, -1);
 	
 	
 	public void run(String arg) {

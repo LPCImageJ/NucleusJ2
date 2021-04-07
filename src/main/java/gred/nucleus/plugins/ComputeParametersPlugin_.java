@@ -9,9 +9,9 @@ import ij.plugin.PlugIn;
 public class ComputeParametersPlugin_ implements PlugIn {
 	/** Run computing parameters method. */
 	public void run(String arg) {
-		ComputeParametersDialog _computeParametersDialog = new ComputeParametersDialog();
+		ComputeParametersDialog computeParametersDialog = new ComputeParametersDialog();
 		
-		while (_computeParametersDialog.isShowing()) {
+		while (computeParametersDialog.isShowing()) {
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
@@ -19,22 +19,22 @@ public class ComputeParametersPlugin_ implements PlugIn {
 			}
 		}
 		try {
-			if (_computeParametersDialog.isStart()) {
-				if (_computeParametersDialog.getCalibrationStatus()) {
+			if (computeParametersDialog.isStart()) {
+				if (computeParametersDialog.getCalibrationStatus()) {
 					Calibration calibration = new Calibration();
-					calibration.pixelDepth = _computeParametersDialog.getZCalibration();
-					calibration.pixelWidth = _computeParametersDialog.getXCalibration();
-					calibration.pixelHeight = _computeParametersDialog.getYCalibration();
-					calibration.setUnit(_computeParametersDialog.getUnit());
+					calibration.pixelDepth = computeParametersDialog.getZCalibration();
+					calibration.pixelWidth = computeParametersDialog.getXCalibration();
+					calibration.pixelHeight = computeParametersDialog.getYCalibration();
+					calibration.setUnit(computeParametersDialog.getUnit());
 					ComputeNucleiParameters generateParameters = new ComputeNucleiParameters(
-							_computeParametersDialog.getRawDataDirectory(),
-							_computeParametersDialog.getWorkDirectory(),
+							computeParametersDialog.getRawDataDirectory(),
+							computeParametersDialog.getWorkDirectory(),
 							calibration);
 					generateParameters.run();
 				} else {
 					ComputeNucleiParameters generateParameters = new ComputeNucleiParameters(
-							_computeParametersDialog.getRawDataDirectory(),
-							_computeParametersDialog.getWorkDirectory());
+							computeParametersDialog.getRawDataDirectory(),
+							computeParametersDialog.getWorkDirectory());
 					generateParameters.run();
 				}
 			}

@@ -14,17 +14,17 @@ import java.util.HashMap;
  */
 public class Histogram {
 	/** HashMap which stock the different values of voxels and the number of voxels for each value present on the image */
-	private final HashMap<Double, Integer> _hHistogram = new HashMap<>();
+	private final HashMap<Double, Integer> hHistogram = new HashMap<>();
 	/** All the value present on the image */
-	private       double[]                 _label;
+	private       double[]                 label;
 	/**
 	 *
 	 */
-	private       double                   _labelMax   = -1;
+	private       double                   labelMax   = -1;
 	/**
 	 *
 	 */
-	private       int                      _nbLabel    = 0;
+	private       int                      nbLabel    = 0;
 	
 	
 	/**
@@ -37,13 +37,13 @@ public class Histogram {
 	/** @param imagePlusInput  */
 	public void run(ImagePlus imagePlusInput) {
 		Object[] tTemp = computeHistogram(imagePlusInput).keySet().toArray();
-		_label = new double[tTemp.length];
+		label = new double[tTemp.length];
 		for (int i = 0; i < tTemp.length; ++i) {
-			_label[i] = Double.parseDouble(tTemp[i].toString());
+			label[i] = Double.parseDouble(tTemp[i].toString());
 		}
-		Arrays.sort(_label);
-		if (_nbLabel > 0) {
-			_labelMax = _label[_label.length - 1];
+		Arrays.sort(label);
+		if (nbLabel > 0) {
+			labelMax = label[label.length - 1];
 		}
 	}
 	
@@ -63,19 +63,19 @@ public class Histogram {
 				for (int j = 0; j < imagePlusInput.getHeight(); ++j) {
 					voxelValue = imageStackInput.getVoxel(i, j, k);
 					if (voxelValue > 0) {
-						if (_hHistogram.containsKey(voxelValue)) {
-							int nbVoxel = _hHistogram.get(voxelValue);
+						if (hHistogram.containsKey(voxelValue)) {
+							int nbVoxel = hHistogram.get(voxelValue);
 							++nbVoxel;
-							_hHistogram.put(voxelValue, nbVoxel);
+							hHistogram.put(voxelValue, nbVoxel);
 						} else {
-							_hHistogram.put(voxelValue, 1);
-							++_nbLabel;
+							hHistogram.put(voxelValue, 1);
+							++nbLabel;
 						}
 					}
 				}
 			}
 		}
-		return _hHistogram;
+		return hHistogram;
 	}
 	
 	
@@ -85,25 +85,25 @@ public class Histogram {
 	 * @return
 	 */
 	public double[] getLabels() {
-		return _label;
+		return label;
 	}
 	
 	
 	/** @return  */
 	public HashMap<Double, Integer> getHistogram() {
-		return _hHistogram;
+		return hHistogram;
 	}
 	
 	
 	/** @return  */
 	public double getLabelMax() {
-		return _labelMax;
+		return labelMax;
 	}
 	
 	
 	/** @return  */
 	public int getNbLabels() {
-		return _nbLabel;
+		return nbLabel;
 	}
 	
 }

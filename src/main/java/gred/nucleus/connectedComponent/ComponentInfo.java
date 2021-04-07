@@ -20,26 +20,26 @@ import gred.nucleus.utils.Voxel;
 public class ComponentInfo {
 	
 	/** Label (ID) of the connected component (i.e. color in the labels image array) */
-	private int m_label;
+	private int label;
 	
 	/**
 	 * Cardinality of the connected component. Can be zero if the connected component has been filtered out (e.g.
 	 * threshold size or border components exclusion)
 	 */
-	private int m_numberOfPoints;
+	private int numberOfPoints;
 	
 	/**
 	 * Voxel representative of the component (one voxel in the component) Currently, this representative has minimal
 	 * depth Z
 	 * <p> TODO extend usage using a comparison predicate possibly other that comparing depth.
 	 */
-	private Voxel m_voxelRepresentant;
+	private final Voxel voxelRepresentant;
 	
 	/**
 	 * Flag indicating whether the connected component touches the edge of the image. (allows filtering out connected
 	 * component which touch the edge of the image.)
 	 */
-	private boolean m_componentOnTheBorder;
+	private boolean componentOnTheBorder;
 	
 	
 	/**
@@ -52,10 +52,10 @@ public class ComponentInfo {
 	 *                             image.
 	 */
 	public ComponentInfo(int label, int numberOfPoints, Voxel voxelRepresentant, boolean componentOnTheBorder) {
-		this.m_label = label;
-		this.m_numberOfPoints = numberOfPoints;
-		this.m_voxelRepresentant = voxelRepresentant;
-		this.m_componentOnTheBorder = componentOnTheBorder;
+		this.label = label;
+		this.numberOfPoints = numberOfPoints;
+		this.voxelRepresentant = voxelRepresentant;
+		this.componentOnTheBorder = componentOnTheBorder;
 	}
 	
 	
@@ -65,7 +65,7 @@ public class ComponentInfo {
 	 * @return the label of the component
 	 */
 	public int getLabel() {
-		return this.m_label;
+		return this.label;
 	}
 	
 	
@@ -75,7 +75,7 @@ public class ComponentInfo {
 	 * @param label the label to use
 	 */
 	public void setLabel(int label) {
-		this.m_label = label;
+		this.label = label;
 	}
 	
 	
@@ -85,7 +85,7 @@ public class ComponentInfo {
 	 * @return the cardinality of the component
 	 */
 	public int getNumberOfPoints() {
-		return this.m_numberOfPoints;
+		return this.numberOfPoints;
 	}
 	
 	
@@ -95,13 +95,13 @@ public class ComponentInfo {
 	 * @param numberOfPoints the cardinality to set
 	 */
 	public void setNumberOfPoints(int numberOfPoints) {
-		this.m_numberOfPoints = numberOfPoints;
+		this.numberOfPoints = numberOfPoints;
 	}
 	
 	
 	/** Increments the cardinality */
 	public void incrementNumberOfPoints() {
-		this.m_numberOfPoints++;
+		this.numberOfPoints++;
 	}
 	
 	
@@ -111,7 +111,7 @@ public class ComponentInfo {
 	 * @return returns the component's flag indicating whether the component is on the border.
 	 */
 	public boolean isOnTheBorder() {
-		return this.m_componentOnTheBorder;
+		return this.componentOnTheBorder;
 	}
 	
 	
@@ -121,13 +121,13 @@ public class ComponentInfo {
 	 * @return the voxel representative of the component (one voxel in the component)
 	 */
 	public Voxel getRepresentant() {
-		return this.m_voxelRepresentant;
+		return this.voxelRepresentant;
 	}
 	
 	
 	/** Sets to true the flag indicating whether the component is on the border. */
 	public void setOnTheeBorder() {
-		this.m_componentOnTheBorder = true;
+		this.componentOnTheBorder = true;
 	}
 	
 	
@@ -138,7 +138,7 @@ public class ComponentInfo {
 	 */
 	@Override
 	public String toString() {
-		return "Component label : " + this.m_label + ", Number of points : " + this.m_numberOfPoints;
+		return "Component label : " + this.label + ", Number of points : " + this.numberOfPoints;
 	}
 	
 } // end of class ComponentInfo

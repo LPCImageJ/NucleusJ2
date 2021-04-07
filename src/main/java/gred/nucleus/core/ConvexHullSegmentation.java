@@ -15,7 +15,7 @@ import ij.ImageStack;
 public class ConvexHullSegmentation {
 	
 	
-	private SegmentationParameters m_segmentationParameters;
+	private SegmentationParameters segmentationParameters;
 	
 	
 	/**

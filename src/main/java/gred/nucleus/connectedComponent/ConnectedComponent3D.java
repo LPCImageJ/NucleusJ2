@@ -57,7 +57,12 @@ public class ConnectedComponent3D extends ConnectedComponent {
 			short jV               = polledVoxelShort.getY();
 			short kV               = polledVoxelShort.getZ();
 			// Determine the neighborhood taking into account the image's boundaries
-			short iMin, iMax, jMin, jMax, kMin, kMax;
+			short iMin;
+			short iMax;
+			short jMin;
+			short jMax;
+			short kMin;
+			short kMax;
 			if (iV - 1 >= 0) {
 				iMin = (short) (iV - 1);
 			} else {
@@ -77,33 +82,33 @@ public class ConnectedComponent3D extends ConnectedComponent {
 				componentInfo.setOnTheeBorder();
 			}
 			
-			if (iV + 1 < this.m_inputImage.getWidth()) {
+			if (iV + 1 < this.inputImage.getWidth()) {
 				iMax = (short) (iV + 1);
 			} else {
-				iMax = (short) (this.m_inputImage.getWidth() - 1);
+				iMax = (short) (this.inputImage.getWidth() - 1);
 				componentInfo.setOnTheeBorder();
 			}
-			if (jV + 1 < this.m_inputImage.getHeight()) {
+			if (jV + 1 < this.inputImage.getHeight()) {
 				jMax = (short) (jV + 1);
 			} else {
-				jMax = (short) (this.m_inputImage.getHeight() - 1);
+				jMax = (short) (this.inputImage.getHeight() - 1);
 				componentInfo.setOnTheeBorder();
 			}
-			if (kV + 1 < this.m_inputImage.getNSlices()) {
+			if (kV + 1 < this.inputImage.getNSlices()) {
 				kMax = (short) (kV + 1);
 			} else {
-				kMax = (short) (this.m_inputImage.getNSlices() - 1);
+				kMax = (short) (this.inputImage.getNSlices() - 1);
 				componentInfo.setOnTheeBorder();
 			}
-			ImageStack imageStack = m_inputImage.getStack();
+			ImageStack imageStack = inputImage.getStack();
 			// For each neighbor :
 			for (short kk = kMin; kk <= kMax; kk++) {
-				//this.m_inputImage.setCurrentSlice(kk);
+				//this.inputImage.setCurrentSlice(kk);
 				for (short ii = iMin; ii <= iMax; ii++) {
 					for (short jj = jMin; jj <= jMax; jj++) {
 						// If the neighbor (different from VoxelRecordShort) is a 1 and not labeled
 						if ((getLabel(ii, jj, kk) == 0) &&
-						    (imageStack.getVoxel(ii, jj, kk) == this.m_foregroundColor)) {
+						    (imageStack.getVoxel(ii, jj, kk) == this.foregroundColor)) {
 							// Set the voxel's label
 							setLabel(ii, jj, kk, currentLabel);
 							componentInfo.incrementNumberOfPoints(); // increment component's cardinality					
@@ -123,23 +128,23 @@ public class ConnectedComponent3D extends ConnectedComponent {
 	
 	
 	/**
-	 * labels the connected components of the input image (attribute m_ip)
+	 * labels the connected components of the input image (attribute ip)
 	 *
 	 * @throws Exception
 	 */
 	@Override
 	public void doLabelConnectedComponent() throws Exception {
 		int        currentLabel = 0;
-		ImageStack imageStack   = m_inputImage.getStack();
-		for (short k = 0; k < this.m_inputImage.getNSlices(); k++) {
-			for (short i = 0; i < this.m_inputImage.getWidth(); i++) {
-				for (short j = 0; j < this.m_inputImage.getHeight(); j++) {
-					if (imageStack.getVoxel(i, j, k) == this.m_foregroundColor && getLabel(i, j, k) == 0) {
+		ImageStack imageStack   = inputImage.getStack();
+		for (short k = 0; k < this.inputImage.getNSlices(); k++) {
+			for (short i = 0; i < this.inputImage.getWidth(); i++) {
+				for (short j = 0; j < this.inputImage.getHeight(); j++) {
+					if (imageStack.getVoxel(i, j, k) == this.foregroundColor && getLabel(i, j, k) == 0) {
 						currentLabel++;
 						if (currentLabel == Integer.MAX_VALUE) {
 							throw new Exception("Too many connected components.");
 						}
-						this.m_labels[i][j][k] = currentLabel;
+						this.labels[i][j][k] = currentLabel;
 						//System.out.println("doLabelConnectedComponent "+currentLabel);
 						ComponentInfo componentInfo = new ComponentInfo(
 								currentLabel,
@@ -153,7 +158,7 @@ public class ConnectedComponent3D extends ConnectedComponent {
 							e.printStackTrace();
 							System.exit(0);
 						}
-						this.m_compInfo.add(componentInfo);
+						this.compInfo.add(componentInfo);
 						//System.gc();
 					}
 				}

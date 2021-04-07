@@ -12,7 +12,7 @@ public class SegmentationImageIntegrationCheck {
 	
 	/*
 	 
-	  @param img
+	 * @param img
 	 * @param vMin
 	 * @param vMax
 	 * @param outputImgString
@@ -77,10 +77,10 @@ public class SegmentationImageIntegrationCheck {
 		pathToTest+"/SEGMENTATION_RESULTS/PB_RADIUS_CONVEXHULL");
 		*/
 		OutputFileVerification fw = new OutputFileVerification(pathToExpected, pathToTest);
-		fw.GetFileResultExpected(pathToExpected);
+		fw.getFileResultExpected(pathToExpected);
 		//fw.GetFilesOutputFolder(pathToTest);
-		fw.GetFilesResultingOfAnalysis(pathToTest);
-		fw.CompareAnalysisResult();
+		fw.getFilesResultingOfAnalysis(pathToTest);
+		fw.compareAnalysisResult();
         /*
         OutputFileVerification fw = new OutputFileVerification();
         fw.GetFileResultExpected(ExpectedResult);

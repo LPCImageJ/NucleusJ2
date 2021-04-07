@@ -15,7 +15,7 @@ import ij.plugin.PlugIn;
  */
 public class NucleusAnalysis_ implements PlugIn {
 	/** image to process */
-	ImagePlus _imagePlusInput;
+	ImagePlus imagePlusInput;
 	
 	
 	/**
@@ -26,7 +26,9 @@ public class NucleusAnalysis_ implements PlugIn {
 	public void run(String arg) {
 		int    indexRawImage      = 0;
 		int    indexSementedImage = 0;
-		double xCalibration       = 1, yCalibration = 1, zCalibration = 1;
+		double xCalibration       = 1;
+		double yCalibration       = 1;
+		double zCalibration       = 1;
 		String unit               = "pixel";
 		int[]  wList              = WindowManager.getIDList();
 		if (wList == null) {

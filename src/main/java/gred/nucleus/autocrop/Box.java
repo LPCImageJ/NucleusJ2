@@ -9,17 +9,17 @@ package gred.nucleus.autocrop;
  */
 public class Box {
 	/** The coordinate x min of the Box */
-	private short m_xMin;
+	private short xMin;
 	/** The coordinate x max of the Box */
-	private short m_xMax;
+	private short xMax;
 	/** The coordinate y min of the Box */
-	private short m_yMin;
+	private short yMin;
 	/** The coordinate y max of the Box */
-	private short m_yMax;
+	private short yMax;
 	/** The coordinate z min of the Box */
-	private short m_zMin;
+	private short zMin;
 	/** The coordinate z max of the Box */
-	private short m_zMax;
+	private short zMax;
 	
 	
 	/**
@@ -34,108 +34,108 @@ public class Box {
 	 */
 	public Box(short xMin, short xMax, short yMin, short yMax, short zMin,
 	           short zMax) {
-		this.m_xMin = xMin;
-		this.m_xMax = xMax;
-		this.m_yMin = yMin;
-		this.m_yMax = yMax;
-		this.m_zMin = zMin;
-		this.m_zMax = zMax;
+		this.xMin = xMin;
+		this.xMax = xMax;
+		this.yMin = yMin;
+		this.yMax = yMax;
+		this.zMin = zMin;
+		this.zMax = zMax;
 	}
 	
 	
 	/**
 	 * Returns minimal value of the x coordinate in the box
 	 *
-	 * @return the m_xMin
+	 * @return the xMin
 	 */
 	public short getXMin() {
-		return this.m_xMin;
+		return this.xMin;
 	}
 	
 	
-	/** @param xMin the m_xMin to set */
+	/** @param xMin the xMin to set */
 	public void setXMin(short xMin) {
-		this.m_xMin = xMin;
+		this.xMin = xMin;
 	}
 	
 	
 	/**
 	 * Returns maximal value of the x coordinate in the box
 	 *
-	 * @return the m_xMax
+	 * @return the xMax
 	 */
 	public short getXMax() {
-		return this.m_xMax;
+		return this.xMax;
 	}
 	
 	
-	/** @param xMax the m_xMax to set */
+	/** @param xMax the xMax to set */
 	public void setXMax(short xMax) {
-		this.m_xMax = xMax;
+		this.xMax = xMax;
 	}
 	
 	
 	/**
 	 * Returns minimal value of the y coordinate in the box
 	 *
-	 * @return the m_yMin
+	 * @return the yMin
 	 */
 	public short getYMin() {
-		return this.m_yMin;
+		return this.yMin;
 	}
 	
 	
-	/** @param yMin the m_yMin to set */
+	/** @param yMin the yMin to set */
 	public void setYMin(short yMin) {
-		this.m_yMin = yMin;
+		this.yMin = yMin;
 	}
 	
 	
 	/**
 	 * Returns maximal value of the y coordinate in the box
 	 *
-	 * @return the m_yMax
+	 * @return the yMax
 	 */
 	public short getYMax() {
-		return this.m_yMax;
+		return this.yMax;
 	}
 	
 	
-	/** @param yMax the m_yMax to set */
+	/** @param yMax the yMax to set */
 	public void setYMax(short yMax) {
-		this.m_yMax = yMax;
+		this.yMax = yMax;
 	}
 	
 	
 	/**
 	 * returns minimal value of the z coordinate in the box
 	 *
-	 * @return the m_zMin
+	 * @return the zMin
 	 */
 	public short getZMin() {
-		return this.m_zMin;
+		return this.zMin;
 	}
 	
 	
-	/** @param zMin the m_zMin to set */
+	/** @param zMin the zMin to set */
 	public void setZMin(short zMin) {
-		this.m_zMin = zMin;
+		this.zMin = zMin;
 	}
 	
 	
 	/**
 	 * Returns maximal value of the z coordinate in the box
 	 *
-	 * @return the m_zMax
+	 * @return the zMax
 	 */
 	public short getZMax() {
-		return this.m_zMax;
+		return this.zMax;
 	}
 	
 	
-	/** @param zMax the m_zMax to set */
+	/** @param zMax the zMax to set */
 	public void setZMax(short zMax) {
-		this.m_zMax = zMax;
+		this.zMax = zMax;
 	}
 	
 }

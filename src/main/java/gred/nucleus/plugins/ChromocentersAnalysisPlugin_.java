@@ -23,7 +23,9 @@ public class ChromocentersAnalysisPlugin_ implements PlugIn {
 		int    indexCcImage        = 0;
 		int    indexRawImage       = 0;
 		int    indexSegmentedImage = 0;
-		double xCalibration        = 1, yCalibration = 1, zCalibration = 1;
+		double xCalibration        = 1;
+		double yCalibration        = 1;
+		double zCalibration        = 1;
 		String unit                = "pixel";
 		int[]  wList               = WindowManager.getIDList();
 		if (wList == null) {

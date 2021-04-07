@@ -12,26 +12,26 @@ import static org.apache.commons.lang.Validate.isTrue;
 public class CLIActionOptionCmdLine extends CLIActionOptions {
 	
 	/** Path to output folder */
-	private final Option m_outputFolder = Option.builder("out")
-	                                            .longOpt("output")
-	                                            .type(String.class)
-	                                            .desc("Path to output results\n")
-	                                            .numberOfArgs(1)
-	                                            .build();
+	private final Option outputFolder = Option.builder("out")
+	                                          .longOpt("output")
+	                                          .type(String.class)
+	                                          .desc("Path to output results\n")
+	                                          .numberOfArgs(1)
+	                                          .build();
 	/** Path to second input folder Need in specific action */
-	private final Option m_inputFolder2 = Option.builder("in2")
-	                                            .longOpt("input2")
-	                                            .required()
-	                                            .type(String.class)
-	                                            .numberOfArgs(1)
-	                                            .build();
+	private final Option inputFolder2 = Option.builder("in2")
+	                                          .longOpt("input2")
+	                                          .required()
+	                                          .type(String.class)
+	                                          .numberOfArgs(1)
+	                                          .build();
 	/** Path to second input folder Need in specific action */
-	private final Option m_inputFolder3 = Option.builder("in3")
-	                                            .longOpt("input3")
-	                                            .required()
-	                                            .type(String.class)
-	                                            .numberOfArgs(1)
-	                                            .build();
+	private final Option inputFolder3 = Option.builder("in3")
+	                                          .longOpt("input3")
+	                                          .required()
+	                                          .type(String.class)
+	                                          .numberOfArgs(1)
+	                                          .build();
 	
 	
 	/**
@@ -39,23 +39,23 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
 	 */
 	public CLIActionOptionCmdLine(String[] args) {
 		super(args);
-		this.m_action.setDescription(this.m_action.getDescription() + "\n" +
-		                             "computeParameters : compute parameters \n" +
-		                             "computeParametersDL : compute parameters for machine leaning\n" +
-		                             "generateProjection : generate projection from coordinates\n" +
-		                             "CropFromCoordinate : crop wide-field image from coordinate\n" +
-		                             "GenerateOverlay : generate overlay from images \n");
+		this.action.setDescription(this.action.getDescription() + "\n" +
+		                           "computeParameters : compute parameters \n" +
+		                           "computeParametersDL : compute parameters for machine leaning\n" +
+		                           "generateProjection : generate projection from coordinates\n" +
+		                           "CropFromCoordinate : crop wide-field image from coordinate\n" +
+		                           "GenerateOverlay : generate overlay from images \n");
 		
 		checkSpecificOptions();
 		try {
-			this.m_cmd = this.m_parser.parse(this.m_options, args);
-			isTrue(CMDAvailableAction(this.m_cmd.getOptionValue("action")));
+			this.cmd = this.parser.parse(this.options, args);
+			isTrue(availableActionCMD(this.cmd.getOptionValue("action")));
 		} catch (ParseException exp) {
 			System.out.println(exp.getMessage() + "\n");
 			System.out.println(getHelperInfo());
 			System.exit(1);
 		} catch (Exception exp) {
-			System.out.println("Action option \"" + this.m_cmd.getOptionValue("action") + "\" not available" + "\n");
+			System.out.println("Action option \"" + this.cmd.getOptionValue("action") + "\" not available" + "\n");
 			System.out.println(getHelperInfo());
 			System.exit(1);
 		}
@@ -69,70 +69,70 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
 	 *
 	 * @return boolean existing action
 	 */
-	private static boolean CMDAvailableAction(String action) {
-		ArrayList<String> actionAvailableInOmero = new ArrayList<>();
-		actionAvailableInOmero.add("autocrop");
-		actionAvailableInOmero.add("segmentation");
-		actionAvailableInOmero.add("computeParameters");
-		actionAvailableInOmero.add("computeParametersDL");
-		actionAvailableInOmero.add("generateProjection");
-		actionAvailableInOmero.add("generateProjectionFiltered");
-		actionAvailableInOmero.add("CropFromCoordinate");
-		actionAvailableInOmero.add("GenerateOverlay");
-		return actionAvailableInOmero.contains(action);
+	private static boolean availableActionCMD(String action) {
+		ArrayList<String> actionAvailableInOMERO = new ArrayList<>();
+		actionAvailableInOMERO.add("autocrop");
+		actionAvailableInOMERO.add("segmentation");
+		actionAvailableInOMERO.add("computeParameters");
+		actionAvailableInOMERO.add("computeParametersDL");
+		actionAvailableInOMERO.add("generateProjection");
+		actionAvailableInOMERO.add("generateProjectionFiltered");
+		actionAvailableInOMERO.add("CropFromCoordinate");
+		actionAvailableInOMERO.add("GenerateOverlay");
+		return actionAvailableInOMERO.contains(action);
 	}
 	
 	
 	/** Method to check specific action parameters */
 	private void checkSpecificOptions() {
-		switch (this.m_cmd.getOptionValue("action")) {
+		switch (this.cmd.getOptionValue("action")) {
 			case "autocrop":
 			case "segmentation":
-				this.m_inputFolder.setDescription("Path to input folder containing images to analyse\n");
-				this.m_options.addOption(this.m_outputFolder);
+				this.inputFolder.setDescription("Path to input folder containing images to analyse\n");
+				this.options.addOption(this.outputFolder);
 				break;
 			
 			case "computeParameters":
-				this.m_inputFolder.setDescription("Path to input folder containing RAW images\n");
-				this.m_inputFolder2.setDescription("Path to input folder containing SEGMENTED images\n");
-				this.m_options.addOption(this.m_inputFolder2);
-				this.m_omero.setDescription("NOT AVAILABLE");
+				this.inputFolder.setDescription("Path to input folder containing RAW images\n");
+				this.inputFolder2.setDescription("Path to input folder containing SEGMENTED images\n");
+				this.options.addOption(this.inputFolder2);
+				this.omero.setDescription("NOT AVAILABLE");
 				break;
 			
 			case "computeParametersDL":
-				this.m_inputFolder.setDescription("Path to input folder containing RAW images\n");
-				this.m_inputFolder2.setDescription("Path to input folder containing machine leaning SEGMENTED images\n");
-				this.m_options.addOption(this.m_inputFolder2);
-				this.m_omero.setDescription("NOT AVAILABLE");
+				this.inputFolder.setDescription("Path to input folder containing RAW images\n");
+				this.inputFolder2.setDescription("Path to input folder containing machine leaning SEGMENTED images\n");
+				this.options.addOption(this.inputFolder2);
+				this.omero.setDescription("NOT AVAILABLE");
 				break;
 			
 			case "generateProjection":
-				this.m_inputFolder.setDescription("Path to input folder containing coordinates files\n");
-				this.m_inputFolder2.setDescription("Path to input folder containing raw data\n");
-				this.m_options.addOption(this.m_inputFolder2);
-				this.m_omero.setDescription("NOT AVAILABLE");
+				this.inputFolder.setDescription("Path to input folder containing coordinates files\n");
+				this.inputFolder2.setDescription("Path to input folder containing raw data\n");
+				this.options.addOption(this.inputFolder2);
+				this.omero.setDescription("NOT AVAILABLE");
 				break;
 			
 			case "generateProjectionFiltered":
-				this.m_inputFolder.setDescription("Path to input folder containing coordinates files\n");
-				this.m_inputFolder2.setDescription(
+				this.inputFolder.setDescription("Path to input folder containing coordinates files\n");
+				this.inputFolder2.setDescription(
 						"Path to input folder containing kept images after segmentation filter\n");
-				this.m_inputFolder3.setDescription("Path to input folder containing initial Zprojection\n");
-				this.m_options.addOption(this.m_inputFolder2);
-				this.m_options.addOption(this.m_inputFolder3);
-				this.m_omero.setDescription("NOT AVAILABLE");
+				this.inputFolder3.setDescription("Path to input folder containing initial Zprojection\n");
+				this.options.addOption(this.inputFolder2);
+				this.options.addOption(this.inputFolder3);
+				this.omero.setDescription("NOT AVAILABLE");
 				break;
 			
 			case "CropFromCoordinate":
-				this.m_inputFolder.setDescription("Path to tabulated file containing 2 columns :\n" +
-				                                  "pathToCoordinateFile   pathToRawImageAssociate\n");
-				this.m_omero.setDescription("NOT AVAILABLE");
+				this.inputFolder.setDescription("Path to tabulated file containing 2 columns :\n" +
+				                                "pathToCoordinateFile   pathToRawImageAssociate\n");
+				this.omero.setDescription("NOT AVAILABLE");
 				break;
 			
 			case "GenerateOverlay":
-				this.m_inputFolder.setDescription("Path to tabulated file containing 2 columns :\n" +
-				                                  "pathToOverlayFile pathToRawImageAssociate\n");
-				this.m_omero.setDescription("NOT AVAILABLE");
+				this.inputFolder.setDescription("Path to tabulated file containing 2 columns :\n" +
+				                                "pathToOverlayFile pathToRawImageAssociate\n");
+				this.omero.setDescription("NOT AVAILABLE");
 				break;
 		}
 	}

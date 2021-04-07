@@ -13,8 +13,8 @@ import java.util.Map;
 
 public class SliceToStack {
 	
-	String m_pathToSliceDir;
-	String m_pathToOutputDir;
+	String pathToSliceDir;
+	String pathToOutputDir;
 	
 	
 	/**
@@ -24,8 +24,8 @@ public class SliceToStack {
 	 * @param pathToOutputDir path to stack image output
 	 */
 	public SliceToStack(String pathToSliceDir, String pathToOutputDir) {
-		this.m_pathToSliceDir = pathToSliceDir;
-		this.m_pathToOutputDir = pathToOutputDir;
+		this.pathToSliceDir = pathToSliceDir;
+		this.pathToOutputDir = pathToOutputDir;
 	}
 	
 	
@@ -46,9 +46,9 @@ public class SliceToStack {
 	 */
 	public void run() {
 		HashMap<String, Integer> test            = new HashMap<>();
-		Directory                directoryOutput = new Directory(this.m_pathToOutputDir);
-		Directory                directoryInput  = new Directory(this.m_pathToSliceDir);
-		directoryInput.listImageFiles(this.m_pathToSliceDir);
+		Directory                directoryOutput = new Directory(this.pathToOutputDir);
+		Directory                directoryInput  = new Directory(this.pathToSliceDir);
+		directoryInput.listImageFiles(this.pathToSliceDir);
 		// Iterate over images from directory
 		for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
 			String tm = directoryInput.getFile(i).getName();
@@ -66,8 +66,8 @@ public class SliceToStack {
 			ImagePlus[] image = new ImagePlus[size];
 			System.out.println("image :" + entry.getKey());
 			for (short i = 0; i < image.length; ++i) {
-				//image= BF.openImagePlus((directoryInput.m_dirPath
-				image[i] = IJ.openImage((directoryInput.m_dirPath +
+				//image= BF.openImagePlus((directoryInput.dirPath
+				image[i] = IJ.openImage((directoryInput.dirPath +
 				                         File.separator +
 				                         entry.getKey() +
 				                         "_" +
@@ -77,7 +77,7 @@ public class SliceToStack {
 				//
 			}
 			ImagePlus imp3 = new Concatenator().concatenate(image, false);
-			saveFile(imp3, directoryOutput.m_dirPath + directoryOutput.m_separator
+			saveFile(imp3, directoryOutput.dirPath + directoryOutput.separator
 			               + entry.getKey() + ".tif");
 		}
 		

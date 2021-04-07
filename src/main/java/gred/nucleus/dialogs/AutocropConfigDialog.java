@@ -25,23 +25,23 @@ public class AutocropConfigDialog extends JFrame implements ItemListener {
 	private final JCheckBox  addCalibrationBox           = new JCheckBox();
 	private final JPanel     cropBoxPane;
 	private       Boolean    isRegroupBoxesSelected      = true;
-	private       JPanel     XCalibration;
-	private       JPanel     YCalibration;
-	private       JPanel     ZCalibration;
+	private       JPanel     xCalibrationPanel;
+	private       JPanel     yCalibrationPanel;
+	private       JPanel     zCalibrationPanel;
 	
 	
 	public AutocropConfigDialog(AutocropDialog caller) {
 		this.setTitle("Autocrop NucleusJ2");
 		this.setSize(500, 350);
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		Container     _container    = getContentPane();
+		Container     container     = getContentPane();
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.rowWeights = new double[]{1.0};
 		gridBagLayout.rowHeights = new int[]{300};
 		gridBagLayout.columnWeights = new double[]{0.0, 0.3};
 		gridBagLayout.columnWidths = new int[]{180, 500};
 		
-		_container.setLayout(gridBagLayout);
+		container.setLayout(gridBagLayout);
 		JButton buttonOK = new JButton("Done");
 		getRootPane().setDefaultButton(buttonOK);
 
@@ -56,42 +56,42 @@ public class AutocropConfigDialog extends JFrame implements ItemListener {
 		cropBoxPane.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 		cropBoxPane.setAlignmentX(0);
 		
-		JPanel XCropBoxPane = new JPanel();
-		XCropBoxPane.setLayout(new BoxLayout(XCropBoxPane, BoxLayout.X_AXIS));
-		XCropBoxPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+		JPanel xCropBoxPane = new JPanel();
+		xCropBoxPane.setLayout(new BoxLayout(xCropBoxPane, BoxLayout.X_AXIS));
+		xCropBoxPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 		JLabel xBox = new JLabel("X:");
-		XCropBoxPane.add(xBox);
-		XCropBoxPane.add(Box.createRigidArea(new Dimension(10, 0)));
+		xCropBoxPane.add(xBox);
+		xCropBoxPane.add(Box.createRigidArea(new Dimension(10, 0)));
 		xCropBoxSize.setText("40");
 		xCropBoxSize.setMinimumSize(new Dimension(60, 10));
-		XCropBoxPane.add(xCropBoxSize);
+		xCropBoxPane.add(xCropBoxSize);
 		
-		JPanel YCropBoxPane = new JPanel();
-		YCropBoxPane.setLayout(new BoxLayout(YCropBoxPane, BoxLayout.X_AXIS));
-		YCropBoxPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+		JPanel yCropBoxPane = new JPanel();
+		yCropBoxPane.setLayout(new BoxLayout(yCropBoxPane, BoxLayout.X_AXIS));
+		yCropBoxPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 		JLabel yBox = new JLabel("Y:");
-		YCropBoxPane.add(yBox);
-		YCropBoxPane.add(Box.createRigidArea(new Dimension(10, 0)));
+		yCropBoxPane.add(yBox);
+		yCropBoxPane.add(Box.createRigidArea(new Dimension(10, 0)));
 		yCropBoxSize.setText("40");
 		yCropBoxSize.setMinimumSize(new Dimension(60, 10));
-		YCropBoxPane.add(yCropBoxSize);
+		yCropBoxPane.add(yCropBoxSize);
 		
-		JPanel ZCropBoxPane = new JPanel();
-		ZCropBoxPane.setLayout(new BoxLayout(ZCropBoxPane, BoxLayout.X_AXIS));
-		ZCropBoxPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+		JPanel zCropBoxPane = new JPanel();
+		zCropBoxPane.setLayout(new BoxLayout(zCropBoxPane, BoxLayout.X_AXIS));
+		zCropBoxPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 		JLabel zBox = new JLabel("Z:");
-		ZCropBoxPane.add(zBox);
-		ZCropBoxPane.add(Box.createRigidArea(new Dimension(10, 0)));
+		zCropBoxPane.add(zBox);
+		zCropBoxPane.add(Box.createRigidArea(new Dimension(10, 0)));
 		zCropBoxSize.setText("20");
 		zCropBoxSize.setMinimumSize(new Dimension(60, 10));
-		ZCropBoxPane.add(zCropBoxSize);
+		zCropBoxPane.add(zCropBoxSize);
 		
 		JLabel cropBoxLabel = new JLabel("Crop Box Size:");
 		cropBoxLabel.setAlignmentX(0);
 		cropBoxPane.add(cropBoxLabel);
-		cropBoxPane.add(XCropBoxPane);
-		cropBoxPane.add(YCropBoxPane);
-		cropBoxPane.add(ZCropBoxPane);
+		cropBoxPane.add(xCropBoxPane);
+		cropBoxPane.add(yCropBoxPane);
+		cropBoxPane.add(zCropBoxPane);
 		cropBoxPane.add(Box.createRigidArea(new Dimension(0, 20)));
 
 
@@ -110,17 +110,17 @@ public class AutocropConfigDialog extends JFrame implements ItemListener {
 		calibrationPanel.add(addCalibrationBox);
 		cropBoxPane.add(calibrationPanel);
 		
-		_container.add(cropBoxPane, new GridBagConstraints(0,
-		                                                   0,
-		                                                   0,
-		                                                   0,
-		                                                   0.0,
-		                                                   0.0,
-		                                                   GridBagConstraints.NORTHWEST,
-		                                                   GridBagConstraints.NONE,
-		                                                   new Insets(0, 0, 0, 0),
-		                                                   0,
-		                                                   0));
+		container.add(cropBoxPane, new GridBagConstraints(0,
+		                                                  0,
+		                                                  0,
+		                                                  0,
+		                                                  0.0,
+		                                                  0.0,
+		                                                  GridBagConstraints.NORTHWEST,
+		                                                  GridBagConstraints.NONE,
+		                                                  new Insets(0, 0, 0, 0),
+		                                                  0,
+		                                                  0));
 
 
 
@@ -235,17 +235,17 @@ public class AutocropConfigDialog extends JFrame implements ItemListener {
 		buttonOK.setPreferredSize(new java.awt.Dimension(80, 21));
 		volumeNucleus.add(buttonOK);
 		
-		_container.add(volumeNucleus, new GridBagConstraints(1,
-		                                                     0,
-		                                                     0,
-		                                                     0,
-		                                                     0.0,
-		                                                     0.0,
-		                                                     GridBagConstraints.NORTHWEST,
-		                                                     GridBagConstraints.NONE,
-		                                                     new Insets(0, 0, 0, 0),
-		                                                     0,
-		                                                     0));
+		container.add(volumeNucleus, new GridBagConstraints(1,
+		                                                    0,
+		                                                    0,
+		                                                    0,
+		                                                    0.0,
+		                                                    0.0,
+		                                                    GridBagConstraints.NORTHWEST,
+		                                                    GridBagConstraints.NONE,
+		                                                    new Insets(0, 0, 0, 0),
+		                                                    0,
+		                                                    0));
 		
 		
 		this.setVisible(false);
@@ -332,44 +332,44 @@ public class AutocropConfigDialog extends JFrame implements ItemListener {
 		} else if (e.getSource() == addCalibrationBox) {
 			if (addCalibrationBox.isSelected()) {
 				
-				XCalibration = new JPanel();
-				XCalibration.setLayout(new BoxLayout(XCalibration, BoxLayout.X_AXIS));
-				XCalibration.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+				xCalibrationPanel = new JPanel();
+				xCalibrationPanel.setLayout(new BoxLayout(xCalibrationPanel, BoxLayout.X_AXIS));
+				xCalibrationPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 				JLabel xBox2 = new JLabel("X:");
-				XCalibration.add(xBox2);
-				XCalibration.add(Box.createRigidArea(new Dimension(10, 0)));
+				xCalibrationPanel.add(xBox2);
+				xCalibrationPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 				xCalibration.setText("1");
 				xCalibration.setMinimumSize(new Dimension(60, 10));
-				XCalibration.add(xCalibration);
+				xCalibrationPanel.add(xCalibration);
 				
-				YCalibration = new JPanel();
-				YCalibration.setLayout(new BoxLayout(YCalibration, BoxLayout.X_AXIS));
-				YCalibration.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+				yCalibrationPanel = new JPanel();
+				yCalibrationPanel.setLayout(new BoxLayout(yCalibrationPanel, BoxLayout.X_AXIS));
+				yCalibrationPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 				JLabel yBox2 = new JLabel("Y:");
-				YCalibration.add(yBox2);
-				YCalibration.add(Box.createRigidArea(new Dimension(10, 0)));
+				yCalibrationPanel.add(yBox2);
+				yCalibrationPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 				yCalibration.setText("1");
 				yCalibration.setMinimumSize(new Dimension(60, 10));
-				YCalibration.add(yCalibration);
+				yCalibrationPanel.add(yCalibration);
 				
-				ZCalibration = new JPanel();
-				ZCalibration.setLayout(new BoxLayout(ZCalibration, BoxLayout.X_AXIS));
-				ZCalibration.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+				zCalibrationPanel = new JPanel();
+				zCalibrationPanel.setLayout(new BoxLayout(zCalibrationPanel, BoxLayout.X_AXIS));
+				zCalibrationPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
 				JLabel zBox2 = new JLabel("Z:");
-				ZCalibration.add(zBox2);
-				ZCalibration.add(Box.createRigidArea(new Dimension(10, 0)));
+				zCalibrationPanel.add(zBox2);
+				zCalibrationPanel.add(Box.createRigidArea(new Dimension(10, 0)));
 				zCalibration.setText("1");
 				zCalibration.setMinimumSize(new Dimension(60, 10));
-				ZCalibration.add(zCalibration);
+				zCalibrationPanel.add(zCalibration);
 				
-				cropBoxPane.add(XCalibration);
-				cropBoxPane.add(YCalibration);
-				cropBoxPane.add(ZCalibration);
+				cropBoxPane.add(xCalibrationPanel);
+				cropBoxPane.add(yCalibrationPanel);
+				cropBoxPane.add(zCalibrationPanel);
 			} else {
 				try {
-					cropBoxPane.remove(XCalibration);
-					cropBoxPane.remove(YCalibration);
-					cropBoxPane.remove(ZCalibration);
+					cropBoxPane.remove(xCalibrationPanel);
+					cropBoxPane.remove(yCalibrationPanel);
+					cropBoxPane.remove(zCalibrationPanel);
 				} catch (NullPointerException nullPointerException) {
 					// Do nothing
 				}
@@ -381,17 +381,17 @@ public class AutocropConfigDialog extends JFrame implements ItemListener {
 	
 	
 	static class StartListener implements ActionListener {
-		AutocropConfigDialog _autocropDialog;
+		AutocropConfigDialog autocropDialog;
 		
 		
 		/** @param autocropDialog  */
 		public StartListener(AutocropConfigDialog autocropDialog) {
-			_autocropDialog = autocropDialog;
+			this.autocropDialog = autocropDialog;
 		}
 		
 		
 		public void actionPerformed(ActionEvent actionEvent) {
-			_autocropDialog.setVisible(false);
+			autocropDialog.setVisible(false);
 		}
 		
 	}

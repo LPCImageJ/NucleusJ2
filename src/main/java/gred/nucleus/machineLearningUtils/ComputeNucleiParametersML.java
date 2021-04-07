@@ -16,8 +16,8 @@ import java.util.ArrayList;
 
 
 public class ComputeNucleiParametersML {
-	String m_rawImagesInputDirectory;
-	String m_segmentedImagesDirectory;
+	String rawImagesInputDirectory;
+	String segmentedImagesDirectory;
 	
 	
 	/**
@@ -27,8 +27,8 @@ public class ComputeNucleiParametersML {
 	 * @param segmentedImagesDirectory path to list of segmented images from machine learning associated to raw
 	 */
 	public ComputeNucleiParametersML(String rawImagesInputDirectory, String segmentedImagesDirectory) {
-		this.m_rawImagesInputDirectory = rawImagesInputDirectory;
-		this.m_segmentedImagesDirectory = segmentedImagesDirectory;
+		this.rawImagesInputDirectory = rawImagesInputDirectory;
+		this.segmentedImagesDirectory = segmentedImagesDirectory;
 	}
 	
 	
@@ -71,32 +71,32 @@ public class ComputeNucleiParametersML {
 	 */
 	public void run() throws Exception {
 		PluginParameters pluginParameters =
-				new PluginParameters(this.m_rawImagesInputDirectory, this.m_segmentedImagesDirectory);
+				new PluginParameters(this.rawImagesInputDirectory, this.segmentedImagesDirectory);
 		Directory directoryInput = new Directory(pluginParameters.getOutputFolder());
 		directoryInput.listImageFiles(pluginParameters.getOutputFolder());
 		directoryInput.checkIfEmpty();
-		ArrayList<File> segImages = directoryInput.m_fileList;
+		ArrayList<File> segImages = directoryInput.fileList;
 		StringBuilder outputCropGeneralInfoOTSU =
-				new StringBuilder(pluginParameters.getAnalyseParameters() + getResultsColumnNames());
+				new StringBuilder(pluginParameters.getAnalysisParameters() + getResultsColumnNames());
 		for (File currentFile : segImages) {
 			System.out.println("current File " + currentFile.getName());
-			ImagePlus Raw = new ImagePlus(pluginParameters.getInputFolder() +
+			ImagePlus raw = new ImagePlus(pluginParameters.getInputFolder() +
 			                              directoryInput.getSeparator() +
 			                              currentFile.getName());
-			ImagePlus[] Segmented = BF.openImagePlus(pluginParameters.getOutputFolder() + currentFile.getName());
+			ImagePlus[] segmented = BF.openImagePlus(pluginParameters.getOutputFolder() + currentFile.getName());
 			// TODO TRANSFORMATION FACTORISABLE AVEC METHODE DU DESSUS !!!!!
-			Segmented[0] = generateSegmentedImage(Segmented[0], 1);
-			Segmented[0] = BinaryImages.componentsLabeling(Segmented[0], 26, 32);
-			LabelImages.removeBorderLabels(Segmented[0]);
-			Segmented[0] = generateSegmentedImage(Segmented[0], 1);
+			segmented[0] = generateSegmentedImage(segmented[0], 1);
+			segmented[0] = BinaryImages.componentsLabeling(segmented[0], 26, 32);
+			LabelImages.removeBorderLabels(segmented[0]);
+			segmented[0] = generateSegmentedImage(segmented[0], 1);
 			Histogram histogram = new Histogram();
-			histogram.run(Segmented[0]);
+			histogram.run(segmented[0]);
 			if (histogram.getNbLabels() > 0) {
-				Measure3D measure3D = new Measure3D(Segmented,
-				                                    Raw,
-				                                    pluginParameters.getXCalibration(Raw),
-				                                    pluginParameters.getYCalibration(Raw),
-				                                    pluginParameters.getZCalibration(Raw));
+				Measure3D measure3D = new Measure3D(segmented,
+				                                    raw,
+				                                    pluginParameters.getXCalibration(raw),
+				                                    pluginParameters.getYCalibration(raw),
+				                                    pluginParameters.getZCalibration(raw));
 				outputCropGeneralInfoOTSU.append(measure3D.nucleusParameter3D()).append("\n");
 			}
 		}

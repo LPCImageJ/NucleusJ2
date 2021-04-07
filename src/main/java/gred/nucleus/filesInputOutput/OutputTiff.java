@@ -19,27 +19,27 @@ public class OutputTiff extends FilesNames {
 	 * Method to save file with verification if file already exists
 	 * <p> TODO ADD ERROR IN LOG FILE
 	 */
-	public void SaveImage(ImagePlus imageToSave) {
+	public void saveImage(ImagePlus imageToSave) {
 		try {
 			if (!fileExists()) {
 				if (imageToSave.getNSlices() > 1) {
 					FileSaver fileSaver = new FileSaver(imageToSave);
-					fileSaver.saveAsTiffStack(this._fullPathFile);
+					fileSaver.saveAsTiffStack(this.fullPathFile);
 				} else {
 					FileSaver fileSaver = new FileSaver(imageToSave);
-					fileSaver.saveAsTiff(this._fullPathFile);
+					fileSaver.saveAsTiff(this.fullPathFile);
 				}
 			} else {
-				File old = new File(this._fullPathFile);
+				File old = new File(this.fullPathFile);
 				if (old.delete()) {
-					IJ.log("Deleted old " + this._fullPathFile);
+					IJ.log("Deleted old " + this.fullPathFile);
 				}
 				if (imageToSave.getNSlices() > 1) {
 					FileSaver fileSaver = new FileSaver(imageToSave);
-					fileSaver.saveAsTiffStack(this._fullPathFile);
+					fileSaver.saveAsTiffStack(this.fullPathFile);
 				} else {
 					FileSaver fileSaver = new FileSaver(imageToSave);
-					fileSaver.saveAsTiff(this._fullPathFile);
+					fileSaver.saveAsTiff(this.fullPathFile);
 				}
 			}
 		} catch (Exception e) {

@@ -28,28 +28,28 @@ import java.util.Map;
 public class OutputFileVerification {
 	
 	/** Key of files expected in the result directory */
-	Map<String, String> _myMapInitialFilesInputFolder = new HashMap<>();
+	Map<String, String> myMapInitialFilesInputFolder = new HashMap<>();
 	/** Key of files produce by the analysis */
-	Map<String, String> _myMapInitialFileOutputFolder = new HashMap<>();
+	Map<String, String> myMapInitialFileOutputFolder = new HashMap<>();
 	/** list of files produce by the analysis */
-	Map<String, String> _myMapFilesProduceByAnalysis  = new HashMap<>();
+	Map<String, String> myMapFilesProduceByAnalysis  = new HashMap<>();
 	
 	
 	/** Path output analysis files */
-	String _rawPathOutPut;
+	String rawPathOutPut;
 	/** Raw path expected files */
-	String _rawPathExpectedResult;
+	String rawPathExpectedResult;
 	
 	
 	/**
 	 * Constructor containing 2 parameters path containing expected results and path to the raw data
 	 *
-	 * @param PathExpectedResult Path of expected result (version under control)
-	 * @param PathOutPut         Path of out results new version
+	 * @param pathExpectedResult Path of expected result (version under control)
+	 * @param pathOutPut         Path of out results new version
 	 */
-	public OutputFileVerification(String PathExpectedResult, String PathOutPut) {
-		this._rawPathExpectedResult = PathExpectedResult;
-		this._rawPathOutPut = PathOutPut;
+	public OutputFileVerification(String pathExpectedResult, String pathOutPut) {
+		this.rawPathExpectedResult = pathExpectedResult;
+		this.rawPathOutPut = pathOutPut;
 	}
 	
 	
@@ -58,17 +58,17 @@ public class OutputFileVerification {
 	 *
 	 * @param path Path of folder which contains files expected
 	 */
-	public void GetFileResultExpected(String path) {
+	public void getFileResultExpected(String path) {
 		File   root = new File(path);
 		File[] list = root.listFiles();
 		if (list != null) {
 			for (File f : list) {
 				if (f.isDirectory()) {
-					GetFileResultExpected(f.getAbsolutePath());
+					getFileResultExpected(f.getAbsolutePath());
 				} else {
 					String temps = f.getPath().replace(
-							this._rawPathExpectedResult, "");
-					this._myMapInitialFilesInputFolder.put(temps, md5(f.getPath()));
+							this.rawPathExpectedResult, "");
+					this.myMapInitialFilesInputFolder.put(temps, md5(f.getPath()));
 				}
 			}
 		}
@@ -80,16 +80,16 @@ public class OutputFileVerification {
 	 *
 	 * @param path Path of folder which contains files expected
 	 */
-	public void GetFilesOutputFolder(String path) {
+	public void getFilesOutputFolder(String path) {
 		File   root = new File(path);
 		File[] list = root.listFiles();
 		if (list != null) {
 			for (File f : list) {
 				if (f.isDirectory()) {
-					GetFilesOutputFolder(f.getAbsolutePath());
+					getFilesOutputFolder(f.getAbsolutePath());
 				} else {
-					String temps = f.getPath().replace(this._rawPathOutPut, "");
-					this._myMapInitialFileOutputFolder.put(temps, md5(f.getPath()));
+					String temps = f.getPath().replace(this.rawPathOutPut, "");
+					this.myMapInitialFileOutputFolder.put(temps, md5(f.getPath()));
 				}
 			}
 		}
@@ -101,18 +101,18 @@ public class OutputFileVerification {
 	 *
 	 * @param path Path of folder which contains files expected
 	 */
-	public void GetFilesResultingOfAnalysis(String path) {
+	public void getFilesResultingOfAnalysis(String path) {
 		File   root = new File(path);
 		File[] list = root.listFiles();
 		if (list != null) {
 			for (File f : list) {
 				if (f.isDirectory()) {
-					GetFilesResultingOfAnalysis(f.getAbsolutePath());
+					getFilesResultingOfAnalysis(f.getAbsolutePath());
 				} else {
-					String temps = f.getPath().replace(this._rawPathOutPut
+					String temps = f.getPath().replace(this.rawPathOutPut
 							, "");
 					System.out.println(temps);
-					this._myMapFilesProduceByAnalysis.put(temps, md5(f.getPath()));
+					this.myMapFilesProduceByAnalysis.put(temps, md5(f.getPath()));
 				}
 			}
 		}
@@ -120,19 +120,19 @@ public class OutputFileVerification {
 	
 	
 	/** Method to compare md5sum of files from output analysis with expected results */
-	public void CompareAnalysisResult() {
+	public void compareAnalysisResult() {
 		for (Map.Entry<String, String> entry :
-				this._myMapInitialFilesInputFolder.entrySet()) {
+				this.myMapInitialFilesInputFolder.entrySet()) {
 			String fileName = entry.getKey();
 			String hashCode = entry.getValue();
 			if (hashCode.equals(
-					this._myMapFilesProduceByAnalysis.get(fileName))) {
+					this.myMapFilesProduceByAnalysis.get(fileName))) {
 				System.out.println("Terrible du cul " + fileName);
 			} else {
 				System.out.println("le fichier n'existe pas ou diff hash "
 				                   + fileName + "\n"
 				                   + hashCode + "\n"
-				                   + this._myMapFilesProduceByAnalysis.get(fileName) + "\n");
+				                   + this.myMapFilesProduceByAnalysis.get(fileName) + "\n");
 			}
 		}
 	}

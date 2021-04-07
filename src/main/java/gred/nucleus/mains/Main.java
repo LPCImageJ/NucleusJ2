@@ -72,7 +72,7 @@ public class Main {
 	}
 	
 	
-	public static void runAutoCropOmero(String inputDirectory,
+	public static void runAutoCropOMERO(String inputDirectory,
 	                                    String outputDirectory,
 	                                    Client client,
 	                                    AutoCropCalling autoCrop) throws Exception {
@@ -80,7 +80,7 @@ public class Main {
 		
 		if (param.length >= 2) {
 			if (param[0].equals("image")) {
-				Long           id    = Long.parseLong(param[1]);
+				Long         id    = Long.parseLong(param[1]);
 				ImageWrapper image = client.getImage(id);
 				
 				int sizeC = image.getPixels().getSizeC();
@@ -93,9 +93,9 @@ public class Main {
 							client.getProject(Long.parseLong(outputDirectory)).addDataset(client, dataset).getId();
 				}
 				
-				autoCrop.runImageOmero(image, outputsDat, client);
+				autoCrop.runImageOMERO(image, outputsDat, client);
 			} else {
-				Long                 id = Long.parseLong(param[1]);
+				Long               id = Long.parseLong(param[1]);
 				List<ImageWrapper> images;
 				
 				String name = "";
@@ -126,7 +126,7 @@ public class Main {
 							client.getProject(Long.parseLong(outputDirectory)).addDataset(client, dataset).getId();
 				}
 				
-				autoCrop.runSeveralImageOmero(images, outputsDat, client);
+				autoCrop.runSeveralImageOMERO(images, outputsDat, client);
 			}
 		} else {
 			throw new IllegalArgumentException();
@@ -134,22 +134,22 @@ public class Main {
 	}
 	
 	
-	public static void runAutoCropOmero(String inputDirectory,
+	public static void runAutoCropOMERO(String inputDirectory,
 	                                    String outputDirectory,
 	                                    String pathToConfig,
 	                                    Client client) throws Exception {
 		AutocropParameters autocropParameters = new AutocropParameters(".", ".", pathToConfig);
 		AutoCropCalling    autoCrop           = new AutoCropCalling(autocropParameters);
 		
-		runAutoCropOmero(inputDirectory, outputDirectory, client, autoCrop);
+		runAutoCropOMERO(inputDirectory, outputDirectory, client, autoCrop);
 	}
 	
 	
-	public static void runAutoCropOmero(String inputDirectory, String outputDirectory, Client client) throws Exception {
+	public static void runAutoCropOMERO(String inputDirectory, String outputDirectory, Client client) throws Exception {
 		AutocropParameters autocropParameters = new AutocropParameters(".", ".");
 		AutoCropCalling    autoCrop           = new AutoCropCalling(autocropParameters);
 		
-		runAutoCropOmero(inputDirectory, outputDirectory, client, autoCrop);
+		runAutoCropOMERO(inputDirectory, outputDirectory, client, autoCrop);
 	}
 	
 	
@@ -226,7 +226,7 @@ public class Main {
 	}
 	
 	
-	public static void segmentationOmero(String inputDirectory,
+	public static void segmentationOMERO(String inputDirectory,
 	                                     String outputDirectory,
 	                                     Client client,
 	                                     SegmentationCalling otsuModified)
@@ -236,15 +236,15 @@ public class Main {
 		
 		if (param.length >= 2) {
 			if (param[0].equals("image")) {
-				Long           id    = Long.parseLong(param[1]);
+				Long         id    = Long.parseLong(param[1]);
 				ImageWrapper image = client.getImage(id);
 				
 				try {
 					String log;
 					if (param.length == 3 && param[2].equals("ROI")) {
-						log = otsuModified.runOneImageOmeroROI(image, Long.parseLong(outputDirectory), client);
+						log = otsuModified.runOneImageOMERObyROIs(image, Long.parseLong(outputDirectory), client);
 					} else {
-						log = otsuModified.runOneImageOmero(image, Long.parseLong(outputDirectory), client);
+						log = otsuModified.runOneImageOMERO(image, Long.parseLong(outputDirectory), client);
 					}
 					if (!(log.equals(""))) {
 						System.out.println("Nuclei which didn't pass the segmentation\n" + log);
@@ -253,7 +253,7 @@ public class Main {
 					e.printStackTrace();
 				}
 			} else {
-				Long                 id = Long.parseLong(param[1]);
+				Long               id = Long.parseLong(param[1]);
 				List<ImageWrapper> images;
 				
 				switch (param[0]) {
@@ -285,9 +285,9 @@ public class Main {
 					String log;
 					if ((param.length == 3 && param[2].equals("ROI")) ||
 					    (param.length == 5 && param[4].equals("ROI"))) {
-						log = otsuModified.runSeveralImageOmeroROI(images, Long.parseLong(outputDirectory), client);
+						log = otsuModified.runSeveralImageOMERObyROIs(images, Long.parseLong(outputDirectory), client);
 					} else {
-						log = otsuModified.runSeveralImageOmero(images, Long.parseLong(outputDirectory), client);
+						log = otsuModified.runSeveralImageOMERO(images, Long.parseLong(outputDirectory), client);
 					}
 					if (!(log.equals(""))) {
 						System.out.println("Nuclei which didn't pass the segmentation\n" + log);
@@ -302,21 +302,21 @@ public class Main {
 	}
 	
 	
-	public static void segmentationOmero(String inputDirectory, String outputDirectory, String config, Client client)
+	public static void segmentationOMERO(String inputDirectory, String outputDirectory, String config, Client client)
 	throws Exception {
 		SegmentationParameters segmentationParameters = new SegmentationParameters(".", ".", config);
 		SegmentationCalling    otsuModified           = new SegmentationCalling(segmentationParameters);
 		
-		segmentationOmero(inputDirectory, outputDirectory, client, otsuModified);
+		segmentationOMERO(inputDirectory, outputDirectory, client, otsuModified);
 	}
 	
 	
-	public static void segmentationOmero(String inputDirectory, String outputDirectory, Client client)
+	public static void segmentationOMERO(String inputDirectory, String outputDirectory, Client client)
 	throws Exception {
 		SegmentationParameters segmentationParameters = new SegmentationParameters(".", ".");
 		SegmentationCalling    otsuModified           = new SegmentationCalling(segmentationParameters);
 		
-		segmentationOmero(inputDirectory, outputDirectory, client, otsuModified);
+		segmentationOMERO(inputDirectory, outputDirectory, client, otsuModified);
 	}
 	
 	
@@ -357,8 +357,8 @@ public class Main {
 	 * Compute parameters from segmented images produce by ML segmentation. During this process we keep only biggest
 	 * connected component.
 	 *
-	 * @param rawImagesInputFolder    Path raw images folder
-	 * @param segmentedImagesFolder   Path segmented images folder
+	 * @param rawImagesInputFolder  Path raw images folder
+	 * @param segmentedImagesFolder Path segmented images folder
 	 *
 	 * @throws IOException
 	 * @throws FormatException
@@ -377,8 +377,8 @@ public class Main {
 	 * Generate a projection from coordinate file. 2 steps : - 1 generate max projection from raw image - 2 draw boxes
 	 * on max projection
 	 *
-	 * @param pathToCoordinates   Folder containing coordinate files
-	 * @param pathToRaw           Folder containing raw images associate
+	 * @param pathToCoordinates Folder containing coordinate files
+	 * @param pathToRaw         Folder containing raw images associate
 	 *
 	 * @throws Exception
 	 */
@@ -397,9 +397,9 @@ public class Main {
 	/**
 	 * Method to draw missing boxes in initial projection after manual filtering.
 	 *
-	 * @param pathToGIFTSeg       Path to cropped images
-	 * @param pathToZprojection   Path to projection images
-	 * @param pathToCoordinate    Path to coordinate
+	 * @param pathToGIFTSeg     Path to cropped images
+	 * @param pathToZprojection Path to projection images
+	 * @param pathToCoordinate  Path to coordinate
 	 *
 	 * @throws IOException
 	 * @throws FormatException
@@ -478,11 +478,11 @@ public class Main {
 	
 	
 	public static boolean OMEROAvailableAction(String action) {
-		ArrayList<String> actionAvailableInOmero = new ArrayList<>();
-		actionAvailableInOmero.add("autocrop");
-		actionAvailableInOmero.add("segmentation");
+		ArrayList<String> actionAvailableInOMERO = new ArrayList<>();
+		actionAvailableInOMERO.add("autocrop");
+		actionAvailableInOMERO.add("segmentation");
 		
-		return actionAvailableInOmero.contains(action);
+		return actionAvailableInOMERO.contains(action);
 	}
 	
 	
@@ -536,12 +536,12 @@ public class Main {
 					               Long.valueOf(cmd.getOptionValue("group")));
 					
 					if (cmd.hasOption("config")) {
-						runAutoCropOmero(cmd.getOptionValue("input"),
+						runAutoCropOMERO(cmd.getOptionValue("input"),
 						                 cmd.getOptionValue("output"),
 						                 cmd.getOptionValue("config"),
 						                 client);
 					} else {
-						runAutoCropOmero(cmd.getOptionValue("input"),
+						runAutoCropOMERO(cmd.getOptionValue("input"),
 						                 cmd.getOptionValue("output"),
 						                 client);
 					}
@@ -581,12 +581,12 @@ public class Main {
 					               Long.valueOf(cmd.getOptionValue("group")));
 					
 					if (cmd.hasOption("config")) {
-						segmentationOmero(cmd.getOptionValue("input"),
+						segmentationOMERO(cmd.getOptionValue("input"),
 						                  cmd.getOptionValue("output"),
 						                  cmd.getOptionValue("config"),
 						                  client);
 					} else {
-						segmentationOmero(cmd.getOptionValue("input"),
+						segmentationOMERO(cmd.getOptionValue("input"),
 						                  cmd.getOptionValue("output"),
 						                  client);
 					}
