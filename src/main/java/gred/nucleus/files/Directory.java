@@ -2,6 +2,8 @@ package gred.nucleus.files;
 
 import ij.IJ;
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,33 +14,37 @@ import java.util.List;
 public class Directory {
 	
 	/** Directory path */
-	public File       dir;
+	private File   dir;
 	/** Directory path */
-	public String     dirPath       = "";
+	private String dirPath = "";
 	/** List of files in current folder + recursive folder */
-	public List<File> fileList      = new ArrayList<>();
+	private List<File> fileList      = new ArrayList<>();
 	/** Check if directory contain nd files */
-	public boolean    containNdFile = false;
+	private boolean    containNdFile = false;
 	/** List of nd files */
-	public List<File> fileListND    = new ArrayList<>();
+	private List<File> fileListND    = new ArrayList<>();
 	/** Path separator */
-	public String     separator;
-	
-	
+	private String     separator;
 	/**
 	 * Constructor
 	 *
 	 * @param path of directory
 	 */
 	public Directory(String path) {
+		Logger logger = LoggerFactory.getLogger(getClass());
 		try {
 			this.dirPath = path;
 			this.dir = new File(this.dirPath);
 			this.separator = File.separator;
 		} catch (Exception exp) {
-			System.out.println(exp.getMessage());
+			logger.error("Could not create Directory object.", exp);
 			System.exit(1);
 		}
+	}
+	
+	
+	public List<File> getFileList() {
+		return fileList;
 	}
 	
 	
@@ -133,7 +139,8 @@ public class Directory {
 	/** check if input directory is empty */
 	public void checkIfEmpty() {
 		if (this.fileList.isEmpty()) {
-			System.err.println("Folder " + this.dirPath + " is empty");
+			Logger logger = LoggerFactory.getLogger(getClass());
+			logger.debug("Folder {} is empty", dirPath);
 		}
 	}
 	

@@ -71,7 +71,7 @@ public class ComputeNucleiParameters {
 		Directory directorySegmentedInput = new Directory(this.pluginParameters.getOutputFolder());
 		directorySegmentedInput.listImageFiles(this.pluginParameters.getOutputFolder());
 		directorySegmentedInput.checkIfEmpty();
-		List<File>    segmentedImages           = directorySegmentedInput.fileList;
+		List<File>    segmentedImages           = directorySegmentedInput.getFileList();
 		StringBuilder outputCropGeneralInfoOTSU = new StringBuilder();
 		
 		outputCropGeneralInfoOTSU.append(this.pluginParameters.getAnalysisParameters()).append(getColNameResult());

@@ -59,15 +59,13 @@ public class FJ_Statistics implements PlugIn, ItemListener, WindowListener {
 			false,
 			false
 	};
-	
+	private static final Point    pos      = new Point(-1, -1);
 	private static boolean clear   = false;
 	private static boolean name    = true;
 	private static boolean channel = false;
 	private static boolean time    = false;
 	private static boolean slice   = false;
-	
 	private static       int      decimals = 3;
-	private static final Point    pos      = new Point(-1, -1);
 	private              Checkbox channelBox;
 	private              Checkbox timeBox;
 	private              Checkbox sliceBox;
@@ -324,7 +322,6 @@ class FJStatistics {
 				}
 				pgs.stop();
 				msg.status("");
-				
 			} else {
 				cMax.z = dims.z - 1;
 				cMax.t = dims.t - 1;
@@ -338,13 +335,10 @@ class FJStatistics {
 			}
 		} catch (OutOfMemoryError e) {
 			FJ.error("Not enough memory for this operation");
-			
 		} catch (IllegalArgumentException e) {
 			FJ.error(e.getMessage());
-			
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			FJ.error("An unidentified error occurred while running the plugin");
-			
 		}
 	}
 	

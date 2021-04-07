@@ -28,6 +28,7 @@ public class ComputeParametersDialog extends JFrame implements ItemListener {
 	
 	/** Architecture of the graphical windows */
 	public ComputeParametersDialog() {
+		final String    font                = "Albertus";
 		final Container container           = getContentPane();
 		final JLabel    jLabelWorkDirectory = new JLabel();
 		final JLabel    jLabelCalibration   = new JLabel();
@@ -85,7 +86,7 @@ public class ComputeParametersDialog extends JFrame implements ItemListener {
 		                                     0,
 		                                     0));
 		jButtonRawData.setPreferredSize(new java.awt.Dimension(120, 21));
-		jButtonRawData.setFont(new java.awt.Font("Albertus", Font.ITALIC, 10));
+		jButtonRawData.setFont(new java.awt.Font(font, Font.ITALIC, 10));
 		container.add(jTextFieldRawData,
 		              new GridBagConstraints(0,
 		                                     1,
@@ -99,7 +100,7 @@ public class ComputeParametersDialog extends JFrame implements ItemListener {
 		                                     0,
 		                                     0));
 		jTextFieldRawData.setPreferredSize(new java.awt.Dimension(280, 21));
-		jTextFieldRawData.setFont(new java.awt.Font("Albertus", Font.ITALIC, 10));
+		jTextFieldRawData.setFont(new java.awt.Font(font, Font.ITALIC, 10));
 		container.add(jButtonWorkDirectory,
 		              new GridBagConstraints(0,
 		                                     1,
@@ -113,7 +114,7 @@ public class ComputeParametersDialog extends JFrame implements ItemListener {
 		                                     0,
 		                                     0));
 		jButtonWorkDirectory.setPreferredSize(new java.awt.Dimension(120, 21));
-		jButtonWorkDirectory.setFont(new java.awt.Font("Albertus", Font.ITALIC, 10));
+		jButtonWorkDirectory.setFont(new java.awt.Font(font, Font.ITALIC, 10));
 		container.add(jTextFieldWorkDirectory,
 		              new GridBagConstraints(0,
 		                                     1,
@@ -127,7 +128,7 @@ public class ComputeParametersDialog extends JFrame implements ItemListener {
 		                                     0,
 		                                     0));
 		jTextFieldWorkDirectory.setPreferredSize(new java.awt.Dimension(280, 21));
-		jTextFieldWorkDirectory.setFont(new java.awt.Font("Albertus", Font.ITALIC, 10));
+		jTextFieldWorkDirectory.setFont(new java.awt.Font(font, Font.ITALIC, 10));
 		container.add(jLabelCalibration,
 		              new GridBagConstraints(0,
 		                                     2,

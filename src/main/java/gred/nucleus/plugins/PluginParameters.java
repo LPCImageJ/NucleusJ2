@@ -3,6 +3,8 @@ package gred.nucleus.plugins;
 import gred.nucleus.files.Directory;
 import ij.IJ;
 import ij.ImagePlus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -89,15 +91,16 @@ public class PluginParameters {
 	
 	
 	public void addGeneralProperties(String pathToConfigFile) {
+		Logger logger = LoggerFactory.getLogger(getClass().getName());
 		
 		Properties prop = new Properties();
 		try (InputStream is = new FileInputStream(pathToConfigFile)) {
 			prop.load(is);
 		} catch (FileNotFoundException ex) {
-			System.err.println(pathToConfigFile + " : can't find the config file !");
+			logger.error("{}: can't find the config file !", pathToConfigFile);
 			System.exit(-1);
 		} catch (IOException ex) {
-			System.err.println(pathToConfigFile + " : can't load the config file !");
+			logger.error("{}: can't load the config file !", pathToConfigFile);
 			System.exit(-1);
 		}
 		for (String idProp : prop.stringPropertyNames()) {
@@ -117,6 +120,8 @@ public class PluginParameters {
 	
 	
 	private void checkInputPaths(String inputFolder, String outputFolder) {
+		Logger logger = LoggerFactory.getLogger(getClass().getName());
+		
 		File input = new File(inputFolder);
 		if (input.isDirectory()) {
 			this.inputFolder = inputFolder;
@@ -124,7 +129,7 @@ public class PluginParameters {
 			this.inputFolder = input.getParent();
 			
 		} else {
-			System.err.println(inputFolder + " : can't find the input folder/file !");
+			logger.error("{}: can't find the input folder/file !", inputFolder);
 			IJ.error(inputFolder + " : can't find the input folder/file !");
 //            System.exit(-1);
 		}

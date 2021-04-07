@@ -1,6 +1,8 @@
 package gred.nucleus.segmentation;
 
 import fr.igred.omero.Client;
+import fr.igred.omero.exception.AccessException;
+import fr.igred.omero.exception.ServiceException;
 import fr.igred.omero.repository.ImageWrapper;
 import fr.igred.omero.roi.ROIWrapper;
 import fr.igred.omero.repository.DatasetWrapper;
@@ -17,12 +19,15 @@ import ij.plugin.ContrastEnhancer;
 import ij.plugin.GaussianBlur3D;
 import ij.process.StackConverter;
 import loci.formats.FormatException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -139,39 +144,41 @@ public class SegmentationCalling {
 	 * the different parameters with the NucleusAnalysis class, results will be print in the console. If no nucleus is
 	 * detected a log message is print in teh console
 	 */
-	public int runOneImage() throws Exception {
-		ImagePlus imgSeg = this.imgInput;
-		NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(imgSeg,
+	@Deprecated
+	public int runOneImage() throws IOException, FormatException {
+		Logger logger = LoggerFactory.getLogger(getClass().getName());
+		
+		ImagePlus seg = this.imgInput;
+		NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(seg,
 		                                                                  this.segmentationParameters.getMinVolumeNucleus(),
 		                                                                  this.segmentationParameters.getMaxVolumeNucleus(),
 		                                                                  this.segmentationParameters);
 		
-		Calibration cal = imgSeg.getCalibration();
-		if (imgSeg.getType() == ImagePlus.GRAY16) {
-			this.preProcessImage(imgSeg);
+		Calibration cal = seg.getCalibration();
+		if (seg.getType() == ImagePlus.GRAY16) {
+			this.preProcessImage(seg);
 		}
 		
-		imgSeg = nucleusSegmentation.applySegmentation(imgSeg);
+		seg = nucleusSegmentation.applySegmentation(seg);
 		if (nucleusSegmentation.getBestThreshold() == -1) {
-			System.out.println("Segmentation error: \nNo object is detected between " +
-			                   this.segmentationParameters.getMinVolumeNucleus() +
-			                   "and" +
-			                   this.segmentationParameters.getMaxVolumeNucleus());
+			logger.error("Segmentation error: \nNo object is detected between {} and {}",
+			             this.segmentationParameters.getMinVolumeNucleus(),
+			             this.segmentationParameters.getMaxVolumeNucleus());
 		} else {
-			System.out.println("otsu modified threshold: " + nucleusSegmentation.getBestThreshold() + "\n");
+			logger.info("OTSU modified threshold: {}\n", nucleusSegmentation.getBestThreshold());
 			if (this.segmentationParameters.getGiftWrapping()) {
 				ConvexHullSegmentation nuc = new ConvexHullSegmentation();
-				imgSeg = nuc.runGIFTWrapping(imgSeg, this.segmentationParameters);
+				seg = nuc.runGIFTWrapping(seg, this.segmentationParameters);
 			}
-			imgSeg.setTitle(this.output);
+			seg.setTitle(this.output);
 			if (!this.output.equals("")) {
-				saveFile(imgSeg, this.output);
+				saveFile(seg, this.output);
 			}
 			NucleusAnalysis nucleusAnalysis =
-					new NucleusAnalysis(this.imgInput, imgSeg, this.segmentationParameters);
+					new NucleusAnalysis(this.imgInput, seg, this.segmentationParameters);
 			// System.out.println(nucleusAnalysis.nucleusParameter3D());
 		}
-		this.imgSeg = imgSeg;
+		this.imgSeg = seg;
 		return nucleusSegmentation.getBestThreshold();
 	}
 	
@@ -201,10 +208,12 @@ public class SegmentationCalling {
 	 * @throws IOException     if file doesn't existed
 	 * @throws FormatException Bio-formats exception
 	 */
-	public String runSeveralImages2() throws Exception {
+	public String runSeveralImages2() throws IOException, FormatException {
+		Logger logger = LoggerFactory.getLogger(getClass().getName());
+		
 		String        log            = "";
-		StringBuilder infoOtsu           = new StringBuilder();
-		StringBuilder infoGift           = new StringBuilder();
+		StringBuilder infoOtsu       = new StringBuilder();
+		StringBuilder infoGift       = new StringBuilder();
 		Directory     directoryInput = new Directory(this.segmentationParameters.getInputFolder());
 		directoryInput.listImageFiles(this.segmentationParameters.getInputFolder());
 		directoryInput.checkIfEmpty();
@@ -213,11 +222,11 @@ public class SegmentationCalling {
 			String     fileImg          = currentFile.toString();
 			FilesNames outPutFilesNames = new FilesNames(fileImg);
 			this.prefix = outPutFilesNames.prefixNameFile();
-			System.out.println("Current image in process " + currentFile);
+			logger.info("Current image in process: {}", currentFile);
 			
 			String timeStampStart =
 					new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
-			System.out.println("Start :" + timeStampStart);
+			logger.info("Start: {}", timeStampStart);
 			
 			NucleusSegmentation nucleusSegmentation =
 					new NucleusSegmentation(currentFile, this.prefix, this.segmentationParameters);
@@ -230,7 +239,7 @@ public class SegmentationCalling {
 			infoGift.append(nucleusSegmentation.getImageCropInfoGIFT());
 			
 			timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
-			System.out.println("Fin :" + timeStampStart);
+			logger.info("End: {}", timeStampStart);
 			
 		}
 		this.outputCropGeneralInfoOTSU += infoOtsu.toString();
@@ -241,16 +250,19 @@ public class SegmentationCalling {
 		return log;
 	}
 	
-	public String runOneImage(String filePath) throws Exception {
+	
+	public String runOneImage(String filePath) throws IOException, FormatException {
+		Logger logger = LoggerFactory.getLogger(getClass().getName());
+		
 		String     log              = "";
 		File       currentFile      = new File(filePath);
 		String     fileImg          = currentFile.toString();
 		FilesNames outPutFilesNames = new FilesNames(fileImg);
 		this.prefix = outPutFilesNames.prefixNameFile();
-		System.out.println("Current image in process " + currentFile);
+		logger.info("Current image in process: {}", currentFile);
 		
 		String timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
-		System.out.println("Start :" + timeStampStart);
+		logger.info("Start: {}", timeStampStart);
 		NucleusSegmentation nucleusSegmentation =
 				new NucleusSegmentation(currentFile, this.prefix, this.segmentationParameters);
 		nucleusSegmentation.preProcessImage();
@@ -262,11 +274,12 @@ public class SegmentationCalling {
 		this.outputCropGeneralInfoGIFT += nucleusSegmentation.getImageCropInfoGIFT();
 		
 		timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
-		System.out.println("Fin :" + timeStampStart);
+		logger.info("End: {}", timeStampStart);
 		return log;
 	}
 	
-	public void saveCropGeneralInfo(){
+	
+	public void saveCropGeneralInfo() {
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(this.segmentationParameters.getOutputFolder()
 		                                                         + "OTSU"
 		                                                         + File.separator
@@ -282,15 +295,16 @@ public class SegmentationCalling {
 	}
 	
 	
-	
 	public String runOneImageOMERO(ImageWrapper image, Long output, Client client) throws Exception {
+		Logger logger = LoggerFactory.getLogger(getClass().getName());
+		
 		String log = "";
 		
 		String fileImg = image.getName();
-		System.out.println("Current image in process " + fileImg);
+		logger.info("Current image in process: {}", fileImg);
 		
 		String timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
-		System.out.println("Start :" + timeStampStart);
+		logger.info("Start: {}", timeStampStart);
 		NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(image, this.segmentationParameters, client);
 		nucleusSegmentation.preProcessImage();
 		nucleusSegmentation.findOTSUMaximisingSphericity();
@@ -302,10 +316,11 @@ public class SegmentationCalling {
 		this.outputCropGeneralInfoGIFT += nucleusSegmentation.getImageCropInfoGIFT();
 		
 		timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
-		System.out.println("Fin :" + timeStampStart);
+		logger.info("End: {}", timeStampStart);
 		
 		return log;
 	}
+	
 	
 	public String runSeveralImageOMERO(List<ImageWrapper> images, Long output, Client client) throws Exception {
 		StringBuilder log = new StringBuilder();
@@ -319,7 +334,11 @@ public class SegmentationCalling {
 		return log.toString();
 	}
 	
-	public void saveCropGeneralInfoOmero(Client client, Long output) throws Exception{
+	
+	public void saveCropGeneralInfoOmero(Client client, Long output)
+	throws IOException, ServiceException, AccessException, ExecutionException, InterruptedException {
+		Logger logger = LoggerFactory.getLogger(getClass().getName());
+		
 		DatasetWrapper dataset = client.getProject(output).getDatasets("OTSU").get(0);
 		
 		String path =
@@ -330,7 +349,7 @@ public class SegmentationCalling {
 		File file = new File(path);
 		dataset.addFile(client, file);
 		boolean deleted = file.delete();
-		if (!deleted) System.err.println("File not deleted: " + path);
+		if (!deleted) logger.error("File not deleted: {}", path);
 		
 		if (this.segmentationParameters.getGiftWrapping()) {
 			dataset = client.getProject(output).getDatasets("GIFT").get(0);
@@ -340,12 +359,14 @@ public class SegmentationCalling {
 			file = new File(path);
 			dataset.addFile(client, file);
 			deleted = file.delete();
-			if (!deleted) System.err.println("File not deleted: " + path);
+			if (!deleted) logger.error("File not deleted: {}", path);
 		}
 	}
 	
 	
 	public String runOneImageOMERObyROIs(ImageWrapper image, Long output, Client client) throws Exception {
+		Logger logger = LoggerFactory.getLogger(getClass().getName());
+		
 		StringBuilder info = new StringBuilder();
 		
 		List<ROIWrapper> rois = image.getROIs(client);
@@ -353,15 +374,15 @@ public class SegmentationCalling {
 		String log = "";
 		
 		String fileImg = image.getName();
-		System.out.println("Current image in process " + fileImg);
+		logger.info("Current image in process: {}", fileImg);
 		
 		String timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
-		System.out.println("Start :" + timeStampStart);
+		logger.info("Start: {}", timeStampStart);
 		
 		int i = 0;
 		
 		for (ROIWrapper roi : rois) {
-			System.out.println("Current ROI in process : " + i);
+			logger.info("Current ROI in process: {}", i);
 			
 			NucleusSegmentation nucleusSegmentation =
 					new NucleusSegmentation(image, roi, i, this.segmentationParameters, client);
@@ -380,7 +401,7 @@ public class SegmentationCalling {
 		this.outputCropGeneralInfoOTSU += info.toString();
 		
 		timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
-		System.out.println("Fin :" + timeStampStart);
+		logger.info("End: {}", timeStampStart);
 		
 		DatasetWrapper dataset = client.getProject(output).getDatasets("OTSU").get(0);
 		String path =
@@ -391,7 +412,7 @@ public class SegmentationCalling {
 		File file = new File(path);
 		dataset.addFile(client, file);
 		boolean deleted = file.delete();
-		if (!deleted) System.err.println("File not deleted: " + path);
+		if (!deleted) logger.error("File not deleted: {}", path);
 		
 		if (this.segmentationParameters.getGiftWrapping()) {
 			dataset = client.getProject(output).getDatasets("GIFT").get(0);
@@ -401,11 +422,12 @@ public class SegmentationCalling {
 			file = new File(path);
 			dataset.addFile(client, file);
 			deleted = file.delete();
-			if (!deleted) System.err.println("File not deleted: " + path);
+			if (!deleted) logger.error("File not deleted: {}", path);
 		}
 		
 		return log;
 	}
+	
 	
 	public String runSeveralImageOMERObyROIs(List<ImageWrapper> images, Long output, Client client) throws Exception {
 		StringBuilder log = new StringBuilder();

@@ -2,6 +2,8 @@ package gred.nucleus.mains;
 
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -62,6 +64,7 @@ public class TestSegmentationMethods {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
+		Logger logger = LoggerFactory.getLogger(TestAutoCrop.class);
 		///home/titus/Bureau/data/Test_Image_Reproducibility/IMAGE_TEST_NJ/AUTOCROP_RAW/RAW_BIOFORMATS
 		String timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
 		

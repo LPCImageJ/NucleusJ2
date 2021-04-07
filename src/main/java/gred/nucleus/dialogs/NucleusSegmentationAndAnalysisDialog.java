@@ -30,6 +30,7 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 	
 	/** Architecture of the graphical windows */
 	public NucleusSegmentationAndAnalysisDialog(Calibration cal) {
+		final String      boldFont                  = "Albertus Extra Bold (W1)";
 		final JButton     jButtonStart              = new JButton("Start");
 		final JButton     jButtonQuit               = new JButton("Quit");
 		final Container   container;
@@ -46,7 +47,7 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 		final ButtonGroup buttonGroupChoiceAnalysis = new ButtonGroup();
 		this.setTitle("Nucleus segmentation & analysis");
 		this.setSize(500, 350);
-		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		container = getContentPane();
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.1};
@@ -56,310 +57,332 @@ public class NucleusSegmentationAndAnalysisDialog extends JFrame {
 		container.setLayout(gridBagLayout);
 		
 		jLabelCalibration = new JLabel();
-		container.add
-				(
-						jLabelCalibration,
-						new GridBagConstraints
-								(
-										0, 1, 0, 0, 0.0, 0.0,
-										GridBagConstraints.NORTHWEST,
-										GridBagConstraints.NONE,
-										new Insets(0, 10, 0, 0), 0, 0
-								)
-				);
+		container.add(jLabelCalibration,
+		              new GridBagConstraints(0,
+		                                     1,
+		                                     0,
+		                                     0,
+		                                     0.0,
+		                                     0.0,
+		                                     GridBagConstraints.NORTHWEST,
+		                                     GridBagConstraints.NONE,
+		                                     new Insets(0, 10, 0, 0),
+		                                     0,
+		                                     0));
 		jLabelCalibration.setText("Voxel Calibration:");
 		
 		container.setLayout(gridBagLayout);
 		jLabelXCalibration = new JLabel();
-		container.add
-				(
-						jLabelXCalibration,
-						new GridBagConstraints
-								(
-										0, 1, 0, 0, 0.0, 0.0,
-										GridBagConstraints.NORTHWEST,
-										GridBagConstraints.NONE,
-										new Insets(20, 20, 0, 0), 0, 0
-								)
-				);
+		container.add(jLabelXCalibration,
+		              new GridBagConstraints(0,
+		                                     1,
+		                                     0,
+		                                     0,
+		                                     0.0,
+		                                     0.0,
+		                                     GridBagConstraints.NORTHWEST,
+		                                     GridBagConstraints.NONE,
+		                                     new Insets(20, 20, 0, 0),
+		                                     0,
+		                                     0));
 		jLabelXCalibration.setText("x :");
-		jLabelXCalibration.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		container.add
-				(
-						jTextFieldXCalibration,
-						new GridBagConstraints
-								(
-										0, 1, 0, 0, 0.0, 0.0,
-										GridBagConstraints.NORTHWEST,
-										GridBagConstraints.NONE,
-										new Insets(20, 60, 0, 0), 0, 0
-								)
-				);
+		jLabelXCalibration.setFont(new java.awt.Font(boldFont, Font.ITALIC, 12));
+		container.add(jTextFieldXCalibration,
+		              new GridBagConstraints(0,
+		                                     1,
+		                                     0,
+		                                     0,
+		                                     0.0,
+		                                     0.0,
+		                                     GridBagConstraints.NORTHWEST,
+		                                     GridBagConstraints.NONE,
+		                                     new Insets(20, 60, 0, 0),
+		                                     0,
+		                                     0));
 		jTextFieldXCalibration.setText(String.valueOf(cal.pixelWidth));
 		jTextFieldXCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
 		
 		jLabelYCalibration = new JLabel();
-		container.add
-				(
-						jLabelYCalibration,
-						new GridBagConstraints
-								(
-										0, 1, 0, 0, 0.0, 0.0,
-										GridBagConstraints.NORTHWEST,
-										GridBagConstraints.NONE,
-										new Insets(45, 20, 0, 0), 0, 0
-								)
-				);
+		container.add(jLabelYCalibration,
+		              new GridBagConstraints(0,
+		                                     1,
+		                                     0,
+		                                     0,
+		                                     0.0,
+		                                     0.0,
+		                                     GridBagConstraints.NORTHWEST,
+		                                     GridBagConstraints.NONE,
+		                                     new Insets(45, 20, 0, 0),
+		                                     0,
+		                                     0));
 		jLabelYCalibration.setText("y :");
-		jLabelYCalibration.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		container.add
-				(
-						jTextFieldYCalibration,
-						new GridBagConstraints
-								(
-										0, 1, 0, 0, 0.0, 0.0,
-										GridBagConstraints.NORTHWEST,
-										GridBagConstraints.NONE,
-										new Insets(45, 60, 0, 0), 0, 0
-								)
-				);
+		jLabelYCalibration.setFont(new java.awt.Font(boldFont, Font.ITALIC, 12));
+		container.add(jTextFieldYCalibration,
+		              new GridBagConstraints(0,
+		                                     1,
+		                                     0,
+		                                     0,
+		                                     0.0,
+		                                     0.0,
+		                                     GridBagConstraints.NORTHWEST,
+		                                     GridBagConstraints.NONE,
+		                                     new Insets(45, 60, 0, 0),
+		                                     0,
+		                                     0));
 		jTextFieldYCalibration.setText(String.valueOf(cal.pixelWidth));
 		jTextFieldYCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
 		
 		jLabelZCalibration = new JLabel();
-		container.add
-				(
-						jLabelZCalibration,
-						new GridBagConstraints
-								(
-										0, 1, 0, 0, 0.0, 0.0,
-										GridBagConstraints.NORTHWEST,
-										GridBagConstraints.NONE,
-										new Insets(70, 20, 0, 0), 0, 0
-								)
-				);
+		container.add(jLabelZCalibration,
+		              new GridBagConstraints(0,
+		                                     1,
+		                                     0,
+		                                     0,
+		                                     0.0,
+		                                     0.0,
+		                                     GridBagConstraints.NORTHWEST,
+		                                     GridBagConstraints.NONE,
+		                                     new Insets(70, 20, 0, 0),
+		                                     0,
+		                                     0));
 		jLabelZCalibration.setText("z :");
-		jLabelZCalibration.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		container.add
-				(
-						jTextFieldZCalibration,
-						new GridBagConstraints
-								(
-										0, 1, 0, 0, 0.0, 0.0,
-										GridBagConstraints.NORTHWEST,
-										GridBagConstraints.NONE,
-										new Insets(70, 60, 0, 0), 0, 0
-								)
-				);
+		jLabelZCalibration.setFont(new java.awt.Font(boldFont, Font.ITALIC, 12));
+		container.add(jTextFieldZCalibration,
+		              new GridBagConstraints(0,
+		                                     1,
+		                                     0,
+		                                     0,
+		                                     0.0,
+		                                     0.0,
+		                                     GridBagConstraints.NORTHWEST,
+		                                     GridBagConstraints.NONE,
+		                                     new Insets(70, 60, 0, 0),
+		                                     0,
+		                                     0));
 		jTextFieldZCalibration.setText(String.valueOf(cal.pixelDepth));
 		jTextFieldZCalibration.setPreferredSize(new java.awt.Dimension(60, 21));
 		
 		jLabelUnit = new JLabel();
-		container.add
-				(
-						jLabelUnit,
-						new GridBagConstraints
-								(
-										0, 1, 0, 0, 0.0, 0.0,
-										GridBagConstraints.NORTHWEST,
-										GridBagConstraints.NONE,
-										new Insets(95, 20, 0, 0), 0, 0
-								)
-				);
+		container.add(jLabelUnit,
+		              new GridBagConstraints(0,
+		                                     1,
+		                                     0,
+		                                     0,
+		                                     0.0,
+		                                     0.0,
+		                                     GridBagConstraints.NORTHWEST,
+		                                     GridBagConstraints.NONE,
+		                                     new Insets(95, 20, 0, 0),
+		                                     0,
+		                                     0));
 		jLabelUnit.setText("unit :");
-		jLabelUnit.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		container.add
-				(
-						jTextFieldUnit,
-						new GridBagConstraints
-								(
-										0, 1, 0, 0, 0.0, 0.0,
-										GridBagConstraints.NORTHWEST,
-										GridBagConstraints.NONE,
-										new Insets(95, 60, 0, 0), 0, 0
-								)
-				);
+		jLabelUnit.setFont(new java.awt.Font(boldFont, Font.ITALIC, 12));
+		container.add(jTextFieldUnit,
+		              new GridBagConstraints(0,
+		                                     1,
+		                                     0,
+		                                     0,
+		                                     0.0,
+		                                     0.0,
+		                                     GridBagConstraints.NORTHWEST,
+		                                     GridBagConstraints.NONE,
+		                                     new Insets(95, 60, 0, 0),
+		                                     0,
+		                                     0));
 		jTextFieldUnit.setText(cal.getUnit());
 		jTextFieldUnit.setPreferredSize(new java.awt.Dimension(60, 21));
 		
 		
 		jLabelSegmentation = new JLabel();
-		container.add
-				(
-						jLabelSegmentation,
-						new GridBagConstraints
-								(
-										0, 2, 0, 0, 0.0, 0.0,
-										GridBagConstraints.NORTHWEST,
-										GridBagConstraints.NONE,
-										new Insets(20, 10, 0, 0), 0, 0
-								)
-				);
+		container.add(jLabelSegmentation,
+		              new GridBagConstraints(0,
+		                                     2,
+		                                     0,
+		                                     0,
+		                                     0.0,
+		                                     0.0,
+		                                     GridBagConstraints.NORTHWEST,
+		                                     GridBagConstraints.NONE,
+		                                     new Insets(20, 10, 0, 0),
+		                                     0,
+		                                     0));
 		jLabelSegmentation.setText("Choose the min and max volumes of the nucleus:");
 		
 		jLabelVolumeMin = new JLabel();
-		container.add
-				(
-						jLabelVolumeMin,
-						new GridBagConstraints
-								(
-										0, 2, 0, 0, 0.0, 0.0,
-										GridBagConstraints.NORTHWEST,
-										GridBagConstraints.NONE,
-										new Insets(40, 20, 0, 0), 0, 0
-								)
-				);
+		container.add(jLabelVolumeMin,
+		              new GridBagConstraints(0,
+		                                     2,
+		                                     0,
+		                                     0,
+		                                     0.0,
+		                                     0.0,
+		                                     GridBagConstraints.NORTHWEST,
+		                                     GridBagConstraints.NONE,
+		                                     new Insets(40, 20, 0, 0),
+		                                     0,
+		                                     0));
 		jLabelVolumeMin.setText("Minimum volume of the segmented nucleus :");
-		jLabelVolumeMin.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		container.add
-				(
-						jTextFieldMin,
-						new GridBagConstraints
-								(
-										0, 2, 0, 0, 0.0, 0.0,
-										GridBagConstraints.NORTHWEST,
-										GridBagConstraints.NONE,
-										new Insets(40, 320, 0, 0), 0, 0
-								)
-				);
+		jLabelVolumeMin.setFont(new java.awt.Font(boldFont, Font.ITALIC, 12));
+		container.add(jTextFieldMin,
+		              new GridBagConstraints(0,
+		                                     2,
+		                                     0,
+		                                     0,
+		                                     0.0,
+		                                     0.0,
+		                                     GridBagConstraints.NORTHWEST,
+		                                     GridBagConstraints.NONE,
+		                                     new Insets(40, 320, 0, 0),
+		                                     0,
+		                                     0));
 		jTextFieldMin.setText("15");
 		jTextFieldMin.setPreferredSize(new java.awt.Dimension(60, 21));
 		
 		jLabelUnitText = new JLabel();
-		container.add
-				(
-						jLabelUnitText,
-						new GridBagConstraints
-								(
-										0, 2, 0, 0, 0.0, 0.0,
-										GridBagConstraints.NORTHWEST,
-										GridBagConstraints.NONE,
-										new Insets(40, 410, 0, 0), 0, 0
-								)
-				);
+		container.add(jLabelUnitText,
+		              new GridBagConstraints(0,
+		                                     2,
+		                                     0,
+		                                     0,
+		                                     0.0,
+		                                     0.0,
+		                                     GridBagConstraints.NORTHWEST,
+		                                     GridBagConstraints.NONE,
+		                                     new Insets(40, 410, 0, 0),
+		                                     0,
+		                                     0));
 		jLabelUnitText.setText("unit^3");
-		jLabelUnitText.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
+		jLabelUnitText.setFont(new java.awt.Font(boldFont, Font.ITALIC, 12));
 		
 		jLabelVolumeMax = new JLabel();
-		container.add
-				(
-						jLabelVolumeMax,
-						new GridBagConstraints
-								(
-										0, 2, 0, 0, 0.0, 0.0,
-										GridBagConstraints.NORTHWEST,
-										GridBagConstraints.NONE,
-										new Insets(70, 20, 0, 0), 0, 0
-								)
-				);
+		container.add(jLabelVolumeMax,
+		              new GridBagConstraints(0,
+		                                     2,
+		                                     0,
+		                                     0,
+		                                     0.0,
+		                                     0.0,
+		                                     GridBagConstraints.NORTHWEST,
+		                                     GridBagConstraints.NONE,
+		                                     new Insets(70, 20, 0, 0),
+		                                     0,
+		                                     0));
 		jLabelVolumeMax.setText("Maximum volume of the segmented nucleus :");
-		jLabelVolumeMax.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		container.add
-				(
-						jTextFieldMax,
-						new GridBagConstraints
-								(
-										0, 2, 0, 0, 0.0, 0.0,
-										GridBagConstraints.NORTHWEST,
-										GridBagConstraints.NONE,
-										new Insets(70, 320, 0, 0), 0, 0
-								)
-				);
+		jLabelVolumeMax.setFont(new java.awt.Font(boldFont, Font.ITALIC, 12));
+		container.add(jTextFieldMax,
+		              new GridBagConstraints(0,
+		                                     2,
+		                                     0,
+		                                     0,
+		                                     0.0,
+		                                     0.0,
+		                                     GridBagConstraints.NORTHWEST,
+		                                     GridBagConstraints.NONE,
+		                                     new Insets(70, 320, 0, 0),
+		                                     0,
+		                                     0));
 		jTextFieldMax.setText("2000");
 		jTextFieldMax.setPreferredSize(new java.awt.Dimension(60, 21));
 		jLabelUnitText = new JLabel();
-		container.add
-				(
-						jLabelUnitText,
-						new GridBagConstraints
-								(
-										0, 2, 0, 0, 0.0, 0.0,
-										GridBagConstraints.NORTHWEST,
-										GridBagConstraints.NONE,
-										new Insets(70, 410, 0, 0), 0, 0
-								)
-				);
+		container.add(jLabelUnitText,
+		              new GridBagConstraints(0,
+		                                     2,
+		                                     0,
+		                                     0,
+		                                     0.0,
+		                                     0.0,
+		                                     GridBagConstraints.NORTHWEST,
+		                                     GridBagConstraints.NONE,
+		                                     new Insets(70, 410, 0, 0),
+		                                     0,
+		                                     0));
 		jLabelUnitText.setText("unit^3");
-		jLabelUnitText.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
+		jLabelUnitText.setFont(new java.awt.Font(boldFont, Font.ITALIC, 12));
 		
 		jLabelAnalysis = new JLabel();
-		container.add
-				(
-						jLabelAnalysis,
-						new GridBagConstraints
-								(
-										0, 2, 0, 0, 0.0, 0.0,
-										GridBagConstraints.NORTHWEST,
-										GridBagConstraints.NONE,
-										new Insets(100, 10, 0, 0), 0, 0
-								)
-				);
+		container.add(jLabelAnalysis,
+		              new GridBagConstraints(0,
+		                                     2,
+		                                     0,
+		                                     0,
+		                                     0.0,
+		                                     0.0,
+		                                     GridBagConstraints.NORTHWEST,
+		                                     GridBagConstraints.NONE,
+		                                     new Insets(100, 10, 0, 0),
+		                                     0,
+		                                     0));
 		jLabelAnalysis.setText("Type of analysis:");
 		
 		buttonGroupChoiceAnalysis.add(jRadioButton2D);
 		buttonGroupChoiceAnalysis.add(jRadioButton3D);
 		buttonGroupChoiceAnalysis.add(jRadioButton2D3D);
-		jRadioButton2D.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		jRadioButton3D.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		jRadioButton2D3D.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		container.add
-				(
-						jRadioButton2D,
-						new GridBagConstraints
-								(
-										0, 2, 0, 0, 0.0, 0.0,
-										GridBagConstraints.NORTHWEST,
-										GridBagConstraints.NONE,
-										new Insets(130, 170, 0, 0), 0, 0
-								)
-				);
-		container.add
-				(
-						jRadioButton3D,
-						new GridBagConstraints
-								(
-										0, 2, 0, 0, 0.0, 0.0,
-										GridBagConstraints.NORTHWEST,
-										GridBagConstraints.NONE,
-										new Insets(130, 120, 0, 0), 0, 0
-								)
-				);
-		container.add
-				(
-						jRadioButton2D3D,
-						new GridBagConstraints
-								(
-										0, 2, 0, 0, 0.0, 0.0,
-										GridBagConstraints.NORTHWEST,
-										GridBagConstraints.NONE,
-										new Insets(130, 10, 0, 0), 0, 0
-								)
-				);
+		jRadioButton2D.setFont(new java.awt.Font(boldFont, Font.ITALIC, 12));
+		jRadioButton3D.setFont(new java.awt.Font(boldFont, Font.ITALIC, 12));
+		jRadioButton2D3D.setFont(new java.awt.Font(boldFont, Font.ITALIC, 12));
+		container.add(jRadioButton2D,
+		              new GridBagConstraints(0,
+		                                     2,
+		                                     0,
+		                                     0,
+		                                     0.0,
+		                                     0.0,
+		                                     GridBagConstraints.NORTHWEST,
+		                                     GridBagConstraints.NONE,
+		                                     new Insets(130, 170, 0, 0),
+		                                     0,
+		                                     0));
+		container.add(jRadioButton3D,
+		              new GridBagConstraints(0,
+		                                     2,
+		                                     0,
+		                                     0,
+		                                     0.0,
+		                                     0.0,
+		                                     GridBagConstraints.NORTHWEST,
+		                                     GridBagConstraints.NONE,
+		                                     new Insets(130, 120, 0, 0),
+		                                     0,
+		                                     0));
+		container.add(jRadioButton2D3D,
+		              new GridBagConstraints(0,
+		                                     2,
+		                                     0,
+		                                     0,
+		                                     0.0,
+		                                     0.0,
+		                                     GridBagConstraints.NORTHWEST,
+		                                     GridBagConstraints.NONE,
+		                                     new Insets(130, 10, 0, 0),
+		                                     0,
+		                                     0));
 		jRadioButton2D3D.setSelected(true);
 		
-		container.add
-				(
-						jButtonStart,
-						new GridBagConstraints
-								(
-										0, 2, 0, 0, 0.0, 0.0,
-										GridBagConstraints.NORTHWEST,
-										GridBagConstraints.NONE,
-										new Insets(160, 140, 0, 0), 0, 0
-								)
-				);
+		container.add(jButtonStart,
+		              new GridBagConstraints(0,
+		                                     2,
+		                                     0,
+		                                     0,
+		                                     0.0,
+		                                     0.0,
+		                                     GridBagConstraints.NORTHWEST,
+		                                     GridBagConstraints.NONE,
+		                                     new Insets(160, 140, 0, 0),
+		                                     0,
+		                                     0));
 		jButtonStart.setPreferredSize(new java.awt.Dimension(120, 21));
-		container.add
-				(
-						jButtonQuit,
-						new GridBagConstraints
-								(
-										0, 2, 0, 0, 0.0, 0.0,
-										GridBagConstraints.NORTHWEST,
-										GridBagConstraints.NONE,
-										new Insets(160, 10, 0, 0), 0, 0
-								)
-				);
+		container.add(jButtonQuit,
+		              new GridBagConstraints(0,
+		                                     2,
+		                                     0,
+		                                     0,
+		                                     0.0,
+		                                     0.0,
+		                                     GridBagConstraints.NORTHWEST,
+		                                     GridBagConstraints.NONE,
+		                                     new Insets(160, 10, 0, 0),
+		                                     0,
+		                                     0));
 		jButtonQuit.setPreferredSize(new java.awt.Dimension(120, 21));
 		this.setVisible(true);
 		

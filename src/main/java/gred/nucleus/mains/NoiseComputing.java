@@ -6,14 +6,15 @@ import gred.nucleus.plugins.PluginParameters;
 import gred.nucleus.utils.Histogram;
 import ij.ImagePlus;
 import ij.ImageStack;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 
-public class NoiseComputing {
+public final class NoiseComputing {
 	
 	
 	public static void main(String[] args) {
@@ -25,14 +26,16 @@ public class NoiseComputing {
 	
 	
 	public static void computeMeanNoise(String rawImageSourceFile, String segmentedImagesSourceFile) {
+		Logger logger = LoggerFactory.getLogger(NoiseComputing.class);
+		
 		PluginParameters pluginParameters = new PluginParameters(rawImageSourceFile, segmentedImagesSourceFile);
 		Directory        directoryInput   = new Directory(pluginParameters.getOutputFolder());
 		directoryInput.listImageFiles(pluginParameters.getOutputFolder());
 		directoryInput.checkIfEmpty();
-		List<File>    segImages   = directoryInput.fileList;
+		List<File>    segImages   = directoryInput.getFileList();
 		StringBuilder resultNoise = new StringBuilder("NucleusFileName\tMeanNoise\n");
 		for (File currentFile : segImages) {
-			System.out.println("current File " + currentFile.getName());
+			logger.info("Current File: {}", currentFile.getName());
 			ImagePlus raw = new ImagePlus(pluginParameters.getInputFolder() +
 			                              directoryInput.getSeparator() +
 			                              currentFile.getName());
@@ -43,7 +46,7 @@ public class NoiseComputing {
 			resultNoise.append(currentFile.getName()).append("\t")
 			           .append(meanNoise).append("\t")
 			           .append(medianComputing(raw)).append("\n");
-			System.out.println("Noise mean " + meanNoise);
+			logger.info("Noise mean: {}", meanNoise);
 			
 		}
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(

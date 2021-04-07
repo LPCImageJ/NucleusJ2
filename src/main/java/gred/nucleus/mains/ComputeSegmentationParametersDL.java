@@ -11,9 +11,13 @@ import ij.io.FileSaver;
 import inra.ijpb.binary.BinaryImages;
 import inra.ijpb.label.LabelImages;
 import loci.common.DebugTools;
+import loci.formats.FormatException;
 import loci.plugins.BF;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -22,18 +26,20 @@ public class ComputeSegmentationParametersDL {
 	public static void computeNucleusParameters(String rawImageSourceFile,
 	                                            String segmentedImagesSourceFile,
 	                                            String pathToConfig)
-	throws Exception {
+	throws IOException, FormatException {
+		Logger logger = LoggerFactory.getLogger(ComputeSegmentationParametersDL.class);
+		
 		PluginParameters pluginParameters =
 				new PluginParameters(rawImageSourceFile, segmentedImagesSourceFile, pathToConfig);
 		Directory directoryInput = new Directory(pluginParameters.getInputFolder());
 		directoryInput.listImageFiles(pluginParameters.getInputFolder());
 		directoryInput.checkIfEmpty();
-		List<File> rawImages = directoryInput.fileList;
+		List<File> rawImages = directoryInput.getFileList();
 		StringBuilder outputCropGeneralInfoOTSU =
 				new StringBuilder(pluginParameters.getAnalysisParameters() + getResultsColumnNames());
 		for (File currentFile : rawImages) {
 			ImagePlus raw = new ImagePlus(currentFile.getAbsolutePath());
-			System.out.println("current File " + currentFile.getName());
+			logger.info("current File: {}", currentFile.getName());
 			
 			ImagePlus[] segmented = BF.openImagePlus(pluginParameters.getOutputFolder() + currentFile.getName());
 			
@@ -53,16 +59,18 @@ public class ComputeSegmentationParametersDL {
 	
 	
 	public static void computeNucleusParametersDL(String rawImageSourceFile, String segmentedImagesSourceFile)
-	throws Exception {
+	throws IOException, FormatException {
+		Logger logger = LoggerFactory.getLogger(ComputeSegmentationParametersDL.class);
+		
 		PluginParameters pluginParameters = new PluginParameters(rawImageSourceFile, segmentedImagesSourceFile);
 		Directory        directoryInput   = new Directory(pluginParameters.getOutputFolder());
 		directoryInput.listImageFiles(pluginParameters.getOutputFolder());
 		directoryInput.checkIfEmpty();
-		List<File> segImages = directoryInput.fileList;
+		List<File> segImages = directoryInput.getFileList();
 		StringBuilder outputCropGeneralInfoOTSU =
 				new StringBuilder(pluginParameters.getAnalysisParameters() + getResultsColumnNames());
 		for (File currentFile : segImages) {
-			System.out.println("current File " + currentFile.getName());
+			logger.info("current File: {}", currentFile.getName());
 			ImagePlus raw = new ImagePlus(pluginParameters.getInputFolder() +
 			                              directoryInput.getSeparator() +
 			                              currentFile.getName());

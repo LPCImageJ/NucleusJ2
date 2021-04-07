@@ -14,6 +14,7 @@ import ij.plugin.PlugIn;
  * @deprecated Method to segment and analyse the nucleus on one image //TODO add a parameter in GUI to chose true or
  * false for the giftWrapping 3D
  */
+@Deprecated
 public class NucleusSegmentationAndAnalysisPlugin_ implements PlugIn {
 	
 	

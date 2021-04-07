@@ -9,25 +9,18 @@ import java.io.File;
 
 public class CropFromCoodinateDialog extends JFrame implements ActionListener {
 	private static final long         serialVersionUID  = 1L;
-	private static final String       newline           = "\n";
-	private final        JButton      jButtonStart      = new JButton("Start");
-	private final        JButton      jButtonQuit       = new JButton("Quit");
-	private final        Container    container;
-	private final        JLabel       jLabelLink;
 	private final        JTextField   jLinkFileChooser  = new JTextField();
 	private final        JTextField   jImageChooser     = new JTextField();
 	private final        JTextField   jCoordFileChooser = new JTextField();
 	private final        JFileChooser fc                = new JFileChooser();
-	private final        JButton      linkFileButton;
 	private final        String       linkChooserName   = "linkChooser";
 	private final        String       imageChooserName  = "imageChooser";
 	private final        String       coordChooserName  = "coordChooser";
+	private              boolean      start             = false;
 	private              JLabel       jLabelImage;
 	private              JLabel       jLabelCoord;
-	private              boolean      start             = false;
 	private              JButton      imageButton;
 	private              JButton      coordButton;
-	private              File         selectedInput;
 	private              File         selectedOutput;
 	private              File         selectedConfig;
 	
@@ -35,8 +28,8 @@ public class CropFromCoodinateDialog extends JFrame implements ActionListener {
 	public CropFromCoodinateDialog() {
 		this.setTitle("Autocrop NucleusJ2");
 		this.setSize(500, 300);
-		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-		container = getContentPane();
+		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+		Container     container     = getContentPane();
 		GridBagLayout gridBagLayout = new GridBagLayout();
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.1};
 		gridBagLayout.rowHeights = new int[]{60, 60, 60, 120};
@@ -50,7 +43,7 @@ public class CropFromCoodinateDialog extends JFrame implements ActionListener {
         \*\/*/
 		
 		
-		jLabelLink = new JLabel();
+		JLabel jLabelLink = new JLabel();
 		container.add(jLabelLink, new GridBagConstraints(0, 0, 0, 0, 0.0, 0.0,
 		                                                 GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
 		                                                 new Insets(10, 10, 0, 0), 0, 0));
@@ -62,7 +55,7 @@ public class CropFromCoodinateDialog extends JFrame implements ActionListener {
 		jLinkFileChooser.setPreferredSize(new java.awt.Dimension(300, 20));
 		jLinkFileChooser.setMinimumSize(new java.awt.Dimension(300, 20));
 		
-		linkFileButton = new JButton("...");
+		JButton linkFileButton = new JButton("...");
 		container.add(linkFileButton, new GridBagConstraints(0, 0, 0, 0, 0.0, 0.0,
 		                                                     GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
 		                                                     new Insets(30, 330, 0, 0), 0, 0));
@@ -119,10 +112,12 @@ public class CropFromCoodinateDialog extends JFrame implements ActionListener {
         ------------------------------ Buttons -----------------------------------------
         \*\/*/
 		
+		JButton jButtonStart = new JButton("Start");
 		container.add(jButtonStart, new GridBagConstraints(0, 3, 0, 0, 0.0, 0.0,
 		                                                   GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
 		                                                   new Insets(40, 80, 0, 0), 0, 0));
 		jButtonStart.setPreferredSize(new java.awt.Dimension(60, 21));
+		JButton jButtonQuit = new JButton("Quit");
 		container.add(jButtonQuit, new GridBagConstraints(0, 3, 0, 0, 0.0, 0.0,
 		                                                  GridBagConstraints.NORTHWEST, GridBagConstraints.NONE,
 		                                                  new Insets(40, 10, 0, 0), 0, 0));
@@ -164,7 +159,7 @@ public class CropFromCoodinateDialog extends JFrame implements ActionListener {
 		
 		if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
 			if (((JButton) e.getSource()).getName().equals(linkChooserName)) {
-				selectedInput = fc.getSelectedFile();
+				File selectedInput = fc.getSelectedFile();
 				jLinkFileChooser.setText(selectedInput.getPath());
 			}
 		}

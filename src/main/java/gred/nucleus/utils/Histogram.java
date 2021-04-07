@@ -56,7 +56,7 @@ public class Histogram {
 	 *
 	 * @return
 	 */
-	private HashMap<Double, Integer> computeHistogram(ImagePlus imagePlusInput) {
+	private Map<Double, Integer> computeHistogram(ImagePlus imagePlusInput) {
 		double     voxelValue;
 		ImageStack imageStackInput = imagePlusInput.getImageStack();
 		for (int k = 0; k < imagePlusInput.getNSlices(); ++k) {

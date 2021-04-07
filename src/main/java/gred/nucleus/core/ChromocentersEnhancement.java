@@ -10,6 +10,8 @@ import ij.process.ImageStatistics;
 import ij.process.StackStatistics;
 import inra.ijpb.binary.BinaryImages;
 import inra.ijpb.watershed.Watershed;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 
@@ -19,22 +21,24 @@ import java.io.File;
  *
  * @author Tristan Dubos and Axel Poulet
  */
-public class ChromocentersEnhancement {
+public final class ChromocentersEnhancement {
 	
 	/**
 	 *
 	 */
-	public ChromocentersEnhancement() {
+	private ChromocentersEnhancement() {
 	}
 	
 	
 	public static void saveFile(ImagePlus imagePlus, String pathFile) {
+		Logger logger = LoggerFactory.getLogger(ChromocentersEnhancement.class);
+		
 		FileSaver fileSaver = new FileSaver(imagePlus);
 		File      file      = new File(pathFile);
 		if (file.exists() || file.mkdirs()) {
 			fileSaver.saveAsTiffStack(pathFile + File.separator + imagePlus.getTitle());
 		} else {
-			System.err.println("Directory does not exist and could not be created: " + pathFile);
+			logger.error("Directory does not exist and could not be created: {}", pathFile);
 		}
 	}
 	
@@ -47,7 +51,7 @@ public class ChromocentersEnhancement {
 	 *
 	 * @return image of the contrasted region
 	 */
-	public ImagePlus applyEnhanceChromocenters(ImagePlus imagePlusRaw, ImagePlus imagePlusSegmented) {
+	public static ImagePlus applyEnhanceChromocenters(ImagePlus imagePlusRaw, ImagePlus imagePlusSegmented) {
 		MyGradient            myGradient            = new MyGradient(imagePlusRaw, imagePlusSegmented);
 		ImagePlus             imagePlusGradient     = myGradient.run();
 		RegionalExtremaFilter regionalExtremaFilter = new RegionalExtremaFilter();
@@ -71,7 +75,7 @@ public class ChromocentersEnhancement {
 	 *
 	 * @return a float table which contain the value of the contrast between each region
 	 */
-	private double[][] getRegionAdjacencyGraph(ImagePlus imagePlusWatershed) {
+	private static double[][] getRegionAdjacencyGraph(ImagePlus imagePlusWatershed) {
 		int             voxelValue;
 		int             neighborVoxelValue;
 		ImageStatistics imageStatistics = new StackStatistics(imagePlusWatershed);
@@ -119,7 +123,7 @@ public class ChromocentersEnhancement {
 	 *
 	 * @return table of contrast
 	 */
-	private double[] computeContrast(ImagePlus imagePlusRaw, ImagePlus imagePlusRegions) {
+	private static double[] computeContrast(ImagePlus imagePlusRaw, ImagePlus imagePlusRegions) {
 		double[][] tRegionAdjacencyGraph = getRegionAdjacencyGraph(imagePlusRegions);
 		double[]   tMean                 = computeMeanIntensity(imagePlusRaw, imagePlusRegions);
 		double[]   tContrast             = new double[tRegionAdjacencyGraph.length + 1];
@@ -150,7 +154,7 @@ public class ChromocentersEnhancement {
 	 *
 	 * @return table of double of average intensity for each watershed label
 	 */
-	private double[] computeMeanIntensity(ImagePlus imagePlusInput, ImagePlus imagePlusWatershed) {
+	private static double[] computeMeanIntensity(ImagePlus imagePlusInput, ImagePlus imagePlusWatershed) {
 		ImageStatistics imageStatistics      = new StackStatistics(imagePlusWatershed);
 		ImageStack      imageStackWatershed  = imagePlusWatershed.getStack();
 		ImageStack      imageStackInput      = imagePlusInput.getStack();
@@ -184,7 +188,7 @@ public class ChromocentersEnhancement {
 	 *
 	 * @return ImagePlus image contrast
 	 */
-	private ImagePlus computeImage(ImagePlus imagePlusInput, double[] tVoxelValue) {
+	private static ImagePlus computeImage(ImagePlus imagePlusInput, double[] tVoxelValue) {
 		double     voxelValue;
 		ImagePlus  imagePlusContrast  = imagePlusInput.duplicate();
 		ImageStack imageStackContrast = imagePlusContrast.getStack();
@@ -209,7 +213,7 @@ public class ChromocentersEnhancement {
 	 *
 	 * @return
 	 */
-	private ImagePlus convertNegativeValue(ImagePlus imagePlusInput) {
+	private static ImagePlus convertNegativeValue(ImagePlus imagePlusInput) {
 		ImagePlus  imagePlusContrast  = imagePlusInput.duplicate();
 		ImageStack imageStackContrast = imagePlusContrast.getStack();
 		for (int k = 0; k < imagePlusContrast.getNSlices(); ++k) {

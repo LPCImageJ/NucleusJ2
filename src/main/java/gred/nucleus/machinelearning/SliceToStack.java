@@ -5,6 +5,8 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
 import ij.plugin.Concatenator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.HashMap;
@@ -45,6 +47,8 @@ public class SliceToStack {
 	 * Merge slice to stack : - images shall have this file name format : CommonNameOfImageToMerge_NumberOfSlice
 	 */
 	public void run() {
+		Logger logger = LoggerFactory.getLogger(getClass().getName());
+		
 		HashMap<String, Integer> test            = new HashMap<>();
 		Directory                directoryOutput = new Directory(this.pathToOutputDir);
 		Directory                directoryInput  = new Directory(this.pathToSliceDir);
@@ -64,10 +68,10 @@ public class SliceToStack {
 		for (Map.Entry<String, Integer> entry : test.entrySet()) {
 			int         size  = entry.getValue();
 			ImagePlus[] image = new ImagePlus[size];
-			System.out.println("image :" + entry.getKey());
+			logger.info("image: {}", entry.getKey());
 			for (short i = 0; i < image.length; ++i) {
 				//image= BF.openImagePlus((directoryInput.dirPath
-				image[i] = IJ.openImage((directoryInput.dirPath +
+				image[i] = IJ.openImage((directoryInput.getDirPath() +
 				                         File.separator +
 				                         entry.getKey() +
 				                         "_" +
@@ -77,7 +81,7 @@ public class SliceToStack {
 				//
 			}
 			ImagePlus imp3 = new Concatenator().concatenate(image, false);
-			saveFile(imp3, directoryOutput.dirPath + directoryOutput.separator
+			saveFile(imp3, directoryOutput.getDirPath() + directoryOutput.getSeparator()
 			               + entry.getKey() + ".tif");
 		}
 		

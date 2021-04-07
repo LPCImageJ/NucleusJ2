@@ -6,8 +6,6 @@ import fr.igred.omero.exception.ServiceException;
 import fr.igred.omero.repository.DatasetWrapper;
 import fr.igred.omero.repository.ImageWrapper;
 import fr.igred.omero.repository.ProjectWrapper;
-import gred.nucleus.autocrop.AutoCropCalling;
-import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.dialogs.*;
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;

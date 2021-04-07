@@ -2,9 +2,13 @@ package gred.nucleus.autocrop;
 
 import gred.nucleus.files.Directory;
 import gred.nucleus.files.FilesNames;
+import loci.formats.FormatException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -51,6 +55,7 @@ public class GenerateProjectionFromCoordinates {
 	 * @return list of boxes file to draw in red
 	 */
 	public static Map<String, String> readCoordinatesTXT(File boxFile) {
+		Logger logger = LoggerFactory.getLogger(GenerateProjectionFromCoordinates.class);
 		
 		HashMap<String, String> boxLists = new HashMap<>();
 		try (Scanner scanner = new Scanner(boxFile)) {
@@ -71,18 +76,19 @@ public class GenerateProjectionFromCoordinates {
 					                                            + yMax + "\t"
 					                                            + splitLine[5] + "\t"
 					                                            + zMax);
-					System.out.println("EUUU" + fileName[fileName.length - 1] + "value"
-					                   + splitLine[0] + "\t"
-					                   + splitLine[3] + "\t"
-					                   + xMax + "\t"
-					                   + splitLine[4] + "\t"
-					                   + yMax + "\t"
-					                   + splitLine[5] + "\t"
-					                   + zMax);
+					logger.debug("EUUU{}value{}\t{}\t{}\t{}\t{}\t{}\t{}",
+					             fileName[fileName.length - 1],
+					             splitLine[0],
+					             splitLine[3],
+					             xMax,
+					             splitLine[4],
+					             yMax,
+					             splitLine[5],
+					             zMax);
 				}
 			}
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error("File not found.", e);
 		}
 		return boxLists;
 	}
@@ -92,9 +98,12 @@ public class GenerateProjectionFromCoordinates {
 	 * Run new annotation of Zprojection, color in red nuclei which were filtered (in case of GIFT wrapping color in red
 	 * nuclei which not pass the segmentation most of case Z truncated )
 	 *
-	 * @throws Exception
+	 * @throws IOException
+	 * @throws FormatException
 	 */
-	public void generateCoordinateFiltered() throws Exception {
+	public void generateCoordinateFiltered() throws IOException, FormatException {
+		Logger logger = LoggerFactory.getLogger(getClass());
+		
 		Directory giftSegImages = new Directory(this.pathToGIFTSeg);
 		giftSegImages.listImageFiles(this.pathToGIFTSeg);
 		giftSegImages.checkIfEmpty();
@@ -113,7 +122,7 @@ public class GenerateProjectionFromCoordinates {
 			for (Map.Entry<String, String> entry : sortedMap.entrySet()) {
 				if (!(giftSegImages.checkIfFileExists(entry.getKey()))) {
 					boxListsNucleiNotPass.add(entry.getValue());
-					System.out.println("add " + entry.getValue());
+					logger.info("add {}", entry.getValue());
 				}
 			}
 			File currentZProjection = zProjection.searchFileNameWithoutExtension(coordinateFile.getName()
@@ -141,7 +150,9 @@ public class GenerateProjectionFromCoordinates {
 	}
 	
 	
-	public void generateCoordinate() throws Exception {
+	public void generateCoordinate() throws IOException, FormatException {
+		Logger logger = LoggerFactory.getLogger(getClass());
+		
 		Directory rawImage = new Directory(this.pathToRaw);
 		rawImage.listImageFiles(this.pathToRaw);
 		rawImage.checkIfEmpty();
@@ -156,7 +167,7 @@ public class GenerateProjectionFromCoordinates {
 			for (Map.Entry<String, String> entry : listOfBoxes.entrySet()) {
 				boxListsNucleiNotPass.add(entry.getValue());
 			}
-			System.out.println(coordinateFile.getName());
+			logger.info(coordinateFile.getName());
 			
 			File currentRaw = rawImage.searchFileNameWithoutExtension(coordinateFile.getName()
 			                                                                        .substring(0,
@@ -165,7 +176,7 @@ public class GenerateProjectionFromCoordinates {
 					                                                                                                 '.')));
 			FilesNames outPutFilesNames = new FilesNames(currentRaw.toString());
 			String     prefix           = outPutFilesNames.prefixNameFile();
-			System.out.println("current raw " + currentRaw.getName());
+			logger.info("current raw: {}", currentRaw.getName());
 			AutocropParameters autocropParameters = new AutocropParameters(currentRaw.getParent(),
 			                                                               currentRaw.getParent() +
 			                                                               rawImage.getSeparator());

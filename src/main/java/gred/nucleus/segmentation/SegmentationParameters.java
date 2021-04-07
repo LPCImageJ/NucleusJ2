@@ -2,6 +2,8 @@ package gred.nucleus.segmentation;
 
 
 import gred.nucleus.plugins.PluginParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -62,18 +64,16 @@ public class SegmentationParameters extends PluginParameters {
 	
 	
 	public void addProperties(String pathToConfigFile) {
-		Properties  prop = new Properties();
-		InputStream is   = null;
-		try {
-			is = new FileInputStream(pathToConfigFile);
-		} catch (FileNotFoundException ex) {
-			System.err.println(pathToConfigFile + " : can't find the config file !");
-			System.exit(-1);
-		}
-		try {
+		Logger logger = LoggerFactory.getLogger(getClass().getName());
+		
+		Properties prop = new Properties();
+		try (InputStream is = new FileInputStream(pathToConfigFile)) {
 			prop.load(is);
+		} catch (FileNotFoundException ex) {
+			logger.error(pathToConfigFile + ": can't find the config file !", ex);
+			System.exit(-1);
 		} catch (IOException ex) {
-			System.err.println(pathToConfigFile + " : can't load the config file !");
+			logger.error(pathToConfigFile + ": can't load the config file !", ex);
 			System.exit(-1);
 		}
 		for (String idProp : prop.stringPropertyNames()) {
@@ -90,6 +90,7 @@ public class SegmentationParameters extends PluginParameters {
 	}
 	
 	
+	@Override
 	public String getAnalysisParameters() {
 		super.getAnalysisParameters();
 		this.headerInfo += "#maxVolumeNucleus:" + maxVolumeNucleus + "\n"

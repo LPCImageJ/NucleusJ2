@@ -88,40 +88,26 @@ public class ChromocentersAnalysisBatchPlugin_ implements PlugIn {
 						imagePlusInput.setCalibration(calibration);
 						try {
 							if (chromocentersPipelineBatchDialog.isNucAndCcAnalysis()) {
-								ChromocenterAnalysis chromocenterAnalysis = new ChromocenterAnalysis();
-								chromocenterAnalysis.computeParametersChromocenter(
-										nameFileChromocenter,
-										imagePlusSegmented,
-										imagePlusChromocenter
-								                                                  );
+								ChromocenterAnalysis.computeParametersChromocenter(nameFileChromocenter,
+								                                                   imagePlusSegmented,
+								                                                   imagePlusChromocenter);
 								IJ.log("chromocenterAnalysis is computing ...");
-								NucleusChromocentersAnalysis nucleusChromocenterAnalysis =
-										new NucleusChromocentersAnalysis();
 								IJ.log("nucleusChromocenterAnalysis is computing...");
-								nucleusChromocenterAnalysis.computeParameters(
-										nameFileChromocenterAndNucleus,
-										rhfChoice,
-										imagePlusInput,
-										imagePlusSegmented,
-										imagePlusChromocenter
-								                                             );
+								NucleusChromocentersAnalysis.computeParameters(nameFileChromocenterAndNucleus,
+								                                               rhfChoice,
+								                                               imagePlusInput,
+								                                               imagePlusSegmented,
+								                                               imagePlusChromocenter);
 							} else if (chromocentersPipelineBatchDialog.isCcAnalysis()) {
-								ChromocenterAnalysis chromocenterAnalysis = new ChromocenterAnalysis();
-								chromocenterAnalysis.computeParametersChromocenter(
-										nameFileChromocenter,
-										imagePlusSegmented,
-										imagePlusChromocenter
-								                                                  );
+								ChromocenterAnalysis.computeParametersChromocenter(nameFileChromocenter,
+								                                                   imagePlusSegmented,
+								                                                   imagePlusChromocenter);
 							} else {
-								NucleusChromocentersAnalysis nucleusChromocenterAnalysis =
-										new NucleusChromocentersAnalysis();
-								nucleusChromocenterAnalysis.computeParameters(
-										nameFileChromocenterAndNucleus,
-										rhfChoice,
-										imagePlusInput,
-										imagePlusSegmented,
-										imagePlusChromocenter
-								                                             );
+								NucleusChromocentersAnalysis.computeParameters(nameFileChromocenterAndNucleus,
+								                                               rhfChoice,
+								                                               imagePlusInput,
+								                                               imagePlusSegmented,
+								                                               imagePlusChromocenter);
 							}
 						} catch (IOException e) {
 							e.printStackTrace();

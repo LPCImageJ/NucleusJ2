@@ -13,6 +13,7 @@ import ij.plugin.PlugIn;
  * @author Tristan Dubos and Axel Poulet
  * @deprecated
  */
+@Deprecated
 public class NucleusAnalysis_ implements PlugIn {
 	/** image to process */
 	ImagePlus imagePlusInput;
@@ -63,8 +64,8 @@ public class NucleusAnalysis_ implements PlugIn {
 		if (genericDialog.wasCanceled()) {
 			return;
 		}
-		ImagePlus imagePlusInput     = WindowManager.getImage(wList[genericDialog.getNextChoiceIndex()]);
-		ImagePlus imagePlusSegmented = WindowManager.getImage(wList[genericDialog.getNextChoiceIndex()]);
+		ImagePlus input     = WindowManager.getImage(wList[genericDialog.getNextChoiceIndex()]);
+		ImagePlus segmented = WindowManager.getImage(wList[genericDialog.getNextChoiceIndex()]);
 		xCalibration = genericDialog.getNextNumber();
 		yCalibration = genericDialog.getNextNumber();
 		zCalibration = genericDialog.getNextNumber();
@@ -74,8 +75,8 @@ public class NucleusAnalysis_ implements PlugIn {
 		calibration.pixelWidth = xCalibration;
 		calibration.pixelHeight = yCalibration;
 		calibration.setUnit(unit);
-		imagePlusInput.setCalibration(calibration);
-		NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(imagePlusInput, imagePlusSegmented);
+		input.setCalibration(calibration);
+		NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(input, segmented);
 		//nucleusAnalysis.nucleusParameter3D();
 	}
 	

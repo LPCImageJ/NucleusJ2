@@ -13,6 +13,7 @@ import ij.plugin.PlugIn;
  * @author Poulet Axel
  * @deprecated Method to detect the chromocenters on one image
  */
+@Deprecated
 public class ChromocenterSegmentationPlugin_ implements PlugIn {
 	
 	/**
@@ -70,9 +71,8 @@ public class ChromocenterSegmentationPlugin_ implements PlugIn {
 		calibration.setUnit(unit);
 		imagePlusInput.setCalibration(calibration);
 		imagePlusSegmented.setCalibration(calibration);
-		ChromocentersEnhancement chromocentersSegmentation = new ChromocentersEnhancement();
 		ImagePlus imagePlusContrast =
-				chromocentersSegmentation.applyEnhanceChromocenters(imagePlusInput, imagePlusSegmented);
+				ChromocentersEnhancement.applyEnhanceChromocenters(imagePlusInput, imagePlusSegmented);
 		imagePlusContrast.setTitle("ContrastedImage");
 		imagePlusContrast.show();
 	}

@@ -26,10 +26,15 @@ import ij.process.StackConverter;
 import ij.process.StackStatistics;
 import inra.ijpb.binary.BinaryImages;
 import loci.common.DebugTools;
+import loci.formats.FormatException;
 import loci.plugins.BF;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
@@ -45,19 +50,19 @@ public class NucleusSegmentation {
 	
 	/** Segmentation parameters for the analyse */
 	private final SegmentationParameters segmentationParameters;
+	/** ImagePlus input to process */
+	private final ImagePlus              imgRawTransformed;
 	/** List of the 3D parameters computed associated to the segmented image */
 	public        Measure3D              measure3D;
+	/* String stocking the file name if any nucleus is detected*/
 	/** Threshold detected by the Otsu modified method */
 	private       int                    bestThreshold = -1;
-	/* String stocking the file name if any nucleus is detected*/
 	/** volume min of the detected object */
 	private       int                    vMin;
 	/** volume max of the detected object */
 	private       int                    vMax;
 	/** ImagePlus input to process */
 	private       ImagePlus              imgRaw;
-	/** ImagePlus input to process */
-	private final ImagePlus              imgRawTransformed;
 	/** Check if the segmentation is not in border */
 	private       boolean                badCrop       = false;
 	/** Current image analysed */
@@ -76,13 +81,14 @@ public class NucleusSegmentation {
 	 * @param vMax                   maximum volume of detected object
 	 * @param segmentationParameters list the parameters for the analyse
 	 *
-	 * @throws Exception
+	 * @throws IOException
+	 * @throws FormatException
 	 */
 	public NucleusSegmentation(ImagePlus imgRaw,
 	                           int vMin,
 	                           int vMax,
 	                           SegmentationParameters segmentationParameters)
-	throws Exception {
+	throws IOException, FormatException {
 		this.vMin = vMin;
 		this.vMax = vMax;
 		this.segmentationParameters = segmentationParameters;
@@ -104,7 +110,7 @@ public class NucleusSegmentation {
 	public NucleusSegmentation(File imageFile,
 	                           String outputFilesPrefix,
 	                           SegmentationParameters segmentationParameters)
-	throws Exception {
+	throws IOException, FormatException {
 		this.segmentationParameters = segmentationParameters;
 		this.currentFile = imageFile;
 		this.imgRaw = getImageChannel(0);
@@ -176,9 +182,10 @@ public class NucleusSegmentation {
 	 *
 	 * @return channel image
 	 *
-	 * @throws Exception
+	 * @throws IOException
+	 * @throws FormatException
 	 */
-	public ImagePlus getImageChannel(int channelNumber) throws Exception {
+	public ImagePlus getImageChannel(int channelNumber) throws IOException, FormatException {
 		DebugTools.enableLogging("OFF");       // DEBUG INFO BIO-FORMATS OFF
 		ImagePlus[] currentImage = BF.openImagePlus(this.currentFile.getAbsolutePath());
 		currentImage = ChannelSplitter.split(currentImage[channelNumber]);
@@ -480,12 +487,13 @@ public class NucleusSegmentation {
 	 */
 	private ArrayList<Integer> computeMinMaxThreshold(ImagePlus imagePlusInput) {
 		ArrayList<Integer> arrayListMinMaxThreshold = new ArrayList<>();
-		Thresholding       thresholding             = new Thresholding();
-		int                threshold                = thresholding.computeOtsuThreshold(imagePlusInput);
-		StackStatistics    stackStatistics          = new StackStatistics(imagePlusInput);
-		double             stdDev                   = stackStatistics.stdDev;
-		double             min                      = threshold - stdDev * 2;
-		double             max                      = threshold + stdDev / 2;
+		
+		int             threshold       = Thresholding.computeOTSUThreshold(imagePlusInput);
+		StackStatistics stackStatistics = new StackStatistics(imagePlusInput);
+		double          stdDev          = stackStatistics.stdDev;
+		double          min             = threshold - stdDev * 2;
+		double          max             = threshold + stdDev / 2;
+		
 		if (min < 0) {
 			arrayListMinMaxThreshold.add(6);
 		} else {
@@ -531,12 +539,11 @@ public class NucleusSegmentation {
 	 * @param imagePlusSegmented image to be correct
 	 */
 	private void morphologicalCorrection(ImagePlus imagePlusSegmented) {
-		FillingHoles holesFilling = new FillingHoles();
-		int          temps        = imagePlusSegmented.getBitDepth();
+		int temps = imagePlusSegmented.getBitDepth();
 		computeOpening(imagePlusSegmented);
 		computeClosing(imagePlusSegmented);
 		// TODO FIX?
-		imagePlusSegmented = holesFilling.apply2D(imagePlusSegmented);
+		imagePlusSegmented = FillingHoles.apply2D(imagePlusSegmented);
 	}
 	
 	
@@ -595,7 +602,7 @@ public class NucleusSegmentation {
 	 */
 	private boolean testRelativeObjectVolume(double objectVolume, double imageVolume) {
 		final double ratio = (objectVolume / imageVolume) * 100;
-		return !(ratio >= 70);
+		return ratio < 70;
 	}
 	
 	
@@ -724,26 +731,26 @@ public class NucleusSegmentation {
 	 * @param inputPathDir folder of the input to create badcrop folder.
 	 */
 	public void checkBadCrop(String inputPathDir) {
+		Logger logger = LoggerFactory.getLogger(getClass());
+		
 		if ((this.badCrop) || (this.bestThreshold == -1)) {
-			File file          = new File(inputPathDir);
-			File BadCropFolder = new File(inputPathDir + File.separator + "BadCrop");
-			System.out.println("et du coup on est dedans ou quoi ...........\n" +
-			                   BadCropFolder +
-			                   ".....................................");
+			File badCropFolder = new File(inputPathDir + File.separator + "BadCrop");
+			logger.debug("et du coup on est dedans ou quoi ...........\n{}..................", badCropFolder);
 			
-			if (BadCropFolder.exists() || BadCropFolder.mkdir()) {
+			if (badCropFolder.exists() || badCropFolder.mkdir()) {
 				File    fileToMove = new File(inputPathDir + File.separator + this.imgRawTransformed.getTitle());
-				File    newFile    = new File(BadCropFolder + File.separator + this.imgRawTransformed.getTitle());
+				File    newFile    = new File(badCropFolder + File.separator + this.imgRawTransformed.getTitle());
 				boolean renamed    = fileToMove.renameTo(newFile);
-				if (!renamed) System.err.println("File not renamed: " + fileToMove.getAbsolutePath());
+				if (!renamed) logger.info("File not renamed: {}", fileToMove.getAbsolutePath());
 			} else {
-				System.err.println("Directory does not exist and could not be created: " + BadCropFolder);
+				logger.error("Directory does not exist and could not be created: {}", badCropFolder);
 			}
 		}
 	}
 	
 	
 	public void checkBadCrop(ImageWrapper image, Client client) {
+		Logger logger = LoggerFactory.getLogger(getClass());
 		if ((this.badCrop) || (this.bestThreshold == -1)) {
 			List<TagAnnotationWrapper> tags;
 			TagAnnotationWrapper       tagBadCrop;
@@ -751,40 +758,38 @@ public class NucleusSegmentation {
 			try {
 				tags = client.getTags("BadCrop");
 			} catch (Exception e) {
-				System.err.println("Could not get list of \"BadCrop\" tags");
-				e.printStackTrace();
+				logger.error("Could not get list of \"BadCrop\" tags", e);
 				return;
 			}
 			
-			if (tags.size() == 0) {
+			if (tags.isEmpty()) {
 				try {
 					tagBadCrop = new TagAnnotationWrapper(client, "BadCrop", "");
 				} catch (Exception e) {
-					System.err.println("Could not create new \"BadCrop\" tag");
-					e.printStackTrace();
+					logger.error("Could not create new \"BadCrop\" tag", e);
 					return;
 				}
 			} else {
 				try {
 					tagBadCrop = tags.get(0);
 				} catch (Exception e) {
-					System.err.println("Could not retrieve a \"BadCrop\" tag");
-					e.printStackTrace();
+					logger.error("Could not retrieve a \"BadCrop\" tag", e);
 					return;
 				}
 			}
 			
-			System.out.println("Adding Bad Crop tag");
+			logger.info("Adding Bad Crop tag");
 			try {
 				image.addTag(client, tagBadCrop);
 			} catch (Exception e) {
-				System.out.println("Tag already added");
+				logger.error("Tag already added", e);
 			}
 		}
 	}
 	
 	
 	public void checkBadCrop(ROIWrapper roi, Client client) {
+		Logger logger = LoggerFactory.getLogger(getClass());
 		if ((this.badCrop) || (this.bestThreshold == -1)) {
 			for (GenericShapeWrapper<?> shape : roi.getShapes()) {
 				shape.setStroke(Color.RED);
@@ -793,7 +798,7 @@ public class NucleusSegmentation {
 		try {
 			roi.saveROI(client);
 		} catch (Exception e) {
-			System.out.println("Could not save bad crop ROI id: " + roi.getId());
+			logger.error("Could not save bad crop ROI id: {}", roi.getId());
 		}
 	}
 	
@@ -820,6 +825,7 @@ public class NucleusSegmentation {
 	 */
 	public void saveOTSUSegmentedOMERO(Client client, Long id)
 	throws Exception {
+		Logger logger = LoggerFactory.getLogger(getClass());
 		if (!badCrop && bestThreshold != -1) {
 			String path = new java.io.File(".").getCanonicalPath() + File.separator + this.imageSeg[0].getTitle();
 			saveFile(this.imageSeg[0], path);
@@ -838,9 +844,12 @@ public class NucleusSegmentation {
 			
 			otsu.importImages(client, path);
 			
-			File    file    = new File(path);
-			boolean deleted = file.delete();
-			if (!deleted) System.err.println("File not deleted: " + path);
+			File file = new File(path);
+			try {
+				Files.deleteIfExists(file.toPath());
+			} catch (IOException e) {
+				logger.error("Could not delete file: {}", path);
+			}
 		}
 	}
 	
@@ -869,6 +878,7 @@ public class NucleusSegmentation {
 	 */
 	public void saveGiftWrappingSegOMERO(Client client, Long id)
 	throws Exception {
+		Logger logger = LoggerFactory.getLogger(getClass());
 		if (!badCrop && bestThreshold != -1
 		    && this.segmentationParameters.getGiftWrapping()) {
 			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
@@ -892,9 +902,12 @@ public class NucleusSegmentation {
 			
 			gift.importImages(client, path);
 			
-			File    file    = new File(path);
-			boolean deleted = file.delete();
-			if (!deleted) System.err.println("File not deleted: " + path);
+			File file = new File(path);
+			try {
+				Files.deleteIfExists(file.toPath());
+			} catch (IOException e) {
+				logger.error("Could not delete file: {}", path);
+			}
 		}
 	}
 	

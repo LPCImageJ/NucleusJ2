@@ -14,6 +14,7 @@ import ij.plugin.PlugIn;
  * @author Tristan Dubos and Axel Poulet
  * @deprecated Method to analyse the chromocenter
  */
+@Deprecated
 public class ChromocentersAnalysisPlugin_ implements PlugIn {
 	
 	/**
@@ -56,18 +57,22 @@ public class ChromocentersAnalysisPlugin_ implements PlugIn {
 		genericDialog.addNumericField("y calibration", yCalibration, 3);
 		genericDialog.addNumericField("z calibration).", zCalibration, 3);
 		genericDialog.addStringField("Unit", unit, 10);
-		genericDialog.addRadioButtonGroup(
-				"Type of RHF ",
-				new String[]{"Volume and intensity", "Volume", "Intensity"}
-				, 1, 3,
-				"Volume and intensity"
-		                                 );
-		genericDialog.addRadioButtonGroup(
-				"Type of results ",
-				new String[]{"Nucleus and chromocenter parameters", "Chromocenter parameters", "Nucleus parameters"}
-				, 3, 1,
-				"Nucleus and chromocenter parameters"
-		                                 );
+		genericDialog.addRadioButtonGroup("Type of RHF ",
+		                                  new String[]{"Volume and intensity", "Volume", "Intensity"},
+		                                  1,
+		                                  3,
+		                                  "Volume and intensity");
+		
+		String nucleusParameters      = "Nucleus parameters";
+		String chromocenterParameters = "Chromocenter parameters";
+		String ncParameters           = "Nucleus and chromocenter parameters";
+		genericDialog.addRadioButtonGroup("Type of results ",
+		                                  new String[]{ncParameters,
+		                                               chromocenterParameters,
+		                                               nucleusParameters},
+		                                  3,
+		                                  1,
+		                                  ncParameters);
 		genericDialog.showDialog();
 		if (genericDialog.wasCanceled()) {
 			return;
@@ -90,27 +95,19 @@ public class ChromocentersAnalysisPlugin_ implements PlugIn {
 		imagePlusChromocenter.setCalibration(calibration);
 		imagePlusSegmented.setCalibration(calibration);
 		
-		if (analysisChoice.equals("Nucleus and chromocenter parameters")) {
-			ChromocenterAnalysis chromocenterAnalysis = new ChromocenterAnalysis();
-			chromocenterAnalysis.computeParametersChromocenter(imagePlusSegmented, imagePlusChromocenter);
-			NucleusChromocentersAnalysis nucleusChromocentersAnalysis = new NucleusChromocentersAnalysis();
-			nucleusChromocentersAnalysis.computeParameters(
-					rhfChoice,
-					imagePlusInput,
-					imagePlusSegmented,
-					imagePlusChromocenter
-			                                              );
-		} else if (analysisChoice.equals("Chromocenter parameters")) {
-			ChromocenterAnalysis chromocenterAnalysis = new ChromocenterAnalysis();
-			chromocenterAnalysis.computeParametersChromocenter(imagePlusSegmented, imagePlusChromocenter);
+		if (analysisChoice.equals(ncParameters)) {
+			ChromocenterAnalysis.computeParametersChromocenter(imagePlusSegmented, imagePlusChromocenter);
+			NucleusChromocentersAnalysis.computeParameters(rhfChoice,
+			                                               imagePlusInput,
+			                                               imagePlusSegmented,
+			                                               imagePlusChromocenter);
+		} else if (analysisChoice.equals(chromocenterParameters)) {
+			ChromocenterAnalysis.computeParametersChromocenter(imagePlusSegmented, imagePlusChromocenter);
 		} else {
-			NucleusChromocentersAnalysis nucleusChromocentersAnalysis = new NucleusChromocentersAnalysis();
-			nucleusChromocentersAnalysis.computeParameters(
-					rhfChoice,
-					imagePlusInput,
-					imagePlusSegmented,
-					imagePlusChromocenter
-			                                              );
+			NucleusChromocentersAnalysis.computeParameters(rhfChoice,
+			                                               imagePlusInput,
+			                                               imagePlusSegmented,
+			                                               imagePlusChromocenter);
 		}
 	}
 	

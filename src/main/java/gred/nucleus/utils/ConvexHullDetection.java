@@ -9,9 +9,10 @@ import java.util.List;
 /** @author Tristan Dubos and Axel Poulet */
 public class ConvexHullDetection {
 	
-	private final double      pi       = Math.PI;
-	private       VoxelRecord p0       = new VoxelRecord();
-	private       String      axesName = "";
+	private static final double PI = Math.PI;
+	
+	private VoxelRecord p0       = new VoxelRecord();
+	private String      axesName = "";
 	/*
 	 * 1) On calcule l'angle alpha comme précédemment :
 	 * double acos = Math.acos(cosAlpha)
@@ -79,11 +80,11 @@ public class ConvexHullDetection {
 		double      xcal           = calibration.pixelWidth;
 		double      ycal           = calibration.pixelHeight;
 		double      zcal           = calibration.pixelDepth;
-		while (anglesSum < 2 * pi + 1) {
+		while (anglesSum < 2 * PI + 1) {
 			double      angleMin          = 0;
 			double      maxLength         = 0;
 			double      distance          = 0;
-			double      angleMinPiSurDeux = 2 * pi;
+			double      angleMinPiSurDeux = 2 * PI;
 			VoxelRecord voxelMin          = new VoxelRecord();
 			int         iMin              = 0;
 			if (compteur != 0) {
@@ -118,9 +119,9 @@ public class ConvexHullDetection {
 					// IJ.log("distance " + distance +"<="+ distanceThreshold);
 					if (distance <= distanceThreshold) {
 						double angle              = computeAngle(vectorTest, vectorCourant, calibration);
-						double anglePlusPiSurDeux = angle - pi / 2;
-						if (anglePlusPiSurDeux <= -pi) {
-							anglePlusPiSurDeux += 2 * pi;
+						double anglePlusPiSurDeux = angle - PI / 2;
+						if (anglePlusPiSurDeux <= -PI) {
+							anglePlusPiSurDeux += 2 * PI;
 						}
 						double threshold = angleThreshold(image, voxelTest, vectorTest, calibration, distanceThreshold);
 						if (anglePlusPiSurDeux <= angleMinPiSurDeux) {
@@ -154,7 +155,7 @@ public class ConvexHullDetection {
 				break;
 			}
 			
-			if (anglesSum <= 2 * pi) {
+			if (anglesSum <= 2 * PI) {
 				convexHull.add(voxelMin);
 				//IJ.log("point num: "+compteur+" "+_p0._i+" "+_p0._j+" "+_p0._k+" angle: "+angleMinPiSurDeux+" distance: "+maxLength+" angle sum"+anglesSum);
 			}
@@ -328,14 +329,14 @@ public class ConvexHullDetection {
 				                          record.j - nbPixelWidth,
 				                          record.k - nbPixelHeight);
 			}
-			double angleEntreZeroEt2pi = computeAngle(vectorTest, vectorCourant, calibration) + pi;
+			double angleEntreZeroEt2pi = computeAngle(vectorTest, vectorCourant, calibration) + PI;
 			//IJ.log("AngleTest "+ angleEntreZeroEt2pi );
 			if (angleEntreZeroEt2pi > angleMax) {
 				angleMax = angleEntreZeroEt2pi;
 			}
 		}
-		if (angleMax > pi) {
-			angleMax -= 2 * pi;
+		if (angleMax > PI) {
+			angleMax -= 2 * PI;
 		}
 		return angleMax;
 	}

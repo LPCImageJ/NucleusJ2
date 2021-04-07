@@ -114,6 +114,7 @@ public class Distance_Map implements PlugInFilter {
 			}
 		} catch (InterruptedException ie) {
 			IJ.error("A thread was interrupted in step 1 .");
+			Thread.currentThread().interrupt();
 		}
 		//Transformation 2.  g (in s) -> h (in s)
 		IJ.showStatus("EDT transformation 2/3");
@@ -128,6 +129,7 @@ public class Distance_Map implements PlugInFilter {
 			}
 		} catch (InterruptedException ie) {
 			IJ.error("A thread was interrupted in step 2 .");
+			Thread.currentThread().interrupt();
 		}
 		//Transformation 3. h (in s) -> s
 		IJ.showStatus("EDT transformation 3/3");
@@ -142,6 +144,7 @@ public class Distance_Map implements PlugInFilter {
 			}
 		} catch (InterruptedException ie) {
 			IJ.error("A thread was interrupted in step 3 .");
+			Thread.currentThread().interrupt();
 		}
 		//Find the largest distance for scaling
 		//Also fill in the background values.

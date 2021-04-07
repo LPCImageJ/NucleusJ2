@@ -1,6 +1,9 @@
 package gred.nucleus.mains;
 
 import fr.igred.omero.Client;
+import fr.igred.omero.exception.AccessException;
+import fr.igred.omero.exception.OMEROServerError;
+import fr.igred.omero.exception.ServiceException;
 import fr.igred.omero.repository.ImageWrapper;
 import fr.igred.omero.repository.DatasetWrapper;
 import fr.igred.omero.repository.ProjectWrapper;
@@ -16,6 +19,8 @@ import ij.io.FileSaver;
 import loci.common.DebugTools;
 import loci.formats.FormatException;
 import org.apache.commons.cli.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Console;
 import java.io.File;
@@ -161,20 +166,21 @@ public class Main {
 	 *
 	 * @param inputDirectory  path to the raw image's folder
 	 * @param outputDirectory path to output folder analysis
-	 *
-	 * @throws Exception
 	 */
-	public static void segmentationFolder(String inputDirectory, String outputDirectory) throws Exception {
-		System.out.println("test " + inputDirectory);
+	public static void segmentationFolder(String inputDirectory, String outputDirectory) {
+		Logger logger = LoggerFactory.getLogger(Main.class);
+		logger.debug("test: {}", inputDirectory);
 		SegmentationParameters segmentationParameters = new SegmentationParameters(inputDirectory, outputDirectory);
 		SegmentationCalling    otsuModified           = new SegmentationCalling(segmentationParameters);
 		try {
 			String log = otsuModified.runSeveralImages2();
 			if (!(log.equals(""))) {
-				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+				logger.error("Nuclei which didn't pass the segmentation:\n{}", log);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("I/O exception.", e);
+		} catch (FormatException e) {
+			logger.error("Format exception", e);
 		}
 	}
 	
@@ -185,21 +191,22 @@ public class Main {
 	 * @param inputDirectory  path to the raw image's folder
 	 * @param outputDirectory path to output folder analysis
 	 * @param config          path to config file
-	 *
-	 * @throws Exception
 	 */
-	public static void segmentationFolder(String inputDirectory, String outputDirectory, String config)
-	throws Exception {
+	public static void segmentationFolder(String inputDirectory, String outputDirectory, String config) {
+		Logger logger = LoggerFactory.getLogger(Main.class);
+		
 		SegmentationParameters segmentationParameters =
 				new SegmentationParameters(inputDirectory, outputDirectory, config);
 		SegmentationCalling otsuModified = new SegmentationCalling(segmentationParameters);
 		try {
 			String log = otsuModified.runSeveralImages2();
 			if (!(log.equals(""))) {
-				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+				logger.error("Nuclei which didn't pass the segmentation:\n{}", log);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("I/O exception.", e);
+		} catch (FormatException e) {
+			logger.error("Format exception", e);
 		}
 	}
 	
@@ -209,19 +216,19 @@ public class Main {
 	 *
 	 * @param inputDirectory  path to one raw image
 	 * @param outputDirectory path to output folder analysis
-	 *
-	 * @throws Exception
 	 */
-	public static void segmentationOneImage(String inputDirectory, String outputDirectory) throws Exception {
+	public static void segmentationOneImage(String inputDirectory, String outputDirectory) {
+		Logger logger = LoggerFactory.getLogger(Main.class);
+		
 		SegmentationParameters segmentationParameters = new SegmentationParameters(inputDirectory, outputDirectory);
 		SegmentationCalling    otsuModified           = new SegmentationCalling(segmentationParameters);
 		try {
 			String log = otsuModified.runOneImage(inputDirectory);
 			if (!(log.equals(""))) {
-				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+				logger.error("Nuclei which didn't pass the segmentation:\n{}", log);
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (Exception e) {
+			logger.error("An exception occurred", e);
 		}
 	}
 	
@@ -230,7 +237,8 @@ public class Main {
 	                                     String outputDirectory,
 	                                     Client client,
 	                                     SegmentationCalling otsuModified)
-	throws Exception {
+	throws ServiceException, AccessException, OMEROServerError {
+		Logger logger = LoggerFactory.getLogger(Main.class);
 		
 		String[] param = inputDirectory.split(Pattern.quote(File.separator));
 		
@@ -247,10 +255,10 @@ public class Main {
 						log = otsuModified.runOneImageOMERO(image, Long.parseLong(outputDirectory), client);
 					}
 					if (!(log.equals(""))) {
-						System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+						logger.error("Nuclei which didn't pass the segmentation\n{}", log);
 					}
-				} catch (IOException e) {
-					e.printStackTrace();
+				} catch (Exception e) {
+					logger.error("An exception occurred", e);
 				}
 			} else {
 				Long               id = Long.parseLong(param[1]);
@@ -290,10 +298,10 @@ public class Main {
 						log = otsuModified.runSeveralImageOMERO(images, Long.parseLong(outputDirectory), client);
 					}
 					if (!(log.equals(""))) {
-						System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+						logger.error("Nuclei which didn't pass the segmentation\n{}", log);
 					}
-				} catch (IOException e) {
-					e.printStackTrace();
+				} catch (Exception e) {
+					logger.error("An exception occurred", e);
 				}
 			}
 		} else {
@@ -303,7 +311,7 @@ public class Main {
 	
 	
 	public static void segmentationOMERO(String inputDirectory, String outputDirectory, String config, Client client)
-	throws Exception {
+	throws ServiceException, AccessException, OMEROServerError {
 		SegmentationParameters segmentationParameters = new SegmentationParameters(".", ".", config);
 		SegmentationCalling    otsuModified           = new SegmentationCalling(segmentationParameters);
 		
@@ -312,7 +320,7 @@ public class Main {
 	
 	
 	public static void segmentationOMERO(String inputDirectory, String outputDirectory, Client client)
-	throws Exception {
+	throws ServiceException, AccessException, OMEROServerError {
 		SegmentationParameters segmentationParameters = new SegmentationParameters(".", ".");
 		SegmentationCalling    otsuModified           = new SegmentationCalling(segmentationParameters);
 		
@@ -362,11 +370,9 @@ public class Main {
 	 *
 	 * @throws IOException
 	 * @throws FormatException
-	 * @throws FileInOut
-	 * @throws Exception
 	 */
 	public static void computeNucleusParametersDL(String rawImagesInputFolder, String segmentedImagesFolder)
-	throws IOException, FormatException, FileInOut, Exception {
+	throws IOException, FormatException {
 		ComputeNucleiParametersML computeParameters =
 				new ComputeNucleiParametersML(rawImagesInputFolder, segmentedImagesFolder);
 		computeParameters.run();
@@ -487,6 +493,8 @@ public class Main {
 	
 	
 	public static void main2(String[] args) throws Exception {
+		Logger logger = LoggerFactory.getLogger(Main.class);
+		
 		DebugTools.enableLogging("OFF");
 		Console con = System.console();
 		
@@ -516,7 +524,7 @@ public class Main {
 		
 		switch (cmd.getOptionValue("action")) {
 			case "autocrop":
-				System.out.println("start autocrop");
+				logger.info("Start autocrop");
 				
 				if (cmd.hasOption("omero")) {
 					Client client = new Client();
@@ -525,7 +533,7 @@ public class Main {
 					if (cmd.hasOption("password")) {
 						mdp = cmd.getOptionValue("password");
 					} else {
-						System.out.println("Enter password ");
+						System.out.println("Enter password: ");
 						mdp = String.valueOf(con.readPassword());
 					}
 					
@@ -561,7 +569,7 @@ public class Main {
 				}
 				break;
 			case "segmentation":
-				System.out.println("start " + "segmentation");
+				logger.info("start segmentation");
 				
 				if (cmd.hasOption("omero")) {
 					Client client = new Client();
@@ -647,7 +655,7 @@ public class Main {
             */
 				break;
 		}
-		System.out.println("Fin du programme");
+		logger.info("Fin du programme");
 	}
 	
 }

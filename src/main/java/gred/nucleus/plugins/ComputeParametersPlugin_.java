@@ -4,18 +4,23 @@ import gred.nucleus.core.ComputeNucleiParameters;
 import gred.nucleus.dialogs.ComputeParametersDialog;
 import ij.measure.Calibration;
 import ij.plugin.PlugIn;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class ComputeParametersPlugin_ implements PlugIn {
 	/** Run computing parameters method. */
 	public void run(String arg) {
+		Logger logger = LoggerFactory.getLogger(this.getClass());
+		
 		ComputeParametersDialog computeParametersDialog = new ComputeParametersDialog();
 		
 		while (computeParametersDialog.isShowing()) {
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				logger.error("Interrupted exception.", e);
+				Thread.currentThread().interrupt();
 			}
 		}
 		try {

@@ -8,8 +8,12 @@ import gred.nucleus.files.Directory;
 import gred.nucleus.files.FilesNames;
 import gred.nucleus.files.OutputTextFile;
 import ij.IJ;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -69,8 +73,9 @@ public class AutoCropCalling {
 	 * @param file
 	 */
 	public void runFile(String file) {
-		File currentFile = new File(file);
-		System.out.println("Current file " + currentFile.getAbsolutePath());
+		Logger logger      = LoggerFactory.getLogger(this.getClass());
+		File   currentFile = new File(file);
+		logger.info("Current file: {}", currentFile.getAbsolutePath());
 		String     fileImg          = currentFile.toString();
 		FilesNames outPutFilesNames = new FilesNames(fileImg);
 		this.prefix = outPutFilesNames.prefixNameFile();
@@ -93,13 +98,15 @@ public class AutoCropCalling {
 			test.run();
 			this.outputCropGeneralInfo += autoCrop.getImageCropInfo();
 		} catch (Exception e) {
+			logger.error("Cannot run autocrop on: " + currentFile.getName(), e);
 			IJ.error("Cannot run autocrop on " + currentFile.getName());
-			e.printStackTrace();
 		}
 	}
 	
-	public void saveGeneralInfo(){
-		System.out.println(this.autocropParameters.getInputFolder() + "result_Autocrop_Analyse");
+	
+	public void saveGeneralInfo() {
+		Logger logger = LoggerFactory.getLogger(this.getClass());
+		logger.info("{}result_Autocrop_Analyse", this.autocropParameters.getInputFolder());
 		OutputTextFile resultFileOutput =
 				new OutputTextFile(this.autocropParameters.getOutputFolder() + "result_Autocrop_Analyse.csv");
 		resultFileOutput.saveTextFile(this.outputCropGeneralInfo, true);
@@ -107,8 +114,9 @@ public class AutoCropCalling {
 	
 	
 	public void runImageOMERO(ImageWrapper image, Long[] outputsDatImages, Client client) throws Exception {
+		Logger logger  = LoggerFactory.getLogger(this.getClass());
 		String fileImg = image.getName();
-		System.out.println("Current file : " + fileImg);
+		logger.info("Current file: {}", fileImg);
 		FilesNames outPutFilesNames = new FilesNames(fileImg);
 		this.prefix = outPutFilesNames.prefixNameFile();
 		AutoCrop autoCrop = new AutoCrop(image, autocropParameters, client);
@@ -132,16 +140,32 @@ public class AutoCropCalling {
 		saveGeneralInfoOmero(client, outputsDatImages);
 	}
 	
-	public void saveGeneralInfoOmero(Client client, Long[] outputsDatImages) throws Exception{
-		String resultPath = this.autocropParameters.getOutputFolder() + "result_Autocrop_Analyse.csv";
-		File resultFile = new File(resultPath);
+	
+	public void saveGeneralInfoOmero(Client client, Long[] outputsDatImages) throws InterruptedException {
+		Logger logger = LoggerFactory.getLogger(this.getClass());
+		
+		String         resultPath       = this.autocropParameters.getOutputFolder() + "result_Autocrop_Analyse.csv";
+		File           resultFile       = new File(resultPath);
 		OutputTextFile resultFileOutput = new OutputTextFile(resultPath);
 		resultFileOutput.saveTextFile(this.outputCropGeneralInfo, false);
 		
-		client.getDataset(outputsDatImages[autocropParameters.getChannelToComputeThreshold()]).addFile(client, resultFile);
-		boolean deleted = resultFile.delete();
-		if (!deleted) System.err.println("File not deleted: " + resultPath);
+		try {
+			client.getDataset(outputsDatImages[autocropParameters.getChannelToComputeThreshold()])
+			      .addFile(client, resultFile);
+		} catch (ServiceException se) {
+			logger.error("Could not connect to OMERO.", se);
+		} catch (AccessException ae) {
+			logger.error("Could not access data on OMERO.", ae);
+		} catch (ExecutionException e) {
+			logger.error("Could not add file to dataset.", e);
+		}
+		try {
+			Files.deleteIfExists(resultFile.toPath());
+		} catch(IOException io) {
+			logger.error("Problem while deleting file: " + resultPath, io);
+		}
 	}
+	
 	
 	/**
 	 * List of columns names in csv coordinates output file.

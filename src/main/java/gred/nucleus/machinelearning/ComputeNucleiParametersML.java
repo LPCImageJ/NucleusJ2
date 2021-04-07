@@ -9,9 +9,13 @@ import ij.ImagePlus;
 import ij.ImageStack;
 import inra.ijpb.binary.BinaryImages;
 import inra.ijpb.label.LabelImages;
+import loci.formats.FormatException;
 import loci.plugins.BF;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -67,19 +71,21 @@ public class ComputeNucleiParametersML {
 	/**
 	 * Run parameters computation parameters see Measure3D
 	 *
-	 * @throws Exception
+	 * @throws IOException
+	 * @throws FormatException
 	 */
-	public void run() throws Exception {
+	public void run() throws IOException, FormatException {
+		Logger logger = LoggerFactory.getLogger(getClass());
 		PluginParameters pluginParameters =
 				new PluginParameters(this.rawImagesInputDirectory, this.segmentedImagesDirectory);
 		Directory directoryInput = new Directory(pluginParameters.getOutputFolder());
 		directoryInput.listImageFiles(pluginParameters.getOutputFolder());
 		directoryInput.checkIfEmpty();
-		List<File> segImages = directoryInput.fileList;
+		List<File> segImages = directoryInput.getFileList();
 		StringBuilder outputCropGeneralInfoOTSU =
 				new StringBuilder(pluginParameters.getAnalysisParameters() + getResultsColumnNames());
 		for (File currentFile : segImages) {
-			System.out.println("current File " + currentFile.getName());
+			logger.info("Current File: {}", currentFile.getName());
 			ImagePlus raw = new ImagePlus(pluginParameters.getInputFolder() +
 			                              directoryInput.getSeparator() +
 			                              currentFile.getName());

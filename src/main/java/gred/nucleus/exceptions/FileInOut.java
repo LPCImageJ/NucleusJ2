@@ -1,10 +1,14 @@
 package gred.nucleus.exceptions;
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 public class FileInOut extends Exception {
 	public FileInOut(String fileName) {
-		
-		System.err.println("File " + fileName + " already exist ");
+		Logger logger = LoggerFactory.getLogger(getClass());
+		logger.error("File {} already exist ", fileName);
 	}
 	
 }

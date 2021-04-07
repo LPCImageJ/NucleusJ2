@@ -11,55 +11,40 @@ import java.io.File;
 
 
 public class SegmentationDialog extends JFrame implements ActionListener, ItemListener {
-	private static final long                 serialVersionUID   = 1L;
-	private static final String               INPUT_CHOOSER      = "inputChooser";
-	private static final String               OUTPUT_CHOOSER     = "outputChooser";
-	private static final String               CONFIG_CHOOSER     = "configChooser";
+	private static final long                          serialVersionUID        = 1L;
+	private static final String                        INPUT_CHOOSER           = "inputChooser";
+	private static final String                        OUTPUT_CHOOSER          = "outputChooser";
+	private static final String                        CONFIG_CHOOSER          = "configChooser";
+	final                IDialogListener               dialogListener;
+	private final        Container                     container;
+	private final        JFileChooser                  fc                      = new JFileChooser();
+	private final        JRadioButton                  omeroYesButton          = new JRadioButton("Yes");
+	private final        JRadioButton                  omeroNoButton           = new JRadioButton("No");
+	private final        JTextField                    jInputFileChooser       = new JTextField();
+	private final        JTextField                    jOutputFileChooser      = new JTextField();
+	private final        JPanel                        configFilePanel         = new JPanel();
+	private final        JLabel                        defConf                 = new JLabel("Default configuration");
+	private final        SegmentationConfigDialog      segmentationConfigFileDialog;
+	private final        JRadioButton                  rdoDefault              = new JRadioButton("Default");
+	private final        JRadioButton                  rdoAddConfigFile        = new JRadioButton("From file");
+	private final        JTextField                    jConfigFileChooser      = new JTextField();
+	private final        JRadioButton                  rdoAddConfigDialog      = new JRadioButton("New");
+	private final        JButton                       jButtonConfig           = new JButton("Config");
+	private final        JPanel                        localModeLayout         = new JPanel();
+	private final        JPanel                        omeroModeLayout         = new JPanel();
+	private final        JTextField                    jTextFieldHostname      = new JTextField();
+	private final        JTextField                    jTextFieldPort          = new JTextField();
+	private final        JTextField                    jTextFieldUsername      = new JTextField();
+	private final        JPasswordField                jPasswordField          = new JPasswordField();
+	private final        JTextField                    jTextFieldGroup         = new JTextField();
+	private final        String[]                      dataTypes               = {"Project", "Dataset", "Tag", "Image"};
+	private final        JComboBox<String>             jComboBoxDataType       = new JComboBox<>(dataTypes);
+	private final        JTextField                    jTextFieldSourceID      = new JTextField();
+	private final        JTextField                    jTextFieldOutputProject = new JTextField();
+	private final        JButton                       confButton              = new JButton("...");
+	private              boolean                       useOMERO                = false;
+	private              SegmentationDialog.ConfigMode configMode;
 	
-	
-	
-	private final        Container            container;
-	private final        JFileChooser         fc                 = new JFileChooser();
-	
-	private final        JRadioButton          omeroYesButton     = new JRadioButton("Yes");
-	private final        JRadioButton          omeroNoButton      = new JRadioButton("No");
-	private              boolean               useOmero           = false;
-	
-	private              JPanel               localModeLayout    = new JPanel();
-	private final        JTextField           jInputFileChooser  = new JTextField();
-	private final        JTextField           jOutputFileChooser = new JTextField();
-	
-	private              JPanel               omeroModeLayout    = new JPanel();
-	private              JTextField           jTextFieldHostname = new JTextField();
-	private              JTextField           jTextFieldPort     = new JTextField();
-	private              JTextField           jTextFieldUsername = new JTextField();
-	private              JPasswordField       jPasswordField     = new JPasswordField();
-	private              JTextField           jTextFieldGroup    = new JTextField();
-	private              String[]             dataTypes          = {"Project", "Dataset", "Tag", "Image"};
-	private              JComboBox            jComboBoxDataType  = new JComboBox(dataTypes);
-	private              JTextField           jTextFieldSourceID = new JTextField();
-	private              JTextField           jTextFieldOutputProject = new JTextField();
-	
-	private final        JPanel               configFilePanel    = new JPanel();
-	private final        JLabel               defConf            = new JLabel("Default configuration");
-	private final        SegmentationConfigDialog segmentationConfigFileDialog;
-	private final        JRadioButton         rdoDefault         = new JRadioButton("Default");
-	private final        JRadioButton         rdoAddConfigFile   = new JRadioButton("From file");
-	private final        JTextField           jConfigFileChooser = new JTextField();
-	private              JButton              confButton         = new JButton("...");;
-	private final        JRadioButton         rdoAddConfigDialog = new JRadioButton("New");
-	private final        JButton              jButtonConfig      = new JButton("Config");
-	
-	private final JPanel                    startQuitPanel;
-	private       SegmentationDialog.ConfigMode configMode = SegmentationDialog.ConfigMode.DEFAULT;
-	
-	public enum ConfigMode{
-		DEFAULT,
-		FILE,
-		INPUT
-	}
-	
-	IDialogListener dialogListener;
 	
 	/** Architecture of the graphical windows */
 	public SegmentationDialog(IDialogListener dialogListener) {
@@ -69,7 +54,7 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 		JButton jButtonQuit  = new JButton("Quit");
 		this.setTitle("Segmentation NucleusJ2");
 		this.setMinimumSize(new Dimension(400, 500));
-		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		
 		segmentationConfigFileDialog = new SegmentationConfigDialog(this);
 		segmentationConfigFileDialog.setVisible(false);
@@ -100,9 +85,9 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 		// Local mode layout
 		localModeLayout.setLayout(new BoxLayout(localModeLayout, BoxLayout.Y_AXIS));
 		
-		JPanel localPanel = new JPanel();
+		JPanel        localPanel  = new JPanel();
 		GridBagLayout localLayout = new GridBagLayout();
-		localLayout.columnWeights = new double[] {1,5,0.5};
+		localLayout.columnWeights = new double[]{1, 5, 0.5};
 		localPanel.setLayout(localLayout);
 		GridBagConstraints c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -110,13 +95,13 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 		JLabel jLabelInput = new JLabel("Input directory:");
 		localPanel.add(jLabelInput, c);
 		c.gridx = 1;
-		c.insets = new Insets(0,0,0,20);
+		c.insets = new Insets(0, 0, 0, 20);
 		localPanel.add(jInputFileChooser, c);
-		jInputFileChooser.setMaximumSize(new Dimension(10000,20));
+		jInputFileChooser.setMaximumSize(new Dimension(10000, 20));
 		JButton sourceButton = new JButton("...");
 		sourceButton.addActionListener(this);
 		sourceButton.setName(INPUT_CHOOSER);
-		c.insets = new Insets(0,0,0,0);;
+		c.insets = new Insets(0, 0, 0, 0);
 		c.gridx = 2;
 		localPanel.add(sourceButton, c);
 		
@@ -125,13 +110,13 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 		c.gridy = 1;
 		localPanel.add(jLabelOutput, c);
 		c.gridx = 1;
-		c.insets = new Insets(0,0,0,20);
+		c.insets = new Insets(0, 0, 0, 20);
 		localPanel.add(jOutputFileChooser, c);
-		jOutputFileChooser.setMaximumSize(new Dimension(10000,20));
+		jOutputFileChooser.setMaximumSize(new Dimension(10000, 20));
 		JButton destButton = new JButton("...");
 		destButton.addActionListener(this);
 		destButton.setName(OUTPUT_CHOOSER);
-		c.insets = new Insets(10,0,0,0);
+		c.insets = new Insets(10, 0, 0, 0);
 		c.gridx = 2;
 		localPanel.add(destButton, c);
 		
@@ -143,53 +128,53 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 		// Omero mode layout
 		omeroModeLayout.setLayout(new BoxLayout(omeroModeLayout, BoxLayout.Y_AXIS));
 		
-		JPanel omeroPanel = new JPanel();
+		JPanel        omeroPanel  = new JPanel();
 		GridBagLayout omeroLayout = new GridBagLayout();
-		omeroLayout.columnWeights = new double[] {0.1, 0.1, 2};
+		omeroLayout.columnWeights = new double[]{0.1, 0.1, 2};
 		omeroPanel.setLayout(omeroLayout);
 		c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
-		c.insets = new Insets(5,0,5,20);
+		c.insets = new Insets(5, 0, 5, 20);
 		
 		c.gridy = 0;
 		JLabel jLabelHostname = new JLabel("Hostname :");
 		c.gridx = 0;
 		c.gridwidth = 1;
-		omeroPanel.add(jLabelHostname,c);
+		omeroPanel.add(jLabelHostname, c);
 		c.gridx = 1;
 		c.gridwidth = 2;
 		omeroPanel.add(jTextFieldHostname, c);
-		jTextFieldHostname.setMaximumSize(new Dimension(10000,20));
+		jTextFieldHostname.setMaximumSize(new Dimension(10000, 20));
 		
 		c.gridy = 1;
 		JLabel jLabelPort = new JLabel("Port :");
 		c.gridx = 0;
 		c.gridwidth = 1;
-		omeroPanel.add(jLabelPort,c);
+		omeroPanel.add(jLabelPort, c);
 		c.gridx = 1;
 		c.gridwidth = 2;
-		omeroPanel.add(jTextFieldPort,c);
-		jTextFieldPort.setMaximumSize(new Dimension(10000,20));
+		omeroPanel.add(jTextFieldPort, c);
+		jTextFieldPort.setMaximumSize(new Dimension(10000, 20));
 		
 		c.gridy = 2;
 		JLabel jLabelUsername = new JLabel("Username :");
 		c.gridx = 0;
 		c.gridwidth = 1;
-		omeroPanel.add(jLabelUsername,c);
+		omeroPanel.add(jLabelUsername, c);
 		c.gridx = 1;
 		c.gridwidth = 2;
-		omeroPanel.add(jTextFieldUsername,c);
-		jTextFieldUsername.setMaximumSize(new Dimension(10000,20));
+		omeroPanel.add(jTextFieldUsername, c);
+		jTextFieldUsername.setMaximumSize(new Dimension(10000, 20));
 		
 		c.gridy = 3;
 		JLabel jLabelPassword = new JLabel("Password :");
 		c.gridx = 0;
 		c.gridwidth = 1;
-		omeroPanel.add(jLabelPassword,c);
+		omeroPanel.add(jLabelPassword, c);
 		c.gridx = 1;
 		c.gridwidth = 2;
-		omeroPanel.add(jPasswordField,c);
-		jPasswordField.setMaximumSize(new Dimension(10000,20));
+		omeroPanel.add(jPasswordField, c);
+		jPasswordField.setMaximumSize(new Dimension(10000, 20));
 		
 		c.gridy = 4;
 		JLabel jLabelGroup = new JLabel("Group ID :");
@@ -199,29 +184,29 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 		c.gridx = 1;
 		c.gridwidth = 2;
 		omeroPanel.add(jTextFieldGroup, c);
-		jTextFieldGroup.setMaximumSize(new Dimension(10000,20));
+		jTextFieldGroup.setMaximumSize(new Dimension(10000, 20));
 		
 		c.gridy = 5;
 		JLabel jLabelSource = new JLabel("Source :");
 		c.gridx = 0;
 		c.gridwidth = 1;
-		omeroPanel.add(jLabelSource,c);
+		omeroPanel.add(jLabelSource, c);
 		c.gridx = 1;
-		omeroPanel.add(jComboBoxDataType,c);
+		omeroPanel.add(jComboBoxDataType, c);
 		c.gridx = 2;
-		omeroPanel.add(jTextFieldSourceID,c);
-		jTextFieldSourceID.setMaximumSize(new Dimension(10000,20));
+		omeroPanel.add(jTextFieldSourceID, c);
+		jTextFieldSourceID.setMaximumSize(new Dimension(10000, 20));
 		
 		
 		c.gridy = 6;
 		JLabel jLabelOutputProject = new JLabel("Output project :");
 		c.gridx = 0;
 		c.gridwidth = 1;
-		omeroPanel.add(jLabelOutputProject,c);
+		omeroPanel.add(jLabelOutputProject, c);
 		c.gridx = 1;
 		c.gridwidth = 2;
-		omeroPanel.add(jTextFieldOutputProject,c);
-		jTextFieldOutputProject.setMaximumSize(new Dimension(10000,20));
+		omeroPanel.add(jTextFieldOutputProject, c);
+		jTextFieldOutputProject.setMaximumSize(new Dimension(10000, 20));
 		
 		omeroPanel.setBorder(padding);
 		omeroModeLayout.add(omeroPanel);
@@ -249,18 +234,18 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 		configPanel.setBorder(padding);
 		container.add(configPanel, 2);
 		// Initialize config to default
-		container.add(defConf,3);
+		container.add(defConf, 3);
 		defConf.setBorder(padding);
 		configMode = SegmentationDialog.ConfigMode.DEFAULT;
 		
 		
 		// Start/Quit buttons
-		startQuitPanel = new JPanel();
+		JPanel startQuitPanel = new JPanel();
 		startQuitPanel.setLayout(new BoxLayout(startQuitPanel, BoxLayout.X_AXIS));
 		startQuitPanel.add(jButtonStart);
 		startQuitPanel.add(jButtonQuit);
 		startQuitPanel.setBorder(padding);
-		container.add(startQuitPanel,4);
+		container.add(startQuitPanel, 4);
 		
 		SegmentationDialog.QuitListener quitListener = new SegmentationDialog.QuitListener(this);
 		jButtonQuit.addActionListener(quitListener);
@@ -288,24 +273,71 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 	public String getInput() {
 		return jInputFileChooser.getText();
 	}
+	
+	
 	public String getOutput() {
 		return jOutputFileChooser.getText();
 	}
 	
-	public boolean isOmeroEnabled(){ return useOmero; }
 	
-	public String getHostname(){ return jTextFieldHostname.getText(); }
-	public String getPort(){ return jTextFieldPort.getText(); }
-	public String getSourceID(){ return jTextFieldSourceID.getText(); }
-	public String getDataType(){ return (String) jComboBoxDataType.getSelectedItem(); }
-	public String getUsername(){ return jTextFieldUsername.getText(); }
-	public String getPassword(){ return String.valueOf(jPasswordField.getPassword()); }
-	public String getGroup(){ return jTextFieldGroup.getText(); }
-	public String getOutputProject(){ return jTextFieldOutputProject.getText(); }
+	public boolean isOmeroEnabled() {
+		return useOMERO;
+	}
 	
-	public String getConfig() { return jConfigFileChooser.getText(); }
-	public SegmentationDialog.ConfigMode getConfigMode() { return configMode; }
-	public SegmentationConfigDialog getSegmentationConfigFileDialog() { return segmentationConfigFileDialog; }
+	
+	public String getHostname() {
+		return jTextFieldHostname.getText();
+	}
+	
+	
+	public String getPort() {
+		return jTextFieldPort.getText();
+	}
+	
+	
+	public String getSourceID() {
+		return jTextFieldSourceID.getText();
+	}
+	
+	
+	public String getDataType() {
+		return (String) jComboBoxDataType.getSelectedItem();
+	}
+	
+	
+	public String getUsername() {
+		return jTextFieldUsername.getText();
+	}
+	
+	
+	public String getPassword() {
+		return String.valueOf(jPasswordField.getPassword());
+	}
+	
+	
+	public String getGroup() {
+		return jTextFieldGroup.getText();
+	}
+	
+	
+	public String getOutputProject() {
+		return jTextFieldOutputProject.getText();
+	}
+	
+	
+	public String getConfig() {
+		return jConfigFileChooser.getText();
+	}
+	
+	
+	public SegmentationDialog.ConfigMode getConfigMode() {
+		return configMode;
+	}
+	
+	
+	public SegmentationConfigDialog getSegmentationConfigFileDialog() {
+		return segmentationConfigFileDialog;
+	}
 	
 	
 	public void actionPerformed(ActionEvent e) {
@@ -341,27 +373,26 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 		fc.setSelectedFile(null);
 	}
 	
+	
 	@Override
 	public void itemStateChanged(ItemEvent e) {
 		Object source = e.getSource();
 		
-		if(source == omeroNoButton){
+		if (source == omeroNoButton) {
 			container.remove(1);
 			container.add(localModeLayout, 1);
-			useOmero = false;
-		}
-		else if(source == omeroYesButton){
+			useOMERO = false;
+		} else if (source == omeroYesButton) {
 			container.remove(1);
 			container.add(omeroModeLayout, 1);
-			useOmero = true;
-		}
-		else{
+			useOMERO = true;
+		} else {
 			container.remove(3);
 			if (segmentationConfigFileDialog.isVisible()) segmentationConfigFileDialog.setVisible(false);
 			
 			Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
 			if (source == rdoDefault) {
-				container.add(defConf,3);
+				container.add(defConf, 3);
 				defConf.setBorder(padding);
 				configMode = SegmentationDialog.ConfigMode.DEFAULT;
 			} else if (source == rdoAddConfigDialog) {
@@ -371,7 +402,7 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 			} else if (source == rdoAddConfigFile) {
 				configFilePanel.setLayout(new BoxLayout(configFilePanel, BoxLayout.X_AXIS));
 				configFilePanel.add(jConfigFileChooser);
-				jConfigFileChooser.setMaximumSize(new Dimension(10000,20));
+				jConfigFileChooser.setMaximumSize(new Dimension(10000, 20));
 				confButton.addActionListener(this);
 				confButton.setName(CONFIG_CHOOSER);
 				configFilePanel.add(confButton);
@@ -385,47 +416,63 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 		repaint();
 	}
 	
+	
+	public enum ConfigMode {
+		DEFAULT,
+		FILE,
+		INPUT
+	}
+	
 	/** Classes listener to interact with the several elements of the window */
-
+	
 	static class QuitListener implements ActionListener {
-		SegmentationDialog segmentationDialog;
+		final SegmentationDialog segmentationDialog;
+		
 		
 		/** @param segmentationDialog  */
 		public QuitListener(SegmentationDialog segmentationDialog) {
 			this.segmentationDialog = segmentationDialog;
 		}
 		
+		
 		public void actionPerformed(ActionEvent actionEvent) {
 			segmentationDialog.dispose();
 		}
+		
 	}
 	
 	class StartListener implements ActionListener {
-		SegmentationDialog segmentationDialog;
+		final SegmentationDialog segmentationDialog;
+		
 		
 		/** @param autocropDialog  */
 		public StartListener(SegmentationDialog autocropDialog) {
 			segmentationDialog = autocropDialog;
 		}
 		
+		
 		public void actionPerformed(ActionEvent actionEvent) {
 			segmentationDialog.dispose();
 			segmentationConfigFileDialog.dispose();
 			dialogListener.OnStart();
 		}
+		
 	}
 	
 	class ConfigListener implements ActionListener {
-		SegmentationDialog segmentationDialog;
+		final SegmentationDialog segmentationDialog;
+		
 		
 		/** @param segmentationDialog  */
 		public ConfigListener(SegmentationDialog segmentationDialog) {
 			this.segmentationDialog = segmentationDialog;
 		}
 		
+		
 		public void actionPerformed(ActionEvent actionEvent) {
 			segmentationConfigFileDialog.setVisible(true);
 		}
+		
 	}
 	
 }

@@ -12,13 +12,13 @@ import inra.ijpb.binary.BinaryImages;
  *
  * @author Philippe Andrey, Tristan Dubos Axel poulet
  */
-public class FillingHoles {
-	public FillingHoles() {
+public final class FillingHoles {
+	private FillingHoles() {
 	}
 	
 	
 	/** Method which process the image in the three dimensions (x, y, z) in the same time. */
-	public ImagePlus apply3D(ImagePlus imagePlusInput) {
+	public static ImagePlus apply3D(ImagePlus imagePlusInput) {
 		// image inversion (0 became 255 and 255 became 0)
 		ImagePlus  imagePlusCorrected  = imagePlusInput;
 		ImageStack imageStackCorrected = imagePlusCorrected.getStack();
@@ -87,7 +87,7 @@ public class FillingHoles {
 	
 	
 	/** Method in two dimensions which process each plan z independent, */
-	public ImagePlus apply2D(ImagePlus imagePlusInput) {
+	public static ImagePlus apply2D(ImagePlus imagePlusInput) {
 		ImagePlus  imagePlusCorrected  = imagePlusInput;
 		ImageStack imageStackCorrected = imagePlusCorrected.getStack();
 		double     voxelValue;

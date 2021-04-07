@@ -15,8 +15,8 @@ import ij.plugin.Resizer;
  *
  * @author Tristan Dubos and Axel Poulet
  */
-public class RadialDistance {
-	public RadialDistance() {
+public final class RadialDistance {
+	private RadialDistance() {
 	}
 	
 	
@@ -27,7 +27,7 @@ public class RadialDistance {
 	 *
 	 * @return
 	 */
-	public ImagePlus computeDistanceMap(ImagePlus imagePlusSegmentedRescaled) {
+	public static ImagePlus computeDistanceMap(ImagePlus imagePlusSegmentedRescaled) {
 		Distance_Map distanceMap = new Distance_Map();
 		distanceMap.apply(imagePlusSegmentedRescaled);
 		return imagePlusSegmentedRescaled;
@@ -42,8 +42,8 @@ public class RadialDistance {
 	 *
 	 * @return
 	 */
-	public double[] computeBorderToBorderDistances(ImagePlus imagePlusSegmented,
-	                                               ImagePlus imagePlusChromocenter) {
+	public static double[] computeBorderToBorderDistances(ImagePlus imagePlusSegmented,
+	                                                      ImagePlus imagePlusChromocenter) {
 		Histogram histogram = new Histogram();
 		histogram.run(imagePlusChromocenter);
 		double[]    tLabel       = histogram.getLabels();
@@ -86,7 +86,8 @@ public class RadialDistance {
 	 *
 	 * @return
 	 */
-	public double[] computeBarycenterToBorderDistances(ImagePlus imagePlusSegmented, ImagePlus imagePlusChromocenter) {
+	public static double[] computeBarycenterToBorderDistances(ImagePlus imagePlusSegmented,
+	                                                          ImagePlus imagePlusChromocenter) {
 		Calibration calibration  = imagePlusSegmented.getCalibration();
 		double      xCalibration = calibration.pixelWidth;
 		ImagePlus imagePlusChromocenterRescale =
@@ -119,16 +120,14 @@ public class RadialDistance {
 	 *
 	 * @return resized image
 	 */
-	private ImagePlus resizeImage(ImagePlus imagePlus) {
-		Resizer     resizer        = new Resizer();
-		Calibration calibration    = imagePlus.getCalibration();
-		double      xCalibration   = calibration.pixelWidth;
-		double      zCalibration   = calibration.pixelDepth;
-		double      rescaleZFactor = zCalibration / xCalibration;
-		ImagePlus imagePlusRescale = resizer.zScale(imagePlus,
-		                                            (int) (imagePlus.getNSlices() * rescaleZFactor),
-		                                            0);
-		return imagePlusRescale;
+	private static ImagePlus resizeImage(ImagePlus imagePlus) {
+		Resizer     resizer      = new Resizer();
+		Calibration calibration  = imagePlus.getCalibration();
+		double      xCalibration = calibration.pixelWidth;
+		double      zCalibration = calibration.pixelDepth;
+		double      zFactor      = zCalibration / xCalibration;
+		int         newDepth     = (int) (imagePlus.getNSlices() * zFactor);
+		return resizer.zScale(imagePlus, newDepth, 0);
 	}
 	
 }

@@ -1,6 +1,8 @@
 package gred.nucleus.autocrop;
 
 import gred.nucleus.plugins.PluginParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -255,14 +257,16 @@ public class AutocropParameters extends PluginParameters {
 	
 	
 	public void addProperties(String pathToConfigFile) {
+		Logger logger = LoggerFactory.getLogger(this.getClass());
+		
 		Properties prop = new Properties();
 		try (InputStream is = new FileInputStream(pathToConfigFile)) {
 			prop.load(is);
 		} catch (FileNotFoundException ex) {
-			System.err.println(pathToConfigFile + " : can't find the config file !");
+			logger.error("{}: can't find the config file !", pathToConfigFile);
 			System.exit(-1);
 		} catch (IOException ex) {
-			System.err.println(pathToConfigFile + " : can't load the config file !");
+			logger.error("{}: can't load the config file !", pathToConfigFile);
 			System.exit(-1);
 		}
 		for (String idProp : prop.stringPropertyNames()) {

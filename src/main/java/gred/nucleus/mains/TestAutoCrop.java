@@ -3,6 +3,9 @@ package gred.nucleus.mains;
 import gred.nucleus.autocrop.AutoCropCalling;
 import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.autocrop.CropFromCoordinates;
+import gred.nucleus.test.SegmentationImagesIntegration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -63,20 +66,21 @@ public class TestAutoCrop {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
+		Logger logger = LoggerFactory.getLogger(TestAutoCrop.class);
 		
-		System.err.println("start program");
+		logger.info("Start program");
 		long maxMemory = Runtime.getRuntime().maxMemory();
 		/* Maximum amount of memory the JVM will attempt to use */
-		System.out.println("Maximum memory (bytes): " +
-		                   (maxMemory == Long.MAX_VALUE ? "no limit" : maxMemory * 1e-9));
+		logger.info("Maximum memory (bytes): {}",
+		            (maxMemory == Long.MAX_VALUE ? "no limit" : maxMemory * 1e-9));
 
 //		runAutoCropFolder("C:/Users/Martin/Documents/IMAGE_TEST_NJ/AUTOCROP/RAW_ND/","C:/Users/Martin/Documents/IMAGE_TEST_NJ/AUTOCROP/RESULTS/RAW_ND/");
 		runCropFromCoordinates("C:/Users/Martin/Documents/IMAGE_TEST_NJ/AUTOCROP/RESULTS/TIF_3D/tab_file.txt");
 		
-		System.err.println("The program ended normally.");
+		logger.info("The program ended normally.");
 		
-		System.out.println("Total memory (bytes): " +
-		                   Runtime.getRuntime().totalMemory() * 1e-9);
+		logger.info("Total memory (bytes): {}",
+		            Runtime.getRuntime().totalMemory() * 1e-9);
 	}
 	
 }

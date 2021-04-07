@@ -1,6 +1,7 @@
 package gred.nucleus.autocrop;
 
 import fr.igred.omero.Client;
+import fr.igred.omero.exception.AccessException;
 import fr.igred.omero.repository.ImageWrapper;
 import fr.igred.omero.roi.ROIWrapper;
 import fr.igred.omero.roi.RectangleWrapper;
@@ -20,17 +21,23 @@ import ij.plugin.GaussianBlur3D;
 import inra.ijpb.binary.BinaryImages;
 import inra.ijpb.label.LabelImages;
 import loci.common.DebugTools;
+import loci.formats.FormatException;
 import loci.plugins.BF;
 import loci.plugins.in.ImporterOptions;
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.Color;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -90,19 +97,21 @@ public class AutoCrop {
 	 * @param imageFile                 Current image analyse
 	 * @param outputFilesPrefix         Prefix use for output file name
 	 * @param autocropParametersAnalyse List of analyse parameter
+	 *
+	 * @throws IOException
+	 * @throws FormatException
 	 */
 	public AutoCrop(File imageFile, String outputFilesPrefix, AutocropParameters autocropParametersAnalyse)
-	throws Exception {
+	throws IOException, FormatException {
 		this.autocropParameters = autocropParametersAnalyse;
 		this.currentFile = imageFile;
 		this.imageFilePath = imageFile.getAbsolutePath();
 		this.outputDirPath = this.autocropParameters.getOutputFolder();
-		Thresholding thresholding = new Thresholding();
 		this.outputFilesPrefix = outputFilesPrefix;
 		setChannelNumbers();
 		if (this.rawImg.getBitDepth() > 8) {
 			this.imageSeg =
-					thresholding.contrastAnd8bits(getImageChannel(this.autocropParameters.getChannelToComputeThreshold()));
+					Thresholding.contrastAnd8bits(getImageChannel(this.autocropParameters.getChannelToComputeThreshold()));
 		} else {
 			this.imageSeg = getImageChannel(this.autocropParameters.getChannelToComputeThreshold());
 		}
@@ -111,16 +120,15 @@ public class AutoCrop {
 	
 	
 	public AutoCrop(ImageWrapper image, AutocropParameters autocropParametersAnalyse, Client client)
-	throws Exception {
+	throws AccessException, ExecutionException {
 		this.currentFile = new File(image.getName());
 		this.autocropParameters = autocropParametersAnalyse;
 		this.outputDirPath = this.autocropParameters.getOutputFolder();
-		Thresholding thresholding = new Thresholding();
 		this.outputFilesPrefix = FilenameUtils.removeExtension(image.getName());
 		setChannelNumbersOMERO(image, client);
 		if (this.rawImg.getBitDepth() > 8) {
 			this.imageSeg =
-					thresholding.contrastAnd8bits(getImageChannelOMERO(this.autocropParameters.getChannelToComputeThreshold(),
+					Thresholding.contrastAnd8bits(getImageChannelOMERO(this.autocropParameters.getChannelToComputeThreshold(),
 					                                                   image,
 					                                                   client));
 		} else {
@@ -134,12 +142,11 @@ public class AutoCrop {
 	                String outputFilesPrefix,
 	                AutocropParameters autocropParametersAnalyse,
 	                Map<Double, Box> boxes)
-	throws Exception {
+	throws IOException, FormatException {
 		this.autocropParameters = autocropParametersAnalyse;
 		this.currentFile = imageFile;
 		this.imageFilePath = imageFile.getAbsolutePath();
 		this.outputDirPath = this.autocropParameters.getOutputFolder();
-		Thresholding thresholding = new Thresholding();
 		this.outputFilesPrefix = outputFilesPrefix;
 		setChannelNumbers();
 		this.imageSeg = this.rawImg;
@@ -154,8 +161,11 @@ public class AutoCrop {
 	 * @param channelNumber Number of channel to compute OTSU for crop
 	 *
 	 * @return image of specific channel
+	 *
+	 * @throws IOException
+	 * @throws FormatException
 	 */
-	public ImagePlus getImageChannel(int channelNumber) throws Exception {
+	public ImagePlus getImageChannel(int channelNumber) throws IOException, FormatException {
 		DebugTools.enableLogging("OFF");    /* DEBUG INFO BIO-FORMATS OFF*/
 		ImagePlus[] currentImage = BF.openImagePlus(this.imageFilePath);
 		currentImage = ChannelSplitter.split(currentImage[0]);
@@ -163,7 +173,8 @@ public class AutoCrop {
 	}
 	
 	
-	public ImagePlus getImageChannelOMERO(int channelNumber, ImageWrapper image, Client client) throws Exception {
+	public ImagePlus getImageChannelOMERO(int channelNumber, ImageWrapper image, Client client)
+	throws AccessException, ExecutionException {
 		int[] cBound = {channelNumber, channelNumber};
 		return image.toImagePlus(client, null, null, cBound, null, null);
 	}
@@ -172,9 +183,10 @@ public class AutoCrop {
 	/**
 	 * Method to check multichannel and initialising channelNumbers variable
 	 *
-	 * @throws Exception
+	 * @throws IOException
+	 * @throws FormatException
 	 */
-	public void setChannelNumbers() throws Exception {
+	public void setChannelNumbers() throws IOException, FormatException {
 		DebugTools.enableLogging("OFF");      /* DEBUG INFO BIO-FORMATS OFF*/
 		ImagePlus[] currentImage = BF.openImagePlus(this.imageFilePath);
 		currentImage = ChannelSplitter.split(currentImage[0]);
@@ -185,7 +197,8 @@ public class AutoCrop {
 	}
 	
 	
-	public void setChannelNumbersOMERO(ImageWrapper image, Client client) throws Exception {
+	public void setChannelNumbersOMERO(ImageWrapper image, Client client)
+	throws AccessException, ExecutionException {
 		DebugTools.enableLogging("OFF");      /* DEBUG INFO BIO-FORMATS OFF*/
 		int[] cBound = {this.autocropParameters.getChannelToComputeThreshold(),
 		                this.autocropParameters.getChannelToComputeThreshold()};
@@ -207,8 +220,7 @@ public class AutoCrop {
 		}
 		this.sliceUsedForOTSU = "default";
 		GaussianBlur3D.blur(this.imageSeg, 0.5, 0.5, 1);
-		Thresholding thresholding = new Thresholding();
-		int          thresh       = thresholding.computeOtsuThreshold(this.imageSeg);
+		int thresh = Thresholding.computeOTSUThreshold(this.imageSeg);
 		if (thresh < this.autocropParameters.getThresholdOTSUComputing()) {
 			ImagePlus imp2;
 			if (autocropParameters.getSlicesOTSUComputing() == 0) {
@@ -226,7 +238,7 @@ public class AutoCrop {
 				                            this.autocropParameters.getSlicesOTSUComputing(),
 				                            this.imageSeg.getStackSize());
 			}
-			int thresh2 = thresholding.computeOtsuThreshold(imp2);
+			int thresh2 = Thresholding.computeOTSUThreshold(imp2);
 			if (thresh2 < this.autocropParameters.getThresholdOTSUComputing()) {
 				thresh = this.autocropParameters.getThresholdOTSUComputing();
 				this.defaultThreshold = true;
@@ -267,7 +279,7 @@ public class AutoCrop {
 				this.boxes.put(key, initializedBox);
 			}
 		}
-		getNumberOfBox();
+		printNumberOfBox();
 	}
 	
 	
@@ -378,7 +390,7 @@ public class AutoCrop {
 	 * the ImageCore put in input in this method (crop method available in the imagej wrapper).
 	 * <p>Then the image results obtained was used to create a new ImageCoreIJ, and the image is saved.
 	 */
-	public void cropKernels2() throws Exception {
+	public void cropKernels2() throws IOException, FormatException {
 		StringBuilder info      = new StringBuilder();
 		Directory     dirOutput = new Directory(this.outputDirPath + "nuclei");
 		dirOutput.checkAndCreateDir();
@@ -436,7 +448,10 @@ public class AutoCrop {
 	}
 	
 	
-	public void cropKernelsOMERO(ImageWrapper image, Long[] outputsDat, Client client) throws Exception {
+	public void cropKernelsOMERO(ImageWrapper image, Long[] outputsDat, Client client)
+	throws Exception {
+		Logger logger = LoggerFactory.getLogger(this.getClass());
+		
 		StringBuilder info = new StringBuilder();
 		info.append(getSpecificImageInfo()).append(HEADERS);
 		for (int c = 0; c < this.channelNumbers; c++) {
@@ -489,8 +504,11 @@ public class AutoCrop {
 				this.outputFile.add(this.outputFilesPrefix + "_" + i + ".tif");
 				dataset.importImages(client, tiffPath);
 				File    file    = new File(tiffPath);
-				boolean deleted = file.delete();
-				if (!deleted) System.err.println("File not deleted: " + tiffPath);
+				try {
+					Files.deleteIfExists(file.toPath());
+				} catch (Exception e) {
+					logger.error("File not deleted: " + tiffPath, e);
+				}
 				if (c == 0) {
 					int xMax = xMin + width;
 					int yMax = yMin + height;
@@ -512,7 +530,7 @@ public class AutoCrop {
 	
 	
 	/** Method crops a box of interest, from coordinate files. */
-	public void cropKernels3() throws Exception {
+	public void cropKernels3() throws IOException, FormatException {
 		StringBuilder info      = new StringBuilder();
 		Directory     dirOutput = new Directory(this.outputDirPath + File.separator + "Nuclei");
 		dirOutput.checkAndCreateDir();
@@ -634,7 +652,7 @@ public class AutoCrop {
 	 * @return : ImageCoreIJ of the cropped image.
 	 */
 	public ImagePlus cropImage(int xMin, int yMin, int zMin, int width, int height, int depth, int channelNumber)
-	throws Exception {
+	throws IOException, FormatException {
 		ImporterOptions options = new ImporterOptions();
 		options.setId(this.imageFilePath);
 		options.setAutoscale(true);
@@ -658,7 +676,8 @@ public class AutoCrop {
 	 *
 	 * @return : ImageCoreIJ of the cropped image.
 	 */
-	public ImagePlus cropImage2D(int xMin, int yMin, int width, int height, int channelNumber) throws Exception {
+	public ImagePlus cropImage2D(int xMin, int yMin, int width, int height, int channelNumber)
+	throws IOException, FormatException {
 		ImporterOptions options = new ImporterOptions();
 		options.setId(this.imageFilePath);
 		options.setAutoscale(true);
@@ -683,7 +702,6 @@ public class AutoCrop {
 	
 	/** @return Header current image info analyse */
 	public String getSpecificImageInfo() {
-		Calibration cal = this.rawImg.getCalibration();
 		return "#Image: " +
 		       this.imageFilePath +
 		       "\n#OTSU threshold: " +
@@ -721,6 +739,7 @@ public class AutoCrop {
 	
 	/** Write analyse info in output text file */
 	public void writeAnalyseInfoOMERO(Long id, Client client) {
+		Logger logger = LoggerFactory.getLogger(this.getClass());
 		try {
 			String path = new File(".").getCanonicalPath() + File.separator + this.outputFilesPrefix + ".txt";
 			
@@ -730,11 +749,9 @@ public class AutoCrop {
 			
 			resultFileOutput.saveTextFile(this.infoImageAnalysis, false);
 			dataset.addFile(client, file);
-			boolean deleted = file.delete();
-			if (!deleted) System.err.println("File not deleted: " + path);
+			Files.deleteIfExists(file.toPath());
 		} catch (Exception e) {
-			System.err.println("Error writing analysis information to OMERO");
-			e.printStackTrace();
+			logger.error("Error writing analysis information to OMERO.", e);
 		}
 	}
 	
@@ -751,17 +768,18 @@ public class AutoCrop {
 		       this.defaultThreshold + "\n";
 	}
 	
-
+	
 	public String getImageCropInfoOmero(String imageName) {
-		return  imageName + "\t" +
+		return imageName + "\t" +
 		       getNbOfNuc() + "\t" +
 		       this.otsuThreshold + "\t" +
 		       this.defaultThreshold + "\n";
 	}
 	
 	
-	public void getNumberOfBox() {
-		System.out.println("Number of box :" + this.boxes.size());
+	public void printNumberOfBox() {
+		Logger logger = LoggerFactory.getLogger(this.getClass());
+		logger.info("Number of box: {}", this.boxes.size());
 	}
 	
 	

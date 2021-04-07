@@ -14,33 +14,32 @@ import java.awt.event.ItemListener;
  * @author pouletaxel
  */
 public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements ItemListener {
-	private static final long                serialVersionUID        = 1L;
-	private final        JTextField          jTextFieldWorkDirectory = new JTextField();
-	private final        JTextField          jTextFieldRawData       = new JTextField();
-	private final        JRadioButton        jRadioButtonRhfV        = new JRadioButton("VolumeRHF");
-	private final        JRadioButton        jRadioButtonRhfI        = new JRadioButton("IntensityRHF");
-	private final        JRadioButton        jRadioButtonRhfIV       = new JRadioButton("VolumeRHF and IntensityRHF");
-	private final        JRadioButton        jRadioButtonNucCc       = new JRadioButton("Nucleus and chromocenter");
-	private final        JRadioButton        jRadioButtonCc          = new JRadioButton("Chromocenter");
-	private final        JRadioButton        jRadioButtonNuc         = new JRadioButton("Nucleus");
-	private final        JLabel              jLabelUnit              = new JLabel();
-	private final        JLabel              jLabelXCalibration      = new JLabel();
-	private final        JLabel              jLabelYCalibration      = new JLabel();
-	private final        JLabel              jLabelZCalibration      = new JLabel();
-	private final        JTextPane           readUnit                = new JTextPane();
-	private final        JTextPane           readXCalibration        = new JTextPane();
-	private final        JTextPane           readYCalibration        = new JTextPane();
-	private final        JTextPane           readZCalibration        = new JTextPane();
-	private final        JCheckBox           addCalibrationBox       = new JCheckBox();
-	private final        JPanel              calibration;
-	private final        JFormattedTextField jTextFieldXCalibration  = new JFormattedTextField(Number.class);
-	private final        JFormattedTextField jTextFieldYCalibration  = new JFormattedTextField(Number.class);
-	private final        JFormattedTextField jTextFieldZCalibration  = new JFormattedTextField(Number.class);
-	private              boolean             start                   = false;
+	private static final long         serialVersionUID        = 1L;
+	private final        JTextField   jTextFieldWorkDirectory = new JTextField();
+	private final        JTextField   jTextFieldRawData       = new JTextField();
+	private final        JRadioButton jRadioButtonRhfV        = new JRadioButton("VolumeRHF");
+	private final        JRadioButton jRadioButtonRhfI        = new JRadioButton("IntensityRHF");
+	private final        JRadioButton jRadioButtonRhfIV       = new JRadioButton("VolumeRHF and IntensityRHF");
+	private final        JRadioButton jRadioButtonNucCc       = new JRadioButton("Nucleus and chromocenter");
+	private final        JRadioButton jRadioButtonCc          = new JRadioButton("Chromocenter");
+	private final        JRadioButton jRadioButtonNuc         = new JRadioButton("Nucleus");
+	private final        JLabel       jLabelUnit              = new JLabel();
+	private final        JLabel       jLabelXCalibration      = new JLabel();
+	private final        JLabel       jLabelYCalibration      = new JLabel();
+	private final        JLabel       jLabelZCalibration      = new JLabel();
+	private final        JTextPane    readUnit                = new JTextPane();
+	private final        JTextPane    readXCalibration        = new JTextPane();
+	private final        JTextPane    readYCalibration        = new JTextPane();
+	private final        JTextPane    readZCalibration        = new JTextPane();
+	private final        JCheckBox    addCalibrationBox       = new JCheckBox();
+	private final        JPanel       calibration;
+	private              boolean      start                   = false;
 	
 	
 	/** Architecture of the graphical windows */
 	public ChromocentersAnalysisPipelineBatchDialog() {
+		final String      font                      = "Albertus";
+		final String      boldFont                  = "Albertus Extra Bold (W1)";
 		final Container   container                 = getContentPane();
 		final JLabel      jLabelWorkDirectory       = new JLabel();
 		final JButton     jButtonWorkDirectory      = new JButton("Output Directory");
@@ -101,7 +100,7 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements 
 		                                     0,
 		                                     0));
 		jButtonRawData.setPreferredSize(new java.awt.Dimension(120, 21));
-		jButtonRawData.setFont(new java.awt.Font("Albertus", Font.ITALIC, 10));
+		jButtonRawData.setFont(new java.awt.Font(font, Font.ITALIC, 10));
 		container.add(jTextFieldRawData,
 		              new GridBagConstraints(0,
 		                                     1,
@@ -115,7 +114,7 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements 
 		                                     0,
 		                                     0));
 		jTextFieldRawData.setPreferredSize(new java.awt.Dimension(280, 21));
-		jTextFieldRawData.setFont(new java.awt.Font("Albertus", Font.ITALIC, 10));
+		jTextFieldRawData.setFont(new java.awt.Font(font, Font.ITALIC, 10));
 		container.add(jButtonWorkDirectory,
 		              new GridBagConstraints(0,
 		                                     1,
@@ -129,7 +128,7 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements 
 		                                     0,
 		                                     0));
 		jButtonWorkDirectory.setPreferredSize(new java.awt.Dimension(120, 21));
-		jButtonWorkDirectory.setFont(new java.awt.Font("Albertus", Font.ITALIC, 10));
+		jButtonWorkDirectory.setFont(new java.awt.Font(font, Font.ITALIC, 10));
 		container.add(jTextFieldWorkDirectory,
 		              new GridBagConstraints(0,
 		                                     1,
@@ -143,7 +142,7 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements 
 		                                     0,
 		                                     0));
 		jTextFieldWorkDirectory.setPreferredSize(new java.awt.Dimension(280, 21));
-		jTextFieldWorkDirectory.setFont(new java.awt.Font("Albertus", Font.ITALIC, 10));
+		jTextFieldWorkDirectory.setFont(new java.awt.Font(font, Font.ITALIC, 10));
 		calibration = new JPanel();
 		calibration.setLayout(new GridBagLayout());
 		GridBagConstraints gc = new GridBagConstraints();
@@ -190,9 +189,9 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements 
 		buttonGroupChoiceRhf.add(jRadioButtonRhfV);
 		buttonGroupChoiceRhf.add(jRadioButtonRhfI);
 		buttonGroupChoiceRhf.add(jRadioButtonRhfIV);
-		jRadioButtonRhfV.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		jRadioButtonRhfI.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		jRadioButtonRhfIV.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
+		jRadioButtonRhfV.setFont(new java.awt.Font(boldFont, Font.ITALIC, 12));
+		jRadioButtonRhfI.setFont(new java.awt.Font(boldFont, Font.ITALIC, 12));
+		jRadioButtonRhfIV.setFont(new java.awt.Font(boldFont, Font.ITALIC, 12));
 		container.add(jRadioButtonRhfV,
 		              new GridBagConstraints(0,
 		                                     3,
@@ -247,9 +246,9 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements 
 		buttonGroupChoiceAnalysis.add(jRadioButtonNucCc);
 		buttonGroupChoiceAnalysis.add(jRadioButtonCc);
 		buttonGroupChoiceAnalysis.add(jRadioButtonNuc);
-		jRadioButtonNuc.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		jRadioButtonCc.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
-		jRadioButtonNucCc.setFont(new java.awt.Font("Albertus Extra Bold (W1)", Font.ITALIC, 12));
+		jRadioButtonNuc.setFont(new java.awt.Font(boldFont, Font.ITALIC, 12));
+		jRadioButtonCc.setFont(new java.awt.Font(boldFont, Font.ITALIC, 12));
+		jRadioButtonNucCc.setFont(new java.awt.Font(boldFont, Font.ITALIC, 12));
 		container.add(jRadioButtonNuc,
 		              new GridBagConstraints(0,
 		                                     3,

@@ -5,10 +5,10 @@ import ij.plugin.ContrastEnhancer;
 import ij.process.*;
 
 
-public class Thresholding {
+public final class Thresholding {
 	
 	
-	public Thresholding() {
+	private Thresholding() {
 	}
 	
 	
@@ -20,7 +20,7 @@ public class Thresholding {
 	 * @return OTSU threshold
 	 * <p> TODO STRUCTURES PROBABLY NEEDED
 	 */
-	public int computeOtsuThreshold(ImagePlus imagePlusInput) {
+	public static int computeOTSUThreshold(ImagePlus imagePlusInput) {
 		AutoThresholder autoThresholder = new AutoThresholder();
 		ImageStatistics imageStatistics = new StackStatistics(imagePlusInput);
 		int[]           tHistogram      = imageStatistics.histogram;
@@ -35,7 +35,7 @@ public class Thresholding {
 	 *
 	 * @return
 	 */
-	public ImagePlus contrastAnd8bits(ImagePlus imagePlusInput) {
+	public static ImagePlus contrastAnd8bits(ImagePlus imagePlusInput) {
 		ContrastEnhancer enh = new ContrastEnhancer();
 		enh.setNormalize(true);
 		enh.setUseStackHistogram(true);

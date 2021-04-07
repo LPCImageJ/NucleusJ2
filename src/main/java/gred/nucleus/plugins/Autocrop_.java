@@ -2,7 +2,6 @@ package gred.nucleus.plugins;
 
 import fr.igred.omero.Client;
 import fr.igred.omero.exception.AccessException;
-import fr.igred.omero.exception.OMEROServerError;
 import fr.igred.omero.exception.ServiceException;
 import fr.igred.omero.repository.DatasetWrapper;
 import fr.igred.omero.repository.ImageWrapper;
@@ -14,11 +13,8 @@ import gred.nucleus.dialogs.IDialogListener;
 import ij.IJ;
 import ij.plugin.PlugIn;
 
-import java.io.Console;
 import java.io.File;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.ExecutionException;
 
 
 public class Autocrop_ implements PlugIn, IDialogListener {

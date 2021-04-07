@@ -21,7 +21,7 @@ public class NucleusChromocentersAnalysis {
 	/**
 	 *
 	 */
-	public NucleusChromocentersAnalysis() {
+	private NucleusChromocentersAnalysis() {
 	}
 	
 	//TODO INTEGRATION CLASS NEW MEASURE 3D
@@ -35,7 +35,7 @@ public class NucleusChromocentersAnalysis {
 	 * @param imagePlusSegmented
 	 * @param imagePlusChromocenter
 	 */
-	public void computeParameters(String rhfChoice,
+	public static void computeParameters(String rhfChoice,
 	                              ImagePlus imagePlusInput,
 	                              ImagePlus imagePlusSegmented,
 	                              ImagePlus imagePlusChromocenter) {
@@ -69,11 +69,10 @@ public class NucleusChromocentersAnalysis {
 		
 		if (histogram.getNbLabels() > 0) {
 			double[]       tVolumesObjects = measure3D.computeVolumeOfAllObjects(imagePlusChromocenter);
-			RadialDistance radialDistance  = new RadialDistance();
 			double[] tBorderToBorderDistance =
-					radialDistance.computeBorderToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
+					RadialDistance.computeBorderToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
 			double[] tBarycenterToBorderDistance =
-					radialDistance.computeBarycenterToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
+					RadialDistance.computeBarycenterToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
 			double volumeCcMean = computeMeanOfTable(tVolumesObjects);
 			int    nbCc         = measure3D.getNumberOfObject(imagePlusChromocenter);
 			text += nbCc + " "
@@ -99,7 +98,7 @@ public class NucleusChromocentersAnalysis {
 	 *
 	 * @throws IOException
 	 */
-	public void computeParameters(String pathResultsFile,
+	public static void computeParameters(String pathResultsFile,
 	                              String rhfChoice,
 	                              ImagePlus imagePlusInput,
 	                              ImagePlus imagePlusSegmented,
@@ -152,11 +151,10 @@ public class NucleusChromocentersAnalysis {
 				double[]       tVolumesObjects = measure3D.computeVolumeOfAllObjects(imagePlusChromocenter);
 				double         volumeCcMean    = computeMeanOfTable(tVolumesObjects);
 				int            nbCc            = measure3D.getNumberOfObject(imagePlusChromocenter);
-				RadialDistance radialDistance  = new RadialDistance();
 				double[] tBorderToBorderDistance =
-						radialDistance.computeBorderToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
+						RadialDistance.computeBorderToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
 				double[] tBarycenterToBorderDistance =
-						radialDistance.computeBarycenterToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
+						RadialDistance.computeBarycenterToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
 				text += nbCc + "\t"
 				        + volumeCcMean + "\t"
 				        + volumeCcMean * nbCc + "\t"
@@ -180,7 +178,7 @@ public class NucleusChromocentersAnalysis {
 	 *
 	 * @return Mean of the table
 	 */
-	public double computeMeanOfTable(double[] tInput) {
+	public static double computeMeanOfTable(double[] tInput) {
 		double mean = 0;
 		for (double v : tInput) {
 			mean += v;

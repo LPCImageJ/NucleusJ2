@@ -10,6 +10,8 @@ import ij.io.FileSaver;
 import ij.measure.Calibration;
 import ij.plugin.GaussianBlur3D;
 import ij.plugin.PlugIn;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.List;
@@ -21,13 +23,16 @@ import java.util.List;
 public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
 	
 	public void run(String arg) {
+		Logger logger = LoggerFactory.getLogger(this.getClass());
+		
 		ChromocenterSegmentationPipelineBatchDialog chromocenterSegmentationPipelineBatchDialog =
 				new ChromocenterSegmentationPipelineBatchDialog();
 		while (chromocenterSegmentationPipelineBatchDialog.isShowing()) {
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				logger.error("Interruption exception.", e);
+				Thread.currentThread().interrupt();
 			}
 		}
 		if (chromocenterSegmentationPipelineBatchDialog.isStart()) {
@@ -72,9 +77,8 @@ public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
 						} else {
 							calibration = imagePlusInput.getCalibration();
 						}
-						ChromocentersEnhancement chromocenterSegmentation = new ChromocentersEnhancement();
 						ImagePlus imagePlusContrast =
-								chromocenterSegmentation.applyEnhanceChromocenters(imagePlusInput, imagePlusSegmented);
+								ChromocentersEnhancement.applyEnhanceChromocenters(imagePlusInput, imagePlusSegmented);
 						imagePlusContrast.setTitle(imagePlusInput.getTitle());
 						imagePlusContrast.setCalibration(calibration);
 						saveFile(imagePlusContrast, workDirectory + File.separator + "ContrastDataNucleus");
@@ -97,12 +101,14 @@ public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
 	 * @param pathFile  the path where save the image
 	 */
 	public void saveFile(ImagePlus imagePlus, String pathFile) {
+		Logger logger = LoggerFactory.getLogger(this.getClass());
+		
 		FileSaver fileSaver = new FileSaver(imagePlus);
 		File      file      = new File(pathFile);
 		if (file.exists() || file.mkdirs()) {
 			fileSaver.saveAsTiffStack(pathFile + File.separator + imagePlus.getTitle());
 		} else {
-			System.err.println("Directory does not exist and could not be created: " + pathFile);
+			logger.error("Directory does not exist and could not be created: {}", pathFile);
 		}
 	}
 	

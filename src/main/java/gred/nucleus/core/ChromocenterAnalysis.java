@@ -15,8 +15,9 @@ import java.io.IOException;
  *
  * @author Tristan Dubos and Axel Poulet
  */
-public class ChromocenterAnalysis {
-	public ChromocenterAnalysis() {
+public final class ChromocenterAnalysis {
+	
+	private ChromocenterAnalysis() {
 	}
 	
 	
@@ -27,21 +28,20 @@ public class ChromocenterAnalysis {
 	 * @param imagePlusSegmented    image of the segmented nucleus
 	 * @param imagePlusChromocenter image of the segmented chromocenter
 	 */
-	public void computeParametersChromocenter(ImagePlus imagePlusSegmented, ImagePlus imagePlusChromocenter) {
+	public static void computeParametersChromocenter(ImagePlus imagePlusSegmented, ImagePlus imagePlusChromocenter) {
 		Histogram histogram = new Histogram();
 		histogram.run(imagePlusChromocenter);
 		Measure3D      measure3D      = new Measure3D();
 		double[]       tVolume        = measure3D.computeVolumeOfAllObjects(imagePlusChromocenter);
-		RadialDistance radialDistance = new RadialDistance();
 		IJ.log("CHROMOCENTER PARAMETERS");
 		IJ.log("Titre Volume BorderToBorderDistance BarycenterToBorderDistance BarycenterToBorderDistanceNucleus ");
 		if (histogram.getNbLabels() > 0) {
 			double[] tBorderToBorderDistanceTable =
-					radialDistance.computeBorderToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
+					RadialDistance.computeBorderToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
 			double[] tBarycenterToBorderDistanceTable =
-					radialDistance.computeBarycenterToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
+					RadialDistance.computeBarycenterToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
 			double[] tBarycenterToBorderDistanceTableNucleus =
-					radialDistance.computeBarycenterToBorderDistances(imagePlusSegmented, imagePlusSegmented);
+					RadialDistance.computeBarycenterToBorderDistances(imagePlusSegmented, imagePlusSegmented);
 			for (int i = 0; i < tBorderToBorderDistanceTable.length; ++i) {
 				IJ.log(
 						imagePlusChromocenter.getTitle() + "_" + i + " "
@@ -65,7 +65,7 @@ public class ChromocenterAnalysis {
 	 *
 	 * @throws IOException if file doesn't exist catch the exception
 	 */
-	public void computeParametersChromocenter(String pathResultsFile,
+	public static void computeParametersChromocenter(String pathResultsFile,
 	                                          ImagePlus imagePlusSegmented,
 	                                          ImagePlus imagePlusChromocenter) throws IOException {
 		Histogram histogram = new Histogram();
@@ -79,13 +79,12 @@ public class ChromocenterAnalysis {
 				                                    imagePlusChromocenter.getCalibration().pixelDepth);
 				double[] tVolume =
 						measure3D.computeVolumeOfAllObjects(imagePlusChromocenter);
-				RadialDistance radialDistance = new RadialDistance();
 				double[] tBorderToBorderDistanceTable =
-						radialDistance.computeBorderToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
+						RadialDistance.computeBorderToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
 				double[] tBarycenterToBorderDistanceTableCc =
-						radialDistance.computeBarycenterToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
+						RadialDistance.computeBarycenterToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
 				double[] tBarycenterToBorderDistanceTableNucleus =
-						radialDistance.computeBarycenterToBorderDistances(imagePlusSegmented, imagePlusSegmented);
+						RadialDistance.computeBarycenterToBorderDistances(imagePlusSegmented, imagePlusSegmented);
 				if (!exist) {
 					bufferedWriterOutput.write(
 							"Titre\tVolume\tBorderToBorderDistance\tBarycenterToBorderDistance\tBarycenterToBorderDistanceNucleus\n");

@@ -15,6 +15,8 @@ import gred.nucleus.utils.Voxel;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.measure.Calibration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -315,7 +317,8 @@ public abstract class ConnectedComponent {
 	                                ComponentRemovalPredicate removalPredicate,
 	                                boolean keepPredicate,
 	                                boolean setRandomColors) {
-		System.out.println("La on des compO : " + this.voxelVolume);
+		Logger logger = LoggerFactory.getLogger(this.getClass());
+		logger.debug("Là, on des compO : {}", this.voxelVolume);
 		
 		ArrayList<Boolean> existsVoxelSatisfyingPredicate = new ArrayList<>();
 		for (int i = 0; i < this.compInfo.size(); ++i) {

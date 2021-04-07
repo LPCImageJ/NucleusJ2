@@ -1,6 +1,8 @@
 package gred.nucleus.analysistest;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -102,6 +104,8 @@ public class OutputFileVerification {
 	 * @param path Path of folder which contains files expected
 	 */
 	public void getFilesResultingOfAnalysis(String path) {
+		Logger logger = LoggerFactory.getLogger(getClass().getName());
+		
 		File   root = new File(path);
 		File[] list = root.listFiles();
 		if (list != null) {
@@ -111,7 +115,7 @@ public class OutputFileVerification {
 				} else {
 					String temps = f.getPath().replace(this.rawPathOutPut
 							, "");
-					System.out.println(temps);
+					logger.debug(temps);
 					this.myMapFilesProduceByAnalysis.put(temps, md5(f.getPath()));
 				}
 			}
@@ -121,18 +125,19 @@ public class OutputFileVerification {
 	
 	/** Method to compare md5sum of files from output analysis with expected results */
 	public void compareAnalysisResult() {
+		Logger logger = LoggerFactory.getLogger(getClass().getName());
 		for (Map.Entry<String, String> entry :
 				this.myMapInitialFilesInputFolder.entrySet()) {
 			String fileName = entry.getKey();
 			String hashCode = entry.getValue();
 			if (hashCode.equals(
 					this.myMapFilesProduceByAnalysis.get(fileName))) {
-				System.out.println("Terrible du cul " + fileName);
+				logger.debug("Terrible du cul {}", fileName);
 			} else {
-				System.out.println("le fichier n'existe pas ou diff hash "
-				                   + fileName + "\n"
-				                   + hashCode + "\n"
-				                   + this.myMapFilesProduceByAnalysis.get(fileName) + "\n");
+				logger.debug("le fichier n'existe pas ou diff hash {}\n{}\n{}\n",
+				             fileName,
+				             hashCode,
+				             this.myMapFilesProduceByAnalysis.get(fileName));
 			}
 		}
 	}

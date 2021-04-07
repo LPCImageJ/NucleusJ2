@@ -3,6 +3,8 @@ package gred.nucleus.mains;
 import gred.nucleus.autocrop.AnnotateAutoCrop;
 import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.files.Directory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,6 +17,8 @@ public class MulticropFilter {
 	
 	
 	public static void main(String[] args) throws Exception {
+		Logger logger = LoggerFactory.getLogger(MulticropFilter.class);
+		
 		Directory directoryCoordinates =
 				new Directory("/home/titus/Bureau/TEST_NJ/AUTOCROP/coordonneeProjection/coordonnee/");
 		Directory directoryTIF = new Directory("/home/titus/Bureau/TEST_NJ/AUTOCROP/coordonneeProjection/raw/");
@@ -26,7 +30,7 @@ public class MulticropFilter {
 			// TODO FAIRE UNE FONCTION POUR CHOPER LE FICHIER IMAGE DANS LE DIR PEUT IMPORTE L EXTENSION !
 			File tifFile = directoryTIF.searchFileNameWithoutExtension(coordinateFile.getName().split("\\.")[0]);
 			if (tifFile != null) {
-				System.out.println("Inside");
+				logger.debug("Inside");
 				
 				AutocropParameters autocropParameters =
 						new AutocropParameters(tifFile.getParent(), tifFile.getParent());

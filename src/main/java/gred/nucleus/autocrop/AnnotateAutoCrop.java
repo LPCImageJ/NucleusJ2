@@ -8,6 +8,8 @@ import ij.io.FileSaver;
 import ij.plugin.ZProjector;
 import loci.formats.FormatException;
 import loci.plugins.BF;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.io.File;
@@ -115,6 +117,8 @@ public class AnnotateAutoCrop {
 	 * (projectionMax method) and contrast modification of 0,3.
 	 */
 	public void run() {
+		Logger logger = LoggerFactory.getLogger(this.getClass());
+		
 		ZProjector zProjectionTmp = new ZProjector(this.zProjection);
 		this.zProjection = projectionMax(zProjectionTmp);
 		adjustContrast(0.3);
@@ -122,15 +126,16 @@ public class AnnotateAutoCrop {
 			String[] splitLine = boxCoordinate.split("\\t");
 			String[] fileName  = splitLine[0].split(Pattern.quote(File.separator));
 			String[] name      = fileName[fileName.length - 1].split("_");
-			System.out.println(boxCoordinate + "\n" +
-			                   splitLine[0] + "\n" +
-			                   Integer.parseInt(name[name.length - 2]));
+			logger.info("{}\n{}\n{}",
+			            boxCoordinate,
+			            splitLine[0],
+			            Integer.parseInt(name[name.length - 2]));
 			addBoxCropToZProjection(boxCoordinate, Integer.parseInt(name[name.length - 2]));
 		}
 		String outFileZBox = this.outputDirPath + File.separator +
 		                     "zprojection" + File.separator +
 		                     outputFilesPrefix + "_Zprojection.tif";
-		System.out.println("outFileZBox " + outFileZBox);
+		logger.info("outFileZBox: {}", outFileZBox);
 		saveFile(this.zProjection, outFileZBox);
 	}
 	
