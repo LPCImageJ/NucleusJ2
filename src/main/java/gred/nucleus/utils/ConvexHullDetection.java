@@ -3,7 +3,7 @@ package gred.nucleus.utils;
 
 import ij.measure.Calibration;
 
-import java.util.ArrayList;
+import java.util.List;
 
 
 /** @author Tristan Dubos and Axel Poulet */
@@ -66,12 +66,12 @@ public class ConvexHullDetection {
 	 *
 	 * @return List of voxels composing the convexe Hull
 	 */
-	public ArrayList<VoxelRecord> findConvexeHull(double[][] image,
-	                                              ArrayList<VoxelRecord> convexHull,
-	                                              ArrayList<VoxelRecord> lVoxelBoundary,
-	                                              VoxelRecord vectorTest,
-	                                              Calibration calibration,
-	                                              double distanceThreshold) {
+	public List<VoxelRecord> findConvexHull(double[][] image,
+	                                        List<VoxelRecord> convexHull,
+	                                        List<VoxelRecord> lVoxelBoundary,
+	                                        VoxelRecord vectorTest,
+	                                        Calibration calibration,
+	                                        double distanceThreshold) {
 		double      anglesSum      = 0.0;
 		int         compteur       = 0;
 		VoxelRecord voxelTest      = p0;
@@ -312,8 +312,8 @@ public class ConvexHullDetection {
 		//double angleMax = 0;
 		//if(nbPixelWidth>0 && nbPixelHeight>0 ) {
 		//  IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" "+nbPixelWidth + " "+nbPixelHeight+" " +x + " " + y);
-		ArrayList<VoxelRecord> listBoundaryVoxel = getListOfInterestVoxel(image, nbPixelWidth, nbPixelHeight, x, y);
-		double                 angleMax          = 0;
+		List<VoxelRecord> listBoundaryVoxel = getListOfInterestVoxel(image, nbPixelWidth, nbPixelHeight, x, y);
+		double            angleMax          = 0;
 		for (VoxelRecord record : listBoundaryVoxel) {
 			VoxelRecord vectorCourant = new VoxelRecord();
 			vectorCourant.setLocation(record.i - nbPixelWidth,
@@ -350,11 +350,11 @@ public class ConvexHullDetection {
 	 *
 	 * @return
 	 */
-	private ArrayList<VoxelRecord> getListOfInterestVoxel(double[][] image,
-	                                                      int nbPixelWidth,
-	                                                      int nbPixelHeight,
-	                                                      int iInterestVoxel,
-	                                                      int jInterestVoxel) {
+	private List<VoxelRecord> getListOfInterestVoxel(double[][] image,
+	                                                 int nbPixelWidth,
+	                                                 int nbPixelHeight,
+	                                                 int iInterestVoxel,
+	                                                 int jInterestVoxel) {
 		double value     = image[iInterestVoxel][jInterestVoxel];
 		int    minWidth  = iInterestVoxel - nbPixelWidth;
 		int    maxWidth  = iInterestVoxel + nbPixelWidth;
@@ -372,23 +372,23 @@ public class ConvexHullDetection {
 		if (maxHeight >= image[0].length) {
 			maxHeight = image[0].length - 1;
 		}
-		double[][] i_c = new double[nbPixelWidth * 2][nbPixelHeight * 2];
+		double[][] iC = new double[nbPixelWidth * 2][nbPixelHeight * 2];
 		/*
         IJ.log(" i "+ iInterestVoxel + " j "+jInterestVoxel+"\n");
 		IJ.log("Image 1 "+image.length + " x "+image[0].length+"\n");
         IJ.log("minWidth "+minWidth + " maxWidth "+maxWidth+"\n");
         IJ.log("minHeight "+minHeight + " maxHeight "+maxHeight+"\n");
         */
-		//IJ.log("HA "   +minWidth+" max "+maxWidth+" iInterestVoxel "+iInterestVoxel+" "+maxHeight+" ers "+i_c.length + " nbPixelWidth "+nbPixelWidth +" nbPixelHeight " +nbPixelHeight);
+		//IJ.log("HA "   +minWidth+" max "+maxWidth+" iInterestVoxel "+iInterestVoxel+" "+maxHeight+" ers "+iC.length + " nbPixelWidth "+nbPixelWidth +" nbPixelHeight " +nbPixelHeight);
 		int k = 0;
 		for (iInterestVoxel = minWidth; iInterestVoxel < maxWidth; ++iInterestVoxel) {
 			int l = 0;
 			for (jInterestVoxel = minHeight; jInterestVoxel < maxHeight; ++jInterestVoxel) {
-				//IJ.log("HB "+ iInterestVoxel +"  "+ jInterestVoxel+ " "+image[iInterestVoxel][jInterestVoxel]+  " "+i_c[k][l]);
+				//IJ.log("HB "+ iInterestVoxel +"  "+ jInterestVoxel+ " "+image[iInterestVoxel][jInterestVoxel]+  " "+iC[k][l]);
 				if (image[iInterestVoxel][jInterestVoxel] == value) {
-					i_c[k][l] = 0;
+					iC[k][l] = 0;
 				} else {
-					i_c[k][l] = 1;
+					iC[k][l] = 1;
 				}
 				++l;
 			}
@@ -397,8 +397,8 @@ public class ConvexHullDetection {
 		VoxelRecord voxelRecord = new VoxelRecord();
 		voxelRecord.setLocation(nbPixelWidth, nbPixelHeight, 0);
 		ConnectedComponents connectedComponents = new ConnectedComponents();
-		connectedComponents.setImageTable(i_c);
-		//IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" image  "+i_c.length+ " "+voxelRecord._i+ " "+voxelRecord._j + " " +image.length+ " "+image[0].length);
+		connectedComponents.setImageTable(iC);
+		//IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" image  "+iC.length+ " "+voxelRecord._i+ " "+voxelRecord._j + " " +image.length+ " "+image[0].length);
 		connectedComponents.computeLabelOfOneObject(1, voxelRecord);
 		return connectedComponents.getBoundaryVoxel(2);
 	}

@@ -67,7 +67,7 @@ public class Voxel {
 	 * @param y second coordinate of the voxel
 	 * @param z third coordinate of the voxel
 	 */
-	public void setCoordinate(short x, short y, short z) {
+	public void setCoordinates(short x, short y, short z) {
 		this.coordinates[0] = x;
 		this.coordinates[1] = y;
 		this.coordinates[2] = z;
@@ -101,7 +101,7 @@ public class Voxel {
 	 * @param i     the coordinate's index (0, 1 or 2)
 	 * @param value the new value of the i^th coordinate of the voxel
 	 */
-	public void setCoordinate(int i, short value) {
+	public void setCoordinates(int i, short value) {
 		this.coordinates[i] = value;
 	}
 	

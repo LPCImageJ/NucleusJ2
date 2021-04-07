@@ -8,7 +8,6 @@ import ij.ImagePlus;
 import ij.ImageStack;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +78,7 @@ public class NoiseComputing {
 		Histogram histogram        = new Histogram();
 		histogram.run(raw);
 		
-		HashMap<Double, Integer> segmentedNucleusHistogram = histogram.getHistogram();
+		Map<Double, Integer> segmentedNucleusHistogram = histogram.getHistogram();
 		
 		int medianElementStop = (raw.getHeight() * raw.getWidth() * raw.getNSlices()) / 2;
 		int increment         = 0;

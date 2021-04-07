@@ -74,9 +74,9 @@ public final class FJ {
 		
 		ImagePlus newImagePlus = img.imageplus();
 		newImagePlus.setCalibration(imp.getCalibration());
-		final double[] min_max = img.extrema();
-		final double   min     = min_max[0];
-		final double   max     = min_max[1];
+		final double[] minMax = img.extrema();
+		final double   min    = minMax[0];
+		final double   max    = minMax[1];
 		newImagePlus.setDisplayRange(min, max);
 		
 		switch (type(imp)) {

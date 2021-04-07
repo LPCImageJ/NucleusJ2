@@ -27,7 +27,7 @@ public class ConvexHullImageMaker {
 	/**
 	 *
 	 */
-	ArrayList<Double> listLabel;
+	List<Double> listLabel;
 	/**
 	 *
 	 */
@@ -191,11 +191,11 @@ public class ConvexHullImageMaker {
 	 * @return
 	 */
 	public ImagePlus imageMaker(double[][] image,
-	                            ArrayList<VoxelRecord> lVoxelBoundary,
+	                            List<VoxelRecord> lVoxelBoundary,
 	                            int width,
 	                            int height,
 	                            double equivalentSphericalRadius) {
-		ArrayList<VoxelRecord> convexHull = new ArrayList<>();
+		List<VoxelRecord> convexHull = new ArrayList<>();
 		convexHull.add(p0);
 		VoxelRecord vectorTest = new VoxelRecord();
 		if (axesName.equals("xy") || axesName.equals("xz")) {
@@ -207,12 +207,12 @@ public class ConvexHullImageMaker {
 		ConvexHullDetection convexHullDetection = new ConvexHullDetection();
 		convexHullDetection.setInitialVoxel(p0);
 		convexHullDetection.setAxes(axesName);
-		convexHull = convexHullDetection.findConvexeHull(image,
-		                                                 convexHull,
-		                                                 lVoxelBoundary,
-		                                                 vectorTest,
-		                                                 calibration,
-		                                                 equivalentSphericalRadius);
+		convexHull = convexHullDetection.findConvexHull(image,
+		                                                convexHull,
+		                                                lVoxelBoundary,
+		                                                vectorTest,
+		                                                calibration,
+		                                                equivalentSphericalRadius);
 		return makePolygon(convexHull, width, height);
 	}
 	

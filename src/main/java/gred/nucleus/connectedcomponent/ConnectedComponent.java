@@ -17,6 +17,7 @@ import ij.ImageStack;
 import ij.measure.Calibration;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -245,7 +246,7 @@ public abstract class ConnectedComponent {
 	 *
 	 * @return the array of voxel representatives of components
 	 */
-	public ArrayList<Voxel> getVoxelRepresentants() {
+	public List<Voxel> getVoxelRepresentants() {
 		ArrayList<Voxel> tabVoxels = new ArrayList<>();
 		for (ComponentInfo ci : this.compInfo) {
 			if (ci.getNumberOfPoints() > 0) {

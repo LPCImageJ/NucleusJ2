@@ -5,6 +5,7 @@ import ij.ImageStack;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -90,7 +91,7 @@ public class Histogram {
 	
 	
 	/** @return  */
-	public HashMap<Double, Integer> getHistogram() {
+	public Map<Double, Integer> getHistogram() {
 		return hHistogram;
 	}
 	

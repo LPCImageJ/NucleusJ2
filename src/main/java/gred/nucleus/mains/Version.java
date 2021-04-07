@@ -6,6 +6,11 @@ import java.util.Properties;
 
 public class Version {
 	
+	private Version() {
+		// DO NOTHING
+	}
+	
+	
 	public static String get() {
 		
 		final Properties properties = new Properties();

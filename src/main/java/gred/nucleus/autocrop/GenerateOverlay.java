@@ -17,8 +17,8 @@ public class GenerateOverlay {
 	
 	
 	public GenerateOverlay(String linkOverlayProjection) throws Exception {
-		File    overlayProjection = new File(linkOverlayProjection);
-		try(Scanner scanner           = new Scanner(overlayProjection)) {
+		File overlayProjection = new File(linkOverlayProjection);
+		try (Scanner scanner = new Scanner(overlayProjection)) {
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();
 				
@@ -49,7 +49,7 @@ public class GenerateOverlay {
 			File zprojectionFile = new File(listOfFile.getValue());
 			Directory output = new Directory(zprojectionFile.getParent() + File.separator +
 			                                 "Overlay_Projection_MERGED");
-			output.CheckAndCreateDir();
+			output.checkAndCreateDir();
 			ImagePlus overlay     = IJ.openImage(listOfFile.getKey());
 			ImagePlus Zprojection = IJ.openImage(listOfFile.getValue());
 			System.out.println("\n\n" + listOfFile.getKey() + "\n" + listOfFile.getValue() + "\n\n");

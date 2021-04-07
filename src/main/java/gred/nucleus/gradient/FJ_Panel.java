@@ -16,9 +16,15 @@ public class FJ_Panel implements PlugIn, ActionListener, WindowListener {
 	private static final Point pos = new Point(-1, -1);
 	Panel panel;
 	private Dialog dialog;
-	private Button derivatives, edges, hessian;
-	private Button laplacian, statistics, structure;
-	private Button about, options, website;
+	private Button derivatives;
+	private Button edges;
+	private Button hessian;
+	private Button laplacian;
+	private Button statistics;
+	private Button structure;
+	private Button about;
+	private Button options;
+	private Button website;
 	
 	
 	public void run(String arg) {

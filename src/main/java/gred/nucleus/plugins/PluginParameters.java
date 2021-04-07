@@ -42,7 +42,7 @@ public class PluginParameters {
 	public PluginParameters(String inputFolder, String outputFolder) {
 		checkInputPaths(inputFolder, outputFolder);
 		Directory dirOutput = new Directory(outputFolder);
-		dirOutput.CheckAndCreateDir();
+		dirOutput.checkAndCreateDir();
 		this.outputFolder = dirOutput.getDirPath();
 		
 		
@@ -61,7 +61,7 @@ public class PluginParameters {
 	public PluginParameters(String inputFolder, String outputFolder, double xCal, double yCal, double zCal) {
 		checkInputPaths(inputFolder, outputFolder);
 		Directory dirOutput = new Directory(outputFolder);
-		dirOutput.CheckAndCreateDir();
+		dirOutput.checkAndCreateDir();
 		this.outputFolder = dirOutput.getDirPath();
 		this.manualParameter = true;
 		this.xCal = xCal;
@@ -81,7 +81,7 @@ public class PluginParameters {
 	public PluginParameters(String inputFolder, String outputFolder, String pathToConfigFile) {
 		checkInputPaths(inputFolder, outputFolder);
 		Directory dirOutput = new Directory(outputFolder);
-		dirOutput.CheckAndCreateDir();
+		dirOutput.checkAndCreateDir();
 		this.outputFolder = dirOutput.getDirPath();
 		addGeneralProperties(pathToConfigFile);
 		
@@ -90,16 +90,12 @@ public class PluginParameters {
 	
 	public void addGeneralProperties(String pathToConfigFile) {
 		
-		Properties  prop = new Properties();
-		InputStream is   = null;
-		try {
-			is = new FileInputStream(pathToConfigFile);
+		Properties prop = new Properties();
+		try (InputStream is = new FileInputStream(pathToConfigFile)) {
+			prop.load(is);
 		} catch (FileNotFoundException ex) {
 			System.err.println(pathToConfigFile + " : can't find the config file !");
 			System.exit(-1);
-		}
-		try {
-			prop.load(is);
 		} catch (IOException ex) {
 			System.err.println(pathToConfigFile + " : can't load the config file !");
 			System.exit(-1);

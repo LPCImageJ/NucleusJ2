@@ -125,7 +125,7 @@ public class SegmentationCalling {
 		this.inputDir = inputDir;
 		this.output = outputDir;
 		Directory dirOutput = new Directory(this.output);
-		dirOutput.CheckAndCreateDir();
+		dirOutput.checkAndCreateDir();
 		this.output = dirOutput.getDirPath();
 	}
 	
@@ -202,8 +202,9 @@ public class SegmentationCalling {
 	 * @throws FormatException Bio-formats exception
 	 */
 	public String runSeveralImages2() throws Exception {
-		String    log            = "";
-		Directory directoryInput = new Directory(this.segmentationParameters.getInputFolder());
+		String        log            = "";
+		StringBuilder info           = new StringBuilder();
+		Directory     directoryInput = new Directory(this.segmentationParameters.getInputFolder());
 		directoryInput.listImageFiles(this.segmentationParameters.getInputFolder());
 		directoryInput.checkIfEmpty();
 		for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
@@ -223,14 +224,15 @@ public class SegmentationCalling {
 			nucleusSegmentation.findOTSUMaximisingSphericity();
 			nucleusSegmentation.checkBadCrop(this.segmentationParameters.inputFolder);
 			nucleusSegmentation.saveOTSUSegmented();
-			this.outputCropGeneralInfoOTSU += nucleusSegmentation.getImageCropInfoOTSU();
+			info.append(nucleusSegmentation.getImageCropInfoOTSU());
 			nucleusSegmentation.saveGiftWrappingSeg();
-			this.outputCropGeneralInfoGIFT += nucleusSegmentation.getImageCropInfoGIFT();
+			info.append(nucleusSegmentation.getImageCropInfoGIFT());
 			
 			timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
 			System.out.println("Fin :" + timeStampStart);
 			
 		}
+		this.outputCropGeneralInfoOTSU += info.toString();
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(this.segmentationParameters.getOutputFolder()
 		                                                         + directoryInput.getSeparator()
 		                                                         + "OTSU"
@@ -336,6 +338,7 @@ public class SegmentationCalling {
 	
 	
 	public String runOneImageOMERObyROIs(ImageWrapper image, Long output, Client client) throws Exception {
+		StringBuilder info = new StringBuilder();
 		
 		List<ROIWrapper> rois = image.getROIs(client);
 		
@@ -360,13 +363,13 @@ public class SegmentationCalling {
 			
 			
 			nucleusSegmentation.saveOTSUSegmentedOMERO(client, output);
-			this.outputCropGeneralInfoOTSU += nucleusSegmentation.getImageCropInfoOTSU();
-			
+			info.append(nucleusSegmentation.getImageCropInfoOTSU());
 			nucleusSegmentation.saveGiftWrappingSegOMERO(client, output);
-			this.outputCropGeneralInfoGIFT += nucleusSegmentation.getImageCropInfoGIFT();
+			info.append(nucleusSegmentation.getImageCropInfoGIFT());
 			
 			i++;
 		}
+		this.outputCropGeneralInfoOTSU += info.toString();
 		
 		timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
 		System.out.println("Fin :" + timeStampStart);

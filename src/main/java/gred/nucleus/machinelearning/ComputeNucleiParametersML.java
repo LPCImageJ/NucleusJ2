@@ -12,7 +12,6 @@ import inra.ijpb.label.LabelImages;
 import loci.plugins.BF;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 

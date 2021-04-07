@@ -61,7 +61,7 @@ public class AnnotateAutoCrop {
 		this(boxesCoordinates, imageFile, outputDirPath, autocropParameters);
 		this.outputFilesPrefix = prefix;
 		Directory dirOutput = new Directory(this.outputDirPath + "zprojection");
-		dirOutput.CheckAndCreateDir();
+		dirOutput.checkAndCreateDir();
 	}
 	
 	

@@ -114,9 +114,9 @@ public class Measure3D {
 		
 		Histogram histogram = new Histogram();
 		histogram.run(imagePlusInput);
-		double[]                 tlabel        = histogram.getLabels();
-		double[]                 tObjectVolume = new double[tlabel.length];
-		HashMap<Double, Integer> hashHisto     = histogram.getHistogram();
+		double[]             tlabel        = histogram.getLabels();
+		double[]             tObjectVolume = new double[tlabel.length];
+		Map<Double, Integer> hashHisto     = histogram.getHistogram();
 		for (int i = 0; i < tlabel.length; ++i) {
 			int nbVoxel = hashHisto.get(tlabel[i]);
 			tObjectVolume[i] = nbVoxel * this.xCal * this.yCal * this.zCal;
@@ -135,7 +135,7 @@ public class Measure3D {
 	public double computeVolumeObject2(double label) {
 		Histogram histogram = new Histogram();
 		histogram.run(this.imageSeg[0]);
-		HashMap<Double, Integer> hashMapHistogram = histogram.getHistogram();
+		Map<Double, Integer> hashMapHistogram = histogram.getHistogram();
 		
 		return hashMapHistogram.get(label) * this.xCal * this.yCal * this.zCal;
 		
@@ -164,7 +164,7 @@ public class Measure3D {
 	public double computeVolumeObject(ImagePlus imagePlusInput, double label) {
 		Histogram histogram = new Histogram();
 		histogram.run(imagePlusInput);
-		HashMap<Double, Integer> hashMapHistogram = histogram.getHistogram();
+		Map<Double, Integer> hashMapHistogram = histogram.getHistogram();
 		return hashMapHistogram.get(label) * this.xCal * this.yCal * this.zCal;
 	}
 	
@@ -742,7 +742,7 @@ public class Measure3D {
 		double    voxelMedianValue = 0;
 		Histogram histogram        = new Histogram();
 		histogram.run(this.rawImage);
-		HashMap<Double, Integer> nucleusHistogram = histogram.getHistogram();
+		Map<Double, Integer> nucleusHistogram = histogram.getHistogram();
 		int medianElementStop =
 				(this.rawImage.getHeight() * this.rawImage.getWidth() * this.rawImage.getNSlices()) / 2;
 		int increment = 0;

@@ -49,16 +49,16 @@ public class ChromocentersAnalysisBatchPlugin_ implements PlugIn {
 					rhfChoice = "Intensity";
 				}
 				
-				List<String> arrayListImageChromocenter = fileList.fileSearchList(".+SegmentedDataCc.+", tFileRawImage);
+				List<String> listImageChromocenter = fileList.fileSearchList(".+SegmentedDataCc.+", tFileRawImage);
 				
 				String workDirectory = chromocentersPipelineBatchDialog.getWorkDirectory();
 				
 				String nameFileChromocenterAndNucleus = workDirectory + File.separator + "NucAndCcParameters.tab";
 				String nameFileChromocenter           = workDirectory + File.separator + "CcParameters.tab";
 				
-				for (int i = 0; i < arrayListImageChromocenter.size(); ++i) {
-					IJ.log("image" + (i + 1) + " / " + arrayListImageChromocenter.size());
-					String pathImageChromocenter = arrayListImageChromocenter.get(i);
+				for (int i = 0; i < listImageChromocenter.size(); ++i) {
+					IJ.log("image" + (i + 1) + " / " + listImageChromocenter.size());
+					String pathImageChromocenter = listImageChromocenter.get(i);
 					String pathNucleusRaw =
 							pathImageChromocenter.replace("SegmentedDataCc", "RawDataNucleus");
 					String pathNucleusSegmented =
@@ -72,7 +72,7 @@ public class ChromocentersAnalysisBatchPlugin_ implements PlugIn {
 							IJ.error("image format", "No images in gray scale 8bits in 3D");
 							return;
 						}
-						ImagePlus   imagePlusChromocenter = IJ.openImage(arrayListImageChromocenter.get(i));
+						ImagePlus   imagePlusChromocenter = IJ.openImage(listImageChromocenter.get(i));
 						ImagePlus   imagePlusSegmented    = IJ.openImage(pathNucleusSegmented);
 						Calibration calibration           = new Calibration();
 						if (chromocentersPipelineBatchDialog.getCalibrationStatus()) {

@@ -10,7 +10,6 @@ import loci.common.DebugTools;
 import loci.plugins.BF;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 

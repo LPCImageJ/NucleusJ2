@@ -1,6 +1,7 @@
 package gred.nucleus.utils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ConnectedComponents {
@@ -224,7 +225,7 @@ public class ConnectedComponents {
 	 *
 	 * @return
 	 */
-	public ArrayList<Double> getListLabel(double labelIni) {
+	public List<Double> getListLabel(double labelIni) {
 		computeLabel(labelIni);
 		return listLabel;
 	}
@@ -266,7 +267,7 @@ public class ConnectedComponents {
 	 *
 	 * @return
 	 */
-	public ArrayList<VoxelRecord> getBoundaryVoxel(int label) {
+	public List<VoxelRecord> getBoundaryVoxel(int label) {
 		return detectVoxelBoundary(label);
 	}
 	

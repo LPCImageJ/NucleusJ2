@@ -18,7 +18,7 @@ public class Directory {
 	/** List of files in current folder + recursive folder */
 	public List<File> fileList      = new ArrayList<>();
 	/** Check if directory contain nd files */
-	public Boolean    containNdFile = false;
+	public boolean    containNdFile = false;
 	/** List of nd files */
 	public List<File> fileListND    = new ArrayList<>();
 	/** Path separator */
@@ -43,14 +43,14 @@ public class Directory {
 	
 	
 	/** Method to check if directory and create if doesn't */
-	public void CheckAndCreateDir() {
-		ChekSeparatorEndPath();
-		CreateDir();
+	public void checkAndCreateDir() {
+		checkSeparatorEndPath();
+		createDir();
 	}
 	
 	
 	/** Check if separator exist */
-	private void ChekSeparatorEndPath() {
+	private void checkSeparatorEndPath() {
 		if (!(this.dirPath.endsWith(File.separator))) {
 			this.dirPath += File.separator;
 		}
@@ -58,10 +58,10 @@ public class Directory {
 	
 	
 	/** Method creating folder if doesn't exist. */
-	private void CreateDir() {
-		File dir = new File(this.dirPath);
-		if (!dir.exists()) {
-			boolean isDirCreated = dir.mkdirs();
+	private void createDir() {
+		File directory = new File(this.dirPath);
+		if (!directory.exists()) {
+			boolean isDirCreated = directory.mkdirs();
 			if (isDirCreated) {
 				IJ.log("New directory : " + this.dirPath);
 			} else {
@@ -81,13 +81,13 @@ public class Directory {
 	/**
 	 * Method to recursively list files contains in folder and sub folder. (Argument needed because of recursive way)
 	 *
-	 * @param Path path of folder
+	 * @param path path of folder
 	 */
-	public void listImageFiles(String Path) {
-		File   root = new File(Path);
+	public void listImageFiles(String path) {
+		File   root = new File(path);
 		File[] list = root.listFiles();
 		if (list == null) {
-			IJ.error(Path + " does not contain files");
+			IJ.error(path + " does not contain files");
 			System.exit(-1);
 		}
 		for (File f : list) {
@@ -107,8 +107,8 @@ public class Directory {
 	}
 	
 	
-	public void listAllFiles(String Path) {
-		File   root = new File(Path);
+	public void listAllFiles(String path) {
+		File   root = new File(path);
 		File[] list = root.listFiles();
 		
 		if (list != null) {
@@ -139,7 +139,7 @@ public class Directory {
 	
 	
 	/** @return list of files */
-	public List<File> ListFiles() {
+	public List<File> listFiles() {
 		return this.fileList;
 	}
 	

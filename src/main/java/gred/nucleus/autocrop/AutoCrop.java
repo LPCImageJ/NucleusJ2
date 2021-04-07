@@ -252,7 +252,7 @@ public class AutoCrop {
 	public void componentSizeFilter() {
 		Histogram histogram = new Histogram();
 		histogram.run(this.imageSegLabelled);
-		HashMap<Double, Integer> histogramData = histogram.getHistogram();
+		Map<Double, Integer> histogramData = histogram.getHistogram();
 		for (Map.Entry<Double, Integer> entry : new TreeMap<>(histogramData).entrySet()) {
 			Double  key   = entry.getKey();
 			Integer value = entry.getValue();
@@ -381,7 +381,7 @@ public class AutoCrop {
 	public void cropKernels2() throws Exception {
 		StringBuilder info      = new StringBuilder();
 		Directory     dirOutput = new Directory(this.outputDirPath + "nuclei");
-		dirOutput.CheckAndCreateDir();
+		dirOutput.checkAndCreateDir();
 		info.append(getSpecificImageInfo()).append(HEADERS);
 		for (int c = 0; c < this.channelNumbers; c++) {
 			for (Map.Entry<Double, Box> entry : new TreeMap<>(this.boxes).entrySet()) {
@@ -515,7 +515,7 @@ public class AutoCrop {
 	public void cropKernels3() throws Exception {
 		StringBuilder info      = new StringBuilder();
 		Directory     dirOutput = new Directory(this.outputDirPath + File.separator + "Nuclei");
-		dirOutput.CheckAndCreateDir();
+		dirOutput.checkAndCreateDir();
 		info.append(getSpecificImageInfo()).append(HEADERS);
 		for (int c = 0; c < this.channelNumbers; c++) {
 			for (Map.Entry<Double, Box> entry : new TreeMap<>(this.boxes).entrySet()) {
@@ -709,7 +709,7 @@ public class AutoCrop {
 	 */
 	public void writeAnalyseInfo() {
 		Directory dirOutput = new Directory(this.outputDirPath + "coordinates");
-		dirOutput.CheckAndCreateDir();
+		dirOutput.checkAndCreateDir();
 		OutputTextFile resultFileOutput = new OutputTextFile(this.outputDirPath +
 		                                                     "coordinates" +
 		                                                     File.separator +

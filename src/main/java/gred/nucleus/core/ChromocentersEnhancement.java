@@ -210,7 +210,6 @@ public class ChromocentersEnhancement {
 	 * @return
 	 */
 	private ImagePlus convertNegativeValue(ImagePlus imagePlusInput) {
-		double     voxelValue;
 		ImagePlus  imagePlusContrast  = imagePlusInput.duplicate();
 		ImageStack imageStackContrast = imagePlusContrast.getStack();
 		for (int k = 0; k < imagePlusContrast.getNSlices(); ++k) {

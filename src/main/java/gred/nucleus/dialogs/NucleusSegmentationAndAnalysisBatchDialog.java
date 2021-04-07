@@ -488,19 +488,19 @@ public class NucleusSegmentationAndAnalysisBatchDialog extends JFrame {
 	
 	public double getXCalibration() {
 		String xCal = jTextFieldXCalibration.getText();
-		return Double.parseDouble(xCal.replaceAll(",", "."));
+		return Double.parseDouble(xCal.replace(",", "."));
 	}
 	
 	
 	public double getYCalibration() {
 		String yCal = jTextFieldYCalibration.getText();
-		return Double.parseDouble(yCal.replaceAll(",", "."));
+		return Double.parseDouble(yCal.replace(",", "."));
 	}
 	
 	
 	public double getZCalibration() {
 		String zCal = jTextFieldZCalibration.getText();
-		return Double.parseDouble(zCal.replaceAll(",", "."));
+		return Double.parseDouble(zCal.replace(",", "."));
 	}
 	
 	

@@ -12,7 +12,6 @@ import ij.plugin.GaussianBlur3D;
 import ij.plugin.PlugIn;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -45,7 +44,7 @@ public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
 					IJ.log("image" + (i + 1) + " / " + listImageSegmentedDataNucleus.size());
 					String pathImageSegmentedNucleus = listImageSegmentedDataNucleus.get(i);
 					String pathNucleusRaw =
-							pathImageSegmentedNucleus.replaceAll("SegmentedDataNucleus", "RawDataNucleus");
+							pathImageSegmentedNucleus.replace("SegmentedDataNucleus", "RawDataNucleus");
 					IJ.log(pathNucleusRaw);
 					if (fileList.isDirectoryOrFileExist(pathNucleusRaw, tFileRawData)) {
 						ImagePlus imagePlusSegmented = IJ.openImage(pathImageSegmentedNucleus);

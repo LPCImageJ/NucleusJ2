@@ -113,10 +113,10 @@ public class NucleusSegmentation {
 		this.imgRawTransformed = this.imgRaw.duplicate();
 		this.imgRawTransformed.setTitle(imageFile.getName());
 		Directory dirOutputOTSU = new Directory(this.segmentationParameters.getOutputFolder() + "OTSU");
-		dirOutputOTSU.CheckAndCreateDir();
+		dirOutputOTSU.checkAndCreateDir();
 		if (this.segmentationParameters.getGiftWrapping()) {
 			Directory dirOutputGIFT = new Directory(this.segmentationParameters.getOutputFolder() + "GIFT");
-			dirOutputGIFT.CheckAndCreateDir();
+			dirOutputGIFT.checkAndCreateDir();
 		}
 	}
 	

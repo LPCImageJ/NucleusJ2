@@ -335,19 +335,19 @@ public class ChromocentersAnalysisPipelineBatchDialog extends JFrame implements 
 	
 	public double getXCalibration() {
 		String xCal = readXCalibration.getText();
-		return Double.parseDouble(xCal.replaceAll(",", "."));
+		return Double.parseDouble(xCal.replace(",", "."));
 	}
 	
 	
 	public double getYCalibration() {
 		String yCal = readYCalibration.getText();
-		return Double.parseDouble(yCal.replaceAll(",", "."));
+		return Double.parseDouble(yCal.replace(",", "."));
 	}
 	
 	
 	public double getZCalibration() {
 		String zCal = readZCalibration.getText();
-		return Double.parseDouble(zCal.replaceAll(",", "."));
+		return Double.parseDouble(zCal.replace(",", "."));
 	}
 	
 	

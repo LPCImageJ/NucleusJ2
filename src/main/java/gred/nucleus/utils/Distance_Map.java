@@ -56,8 +56,10 @@ may be forthcoming.
 
 */
 public class Distance_Map implements PlugInFilter {
-	public byte[][] data;
-	public int      w, h, d;
+	public  byte[][]  data;
+	public  int       w;
+	public  int       h;
+	public  int       d;
 	public  int       thresh  = 126;
 	public  boolean   inverse = false;
 	private ImagePlus imp;
@@ -181,8 +183,75 @@ public class Distance_Map implements PlugInFilter {
 	}
 	
 	
+	static class Step2Thread extends Thread {
+		int       thread;
+		int       nThreads;
+		int       w;
+		int       h;
+		int       d;
+		float[][] s;
+		
+		
+		public Step2Thread(int thread, int nThreads, int w, int h, int d, float[][] s) {
+			this.thread = thread;
+			this.nThreads = nThreads;
+			this.w = w;
+			this.h = h;
+			this.d = d;
+			this.s = s;
+		}
+		
+		
+		@Override
+		public void run() {
+			float[] sk;
+			int     n = w;
+			if (h > n) n = h;
+			if (d > n) n = d;
+			int     noResult = 3 * (n + 1) * (n + 1);
+			int[]   tempInt  = new int[n];
+			int[]   tempS    = new int[n];
+			boolean nonempty;
+			int     test;
+			int     min;
+			int     delta;
+			for (int k = thread; k < d; k += nThreads) {
+				IJ.showProgress(k / (1. * d));
+				sk = s[k];
+				for (int i = 0; i < w; i++) {
+					nonempty = false;
+					for (int j = 0; j < h; j++) {
+						tempS[j] = (int) sk[i + w * j];
+						if (tempS[j] > 0) nonempty = true;
+					}
+					if (nonempty) {
+						for (int j = 0; j < h; j++) {
+							min = noResult;
+							delta = j;
+							for (int y = 0; y < h; y++) {
+								test = tempS[y] + delta * delta;
+								delta--;
+								if (test < min) min = test;
+							}
+							tempInt[j] = min;
+						}
+						for (int j = 0; j < h; j++) {
+							sk[i + w * j] = tempInt[j];
+						}
+					}
+				}
+			}
+		}//run
+		
+	}//Step2Thread
+	
 	class Step1Thread extends Thread {
-		int thread, nThreads, w, h, d, thresh;
+		int       thread;
+		int       nThreads;
+		int       w;
+		int       h;
+		int       d;
+		int       thresh;
 		float[][] s;
 		byte[][]  data;
 		
@@ -198,6 +267,7 @@ public class Distance_Map implements PlugInFilter {
 			this.s = s;
 		}
 		
+		
 		@Override
 		public void run() {
 			float[] sk;
@@ -209,7 +279,8 @@ public class Distance_Map implements PlugInFilter {
 			boolean[] background = new boolean[n];
 			@SuppressWarnings("unused")
 			boolean nonempty;
-			int test, min;
+			int test;
+			int min;
 			for (int k = thread; k < d; k += nThreads) {
 				IJ.showProgress(k / (1. * d));
 				sk = s[k];
@@ -244,63 +315,12 @@ public class Distance_Map implements PlugInFilter {
 		
 	}//Step1Thread
 	
-	static class Step2Thread extends Thread {
-		int thread, nThreads, w, h, d;
-		float[][] s;
-		
-		
-		public Step2Thread(int thread, int nThreads, int w, int h, int d, float[][] s) {
-			this.thread = thread;
-			this.nThreads = nThreads;
-			this.w = w;
-			this.h = h;
-			this.d = d;
-			this.s = s;
-		}
-		
-		@Override
-		public void run() {
-			float[] sk;
-			int     n = w;
-			if (h > n) n = h;
-			if (d > n) n = d;
-			int     noResult = 3 * (n + 1) * (n + 1);
-			int[]   tempInt  = new int[n];
-			int[]   tempS    = new int[n];
-			boolean nonempty;
-			int     test, min, delta;
-			for (int k = thread; k < d; k += nThreads) {
-				IJ.showProgress(k / (1. * d));
-				sk = s[k];
-				for (int i = 0; i < w; i++) {
-					nonempty = false;
-					for (int j = 0; j < h; j++) {
-						tempS[j] = (int) sk[i + w * j];
-						if (tempS[j] > 0) nonempty = true;
-					}
-					if (nonempty) {
-						for (int j = 0; j < h; j++) {
-							min = noResult;
-							delta = j;
-							for (int y = 0; y < h; y++) {
-								test = tempS[y] + delta * delta;
-								delta--;
-								if (test < min) min = test;
-							}
-							tempInt[j] = min;
-						}
-						for (int j = 0; j < h; j++) {
-							sk[i + w * j] = tempInt[j];
-						}
-					}
-				}
-			}
-		}//run
-		
-	}//Step2Thread
-	
 	class Step3Thread extends Thread {
-		int thread, nThreads, w, h, d;
+		int       thread;
+		int       nThreads;
+		int       w;
+		int       h;
+		int       d;
 		float[][] s;
 		byte[][]  data;
 		
@@ -315,9 +335,13 @@ public class Distance_Map implements PlugInFilter {
 			this.data = data;
 		}
 		
+		
 		@Override
 		public void run() {
-			int zStart, zStop, zBegin, zEnd;
+			int zStart;
+			int zStop;
+			int zBegin;
+			int zEnd;
 			@SuppressWarnings("unused")
 			float[] sk;
 			int n = w;
@@ -327,7 +351,9 @@ public class Distance_Map implements PlugInFilter {
 			int[]   tempInt  = new int[n];
 			int[]   tempS    = new int[n];
 			boolean nonempty;
-			int     test, min, delta;
+			int     test;
+			int     min;
+			int     delta;
 			for (int j = thread; j < h; j += nThreads) {
 				IJ.showProgress(j / (1. * h));
 				for (int i = 0; i < w; i++) {
