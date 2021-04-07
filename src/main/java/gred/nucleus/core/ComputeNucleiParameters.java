@@ -1,7 +1,7 @@
 package gred.nucleus.core;
 
-import gred.nucleus.filesInputOutput.Directory;
-import gred.nucleus.filesInputOutput.OutputTextFile;
+import gred.nucleus.files.Directory;
+import gred.nucleus.files.OutputTextFile;
 import gred.nucleus.plugins.PluginParameters;
 import ij.ImagePlus;
 import ij.measure.Calibration;
@@ -9,6 +9,7 @@ import loci.plugins.BF;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ComputeNucleiParameters {
@@ -71,8 +72,8 @@ public class ComputeNucleiParameters {
 		Directory directorySegmentedInput = new Directory(this.pluginParameters.getOutputFolder());
 		directorySegmentedInput.listImageFiles(this.pluginParameters.getOutputFolder());
 		directorySegmentedInput.checkIfEmpty();
-		ArrayList<File> segmentedImages           = directorySegmentedInput.fileList;
-		StringBuilder   outputCropGeneralInfoOTSU = new StringBuilder();
+		List<File>    segmentedImages           = directorySegmentedInput.fileList;
+		StringBuilder outputCropGeneralInfoOTSU = new StringBuilder();
 		
 		outputCropGeneralInfoOTSU.append(this.pluginParameters.getAnalysisParameters()).append(getColNameResult());
 		

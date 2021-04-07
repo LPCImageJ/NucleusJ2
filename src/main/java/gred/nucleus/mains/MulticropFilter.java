@@ -2,11 +2,12 @@ package gred.nucleus.mains;
 
 import gred.nucleus.autocrop.AnnotateAutoCrop;
 import gred.nucleus.autocrop.AutocropParameters;
-import gred.nucleus.filesInputOutput.Directory;
+import gred.nucleus.files.Directory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -29,7 +30,7 @@ public class MulticropFilter {
 				
 				AutocropParameters autocropParameters =
 						new AutocropParameters(tifFile.getParent(), tifFile.getParent());
-				ArrayList<String> listOfBoxes = readCoordinatesTXT(coordinateFile);
+				List<String> listOfBoxes = readCoordinatesTXT(coordinateFile);
 				AnnotateAutoCrop annotateAutoCrop =
 						new AnnotateAutoCrop(listOfBoxes, tifFile, tifFile.getAbsolutePath(), autocropParameters);
 				
@@ -39,11 +40,10 @@ public class MulticropFilter {
 	}
 	
 	
-	public static ArrayList<String> readCoordinatesTXT(File boxFile) {
+	public static List<String> readCoordinatesTXT(File boxFile) {
 		
 		ArrayList<String> boxLists = new ArrayList<>();
-		try {
-			Scanner scanner = new Scanner(boxFile);
+		try (Scanner scanner = new Scanner(boxFile)) {
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();
 				

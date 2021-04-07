@@ -6,10 +6,10 @@ import fr.igred.omero.roi.ROIWrapper;
 import fr.igred.omero.roi.RectangleWrapper;
 import fr.igred.omero.roi.ShapeList;
 import fr.igred.omero.repository.DatasetWrapper;
-import gred.nucleus.filesInputOutput.Directory;
-import gred.nucleus.filesInputOutput.OutputTextFile;
-import gred.nucleus.filesInputOutput.OutputTiff;
-import gred.nucleus.imageProcess.Thresholding;
+import gred.nucleus.files.Directory;
+import gred.nucleus.files.OutputTextFile;
+import gred.nucleus.files.OutputTiff;
+import gred.nucleus.imageprocessing.Thresholding;
 import gred.nucleus.utils.Histogram;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -133,7 +133,7 @@ public class AutoCrop {
 	public AutoCrop(File imageFile,
 	                String outputFilesPrefix,
 	                AutocropParameters autocropParametersAnalyse,
-	                HashMap<Double, Box> boxes)
+	                Map<Double, Box> boxes)
 	throws Exception {
 		this.autocropParameters = autocropParametersAnalyse;
 		this.currentFile = imageFile;
@@ -577,7 +577,7 @@ public class AutoCrop {
 	 *
 	 * @return outputFile: ArrayList of String for the path of the output files created.
 	 */
-	public List<String> getOutputFileArrayList() {
+	public List<String> getOutputFileList() {
 		return this.outputFile;
 	}
 	
@@ -587,7 +587,7 @@ public class AutoCrop {
 	 *
 	 * @return boxCoordinates: ArrayList of String which contain the coordinates of the boxes
 	 */
-	public ArrayList<String> getFileCoordinates() {
+	public List<String> getFileCoordinates() {
 		return this.boxCoordinates;
 	}
 	

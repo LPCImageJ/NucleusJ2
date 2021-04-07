@@ -1,6 +1,6 @@
 package gred.nucleus.mains;
 
-import gred.nucleus.filesInputOutput.Directory;
+import gred.nucleus.files.Directory;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;

@@ -8,7 +8,7 @@ import gred.nucleus.autocrop.*;
 import gred.nucleus.cli.*;
 import gred.nucleus.core.ComputeNucleiParameters;
 import gred.nucleus.exceptions.FileInOut;
-import gred.nucleus.machineLearningUtils.ComputeNucleiParametersML;
+import gred.nucleus.machinelearning.ComputeNucleiParametersML;
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
 import ij.ImagePlus;

@@ -1,7 +1,7 @@
 package gred.nucleus.cli;
 
-import gred.nucleus.filesInputOutput.Directory;
-import gred.nucleus.filesInputOutput.OutputTextFile;
+import gred.nucleus.files.Directory;
+import gred.nucleus.files.OutputTextFile;
 import gred.nucleus.mains.Version;
 import org.apache.commons.cli.HelpFormatter;
 

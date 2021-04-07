@@ -9,7 +9,7 @@ import java.io.File;
 
 public class CropFromCoodinateDialog extends JFrame implements ActionListener {
 	private static final long         serialVersionUID  = 1L;
-	static private final String       newline           = "\n";
+	private static final String       newline           = "\n";
 	private final        JButton      jButtonStart      = new JButton("Start");
 	private final        JButton      jButtonQuit       = new JButton("Quit");
 	private final        Container    container;

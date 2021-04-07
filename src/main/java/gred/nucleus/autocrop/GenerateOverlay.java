@@ -1,6 +1,6 @@
 package gred.nucleus.autocrop;
 
-import gred.nucleus.filesInputOutput.Directory;
+import gred.nucleus.files.Directory;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
@@ -18,14 +18,15 @@ public class GenerateOverlay {
 	
 	public GenerateOverlay(String linkOverlayProjection) throws Exception {
 		File    overlayProjection = new File(linkOverlayProjection);
-		Scanner scanner           = new Scanner(overlayProjection);
-		while (scanner.hasNextLine()) {
-			String line = scanner.nextLine();
-			
-			if (!(line.matches("^#.*"))) {
-				String[] splitLine = line.split("\\t");
-				this.linkOverlayProjection.put(splitLine[0], splitLine[1]);
+		try(Scanner scanner           = new Scanner(overlayProjection)) {
+			while (scanner.hasNextLine()) {
+				String line = scanner.nextLine();
 				
+				if (!(line.matches("^#.*"))) {
+					String[] splitLine = line.split("\\t");
+					this.linkOverlayProjection.put(splitLine[0], splitLine[1]);
+					
+				}
 			}
 		}
 	}

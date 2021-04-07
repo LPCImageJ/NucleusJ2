@@ -71,38 +71,38 @@ public class ChromocenterAnalysis {
 		Histogram histogram = new Histogram();
 		histogram.run(imagePlusChromocenter);
 		if (histogram.getNbLabels() > 0) {
-			File           fileResults = new File(pathResultsFile);
-			boolean        exist       = fileResults.exists();
-			BufferedWriter bufferedWriterOutput;
-			FileWriter     fileWriter  = new FileWriter(fileResults, true);
-			bufferedWriterOutput = new BufferedWriter(fileWriter);
-			Measure3D measure3D = new Measure3D(imagePlusChromocenter.getCalibration().pixelWidth,
-			                                    imagePlusChromocenter.getCalibration().pixelHeight,
-			                                    imagePlusChromocenter.getCalibration().pixelDepth);
-			double[] tVolume =
-					measure3D.computeVolumeOfAllObjects(imagePlusChromocenter);
-			RadialDistance radialDistance = new RadialDistance();
-			double[] tBorderToBorderDistanceTable =
-					radialDistance.computeBorderToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
-			double[] tBarycenterToBorderDistanceTableCc =
-					radialDistance.computeBarycenterToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
-			double[] tBarycenterToBorderDistanceTableNucleus =
-					radialDistance.computeBarycenterToBorderDistances(imagePlusSegmented, imagePlusSegmented);
-			if (!exist) {
-				bufferedWriterOutput.write(
-						"Titre\tVolume\tBorderToBorderDistance\tBarycenterToBorderDistance\tBarycenterToBorderDistanceNucleus\n");
+			File    fileResults = new File(pathResultsFile);
+			boolean exist       = fileResults.exists();
+			try (BufferedWriter bufferedWriterOutput = new BufferedWriter(new FileWriter(fileResults, true))) {
+				Measure3D measure3D = new Measure3D(imagePlusChromocenter.getCalibration().pixelWidth,
+				                                    imagePlusChromocenter.getCalibration().pixelHeight,
+				                                    imagePlusChromocenter.getCalibration().pixelDepth);
+				double[] tVolume =
+						measure3D.computeVolumeOfAllObjects(imagePlusChromocenter);
+				RadialDistance radialDistance = new RadialDistance();
+				double[] tBorderToBorderDistanceTable =
+						radialDistance.computeBorderToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
+				double[] tBarycenterToBorderDistanceTableCc =
+						radialDistance.computeBarycenterToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
+				double[] tBarycenterToBorderDistanceTableNucleus =
+						radialDistance.computeBarycenterToBorderDistances(imagePlusSegmented, imagePlusSegmented);
+				if (!exist) {
+					bufferedWriterOutput.write(
+							"Titre\tVolume\tBorderToBorderDistance\tBarycenterToBorderDistance\tBarycenterToBorderDistanceNucleus\n");
+				}
+				for (
+						int i = 0;
+						i < tBorderToBorderDistanceTable.length; ++i) {
+					bufferedWriterOutput.write(
+							imagePlusChromocenter.getTitle() + "_" + i + "\t"
+							+ tVolume[i] + "\t"
+							+ tBorderToBorderDistanceTable[i] + "\t"
+							+ tBarycenterToBorderDistanceTableCc[i] + "\t"
+							+ tBarycenterToBorderDistanceTableNucleus[0] + "\n"
+					                          );
+				}
+				bufferedWriterOutput.flush();
 			}
-			for (int i = 0; i < tBorderToBorderDistanceTable.length; ++i) {
-				bufferedWriterOutput.write(
-						imagePlusChromocenter.getTitle() + "_" + i + "\t"
-						+ tVolume[i] + "\t"
-						+ tBorderToBorderDistanceTable[i] + "\t"
-						+ tBarycenterToBorderDistanceTableCc[i] + "\t"
-						+ tBarycenterToBorderDistanceTableNucleus[0] + "\n"
-				                          );
-			}
-			bufferedWriterOutput.flush();
-			bufferedWriterOutput.close();
 		}
 	}
 	

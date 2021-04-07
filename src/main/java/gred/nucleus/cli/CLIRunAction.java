@@ -2,7 +2,7 @@ package gred.nucleus.cli;
 
 import gred.nucleus.autocrop.*;
 import gred.nucleus.core.ComputeNucleiParameters;
-import gred.nucleus.machineLearningUtils.ComputeNucleiParametersML;
+import gred.nucleus.machinelearning.ComputeNucleiParametersML;
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
 import org.apache.commons.cli.CommandLine;

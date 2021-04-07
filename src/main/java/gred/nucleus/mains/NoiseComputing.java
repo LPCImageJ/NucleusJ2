@@ -1,7 +1,7 @@
 package gred.nucleus.mains;
 
-import gred.nucleus.filesInputOutput.Directory;
-import gred.nucleus.filesInputOutput.OutputTextFile;
+import gred.nucleus.files.Directory;
+import gred.nucleus.files.OutputTextFile;
 import gred.nucleus.plugins.PluginParameters;
 import gred.nucleus.utils.Histogram;
 import ij.ImagePlus;
@@ -10,6 +10,8 @@ import ij.ImageStack;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class NoiseComputing {
@@ -28,8 +30,8 @@ public class NoiseComputing {
 		Directory        directoryInput   = new Directory(pluginParameters.getOutputFolder());
 		directoryInput.listImageFiles(pluginParameters.getOutputFolder());
 		directoryInput.checkIfEmpty();
-		ArrayList<File> segImages   = directoryInput.fileList;
-		StringBuilder   resultNoise = new StringBuilder("NucleusFileName\tMeanNoise\n");
+		List<File>    segImages   = directoryInput.fileList;
+		StringBuilder resultNoise = new StringBuilder("NucleusFileName\tMeanNoise\n");
 		for (File currentFile : segImages) {
 			System.out.println("current File " + currentFile.getName());
 			ImagePlus raw = new ImagePlus(pluginParameters.getInputFolder() +
@@ -82,7 +84,7 @@ public class NoiseComputing {
 		int medianElementStop = (raw.getHeight() * raw.getWidth() * raw.getNSlices()) / 2;
 		int increment         = 0;
 		
-		for (HashMap.Entry<Double, Integer> entry : segmentedNucleusHistogram.entrySet()) {
+		for (Map.Entry<Double, Integer> entry : segmentedNucleusHistogram.entrySet()) {
 			increment += entry.getValue();
 			if (increment > medianElementStop) {
 				voxelMedianValue = entry.getKey();

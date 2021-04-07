@@ -1,6 +1,6 @@
 package gred.nucleus.autocrop;
 
-import gred.nucleus.filesInputOutput.FilesNames;
+import gred.nucleus.files.FilesNames;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,15 +21,16 @@ public class CropFromCoordinates {
 	 */
 	public CropFromCoordinates(String linkCoordinateToRawImage)
 	throws Exception {
-		File    coordinateFile = new File(linkCoordinateToRawImage);
-		Scanner scanner        = new Scanner(coordinateFile);
-		while (scanner.hasNextLine()) {
-			String line = scanner.nextLine();
-			
-			if (!(line.matches("^#.*"))) {
-				String[] splitLine = line.split("\\t");
-				this.coordinateToRawImage.put(splitLine[0], splitLine[1]);
+		File coordinateFile = new File(linkCoordinateToRawImage);
+		try (Scanner scanner = new Scanner(coordinateFile)) {
+			while (scanner.hasNextLine()) {
+				String line = scanner.nextLine();
 				
+				if (!(line.matches("^#.*"))) {
+					String[] splitLine = line.split("\\t");
+					this.coordinateToRawImage.put(splitLine[0], splitLine[1]);
+					
+				}
 			}
 		}
 	}
@@ -42,21 +43,20 @@ public class CropFromCoordinates {
 			File rawImage       = new File(listOfFile.getValue());
 			AutocropParameters autocropParameters =
 					new AutocropParameters(rawImage.getParent(), rawImage.getParent());
-			HashMap<Double, Box> boxes            = readCoordinatesTXT(coordinateFile);
-			FilesNames           outPutFilesNames = new FilesNames(listOfFile.getValue());
-			String               prefix           = outPutFilesNames.prefixNameFile();
-			AutoCrop             autoCrop         = new AutoCrop(rawImage, prefix, autocropParameters, boxes);
+			Map<Double, Box> boxes            = readCoordinatesTXT(coordinateFile);
+			FilesNames       outPutFilesNames = new FilesNames(listOfFile.getValue());
+			String           prefix           = outPutFilesNames.prefixNameFile();
+			AutoCrop         autoCrop         = new AutoCrop(rawImage, prefix, autocropParameters, boxes);
 			autoCrop.cropKernels3();
 		}
 	}
 	
 	
-	public HashMap<Double, Box> readCoordinatesTXT(File boxesFile) {
+	public Map<Double, Box> readCoordinatesTXT(File boxesFile) {
 		
 		HashMap<Double, Box> boxLists = new HashMap<>();
 		double               count    = 0;
-		try {
-			Scanner scanner = new Scanner(boxesFile);
+		try (Scanner scanner = new Scanner(boxesFile)) {
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();
 				

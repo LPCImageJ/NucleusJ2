@@ -1,8 +1,8 @@
 package gred.nucleus.mains;
 
 import gred.nucleus.core.Measure3D;
-import gred.nucleus.filesInputOutput.Directory;
-import gred.nucleus.filesInputOutput.OutputTextFile;
+import gred.nucleus.files.Directory;
+import gred.nucleus.files.OutputTextFile;
 import gred.nucleus.plugins.PluginParameters;
 import gred.nucleus.utils.Histogram;
 import ij.ImagePlus;
@@ -15,6 +15,7 @@ import loci.plugins.BF;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class ComputeSegmentationParametersDL {
@@ -28,7 +29,7 @@ public class ComputeSegmentationParametersDL {
 		Directory directoryInput = new Directory(pluginParameters.getInputFolder());
 		directoryInput.listImageFiles(pluginParameters.getInputFolder());
 		directoryInput.checkIfEmpty();
-		ArrayList<File> rawImages = directoryInput.fileList;
+		List<File> rawImages = directoryInput.fileList;
 		StringBuilder outputCropGeneralInfoOTSU =
 				new StringBuilder(pluginParameters.getAnalysisParameters() + getResultsColumnNames());
 		for (File currentFile : rawImages) {
@@ -58,7 +59,7 @@ public class ComputeSegmentationParametersDL {
 		Directory        directoryInput   = new Directory(pluginParameters.getOutputFolder());
 		directoryInput.listImageFiles(pluginParameters.getOutputFolder());
 		directoryInput.checkIfEmpty();
-		ArrayList<File> segImages = directoryInput.fileList;
+		List<File> segImages = directoryInput.fileList;
 		StringBuilder outputCropGeneralInfoOTSU =
 				new StringBuilder(pluginParameters.getAnalysisParameters() + getResultsColumnNames());
 		for (File currentFile : segImages) {

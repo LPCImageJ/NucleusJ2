@@ -2,9 +2,9 @@ package gred.nucleus.autocrop;
 
 import fr.igred.omero.Client;
 import fr.igred.omero.repository.ImageWrapper;
-import gred.nucleus.filesInputOutput.Directory;
-import gred.nucleus.filesInputOutput.FilesNames;
-import gred.nucleus.filesInputOutput.OutputTextFile;
+import gred.nucleus.files.Directory;
+import gred.nucleus.files.FilesNames;
+import gred.nucleus.files.OutputTextFile;
 import ij.IJ;
 
 import java.io.File;

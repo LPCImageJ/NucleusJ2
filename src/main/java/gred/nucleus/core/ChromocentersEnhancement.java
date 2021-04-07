@@ -1,6 +1,6 @@
 package gred.nucleus.core;
 
-import gred.nucleus.myGradient.MyGradient;
+import gred.nucleus.gradient.MyGradient;
 import gred.nucleus.utils.RegionalExtremaFilter;
 import ij.ImagePlus;
 import ij.ImageStack;

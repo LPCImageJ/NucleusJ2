@@ -746,7 +746,7 @@ public class Measure3D {
 		int medianElementStop =
 				(this.rawImage.getHeight() * this.rawImage.getWidth() * this.rawImage.getNSlices()) / 2;
 		int increment = 0;
-		for (HashMap.Entry<Double, Integer> entry : nucleusHistogram.entrySet()) {
+		for (Map.Entry<Double, Integer> entry : nucleusHistogram.entrySet()) {
 			increment += entry.getValue();
 			if (increment > medianElementStop) {
 				voxelMedianValue = entry.getKey();

@@ -198,7 +198,7 @@ public class Distance_Map implements PlugInFilter {
 			this.s = s;
 		}
 		
-		
+		@Override
 		public void run() {
 			float[] sk;
 			byte[]  dk;
@@ -258,7 +258,7 @@ public class Distance_Map implements PlugInFilter {
 			this.s = s;
 		}
 		
-		
+		@Override
 		public void run() {
 			float[] sk;
 			int     n = w;
@@ -315,7 +315,7 @@ public class Distance_Map implements PlugInFilter {
 			this.data = data;
 		}
 		
-		
+		@Override
 		public void run() {
 			int zStart, zStop, zBegin, zEnd;
 			@SuppressWarnings("unused")
@@ -357,7 +357,6 @@ public class Distance_Map implements PlugInFilter {
 									test = tempS[z] + delta * delta;
 									delta--;
 									if (test < min) min = test;
-									//min = (test < min) ? test : min;
 								}
 								tempInt[k] = min;
 							}
