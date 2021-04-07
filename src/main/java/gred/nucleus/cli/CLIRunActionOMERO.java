@@ -12,10 +12,8 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
 
 import java.io.Console;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.regex.Pattern;
 
 
 public class CLIRunActionOMERO {
@@ -53,7 +51,7 @@ public class CLIRunActionOMERO {
 	                                 String outputDirectory,
 	                                 Client client,
 	                                 AutoCropCalling autoCrop) throws Exception {
-		String[] param = inputDirectory.split(Pattern.quote(File.separator));
+		String[] param = inputDirectory.split("/");
 		
 		if (param.length >= 2) {
 			Long id = Long.parseLong(param[1]);
@@ -176,7 +174,7 @@ public class CLIRunActionOMERO {
 	                              String outputDirectory,
 	                              Client client,
 	                              SegmentationCalling otsuModified) throws Exception {
-		String[] param = inputDirectory.split(Pattern.quote(File.separator));
+		String[] param = inputDirectory.split("/");
 		
 		if (param.length >= 2) {
 			Long id = Long.parseLong(param[1]);
