@@ -1,4 +1,6 @@
 package gred.nucleus.dialogs;
+import sun.security.krb5.Confounder;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
@@ -49,13 +51,20 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 	private final        JButton              jButtonConfig      = new JButton("Config");
 	
 	private final        JPanel               startQuitPanel;
-	private              boolean              start              = false;
-	private              int                  configMode         = 0;
+	private              ConfigMode                  configMode         = ConfigMode.DEFAULT;
 	
+	public enum ConfigMode{
+		DEFAULT,
+		FILE,
+		INPUT
+	}
 	
+	IDialogListener dialogListener;
 	
 	/** Architecture of the graphical windows */
-	public AutocropDialog() {
+	public AutocropDialog(IDialogListener dialogListener) {
+		this.dialogListener = dialogListener;
+		
 		JButton jButtonStart = new JButton("Start");
 		JButton jButtonQuit  = new JButton("Quit");
 		this.setTitle("Autocrop NucleusJ2");
@@ -242,7 +251,7 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 		// Initialize config to default
 		container.add(defConf,3);
 		defConf.setBorder(padding);
-		configMode = 0;
+		configMode = ConfigMode.DEFAULT;
 		
 		
 		// Start/Quit buttons
@@ -261,6 +270,18 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 		jButtonConfig.addActionListener(configListener);
 		
 		this.setVisible(true);
+	
+		// DEFAULT VALUES FOR TESTING :
+		jTextFieldHostname.setText("omero.gred-clermont.fr");
+		jTextFieldPort.setText("4064");
+		
+		jTextFieldUsername.setText("demo");
+		jPasswordField.setText("Isim@42");
+		jTextFieldGroup.setText("553");
+		
+		jComboBoxDataType.setSelectedIndex(3);
+		jTextFieldSourceID.setText("334953");
+		jTextFieldOutputProject.setText("9851");
 	}
 	
 	
@@ -275,7 +296,7 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 	
 	public String getHostname(){ return jTextFieldHostname.getText(); }
 	public String getPort(){ return jTextFieldPort.getText(); }
-	public String getSource(){ return jTextFieldSourceID.getText(); }
+	public String getSourceID(){ return jTextFieldSourceID.getText(); }
 	public String getDataType(){ return (String) jComboBoxDataType.getSelectedItem(); }
 	public String getUsername(){ return jTextFieldUsername.getText(); }
 	public String getPassword(){ return String.valueOf(jPasswordField.getPassword()); }
@@ -283,9 +304,8 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 	public String getOutputProject(){ return jTextFieldOutputProject.getText(); }
 	
 	public String getConfig() { return jConfigFileChooser.getText(); }
-	public int getConfigMode() { return configMode; }
+	public ConfigMode getConfigMode() { return configMode; }
 	public AutocropConfigDialog getAutocropConfigFileDialog() { return autocropConfigFileDialog; }
-	public boolean isStart() { return start; }
 	
 	
 	public void actionPerformed(ActionEvent e) {
@@ -343,11 +363,11 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 			if (source == rdoDefault) {
 				container.add(defConf,3);
 				defConf.setBorder(padding);
-				configMode = 0;
+				configMode = ConfigMode.DEFAULT;
 			} else if (source == rdoAddConfigDialog) {
 				container.add(jButtonConfig, 3);
 				jButtonConfig.setBorder(padding);
-				configMode = 1;
+				configMode = ConfigMode.INPUT;
 			} else if (source == rdoAddConfigFile) {
 				configFilePanel.setLayout(new BoxLayout(configFilePanel, BoxLayout.X_AXIS));
 				configFilePanel.add(jConfigFileChooser);
@@ -357,7 +377,7 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 				configFilePanel.add(confButton);
 				container.add(configFilePanel, 3);
 				configFilePanel.setBorder(padding);
-				configMode = 2;
+				configMode = ConfigMode.FILE;
 			}
 		}
 		
@@ -365,23 +385,20 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 		repaint();
 	}
 	
-	
 	/** Classes listener to interact with the several elements of the window */
 	
 	class StartListener implements ActionListener {
 		final AutocropDialog autocropDialog;
-		
 		
 		/** @param autocropDialog  */
 		public StartListener(AutocropDialog autocropDialog) {
 			this.autocropDialog = autocropDialog;
 		}
 		
-		
 		public void actionPerformed(ActionEvent actionEvent) {
-			start = true;
 			autocropDialog.dispose();
 			autocropConfigFileDialog.dispose();
+			dialogListener.OnStart();
 		}
 		
 	}
@@ -389,34 +406,29 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 	class QuitListener implements ActionListener {
 		final AutocropDialog autocropDialog;
 		
-		
 		/** @param autocropDialog  */
 		public QuitListener(AutocropDialog autocropDialog) {
 			this.autocropDialog = autocropDialog;
 		}
 		
-		
 		public void actionPerformed(ActionEvent actionEvent) {
 			autocropDialog.dispose();
 			autocropConfigFileDialog.dispose();
 		}
-		
 	}
 	
 	class ConfigListener implements ActionListener {
 		final AutocropDialog autocropDialog;
-		
 		
 		/** @param autocropDialog  */
 		public ConfigListener(AutocropDialog autocropDialog) {
 			this.autocropDialog = autocropDialog;
 		}
 		
-		
 		public void actionPerformed(ActionEvent actionEvent) {
 			autocropConfigFileDialog.setVisible(true);
 		}
-		
 	}
+	
 	
 }

@@ -1,18 +1,29 @@
 package gred.nucleus.plugins;
 
 import fr.igred.omero.Client;
+import fr.igred.omero.exception.AccessException;
+import fr.igred.omero.exception.OMEROServerError;
+import fr.igred.omero.exception.ServiceException;
+import fr.igred.omero.repository.DatasetWrapper;
+import fr.igred.omero.repository.ImageWrapper;
 import gred.nucleus.autocrop.AutoCropCalling;
 import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.dialogs.AutocropConfigDialog;
 import gred.nucleus.dialogs.AutocropDialog;
+import gred.nucleus.dialogs.IDialogListener;
 import ij.IJ;
 import ij.plugin.PlugIn;
 
 import java.io.Console;
 import java.io.File;
+import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.ExecutionException;
 
 
-public class Autocrop_ implements PlugIn {
+public class Autocrop_ implements PlugIn, IDialogListener {
+	AutocropDialog autocropDialog;
+	
 	public static void runAutoCropFolder(String imageSource, String output, String pathToConfig) {
 		AutocropParameters autocropParameters = new AutocropParameters(imageSource, output, pathToConfig);
 		AutoCropCalling    autoCrop           = new AutoCropCalling(autocropParameters);
@@ -120,133 +131,222 @@ public class Autocrop_ implements PlugIn {
 	 */
 	@Override
 	public void run(String arg) {
-		
 		if (IJ.versionLessThan("1.32c")) {
 			return;
 		}
-		AutocropDialog autocropDialog = new AutocropDialog();
-		while (autocropDialog.isShowing()) {
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		if (autocropDialog.isStart()) {
-			if(autocropDialog.isOmeroEnabled()){
-				runOmeroAutocrop(autocropDialog);
-			}
-			else{
-				runLocalAutocrop(autocropDialog);
-			}
-		}
+		autocropDialog = new AutocropDialog(this);
 	}
 	
 	
-	public void checkOMEROConnexion(String hostname,
-	                                String port,
-	                                String username,
-	                                String password,
-	                                String group) {
+	@Override
+	public void OnStart() {
+		if (autocropDialog.isOmeroEnabled()) {
+			runOmeroAutocrop();
+		} else {
+			runLocalAutocrop();
+		}
+	}
+	
+		
+	public Client checkOMEROConnexion (String hostname,
+			String port,
+			String username,
+			String password,
+			String group){
 		Client client = new Client();
+		
 		try {
 			client.connect(hostname,
-			               Integer.valueOf(port),
+			               Integer.parseInt(port),
 			               username,
 			               password,
 			               Long.valueOf(group));
 		} catch (Exception exp) {
 			IJ.error("Invalid connection values");
+			return null;
 		}
+		
+		return client;
 	}
-	
-	
-	
-	private void runOmeroAutocrop(AutocropDialog autocropDialog){
-		// Check connection
-		String hostname = autocropDialog.getHostname();
-		String port = autocropDialog.getPort();
-		String username = autocropDialog.getUsername();
-		String password = autocropDialog.getPassword();
-		// Instanciate a Client
 		
 		
-			// Check input omero path (type/id)
-		
-		// Check output project
-		
-		// Check config
-		
-		// Handle the 4 possibilities
-	}
-	
-	private void runLocalAutocrop(AutocropDialog autocropDialog){
-		String input  = autocropDialog.getInput();
-		String output = autocropDialog.getOutput();
-		String config = autocropDialog.getConfig();
-		if (input == null || input.equals("")) {
-			IJ.error("Input file or directory is missing");
-		} else if (output == null || output.equals("")) {
-			IJ.error("Output directory is missing");
-		} else {
-			try {
-				IJ.log("Begin Autocrop process ");
-				
-				if (autocropDialog.getConfigMode() == 2) {
-					if (config == null || config.equals("")) {
-						IJ.error("Config file is missing");
-					} else {
-						IJ.log("Config file");
-						runAutoCropFolder(input, output, config);
-					}
-				} else if (autocropDialog.getConfigMode() == 1) {
+		private void runOmeroAutocrop () {
+			// Check connection
+			String hostname = autocropDialog.getHostname();
+			String port     = autocropDialog.getPort();
+			String username = autocropDialog.getUsername();
+			String password = autocropDialog.getPassword();
+			String group    = autocropDialog.getGroup();
+			Client client   = checkOMEROConnexion(hostname, port, username, password, group);
+			
+			AutocropParameters autocropParameters = null;
+			// Check config
+			String configFile = autocropDialog.getConfig();
+			switch (autocropDialog.getConfigMode()) {
+				case DEFAULT:
+					autocropParameters = new AutocropParameters(".", ".");
+					break;
+				case FILE:
+					autocropParameters = new AutocropParameters(".", ".", configFile);
+					break;
+				case INPUT:
 					AutocropConfigDialog acd = autocropDialog.getAutocropConfigFileDialog();
 					if (acd.isCalibrationSelected()) {
 						IJ.log("w/ calibration");
-						runAutoCropFolder(input,
-						                  output,
-						                  acd.getXCalibration(),
-						                  acd.getYCalibration(),
-						                  acd.getZCalibration(),
-						                  acd.getXCropBoxSize(),
-						                  acd.getYCropBoxSize(),
-						                  acd.getZCropBoxSize(),
-						                  acd.getSlicesOTSUComputing(),
-						                  acd.getThresholdOTSUComputing(),
-						                  acd.getChannelToComputeThreshold(),
-						                  acd.getMinVolume(),
-						                  acd.getMaxVolume(),
-						                  acd.getBoxesPercentSurfaceToFilter(),
-						                  acd.isRegroupBoxesSelected()
-						                 );
+						autocropParameters = new AutocropParameters(".",
+						                                            ".",
+						                                            Integer.parseInt(acd.getXCalibration()),
+						                                            Integer.parseInt(acd.getYCalibration()),
+						                                            Integer.parseInt(acd.getZCalibration()),
+						                                            Integer.parseInt(acd.getXCropBoxSize()),
+						                                            Integer.parseInt(acd.getYCropBoxSize()),
+						                                            Integer.parseInt(acd.getZCropBoxSize()),
+						                                            Integer.parseInt(acd.getSlicesOTSUComputing()),
+						                                            Integer.parseInt(acd.getThresholdOTSUComputing()),
+						                                            Integer.parseInt(acd.getChannelToComputeThreshold()),
+						                                            Integer.parseInt(acd.getMinVolume()),
+						                                            Integer.parseInt(acd.getMaxVolume()),
+						                                            Integer.parseInt(acd.getBoxesPercentSurfaceToFilter()),
+						                                            acd.isRegroupBoxesSelected()
+						);
 					} else {
 						IJ.log("w/out calibration");
-						runAutoCropFolder(input,
-						                  output,
-						                  acd.getXCropBoxSize(),
-						                  acd.getYCropBoxSize(),
-						                  acd.getZCropBoxSize(),
-						                  acd.getSlicesOTSUComputing(),
-						                  acd.getThresholdOTSUComputing(),
-						                  acd.getChannelToComputeThreshold(),
-						                  acd.getMinVolume(),
-						                  acd.getMaxVolume(),
-						                  acd.getBoxesPercentSurfaceToFilter(),
-						                  acd.isRegroupBoxesSelected()
-						                 );
+						autocropParameters = new AutocropParameters(".",
+						                                            ".",
+						                                            Integer.parseInt(acd.getXCropBoxSize()),
+						                                            Integer.parseInt(acd.getYCropBoxSize()),
+						                                            Integer.parseInt(acd.getZCropBoxSize()),
+						                                            Integer.parseInt(acd.getSlicesOTSUComputing()),
+						                                            Integer.parseInt(acd.getThresholdOTSUComputing()),
+						                                            Integer.parseInt(acd.getChannelToComputeThreshold()),
+						                                            Integer.parseInt(acd.getMinVolume()),
+						                                            Integer.parseInt(acd.getMaxVolume()),
+						                                            Integer.parseInt(acd.getBoxesPercentSurfaceToFilter()),
+						                                            acd.isRegroupBoxesSelected()
+						);
 					}
+					break;
+			}
+			
+			AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
+			
+			// Handle the source according to the type given
+			String dataType = autocropDialog.getDataType();
+			Long   inputID  = Long.valueOf(autocropDialog.getSourceID());
+			Long   outputID = Long.valueOf(autocropDialog.getOutputProject());
+			try {
+				if (dataType.equals("Image")) {
+					ImageWrapper image = client.getImage(inputID);
+					
+					int sizeC = image.getPixels().getSizeC();
+					
+					Long[] outputsDat = new Long[sizeC];
+					
+					for (int i = 0; i < sizeC; i++) {
+						DatasetWrapper dataset = new DatasetWrapper("C" + i + "_" + image.getName(), "");
+						outputsDat[i] =
+								client.getProject(outputID).addDataset(client, dataset).getId();
+					}
+					
+					autoCrop.runImageOMERO(image, outputsDat, client);
 				} else {
-					IJ.log("w/out config");
-					runAutoCropFolder(input, output);
+					List<ImageWrapper> images = null;
+					String             name   = "";
+					
+					if (dataType.equals("Dataset")) {
+						DatasetWrapper dataset = client.getDataset(inputID);
+						name = dataset.getName();
+						images = dataset.getImages(client);
+					} else if (dataType.equals("Tag")) {
+						images = client.getImagesTagged(inputID);
+					}
+					int sizeC = images.get(0).getPixels().getSizeC();
+					
+					Long[] outputsDat = new Long[sizeC];
+					
+					for (int i = 0; i < sizeC; i++) {
+						DatasetWrapper dataset = new DatasetWrapper("raw_C" + i + "_" + name, "");
+						outputsDat[i] =
+								client.getProject(outputID).addDataset(client, dataset).getId();
+					}
+					autoCrop.runSeveralImageOMERO(images, outputsDat, client);
 				}
-				
-				IJ.log("\nAutocrop process has ended successfully");
+			} catch (ServiceException se) {
+				IJ.error("Unable to access to OMERO service");
+			} catch (AccessException ae) {
+				IJ.error("Cannot access " + dataType + "with ID = " + inputID + ".");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-	}
-	
-	
+		
+		private void runLocalAutocrop () {
+			String input  = autocropDialog.getInput();
+			String output = autocropDialog.getOutput();
+			String config = autocropDialog.getConfig();
+			if (input == null || input.equals("")) {
+				IJ.error("Input file or directory is missing");
+			} else if (output == null || output.equals("")) {
+				IJ.error("Output directory is missing");
+			} else {
+				try {
+					IJ.log("Begin Autocrop process ");
+					switch (autocropDialog.getConfigMode()){
+						case FILE:
+							if (config == null || config.equals("")) {
+								IJ.error("Config file is missing");
+							} else {
+								IJ.log("Config file");
+								runAutoCropFolder(input, output, config);
+							}
+							break;
+						case INPUT:
+							AutocropConfigDialog acd = autocropDialog.getAutocropConfigFileDialog();
+							if (acd.isCalibrationSelected()) {
+								IJ.log("w/ calibration");
+								runAutoCropFolder(input,
+								                  output,
+								                  acd.getXCalibration(),
+								                  acd.getYCalibration(),
+								                  acd.getZCalibration(),
+								                  acd.getXCropBoxSize(),
+								                  acd.getYCropBoxSize(),
+								                  acd.getZCropBoxSize(),
+								                  acd.getSlicesOTSUComputing(),
+								                  acd.getThresholdOTSUComputing(),
+								                  acd.getChannelToComputeThreshold(),
+								                  acd.getMinVolume(),
+								                  acd.getMaxVolume(),
+								                  acd.getBoxesPercentSurfaceToFilter(),
+								                  acd.isRegroupBoxesSelected()
+								                 );
+							} else {
+								IJ.log("w/out calibration");
+								runAutoCropFolder(input,
+								                  output,
+								                  acd.getXCropBoxSize(),
+								                  acd.getYCropBoxSize(),
+								                  acd.getZCropBoxSize(),
+								                  acd.getSlicesOTSUComputing(),
+								                  acd.getThresholdOTSUComputing(),
+								                  acd.getChannelToComputeThreshold(),
+								                  acd.getMinVolume(),
+								                  acd.getMaxVolume(),
+								                  acd.getBoxesPercentSurfaceToFilter(),
+								                  acd.isRegroupBoxesSelected()
+								                 );
+							}
+							break;
+						case DEFAULT:
+							IJ.log("w/out config");
+							runAutoCropFolder(input, output);
+							break;
+					}
+					
+					IJ.log("\nAutocrop process has ended successfully");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
 }
