@@ -722,7 +722,7 @@ public class AutoCrop {
 	/** Write analyse info in output text file */
 	public void writeAnalyseInfoOMERO(Long id, Client client) {
 		try {
-			String path = new File(".").getCanonicalPath() + this.outputFilesPrefix + ".txt";
+			String path = new File(".").getCanonicalPath() + File.separator + this.outputFilesPrefix + ".txt";
 			
 			File           file             = new File(path);
 			OutputTextFile resultFileOutput = new OutputTextFile(path);
