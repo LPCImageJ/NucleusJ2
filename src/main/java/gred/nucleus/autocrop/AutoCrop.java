@@ -751,6 +751,14 @@ public class AutoCrop {
 		       this.defaultThreshold + "\n";
 	}
 	
+
+	public String getImageCropInfoOmero(String imageName) {
+		return  imageName + "\t" +
+		       getNbOfNuc() + "\t" +
+		       this.otsuThreshold + "\t" +
+		       this.defaultThreshold + "\n";
+	}
+	
 	
 	public void getNumberOfBox() {
 		System.out.println("Number of box :" + this.boxes.size());
