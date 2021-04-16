@@ -203,7 +203,8 @@ public class SegmentationCalling {
 	 */
 	public String runSeveralImages2() throws Exception {
 		String        log            = "";
-		StringBuilder info           = new StringBuilder();
+		StringBuilder infoOtsu           = new StringBuilder();
+		StringBuilder infoGift           = new StringBuilder();
 		Directory     directoryInput = new Directory(this.segmentationParameters.getInputFolder());
 		directoryInput.listImageFiles(this.segmentationParameters.getInputFolder());
 		directoryInput.checkIfEmpty();
@@ -224,33 +225,21 @@ public class SegmentationCalling {
 			nucleusSegmentation.findOTSUMaximisingSphericity();
 			nucleusSegmentation.checkBadCrop(this.segmentationParameters.inputFolder);
 			nucleusSegmentation.saveOTSUSegmented();
-			info.append(nucleusSegmentation.getImageCropInfoOTSU());
+			infoOtsu.append(nucleusSegmentation.getImageCropInfoOTSU());
 			nucleusSegmentation.saveGiftWrappingSeg();
-			info.append(nucleusSegmentation.getImageCropInfoGIFT());
+			infoGift.append(nucleusSegmentation.getImageCropInfoGIFT());
 			
 			timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
 			System.out.println("Fin :" + timeStampStart);
 			
 		}
-		this.outputCropGeneralInfoOTSU += info.toString();
-		OutputTextFile resultFileOutputOTSU = new OutputTextFile(this.segmentationParameters.getOutputFolder()
-		                                                         + directoryInput.getSeparator()
-		                                                         + "OTSU"
-		                                                         + directoryInput.getSeparator()
-		                                                         + "result_Segmentation_Analyse_OTSU.csv");
-		resultFileOutputOTSU.saveTextFile(this.outputCropGeneralInfoOTSU, true);
-		if (this.segmentationParameters.getGiftWrapping()) {
-			OutputTextFile resultFileOutputGIFT = new OutputTextFile(this.segmentationParameters.getOutputFolder()
-			                                                         + directoryInput.getSeparator()
-			                                                         + "GIFT"
-			                                                         + directoryInput.getSeparator()
-			                                                         + "result_Segmentation_Analyse_GIFT.csv");
-			resultFileOutputGIFT.saveTextFile(this.outputCropGeneralInfoGIFT, true);
-		}
+		this.outputCropGeneralInfoOTSU += infoOtsu.toString();
+		this.outputCropGeneralInfoGIFT += infoGift.toString();
+		
+		saveCropGeneralInfo();
 		
 		return log;
 	}
-	
 	
 	public String runOneImage(String filePath) throws Exception {
 		String     log              = "";
@@ -277,6 +266,22 @@ public class SegmentationCalling {
 		return log;
 	}
 	
+	public void saveCropGeneralInfo(){
+		OutputTextFile resultFileOutputOTSU = new OutputTextFile(this.segmentationParameters.getOutputFolder()
+		                                                         + "OTSU"
+		                                                         + File.separator
+		                                                         + "result_Segmentation_Analyse_OTSU.csv");
+		resultFileOutputOTSU.saveTextFile(this.outputCropGeneralInfoOTSU, true);
+		if (this.segmentationParameters.getGiftWrapping()) {
+			OutputTextFile resultFileOutputGIFT = new OutputTextFile(this.segmentationParameters.getOutputFolder()
+			                                                         + "GIFT"
+			                                                         + File.separator
+			                                                         + "result_Segmentation_Analyse_GIFT.csv");
+			resultFileOutputGIFT.saveTextFile(this.outputCropGeneralInfoGIFT, true);
+		}
+	}
+	
+	
 	
 	public String runOneImageOMERO(ImageWrapper image, Long output, Client client) throws Exception {
 		String log = "";
@@ -302,7 +307,6 @@ public class SegmentationCalling {
 		return log;
 	}
 	
-	
 	public String runSeveralImageOMERO(List<ImageWrapper> images, Long output, Client client) throws Exception {
 		StringBuilder log = new StringBuilder();
 		
@@ -310,10 +314,16 @@ public class SegmentationCalling {
 			log.append(runOneImageOMERO(image, output, client));
 		}
 		
+		saveCropGeneralInfoOmero(client, output);
+		
+		return log.toString();
+	}
+	
+	public void saveCropGeneralInfoOmero(Client client, Long output) throws Exception{
 		DatasetWrapper dataset = client.getProject(output).getDatasets("OTSU").get(0);
 		
 		String path =
-				new java.io.File(".").getCanonicalPath() + dataset.getName() + "result_Segmentation_Analyse.csv";
+				new File(".").getCanonicalPath() + File.separator + "result_Segmentation_Analyse.csv";
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(path);
 		resultFileOutputOTSU.saveTextFile(this.outputCropGeneralInfoOTSU, false);
 		
@@ -332,8 +342,6 @@ public class SegmentationCalling {
 			deleted = file.delete();
 			if (!deleted) System.err.println("File not deleted: " + path);
 		}
-		
-		return log.toString();
 	}
 	
 	
@@ -398,7 +406,6 @@ public class SegmentationCalling {
 		
 		return log;
 	}
-	
 	
 	public String runSeveralImageOMERObyROIs(List<ImageWrapper> images, Long output, Client client) throws Exception {
 		StringBuilder log = new StringBuilder();

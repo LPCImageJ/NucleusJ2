@@ -22,110 +22,6 @@ import java.util.List;
 public class Segmentation_ implements PlugIn, IDialogListener {
 	SegmentationDialog segmentationDialog;
 	
-	
-	public static void segmentationFolder(String inputDirectory, String outputDirectory) throws Exception {
-		SegmentationParameters segmentationParameters = new SegmentationParameters(inputDirectory, outputDirectory);
-		SegmentationCalling    otsuModified           = new SegmentationCalling(segmentationParameters);
-		try {
-			File   file = new File(inputDirectory);
-			String log  = "";
-			if (file.isDirectory()) {
-				log = otsuModified.runSeveralImages2();
-			} else if (file.isFile()) {
-				log = otsuModified.runOneImage(inputDirectory);
-			}
-			if (!(log.equals(""))) {
-				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	public static void segmentationFolder(String inputDirectory, String outputDirectory, String config) throws Exception {
-		SegmentationParameters segmentationParameters =
-				new SegmentationParameters(inputDirectory, outputDirectory, config);
-		SegmentationCalling otsuModified = new SegmentationCalling(segmentationParameters);
-		try {
-			File   file = new File(inputDirectory);
-			String log  = "";
-			if (file.isDirectory()) {
-				log = otsuModified.runSeveralImages2();
-			} else if (file.isFile()) {
-				log = otsuModified.runOneImage(inputDirectory);
-			}
-			if (!(log.equals(""))) {
-				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	public static void segmentationFolder(String inputDirectory,
-	                                      String outputDirectory,
-	                                      String minVolume,
-	                                      String maxVolume,
-	                                      boolean isGiftWrapping) throws Exception {
-		SegmentationParameters segmentationParameters = new SegmentationParameters(inputDirectory,
-		                                                                           outputDirectory,
-		                                                                           Integer.parseInt(minVolume),
-		                                                                           Integer.parseInt(maxVolume),
-		                                                                           isGiftWrapping);
-		SegmentationCalling otsuModified = new SegmentationCalling(segmentationParameters);
-		try {
-			File   file = new File(inputDirectory);
-			String log  = "";
-			if (file.isDirectory()) {
-				log = otsuModified.runSeveralImages2();
-			} else if (file.isFile()) {
-				log = otsuModified.runOneImage(inputDirectory);
-			}
-			if (!(log.equals(""))) {
-				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
-	public static void segmentationFolder(String inputDirectory,
-	                                      String outputDirectory,
-	                                      String xCal,
-	                                      String yCal,
-	                                      String zCal,
-	                                      String minVolume,
-	                                      String maxVolume,
-	                                      boolean isGiftWrapping) throws Exception {
-		SegmentationParameters segmentationParameters = new SegmentationParameters(inputDirectory,
-		                                                                           outputDirectory,
-		                                                                           Integer.parseInt(minVolume),
-		                                                                           Integer.parseInt(maxVolume),
-		                                                                           isGiftWrapping);
-		segmentationParameters.setXCal(Integer.parseInt(xCal));
-		segmentationParameters.setYCal(Integer.parseInt(yCal));
-		segmentationParameters.setZCal(Integer.parseInt(zCal));
-		SegmentationCalling otsuModified = new SegmentationCalling(segmentationParameters);
-		try {
-			File   file = new File(inputDirectory);
-			String log  = "";
-			if (file.isDirectory()) {
-				log = otsuModified.runSeveralImages2();
-			} else if (file.isFile()) {
-				log = otsuModified.runOneImage(inputDirectory);
-			}
-			if (!(log.equals(""))) {
-				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	
 	/**
 	 * Run method for imageJ plugin for the segmentation
 	 *
@@ -221,6 +117,7 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 				String log;
 				
 				log = segmentation.runOneImageOMERO(image, outputID, client);
+				segmentation.saveCropGeneralInfoOmero(client, outputID);
 				
 				if (!(log.equals(""))) {
 					IJ.log("Nuclei which didn't pass the segmentation\n" + log);
@@ -267,37 +164,65 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 		} else {
 			try {
 				IJ.log("Begin Segmentation process ");
+				SegmentationParameters segmentationParameters = null;
 				
-				if (segmentationDialog.getConfigMode() == SegmentationDialog.ConfigMode.FILE) {
-					if (config == null || config.equals("")) {
-						IJ.error("Config file is missing");
-					} else {
-						IJ.log("Config file");
-						segmentationFolder(input, output, config);
-					}
-				} else if (segmentationDialog.getConfigMode() == SegmentationDialog.ConfigMode.INPUT) {
-					SegmentationConfigDialog scd = segmentationDialog.getSegmentationConfigFileDialog();
-					if (scd.isCalibrationSelected()) {
-						IJ.log("w/ calibration" +
-						       "\nx: " + scd.getXCalibration() +
-						       "\ny: " + scd.getYCalibration() +
-						       "\nz: " + scd.getZCalibration());
-						segmentationFolder(input, output,
-						                   scd.getXCalibration(), scd.getYCalibration(), scd.getZCalibration(),
-						                   scd.getMinVolume(), scd.getMaxVolume(), scd.getGiftWrapping()
-						                  );
-					} else {
-						IJ.log("w/out calibration");
-						segmentationFolder(input, output,
-						                   scd.getMinVolume(), scd.getMaxVolume(), scd.getGiftWrapping()
-						                  );
-					}
-				} else {
-					IJ.log("w/out config");
-					segmentationFolder(input, output);
+				switch (segmentationDialog.getConfigMode()) {
+					case FILE:
+						if (config == null || config.equals("")) {
+							IJ.error("Config file is missing");
+						} else {
+							IJ.log("Config file");
+							segmentationParameters = new SegmentationParameters(input, output, config);
+						}
+						break;
+					case INPUT:
+						SegmentationConfigDialog scd = segmentationDialog.getSegmentationConfigFileDialog();
+						if (scd.isCalibrationSelected()) {
+							IJ.log("w/ calibration" +
+							       "\nx: " + scd.getXCalibration() +
+							       "\ny: " + scd.getYCalibration() +
+							       "\nz: " + scd.getZCalibration());
+							
+							segmentationParameters = new SegmentationParameters(input, output,
+							                                                    Integer.parseInt(scd.getXCalibration()),
+							                                                    Integer.parseInt(scd.getYCalibration()),
+							                                                    Integer.parseInt(scd.getZCalibration()),
+							                                                    Integer.parseInt(scd.getMinVolume()),
+							                                                    Integer.parseInt(scd.getMaxVolume()),
+							                                                    scd.getGiftWrapping()
+							);
+						} else {
+							IJ.log("w/out calibration");
+							segmentationParameters = new SegmentationParameters(input, output,
+							                                                    Integer.parseInt(scd.getMinVolume()),
+							                                                    Integer.parseInt(scd.getMaxVolume()),
+							                                                    scd.getGiftWrapping()
+							);
+						}
+						break;
+					case DEFAULT:
+						IJ.log("w/out config");
+						segmentationParameters = new SegmentationParameters(input, output);
+						break;
+				}
+				
+				SegmentationCalling otsuModified = new SegmentationCalling(segmentationParameters);
+				
+				File   file = new File(input);
+				String log  = "";
+				if (file.isDirectory()) {
+					log = otsuModified.runSeveralImages2();
+				} else if (file.isFile()) {
+					log = otsuModified.runOneImage(input);
+					otsuModified.saveCropGeneralInfo();
+				}
+				if (!(log.equals(""))) {
+					System.out.println("Nuclei which didn't pass the segmentation\n" + log);
 				}
 				
 				IJ.log("\nSegmentation process has ended successfully");
+			} catch (IOException ioe){
+				IJ.error("File/Directory does not exist");
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
