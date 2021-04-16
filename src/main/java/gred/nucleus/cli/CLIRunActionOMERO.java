@@ -69,6 +69,7 @@ public class CLIRunActionOMERO {
 				}
 				
 				autoCrop.runImageOMERO(image, outputsDat, client);
+				autoCrop.saveGeneralInfoOmero(client, outputsDat);
 			} else {
 				List<ImageWrapper> images;
 				
@@ -188,6 +189,7 @@ public class CLIRunActionOMERO {
 					} else {
 						log = otsuModified.runOneImageOMERO(image, Long.parseLong(outputDirectory), client);
 					}
+					otsuModified.saveCropGeneralInfoOmero(client, Long.parseLong(outputDirectory));
 					if (!(log.equals(""))) {
 						System.out.println("Nuclei which didn't pass the segmentation\n" + log);
 					}
