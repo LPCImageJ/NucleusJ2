@@ -722,7 +722,7 @@ public class AutoCrop {
 	/** Write analyse info in output text file */
 	public void writeAnalyseInfoOMERO(Long id, Client client) {
 		try {
-			String path = new File(".").getCanonicalPath() + this.outputFilesPrefix + ".txt";
+			String path = new File(".").getCanonicalPath() + File.separator + this.outputFilesPrefix + ".txt";
 			
 			File           file             = new File(path);
 			OutputTextFile resultFileOutput = new OutputTextFile(path);
@@ -746,6 +746,14 @@ public class AutoCrop {
 	 */
 	public String getImageCropInfo() {
 		return this.imageFilePath + "\t" +
+		       getNbOfNuc() + "\t" +
+		       this.otsuThreshold + "\t" +
+		       this.defaultThreshold + "\n";
+	}
+	
+
+	public String getImageCropInfoOmero(String imageName) {
+		return  imageName + "\t" +
 		       getNbOfNuc() + "\t" +
 		       this.otsuThreshold + "\t" +
 		       this.defaultThreshold + "\n";

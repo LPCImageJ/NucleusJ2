@@ -7,6 +7,7 @@ import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
 import org.apache.commons.cli.CommandLine;
 
+import java.io.File;
 import java.io.IOException;
 
 
@@ -79,9 +80,11 @@ public class CLIRunAction {
 			autocropParameters.addGeneralProperties(this.cmd.getOptionValue("config"));
 			autocropParameters.addProperties(this.cmd.getOptionValue("config"));
 		}
-		if (this.cmd.hasOption("file")) {
+		File path = new File(this.cmd.getOptionValue("input"));
+		if (path.isFile()) {
 			AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
-			autoCrop.runFile(this.cmd.getOptionValue("file"));
+			autoCrop.runFile(this.cmd.getOptionValue("input"));
+			autoCrop.saveGeneralInfo();
 		} else {
 			AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
 			autoCrop.runFolder();
@@ -96,10 +99,12 @@ public class CLIRunAction {
 			segmentationParameters.addGeneralProperties(this.cmd.getOptionValue("config"));
 			segmentationParameters.addProperties(this.cmd.getOptionValue("config"));
 		}
-		if (this.cmd.hasOption("file")) {
+		File path = new File(this.cmd.getOptionValue("input"));
+		if (path.isFile()) {
 			SegmentationCalling otsuModified = new SegmentationCalling(segmentationParameters);
 			try {
 				String log = otsuModified.runOneImage(this.cmd.getOptionValue("input"));
+				otsuModified.saveCropGeneralInfo();
 				if (!(log.equals(""))) System.out.println("Nuclei which didn't pass the segmentation\n" + log);
 			} catch (IOException e) {
 				e.printStackTrace();

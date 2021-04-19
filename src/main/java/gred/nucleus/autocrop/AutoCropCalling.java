@@ -1,6 +1,8 @@
 package gred.nucleus.autocrop;
 
 import fr.igred.omero.Client;
+import fr.igred.omero.exception.AccessException;
+import fr.igred.omero.exception.ServiceException;
 import fr.igred.omero.repository.ImageWrapper;
 import gred.nucleus.files.Directory;
 import gred.nucleus.files.FilesNames;
@@ -9,6 +11,7 @@ import ij.IJ;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -54,10 +57,7 @@ public class AutoCropCalling {
 		for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
 			runFile(directoryInput.getFile(i).getAbsolutePath());
 		}
-		System.out.println(this.autocropParameters.getInputFolder() + "result_Autocrop_Analyse");
-		OutputTextFile resultFileOutput =
-				new OutputTextFile(this.autocropParameters.getOutputFolder() + "result_Autocrop_Analyse.csv");
-		resultFileOutput.saveTextFile(this.outputCropGeneralInfo, true);
+		saveGeneralInfo();
 	}
 	
 	
@@ -98,6 +98,13 @@ public class AutoCropCalling {
 		}
 	}
 	
+	public void saveGeneralInfo(){
+		System.out.println(this.autocropParameters.getInputFolder() + "result_Autocrop_Analyse");
+		OutputTextFile resultFileOutput =
+				new OutputTextFile(this.autocropParameters.getOutputFolder() + "result_Autocrop_Analyse.csv");
+		resultFileOutput.saveTextFile(this.outputCropGeneralInfo, true);
+	}
+	
 	
 	public void runImageOMERO(ImageWrapper image, Long[] outputsDatImages, Client client) throws Exception {
 		String fileImg = image.getName();
@@ -114,15 +121,27 @@ public class AutoCropCalling {
 		autoCrop.boxIntersection();
 		autoCrop.cropKernelsOMERO(image, outputsDatImages, client);
 		autoCrop.writeAnalyseInfoOMERO(outputsDatImages[autocropParameters.getChannelToComputeThreshold()], client);
-		this.outputCropGeneralInfo += autoCrop.getImageCropInfo();
+		this.outputCropGeneralInfo += autoCrop.getImageCropInfoOmero(image.getName());
 	}
 	
 	
 	public void runSeveralImageOMERO(List<ImageWrapper> images, Long[] outputsDatImages, Client client)
 	throws Exception {
 		for (ImageWrapper image : images) runImageOMERO(image, outputsDatImages, client);
+		
+		saveGeneralInfoOmero(client, outputsDatImages);
 	}
 	
+	public void saveGeneralInfoOmero(Client client, Long[] outputsDatImages) throws Exception{
+		String resultPath = this.autocropParameters.getOutputFolder() + "result_Autocrop_Analyse.csv";
+		File resultFile = new File(resultPath);
+		OutputTextFile resultFileOutput = new OutputTextFile(resultPath);
+		resultFileOutput.saveTextFile(this.outputCropGeneralInfo, false);
+		
+		client.getDataset(outputsDatImages[autocropParameters.getChannelToComputeThreshold()]).addFile(client, resultFile);
+		boolean deleted = resultFile.delete();
+		if (!deleted) System.err.println("File not deleted: " + resultPath);
+	}
 	
 	/**
 	 * List of columns names in csv coordinates output file.
