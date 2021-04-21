@@ -8,16 +8,18 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 
 public class MulticropFilter {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	
 	public static void main(String[] args) throws Exception {
-		Logger logger = LoggerFactory.getLogger(MulticropFilter.class);
 		
 		Directory directoryCoordinates =
 				new Directory("/home/titus/Bureau/TEST_NJ/AUTOCROP/coordonneeProjection/coordonnee/");
@@ -30,7 +32,7 @@ public class MulticropFilter {
 			// TODO FAIRE UNE FONCTION POUR CHOPER LE FICHIER IMAGE DANS LE DIR PEUT IMPORTE L EXTENSION !
 			File tifFile = directoryTIF.searchFileNameWithoutExtension(coordinateFile.getName().split("\\.")[0]);
 			if (tifFile != null) {
-				logger.debug("Inside");
+				LOGGER.debug("Inside");
 				
 				AutocropParameters autocropParameters =
 						new AutocropParameters(tifFile.getParent(), tifFile.getParent());

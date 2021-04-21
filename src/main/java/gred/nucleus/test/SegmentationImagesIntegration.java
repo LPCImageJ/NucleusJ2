@@ -7,9 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 
 
 public class SegmentationImagesIntegration {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	
 	/*
 	 * @param img
@@ -31,37 +35,35 @@ public class SegmentationImagesIntegration {
 	 * @param output
 	 */
 	public static void testStupidSeveralImages(String input, String output) {
-		Logger logger = LoggerFactory.getLogger(SegmentationImagesIntegration.class);
 		
 		SegmentationParameters segmentationParameters = new SegmentationParameters(input, output);
 		SegmentationCalling    otsuModified           = new SegmentationCalling(segmentationParameters);
 		try {
 			String log = otsuModified.runSeveralImages2();
 			if (!(log.equals(""))) {
-				logger.error("Nuclei which didn't pass the segmentation\n{}", log);
+				LOGGER.error("Nuclei which didn't pass the segmentation\n{}", log);
 			}
 		} catch (IOException e) {
-			logger.error("I/O exception.", e);
+			LOGGER.error("I/O exception.", e);
 		} catch (FormatException e) {
-			logger.error("Format exception", e);
+			LOGGER.error("Format exception", e);
 		}
 	}
 	
 	
 	public static void testStupidSeveralImages(String input, String output, String config) {
-		Logger logger = LoggerFactory.getLogger(SegmentationImagesIntegration.class);
 		
 		SegmentationParameters segmentationParameters = new SegmentationParameters(input, output, config);
 		SegmentationCalling    otsuModified           = new SegmentationCalling(segmentationParameters);
 		try {
 			String log = otsuModified.runSeveralImages2();
 			if (!(log.equals(""))) {
-				logger.error("Nuclei which didn't pass the segmentation\n{}", log);
+				LOGGER.error("Nuclei which didn't pass the segmentation\n{}", log);
 			}
 		} catch (IOException e) {
-			logger.error("I/O exception.", e);
+			LOGGER.error("I/O exception.", e);
 		} catch (FormatException e) {
-			logger.error("Format exception", e);
+			LOGGER.error("Format exception", e);
 		}
 	}
 	

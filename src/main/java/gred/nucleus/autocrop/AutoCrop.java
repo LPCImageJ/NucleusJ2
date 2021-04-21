@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.ArrayList;
@@ -54,6 +55,9 @@ import java.util.concurrent.ExecutionException;
  * crop from the file name before file extension you can see C0 for channel 0 for example.
  */
 public class AutoCrop {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	/** Column names */
 	private static final String HEADERS =
 			"FileName\tChannelNumber\tCropNumber\tXStart\tYStart\tZStart\twidth\theight\tdepth\n";
@@ -451,7 +455,6 @@ public class AutoCrop {
 	
 	public void cropKernelsOMERO(ImageWrapper image, Long[] outputsDat, Client client)
 	throws Exception {
-		Logger logger = LoggerFactory.getLogger(this.getClass());
 		
 		StringBuilder info = new StringBuilder();
 		info.append(getSpecificImageInfo()).append(HEADERS);
@@ -508,7 +511,7 @@ public class AutoCrop {
 				try {
 					Files.deleteIfExists(file.toPath());
 				} catch (Exception e) {
-					logger.error("File not deleted: " + tiffPath, e);
+					LOGGER.error("File not deleted: " + tiffPath, e);
 				}
 				if (c == 0) {
 					int xMax = xMin + width;
@@ -740,7 +743,6 @@ public class AutoCrop {
 	
 	/** Write analyse info in output text file */
 	public void writeAnalyseInfoOMERO(Long id, Client client) {
-		Logger logger = LoggerFactory.getLogger(this.getClass());
 		try {
 			String path = new File(".").getCanonicalPath() + File.separator + this.outputFilesPrefix + ".txt";
 			
@@ -752,7 +754,7 @@ public class AutoCrop {
 			dataset.addFile(client, file);
 			Files.deleteIfExists(file.toPath());
 		} catch (Exception e) {
-			logger.error("Error writing analysis information to OMERO.", e);
+			LOGGER.error("Error writing analysis information to OMERO.", e);
 		}
 	}
 	
@@ -779,8 +781,7 @@ public class AutoCrop {
 	
 	
 	public void printNumberOfBox() {
-		Logger logger = LoggerFactory.getLogger(this.getClass());
-		logger.info("Number of box: {}", this.boxes.size());
+		LOGGER.info("Number of box: {}", this.boxes.size());
 	}
 	
 	

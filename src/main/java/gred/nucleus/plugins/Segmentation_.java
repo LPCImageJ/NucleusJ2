@@ -20,6 +20,7 @@ import java.util.List;
 public class Segmentation_ implements PlugIn, IDialogListener {
 	SegmentationDialog segmentationDialog;
 	
+	
 	/**
 	 * Run method for imageJ plugin for the segmentation
 	 *
@@ -33,6 +34,7 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 		segmentationDialog = new SegmentationDialog(this);
 	}
 	
+	
 	@Override
 	public void OnStart() {
 		if (segmentationDialog.isOmeroEnabled()) {
@@ -42,11 +44,12 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 		}
 	}
 	
-	public Client checkOMEROConnexion (String hostname,
-	                                   String port,
-	                                   String username,
-	                                   String password,
-	                                   String group){
+	
+	public Client checkOMEROConnexion(String hostname,
+	                                  String port,
+	                                  String username,
+	                                  String password,
+	                                  String group) {
 		Client client = new Client();
 		try {
 			client.connect(hostname,
@@ -61,7 +64,8 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 		return client;
 	}
 	
-	private void runOmeroSegmentation () {
+	
+	private void runOmeroSegmentation() {
 		// Check connection
 		String hostname = segmentationDialog.getHostname();
 		String port     = segmentationDialog.getPort();
@@ -112,7 +116,7 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 		try {
 			if (dataType.equals("Image")) {
 				ImageWrapper image = client.getImage(inputID);
-				String log;
+				String       log;
 				
 				log = segmentation.runOneImageOMERO(image, outputID, client);
 				segmentation.saveCropGeneralInfoOmero(client, outputID);
@@ -151,7 +155,8 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 		}
 	}
 	
-	public void runLocalSegmentation(){
+	
+	public void runLocalSegmentation() {
 		String input  = segmentationDialog.getInput();
 		String output = segmentationDialog.getOutput();
 		String config = segmentationDialog.getConfig();
@@ -219,7 +224,7 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 				}
 				
 				IJ.log("\nSegmentation process has ended successfully");
-			} catch (IOException ioe){
+			} catch (IOException ioe) {
 				IJ.error("File/Directory does not exist");
 			} catch (Exception e) {
 				e.printStackTrace();

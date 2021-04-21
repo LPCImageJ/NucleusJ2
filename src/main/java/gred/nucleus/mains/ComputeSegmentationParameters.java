@@ -14,10 +14,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 
 public class ComputeSegmentationParameters {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	
 	public static void computeNucleusParameters(String rawImageSourceFile,
 	                                            String segmentedImagesSourceFile,
@@ -53,7 +57,6 @@ public class ComputeSegmentationParameters {
 	
 	public static void computeNucleusParameters(String rawImageSourceFile, String segmentedImagesSourceFile)
 	throws IOException, FormatException {
-		Logger logger = LoggerFactory.getLogger(ComputeSegmentationParameters.class);
 		
 		PluginParameters pluginParameters = new PluginParameters(rawImageSourceFile, segmentedImagesSourceFile);
 		Directory        directoryInput   = new Directory(pluginParameters.getInputFolder());
@@ -63,7 +66,7 @@ public class ComputeSegmentationParameters {
 		StringBuilder outputCropGeneralInfoOTSU =
 				new StringBuilder(pluginParameters.getAnalysisParameters() + getResultsColumnNames());
 		for (File currentFile : rawImages) {
-			logger.info("current File: {}", currentFile.getName());
+			LOGGER.info("current File: {}", currentFile.getName());
 			
 			ImagePlus   raw       = new ImagePlus(currentFile.getAbsolutePath());
 			ImagePlus[] segmented = BF.openImagePlus(pluginParameters.getOutputFolder() + currentFile.getName());

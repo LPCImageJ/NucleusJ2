@@ -1,16 +1,21 @@
 package gred.nucleus.mains;
 
+import gred.nucleus.connectedcomponent.ConnectedComponent;
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
 public class TestSegmentationMethods {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	/*
 	 * @param img
 	 * @param vMin
@@ -36,7 +41,7 @@ public class TestSegmentationMethods {
 		try {
 			String log = otsuModified.runSeveralImages2();
 			if (!(log.equals(""))) {
-				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+				LOGGER.error("Nuclei which didn't pass the segmentation\n{}", log);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -50,7 +55,7 @@ public class TestSegmentationMethods {
 		try {
 			String log = otsuModified.runSeveralImages2();
 			if (!(log.equals(""))) {
-				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+				LOGGER.error("Nuclei which didn't pass the segmentation\n{}", log);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -64,7 +69,6 @@ public class TestSegmentationMethods {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		Logger logger = LoggerFactory.getLogger(TestAutoCrop.class);
 		///home/titus/Bureau/data/Test_Image_Reproducibility/IMAGE_TEST_NJ/AUTOCROP_RAW/RAW_BIOFORMATS
 		String timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
 		
@@ -139,11 +143,11 @@ public class TestSegmentationMethods {
         fw.GetFilesResultingOfAnalysis(outputTristan);
         fw.CompareAnalysisResult();
         */
-		System.err.println("The program ended normally.");
+		LOGGER.info("The program ended normally.");
 		String timestampEnd = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
 		
-		System.out.println("START :" + timeStampStart);
-		System.out.println("END :" + timestampEnd);
+		LOGGER.info("Start: {}", timeStampStart);
+		LOGGER.info("End: {}", timestampEnd);
 		
 	}
 	

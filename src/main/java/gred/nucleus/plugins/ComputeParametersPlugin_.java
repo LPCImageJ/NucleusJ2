@@ -7,11 +7,16 @@ import ij.plugin.PlugIn;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
+
 
 public class ComputeParametersPlugin_ implements PlugIn {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
+	
 	/** Run computing parameters method. */
 	public void run(String arg) {
-		Logger logger = LoggerFactory.getLogger(this.getClass());
 		
 		ComputeParametersDialog computeParametersDialog = new ComputeParametersDialog();
 		
@@ -19,7 +24,7 @@ public class ComputeParametersPlugin_ implements PlugIn {
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
-				logger.error("Interrupted exception.", e);
+				LOGGER.error("Interrupted exception.", e);
 				Thread.currentThread().interrupt();
 			}
 		}

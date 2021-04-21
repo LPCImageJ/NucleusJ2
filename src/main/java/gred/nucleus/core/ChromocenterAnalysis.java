@@ -31,8 +31,8 @@ public final class ChromocenterAnalysis {
 	public static void computeParametersChromocenter(ImagePlus imagePlusSegmented, ImagePlus imagePlusChromocenter) {
 		Histogram histogram = new Histogram();
 		histogram.run(imagePlusChromocenter);
-		Measure3D      measure3D      = new Measure3D();
-		double[]       tVolume        = measure3D.computeVolumeOfAllObjects(imagePlusChromocenter);
+		Measure3D measure3D = new Measure3D();
+		double[]  tVolume   = measure3D.computeVolumeOfAllObjects(imagePlusChromocenter);
 		IJ.log("CHROMOCENTER PARAMETERS");
 		IJ.log("Titre Volume BorderToBorderDistance BarycenterToBorderDistance BarycenterToBorderDistanceNucleus ");
 		if (histogram.getNbLabels() > 0) {
@@ -66,8 +66,8 @@ public final class ChromocenterAnalysis {
 	 * @throws IOException if file doesn't exist catch the exception
 	 */
 	public static void computeParametersChromocenter(String pathResultsFile,
-	                                          ImagePlus imagePlusSegmented,
-	                                          ImagePlus imagePlusChromocenter) throws IOException {
+	                                                 ImagePlus imagePlusSegmented,
+	                                                 ImagePlus imagePlusChromocenter) throws IOException {
 		Histogram histogram = new Histogram();
 		histogram.run(imagePlusChromocenter);
 		if (histogram.getNbLabels() > 0) {

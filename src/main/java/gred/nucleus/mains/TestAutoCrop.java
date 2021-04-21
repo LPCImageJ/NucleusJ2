@@ -7,6 +7,7 @@ import gred.nucleus.test.SegmentationImagesIntegration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 
 
@@ -16,6 +17,9 @@ import java.util.ArrayList;
  * @author Remy Malgouyres, Tristan Dubos and Axel Poulet
  */
 public class TestAutoCrop {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	
 	/**
 	 * Test for labeling connected components of a binarized image. Only connected components with no voxel on the
@@ -66,20 +70,19 @@ public class TestAutoCrop {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		Logger logger = LoggerFactory.getLogger(TestAutoCrop.class);
 		
-		logger.info("Start program");
+		LOGGER.info("Start program");
 		long maxMemory = Runtime.getRuntime().maxMemory();
 		/* Maximum amount of memory the JVM will attempt to use */
-		logger.info("Maximum memory (bytes): {}",
+		LOGGER.info("Maximum memory (bytes): {}",
 		            (maxMemory == Long.MAX_VALUE ? "no limit" : maxMemory * 1e-9));
 
 //		runAutoCropFolder("C:/Users/Martin/Documents/IMAGE_TEST_NJ/AUTOCROP/RAW_ND/","C:/Users/Martin/Documents/IMAGE_TEST_NJ/AUTOCROP/RESULTS/RAW_ND/");
 		runCropFromCoordinates("C:/Users/Martin/Documents/IMAGE_TEST_NJ/AUTOCROP/RESULTS/TIF_3D/tab_file.txt");
 		
-		logger.info("The program ended normally.");
+		LOGGER.info("The program ended normally.");
 		
-		logger.info("Total memory (bytes): {}",
+		LOGGER.info("Total memory (bytes): {}",
 		            Runtime.getRuntime().totalMemory() * 1e-9);
 	}
 	

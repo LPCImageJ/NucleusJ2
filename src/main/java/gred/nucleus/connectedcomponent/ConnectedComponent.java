@@ -11,6 +11,7 @@ package gred.nucleus.connectedcomponent;
 
 import gred.nucleus.componentremoval.ComponentRemovalNone;
 import gred.nucleus.componentremoval.ComponentRemovalPredicate;
+import gred.nucleus.plugins.ComputeParametersPlugin_;
 import gred.nucleus.utils.Voxel;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -18,6 +19,7 @@ import ij.measure.Calibration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,6 +36,9 @@ import java.util.List;
  * @author Remy Malgouyres, Tristan Dubos and Axel Poulet
  */
 public abstract class ConnectedComponent {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	/**
 	 * Input Image. The image can be modified by the filtering in the filterComponents() method
 	 */
@@ -317,8 +322,7 @@ public abstract class ConnectedComponent {
 	                                ComponentRemovalPredicate removalPredicate,
 	                                boolean keepPredicate,
 	                                boolean setRandomColors) {
-		Logger logger = LoggerFactory.getLogger(this.getClass());
-		logger.debug("Là, on des compO : {}", this.voxelVolume);
+		LOGGER.debug("Là, on des compO : {}", this.voxelVolume);
 		
 		ArrayList<Boolean> existsVoxelSatisfyingPredicate = new ArrayList<>();
 		for (int i = 0; i < this.compInfo.size(); ++i) {

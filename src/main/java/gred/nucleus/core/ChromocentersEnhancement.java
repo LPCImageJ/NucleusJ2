@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 
 
 /**
@@ -22,6 +23,9 @@ import java.io.File;
  * @author Tristan Dubos and Axel Poulet
  */
 public final class ChromocentersEnhancement {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	
 	/**
 	 *
@@ -31,14 +35,13 @@ public final class ChromocentersEnhancement {
 	
 	
 	public static void saveFile(ImagePlus imagePlus, String pathFile) {
-		Logger logger = LoggerFactory.getLogger(ChromocentersEnhancement.class);
 		
 		FileSaver fileSaver = new FileSaver(imagePlus);
 		File      file      = new File(pathFile);
 		if (file.exists() || file.mkdirs()) {
 			fileSaver.saveAsTiffStack(pathFile + File.separator + imagePlus.getTitle());
 		} else {
-			logger.error("Directory does not exist and could not be created: {}", pathFile);
+			LOGGER.error("Directory does not exist and could not be created: {}", pathFile);
 		}
 	}
 	

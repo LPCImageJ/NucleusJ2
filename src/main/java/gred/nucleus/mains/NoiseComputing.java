@@ -10,11 +10,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Map;
 
 
 public final class NoiseComputing {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	
 	public static void main(String[] args) {
@@ -26,7 +29,6 @@ public final class NoiseComputing {
 	
 	
 	public static void computeMeanNoise(String rawImageSourceFile, String segmentedImagesSourceFile) {
-		Logger logger = LoggerFactory.getLogger(NoiseComputing.class);
 		
 		PluginParameters pluginParameters = new PluginParameters(rawImageSourceFile, segmentedImagesSourceFile);
 		Directory        directoryInput   = new Directory(pluginParameters.getOutputFolder());
@@ -35,7 +37,7 @@ public final class NoiseComputing {
 		List<File>    segImages   = directoryInput.getFileList();
 		StringBuilder resultNoise = new StringBuilder("NucleusFileName\tMeanNoise\n");
 		for (File currentFile : segImages) {
-			logger.info("Current File: {}", currentFile.getName());
+			LOGGER.info("Current File: {}", currentFile.getName());
 			ImagePlus raw = new ImagePlus(pluginParameters.getInputFolder() +
 			                              directoryInput.getSeparator() +
 			                              currentFile.getName());
@@ -46,7 +48,7 @@ public final class NoiseComputing {
 			resultNoise.append(currentFile.getName()).append("\t")
 			           .append(meanNoise).append("\t")
 			           .append(medianComputing(raw)).append("\n");
-			logger.info("Noise mean: {}", meanNoise);
+			LOGGER.info("Noise mean: {}", meanNoise);
 			
 		}
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(

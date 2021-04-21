@@ -20,6 +20,7 @@ import java.util.List;
 public class Autocrop_ implements PlugIn, IDialogListener {
 	AutocropDialog autocropDialog;
 	
+	
 	/**
 	 * Run method for imageJ plugin for the autocrop
 	 *
@@ -33,6 +34,7 @@ public class Autocrop_ implements PlugIn, IDialogListener {
 		autocropDialog = new AutocropDialog(this);
 	}
 	
+	
 	@Override
 	public void OnStart() {
 		if (autocropDialog.isOmeroEnabled()) {
@@ -42,11 +44,12 @@ public class Autocrop_ implements PlugIn, IDialogListener {
 		}
 	}
 	
-	public Client checkOMEROConnexion (String hostname,
-	                                   String port,
-	                                   String username,
-	                                   String password,
-	                                   String group) {
+	
+	public Client checkOMEROConnexion(String hostname,
+	                                  String port,
+	                                  String username,
+	                                  String password,
+	                                  String group) {
 		Client client = new Client();
 		
 		try {
@@ -62,119 +65,121 @@ public class Autocrop_ implements PlugIn, IDialogListener {
 		
 		return client;
 	}
+	
+	
+	private void runOmeroAutocrop() {
+		// Check connection
+		String hostname = autocropDialog.getHostname();
+		String port     = autocropDialog.getPort();
+		String username = autocropDialog.getUsername();
+		String password = autocropDialog.getPassword();
+		String group    = autocropDialog.getGroup();
+		Client client   = checkOMEROConnexion(hostname, port, username, password, group);
 		
-	private void runOmeroAutocrop () {
-			// Check connection
-			String hostname = autocropDialog.getHostname();
-			String port     = autocropDialog.getPort();
-			String username = autocropDialog.getUsername();
-			String password = autocropDialog.getPassword();
-			String group    = autocropDialog.getGroup();
-			Client client   = checkOMEROConnexion(hostname, port, username, password, group);
-			
-			AutocropParameters autocropParameters = null;
-			// Check config
-			String configFile = autocropDialog.getConfig();
-			switch (autocropDialog.getConfigMode()) {
-				case DEFAULT:
-					autocropParameters = new AutocropParameters(".", ".");
-					break;
-				case FILE:
-					autocropParameters = new AutocropParameters(".", ".", configFile);
-					break;
-				case INPUT:
-					AutocropConfigDialog acd = autocropDialog.getAutocropConfigFileDialog();
-					if (acd.isCalibrationSelected()) {
-						IJ.log("w/ calibration");
-						autocropParameters = new AutocropParameters(".",
-						                                            ".",
-						                                            Integer.parseInt(acd.getXCalibration()),
-						                                            Integer.parseInt(acd.getYCalibration()),
-						                                            Integer.parseInt(acd.getZCalibration()),
-						                                            Integer.parseInt(acd.getXCropBoxSize()),
-						                                            Integer.parseInt(acd.getYCropBoxSize()),
-						                                            Integer.parseInt(acd.getZCropBoxSize()),
-						                                            Integer.parseInt(acd.getSlicesOTSUComputing()),
-						                                            Integer.parseInt(acd.getThresholdOTSUComputing()),
-						                                            Integer.parseInt(acd.getChannelToComputeThreshold()),
-						                                            Integer.parseInt(acd.getMinVolume()),
-						                                            Integer.parseInt(acd.getMaxVolume()),
-						                                            Integer.parseInt(acd.getBoxesPercentSurfaceToFilter()),
-						                                            acd.isRegroupBoxesSelected()
-						);
-					} else {
-						IJ.log("w/out calibration");
-						autocropParameters = new AutocropParameters(".",
-						                                            ".",
-						                                            Integer.parseInt(acd.getXCropBoxSize()),
-						                                            Integer.parseInt(acd.getYCropBoxSize()),
-						                                            Integer.parseInt(acd.getZCropBoxSize()),
-						                                            Integer.parseInt(acd.getSlicesOTSUComputing()),
-						                                            Integer.parseInt(acd.getThresholdOTSUComputing()),
-						                                            Integer.parseInt(acd.getChannelToComputeThreshold()),
-						                                            Integer.parseInt(acd.getMinVolume()),
-						                                            Integer.parseInt(acd.getMaxVolume()),
-						                                            Integer.parseInt(acd.getBoxesPercentSurfaceToFilter()),
-						                                            acd.isRegroupBoxesSelected()
-						);
-					}
-					break;
-			}
-			
-			AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
-			
-			// Handle the source according to the type given
-		
-			String dataType = autocropDialog.getDataType();
-			Long   inputID  = Long.valueOf(autocropDialog.getSourceID());
-			Long   outputID = Long.valueOf(autocropDialog.getOutputProject());
-			try {
-				if (dataType.equals("Image")) {
-					ImageWrapper image = client.getImage(inputID);
-					int sizeC = image.getPixels().getSizeC();
-					Long[] outputsDat = new Long[sizeC];
-					
-					for (int i = 0; i < sizeC; i++) {
-						DatasetWrapper dataset = new DatasetWrapper("C" + i + "_" + image.getName(), "");
-						outputsDat[i] =
-								client.getProject(outputID).addDataset(client, dataset).getId();
-					}
-					
-					autoCrop.runImageOMERO(image, outputsDat, client); // Run segmentation
-					autoCrop.saveGeneralInfoOmero(client, outputsDat);
-					
+		AutocropParameters autocropParameters = null;
+		// Check config
+		String configFile = autocropDialog.getConfig();
+		switch (autocropDialog.getConfigMode()) {
+			case DEFAULT:
+				autocropParameters = new AutocropParameters(".", ".");
+				break;
+			case FILE:
+				autocropParameters = new AutocropParameters(".", ".", configFile);
+				break;
+			case INPUT:
+				AutocropConfigDialog acd = autocropDialog.getAutocropConfigFileDialog();
+				if (acd.isCalibrationSelected()) {
+					IJ.log("w/ calibration");
+					autocropParameters = new AutocropParameters(".",
+					                                            ".",
+					                                            Integer.parseInt(acd.getXCalibration()),
+					                                            Integer.parseInt(acd.getYCalibration()),
+					                                            Integer.parseInt(acd.getZCalibration()),
+					                                            Integer.parseInt(acd.getXCropBoxSize()),
+					                                            Integer.parseInt(acd.getYCropBoxSize()),
+					                                            Integer.parseInt(acd.getZCropBoxSize()),
+					                                            Integer.parseInt(acd.getSlicesOTSUComputing()),
+					                                            Integer.parseInt(acd.getThresholdOTSUComputing()),
+					                                            Integer.parseInt(acd.getChannelToComputeThreshold()),
+					                                            Integer.parseInt(acd.getMinVolume()),
+					                                            Integer.parseInt(acd.getMaxVolume()),
+					                                            Integer.parseInt(acd.getBoxesPercentSurfaceToFilter()),
+					                                            acd.isRegroupBoxesSelected()
+					);
 				} else {
-					List<ImageWrapper> images = null;
-					String             name   = "";
-					
-					if (dataType.equals("Dataset")) {
-						DatasetWrapper dataset = client.getDataset(inputID);
-						name = dataset.getName();
-						images = dataset.getImages(client);
-					} else if (dataType.equals("Tag")) {
-						images = client.getImagesTagged(inputID);
-					}
-					int sizeC = images.get(0).getPixels().getSizeC();
-					Long[] outputsDat = new Long[sizeC];
-					for (int i = 0; i < sizeC; i++) {
-						DatasetWrapper dataset = new DatasetWrapper("raw_C" + i + "_" + name, "");
-						outputsDat[i] =
-								client.getProject(outputID).addDataset(client, dataset).getId();
-					}
-					
-					autoCrop.runSeveralImageOMERO(images, outputsDat, client); // Run segmentation
-					
+					IJ.log("w/out calibration");
+					autocropParameters = new AutocropParameters(".",
+					                                            ".",
+					                                            Integer.parseInt(acd.getXCropBoxSize()),
+					                                            Integer.parseInt(acd.getYCropBoxSize()),
+					                                            Integer.parseInt(acd.getZCropBoxSize()),
+					                                            Integer.parseInt(acd.getSlicesOTSUComputing()),
+					                                            Integer.parseInt(acd.getThresholdOTSUComputing()),
+					                                            Integer.parseInt(acd.getChannelToComputeThreshold()),
+					                                            Integer.parseInt(acd.getMinVolume()),
+					                                            Integer.parseInt(acd.getMaxVolume()),
+					                                            Integer.parseInt(acd.getBoxesPercentSurfaceToFilter()),
+					                                            acd.isRegroupBoxesSelected()
+					);
 				}
-			} catch (ServiceException se) {
-				IJ.error("Unable to access to OMERO service");
-			} catch (AccessException ae) {
-				IJ.error("Cannot access " + dataType + "with ID = " + inputID + ".");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+				break;
 		}
 		
-	private void runLocalAutocrop () {
+		AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
+		
+		// Handle the source according to the type given
+		
+		String dataType = autocropDialog.getDataType();
+		Long   inputID  = Long.valueOf(autocropDialog.getSourceID());
+		Long   outputID = Long.valueOf(autocropDialog.getOutputProject());
+		try {
+			if (dataType.equals("Image")) {
+				ImageWrapper image      = client.getImage(inputID);
+				int          sizeC      = image.getPixels().getSizeC();
+				Long[]       outputsDat = new Long[sizeC];
+				
+				for (int i = 0; i < sizeC; i++) {
+					DatasetWrapper dataset = new DatasetWrapper("C" + i + "_" + image.getName(), "");
+					outputsDat[i] =
+							client.getProject(outputID).addDataset(client, dataset).getId();
+				}
+				
+				autoCrop.runImageOMERO(image, outputsDat, client); // Run segmentation
+				autoCrop.saveGeneralInfoOmero(client, outputsDat);
+				
+			} else {
+				List<ImageWrapper> images = null;
+				String             name   = "";
+				
+				if (dataType.equals("Dataset")) {
+					DatasetWrapper dataset = client.getDataset(inputID);
+					name = dataset.getName();
+					images = dataset.getImages(client);
+				} else if (dataType.equals("Tag")) {
+					images = client.getImagesTagged(inputID);
+				}
+				int    sizeC      = images.get(0).getPixels().getSizeC();
+				Long[] outputsDat = new Long[sizeC];
+				for (int i = 0; i < sizeC; i++) {
+					DatasetWrapper dataset = new DatasetWrapper("raw_C" + i + "_" + name, "");
+					outputsDat[i] =
+							client.getProject(outputID).addDataset(client, dataset).getId();
+				}
+				
+				autoCrop.runSeveralImageOMERO(images, outputsDat, client); // Run segmentation
+				
+			}
+		} catch (ServiceException se) {
+			IJ.error("Unable to access to OMERO service");
+		} catch (AccessException ae) {
+			IJ.error("Cannot access " + dataType + "with ID = " + inputID + ".");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	private void runLocalAutocrop() {
 		String input  = autocropDialog.getInput();
 		String output = autocropDialog.getOutput();
 		String config = autocropDialog.getConfig();
@@ -188,7 +193,7 @@ public class Autocrop_ implements PlugIn, IDialogListener {
 				
 				AutocropParameters autocropParameters = null;
 				
-				switch (autocropDialog.getConfigMode()){
+				switch (autocropDialog.getConfigMode()) {
 					case FILE:
 						if (config == null || config.equals("")) {
 							IJ.error("Config file is missing");
@@ -237,8 +242,8 @@ public class Autocrop_ implements PlugIn, IDialogListener {
 						autocropParameters = new AutocropParameters(input, output);
 						break;
 				}
-				AutoCropCalling    autoCrop           = new AutoCropCalling(autocropParameters);
-				File               file               = new File(input);
+				AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
+				File            file     = new File(input);
 				if (file.isDirectory()) {
 					autoCrop.runFolder();
 				} else if (file.isFile()) {
@@ -252,4 +257,5 @@ public class Autocrop_ implements PlugIn, IDialogListener {
 			}
 		}
 	}
+	
 }

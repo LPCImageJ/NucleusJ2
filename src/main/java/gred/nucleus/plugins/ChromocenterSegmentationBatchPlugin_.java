@@ -1,5 +1,6 @@
 package gred.nucleus.plugins;
 
+import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.core.ChromocentersEnhancement;
 import gred.nucleus.dialogs.ChromocenterSegmentationPipelineBatchDialog;
 import gred.nucleus.utils.FileList;
@@ -14,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 
@@ -21,9 +23,11 @@ import java.util.List;
  * @author Tristan Dubos and Axel Poulet
  */
 public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	
 	public void run(String arg) {
-		Logger logger = LoggerFactory.getLogger(this.getClass());
 		
 		ChromocenterSegmentationPipelineBatchDialog chromocenterSegmentationPipelineBatchDialog =
 				new ChromocenterSegmentationPipelineBatchDialog();
@@ -31,7 +35,7 @@ public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
-				logger.error("Interruption exception.", e);
+				LOGGER.error("Interruption exception.", e);
 				Thread.currentThread().interrupt();
 			}
 		}
@@ -101,14 +105,13 @@ public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
 	 * @param pathFile  the path where save the image
 	 */
 	public void saveFile(ImagePlus imagePlus, String pathFile) {
-		Logger logger = LoggerFactory.getLogger(this.getClass());
 		
 		FileSaver fileSaver = new FileSaver(imagePlus);
 		File      file      = new File(pathFile);
 		if (file.exists() || file.mkdirs()) {
 			fileSaver.saveAsTiffStack(pathFile + File.separator + imagePlus.getTitle());
 		} else {
-			logger.error("Directory does not exist and could not be created: {}", pathFile);
+			LOGGER.error("Directory does not exist and could not be created: {}", pathFile);
 		}
 	}
 	

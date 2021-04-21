@@ -9,11 +9,14 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.*;
 import java.util.regex.Pattern;
 
 
 public class GenerateProjectionFromCoordinates {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	String pathToGIFTSeg;
 	String pathToZProjection;
@@ -55,7 +58,6 @@ public class GenerateProjectionFromCoordinates {
 	 * @return list of boxes file to draw in red
 	 */
 	public static Map<String, String> readCoordinatesTXT(File boxFile) {
-		Logger logger = LoggerFactory.getLogger(GenerateProjectionFromCoordinates.class);
 		
 		HashMap<String, String> boxLists = new HashMap<>();
 		try (Scanner scanner = new Scanner(boxFile)) {
@@ -76,7 +78,7 @@ public class GenerateProjectionFromCoordinates {
 					                                            + yMax + "\t"
 					                                            + splitLine[5] + "\t"
 					                                            + zMax);
-					logger.debug("EUUU{}value{}\t{}\t{}\t{}\t{}\t{}\t{}",
+					LOGGER.debug("EUUU{}value{}\t{}\t{}\t{}\t{}\t{}\t{}",
 					             fileName[fileName.length - 1],
 					             splitLine[0],
 					             splitLine[3],
@@ -88,7 +90,7 @@ public class GenerateProjectionFromCoordinates {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			logger.error("File not found.", e);
+			LOGGER.error("File not found.", e);
 		}
 		return boxLists;
 	}
@@ -102,7 +104,6 @@ public class GenerateProjectionFromCoordinates {
 	 * @throws FormatException
 	 */
 	public void generateCoordinateFiltered() throws IOException, FormatException {
-		Logger logger = LoggerFactory.getLogger(getClass());
 		
 		Directory giftSegImages = new Directory(this.pathToGIFTSeg);
 		giftSegImages.listImageFiles(this.pathToGIFTSeg);
@@ -122,7 +123,7 @@ public class GenerateProjectionFromCoordinates {
 			for (Map.Entry<String, String> entry : sortedMap.entrySet()) {
 				if (!(giftSegImages.checkIfFileExists(entry.getKey()))) {
 					boxListsNucleiNotPass.add(entry.getValue());
-					logger.info("add {}", entry.getValue());
+					LOGGER.info("add {}", entry.getValue());
 				}
 			}
 			File currentZProjection = zProjection.searchFileNameWithoutExtension(coordinateFile.getName()
@@ -151,7 +152,6 @@ public class GenerateProjectionFromCoordinates {
 	
 	
 	public void generateCoordinate() throws IOException, FormatException {
-		Logger logger = LoggerFactory.getLogger(getClass());
 		
 		Directory rawImage = new Directory(this.pathToRaw);
 		rawImage.listImageFiles(this.pathToRaw);
@@ -167,7 +167,7 @@ public class GenerateProjectionFromCoordinates {
 			for (Map.Entry<String, String> entry : listOfBoxes.entrySet()) {
 				boxListsNucleiNotPass.add(entry.getValue());
 			}
-			logger.info(coordinateFile.getName());
+			LOGGER.info(coordinateFile.getName());
 			
 			File currentRaw = rawImage.searchFileNameWithoutExtension(coordinateFile.getName()
 			                                                                        .substring(0,
@@ -176,7 +176,7 @@ public class GenerateProjectionFromCoordinates {
 					                                                                                                 '.')));
 			FilesNames outPutFilesNames = new FilesNames(currentRaw.toString());
 			String     prefix           = outPutFilesNames.prefixNameFile();
-			logger.info("current raw: {}", currentRaw.getName());
+			LOGGER.info("current raw: {}", currentRaw.getName());
 			AutocropParameters autocropParameters = new AutocropParameters(currentRaw.getParent(),
 			                                                               currentRaw.getParent() +
 			                                                               rawImage.getSeparator());

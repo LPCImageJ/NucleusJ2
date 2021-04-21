@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,6 +29,8 @@ import java.util.Map;
  * @author Tristan Dubos
  */
 public class OutputFileVerification {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	/** Key of files expected in the result directory */
 	Map<String, String> myMapInitialFilesInputFolder = new HashMap<>();
@@ -104,7 +107,6 @@ public class OutputFileVerification {
 	 * @param path Path of folder which contains files expected
 	 */
 	public void getFilesResultingOfAnalysis(String path) {
-		Logger logger = LoggerFactory.getLogger(getClass().getName());
 		
 		File   root = new File(path);
 		File[] list = root.listFiles();
@@ -115,7 +117,7 @@ public class OutputFileVerification {
 				} else {
 					String temps = f.getPath().replace(this.rawPathOutPut
 							, "");
-					logger.debug(temps);
+					LOGGER.debug(temps);
 					this.myMapFilesProduceByAnalysis.put(temps, md5(f.getPath()));
 				}
 			}
@@ -125,16 +127,15 @@ public class OutputFileVerification {
 	
 	/** Method to compare md5sum of files from output analysis with expected results */
 	public void compareAnalysisResult() {
-		Logger logger = LoggerFactory.getLogger(getClass().getName());
 		for (Map.Entry<String, String> entry :
 				this.myMapInitialFilesInputFolder.entrySet()) {
 			String fileName = entry.getKey();
 			String hashCode = entry.getValue();
 			if (hashCode.equals(
 					this.myMapFilesProduceByAnalysis.get(fileName))) {
-				logger.debug("Terrible du cul {}", fileName);
+				LOGGER.debug("Terrible du cul {}", fileName);
 			} else {
-				logger.debug("le fichier n'existe pas ou diff hash {}\n{}\n{}\n",
+				LOGGER.debug("le fichier n'existe pas ou diff hash {}\n{}\n{}\n",
 				             fileName,
 				             hashCode,
 				             this.myMapFilesProduceByAnalysis.get(fileName));

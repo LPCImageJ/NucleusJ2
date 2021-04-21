@@ -16,10 +16,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 
 public class ComputeNucleiParametersML {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	String rawImagesInputDirectory;
 	String segmentedImagesDirectory;
 	
@@ -75,7 +79,6 @@ public class ComputeNucleiParametersML {
 	 * @throws FormatException
 	 */
 	public void run() throws IOException, FormatException {
-		Logger logger = LoggerFactory.getLogger(getClass());
 		PluginParameters pluginParameters =
 				new PluginParameters(this.rawImagesInputDirectory, this.segmentedImagesDirectory);
 		Directory directoryInput = new Directory(pluginParameters.getOutputFolder());
@@ -85,7 +88,7 @@ public class ComputeNucleiParametersML {
 		StringBuilder outputCropGeneralInfoOTSU =
 				new StringBuilder(pluginParameters.getAnalysisParameters() + getResultsColumnNames());
 		for (File currentFile : segImages) {
-			logger.info("Current File: {}", currentFile.getName());
+			LOGGER.info("Current File: {}", currentFile.getName());
 			ImagePlus raw = new ImagePlus(pluginParameters.getInputFolder() +
 			                              directoryInput.getSeparator() +
 			                              currentFile.getName());

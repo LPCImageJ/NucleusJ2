@@ -6,17 +6,20 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
 
 /** Class get to list directory and sub directory. */
 public class Directory {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	/** Directory path */
-	private File   dir;
+	private File       dir;
 	/** Directory path */
-	private String dirPath = "";
+	private String     dirPath       = "";
 	/** List of files in current folder + recursive folder */
 	private List<File> fileList      = new ArrayList<>();
 	/** Check if directory contain nd files */
@@ -25,19 +28,20 @@ public class Directory {
 	private List<File> fileListND    = new ArrayList<>();
 	/** Path separator */
 	private String     separator;
+	
+	
 	/**
 	 * Constructor
 	 *
 	 * @param path of directory
 	 */
 	public Directory(String path) {
-		Logger logger = LoggerFactory.getLogger(getClass());
 		try {
 			this.dirPath = path;
 			this.dir = new File(this.dirPath);
 			this.separator = File.separator;
 		} catch (Exception exp) {
-			logger.error("Could not create Directory object.", exp);
+			LOGGER.error("Could not create Directory object.", exp);
 			System.exit(1);
 		}
 	}
@@ -139,8 +143,7 @@ public class Directory {
 	/** check if input directory is empty */
 	public void checkIfEmpty() {
 		if (this.fileList.isEmpty()) {
-			Logger logger = LoggerFactory.getLogger(getClass());
-			logger.debug("Folder {} is empty", dirPath);
+			LOGGER.debug("Folder {} is empty", dirPath);
 		}
 	}
 	

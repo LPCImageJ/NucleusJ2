@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -27,6 +28,8 @@ import java.util.regex.Pattern;
  * @author Tristan Dubos and Axel Poulet
  */
 public class AnnotateAutoCrop {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	/** List of the coordinate boxes of cropped nucleus */
 	private final List<String>       boxCoordinates;
@@ -117,7 +120,6 @@ public class AnnotateAutoCrop {
 	 * (projectionMax method) and contrast modification of 0,3.
 	 */
 	public void run() {
-		Logger logger = LoggerFactory.getLogger(this.getClass());
 		
 		ZProjector zProjectionTmp = new ZProjector(this.zProjection);
 		this.zProjection = projectionMax(zProjectionTmp);
@@ -126,7 +128,7 @@ public class AnnotateAutoCrop {
 			String[] splitLine = boxCoordinate.split("\\t");
 			String[] fileName  = splitLine[0].split(Pattern.quote(File.separator));
 			String[] name      = fileName[fileName.length - 1].split("_");
-			logger.info("{}\n{}\n{}",
+			LOGGER.info("{}\n{}\n{}",
 			            boxCoordinate,
 			            splitLine[0],
 			            Integer.parseInt(name[name.length - 2]));
@@ -135,7 +137,7 @@ public class AnnotateAutoCrop {
 		String outFileZBox = this.outputDirPath + File.separator +
 		                     "zprojection" + File.separator +
 		                     outputFilesPrefix + "_Zprojection.tif";
-		logger.info("outFileZBox: {}", outFileZBox);
+		LOGGER.info("outFileZBox: {}", outFileZBox);
 		saveFile(this.zProjection, outFileZBox);
 	}
 	

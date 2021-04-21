@@ -8,11 +8,15 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.invoke.MethodHandles;
 import java.util.Properties;
 
 
 /** This class extend plugin parameters and contain the list of specific parameters available for Autocrop function. */
 public class AutocropParameters extends PluginParameters {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	/** Minimal object volume to crop */
 	int minVolumeNucleus = 1;
 	/** Maximal object volume to crop */
@@ -257,16 +261,15 @@ public class AutocropParameters extends PluginParameters {
 	
 	
 	public void addProperties(String pathToConfigFile) {
-		Logger logger = LoggerFactory.getLogger(this.getClass());
 		
 		Properties prop = new Properties();
 		try (InputStream is = new FileInputStream(pathToConfigFile)) {
 			prop.load(is);
 		} catch (FileNotFoundException ex) {
-			logger.error("{}: can't find the config file !", pathToConfigFile);
+			LOGGER.error("{}: can't find the config file !", pathToConfigFile);
 			System.exit(-1);
 		} catch (IOException ex) {
-			logger.error("{}: can't load the config file !", pathToConfigFile);
+			LOGGER.error("{}: can't load the config file !", pathToConfigFile);
 			System.exit(-1);
 		}
 		for (String idProp : prop.stringPropertyNames()) {

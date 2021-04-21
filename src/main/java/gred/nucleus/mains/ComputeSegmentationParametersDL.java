@@ -18,16 +18,19 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 
 public class ComputeSegmentationParametersDL {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	
 	public static void computeNucleusParameters(String rawImageSourceFile,
 	                                            String segmentedImagesSourceFile,
 	                                            String pathToConfig)
 	throws IOException, FormatException {
-		Logger logger = LoggerFactory.getLogger(ComputeSegmentationParametersDL.class);
 		
 		PluginParameters pluginParameters =
 				new PluginParameters(rawImageSourceFile, segmentedImagesSourceFile, pathToConfig);
@@ -39,7 +42,7 @@ public class ComputeSegmentationParametersDL {
 				new StringBuilder(pluginParameters.getAnalysisParameters() + getResultsColumnNames());
 		for (File currentFile : rawImages) {
 			ImagePlus raw = new ImagePlus(currentFile.getAbsolutePath());
-			logger.info("current File: {}", currentFile.getName());
+			LOGGER.info("current File: {}", currentFile.getName());
 			
 			ImagePlus[] segmented = BF.openImagePlus(pluginParameters.getOutputFolder() + currentFile.getName());
 			
@@ -60,7 +63,6 @@ public class ComputeSegmentationParametersDL {
 	
 	public static void computeNucleusParametersDL(String rawImageSourceFile, String segmentedImagesSourceFile)
 	throws IOException, FormatException {
-		Logger logger = LoggerFactory.getLogger(ComputeSegmentationParametersDL.class);
 		
 		PluginParameters pluginParameters = new PluginParameters(rawImageSourceFile, segmentedImagesSourceFile);
 		Directory        directoryInput   = new Directory(pluginParameters.getOutputFolder());
@@ -70,7 +72,7 @@ public class ComputeSegmentationParametersDL {
 		StringBuilder outputCropGeneralInfoOTSU =
 				new StringBuilder(pluginParameters.getAnalysisParameters() + getResultsColumnNames());
 		for (File currentFile : segImages) {
-			logger.info("current File: {}", currentFile.getName());
+			LOGGER.info("current File: {}", currentFile.getName());
 			ImagePlus raw = new ImagePlus(pluginParameters.getInputFolder() +
 			                              directoryInput.getSeparator() +
 			                              currentFile.getName());

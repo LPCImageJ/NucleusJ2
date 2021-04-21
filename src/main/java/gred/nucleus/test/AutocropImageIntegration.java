@@ -5,10 +5,13 @@ import gred.nucleus.autocrop.AutocropParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 
 
 public class AutocropImageIntegration {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	static ArrayList<String> test;
 	
@@ -42,7 +45,6 @@ public class AutocropImageIntegration {
 	 * @param args arguments
 	 */
 	public static void main(String[] args) {
-		Logger logger       = LoggerFactory.getLogger(AutocropImageIntegration.class);
 		String pathToTest   = "/home/tridubos/Bureau/IMAGES_TEST_CICD/AUTOCROP_IMAGES/AUTOCROP_RAW";
 		String pathToOutput = "/home/tridubos/Bureau/IMAGES_TEST_CICD/AUTOCROP";
 		
@@ -101,9 +103,9 @@ public class AutocropImageIntegration {
 		saveFile(sort, "/home/tridubos/Bureau/TEST_READING_METADATA/cetruc.tif");
 		*/
 		//testStupid(inputOneImageTristan, outputTristan);
-		logger.info("The program ended normally.");
+		LOGGER.info("The program ended normally.");
 		
-		logger.info("Total memory (bytes): {}",
+		LOGGER.info("Total memory (bytes): {}",
 		            Runtime.getRuntime().totalMemory() * 1e-9);
 	}
 	

@@ -1,6 +1,7 @@
 package gred.nucleus.machinelearning;
 
 import gred.nucleus.files.Directory;
+import gred.nucleus.mains.TestAutoCrop;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
@@ -9,11 +10,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
 
 
 public class SliceToStack {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	
 	String pathToSliceDir;
 	String pathToOutputDir;
@@ -47,7 +52,6 @@ public class SliceToStack {
 	 * Merge slice to stack : - images shall have this file name format : CommonNameOfImageToMerge_NumberOfSlice
 	 */
 	public void run() {
-		Logger logger = LoggerFactory.getLogger(getClass().getName());
 		
 		HashMap<String, Integer> test            = new HashMap<>();
 		Directory                directoryOutput = new Directory(this.pathToOutputDir);
@@ -68,7 +72,7 @@ public class SliceToStack {
 		for (Map.Entry<String, Integer> entry : test.entrySet()) {
 			int         size  = entry.getValue();
 			ImagePlus[] image = new ImagePlus[size];
-			logger.info("image: {}", entry.getKey());
+			LOGGER.info("image: {}", entry.getKey());
 			for (short i = 0; i < image.length; ++i) {
 				//image= BF.openImagePlus((directoryInput.dirPath
 				image[i] = IJ.openImage((directoryInput.getDirPath() +

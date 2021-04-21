@@ -1,6 +1,7 @@
 package gred.nucleus.segmentation;
 
 
+import gred.nucleus.machinelearning.SliceToStack;
 import gred.nucleus.plugins.PluginParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,10 +10,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.invoke.MethodHandles;
 import java.util.Properties;
 
 
 public class SegmentationParameters extends PluginParameters {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	/** GIFT wrapping option */
 	boolean giftWrapping     = true;
 	/** Minimal object volume to segment */
@@ -64,16 +69,15 @@ public class SegmentationParameters extends PluginParameters {
 	
 	
 	public void addProperties(String pathToConfigFile) {
-		Logger logger = LoggerFactory.getLogger(getClass().getName());
 		
 		Properties prop = new Properties();
 		try (InputStream is = new FileInputStream(pathToConfigFile)) {
 			prop.load(is);
 		} catch (FileNotFoundException ex) {
-			logger.error(pathToConfigFile + ": can't find the config file !", ex);
+			LOGGER.error(pathToConfigFile + ": can't find the config file !", ex);
 			System.exit(-1);
 		} catch (IOException ex) {
-			logger.error(pathToConfigFile + ": can't load the config file !", ex);
+			LOGGER.error(pathToConfigFile + ": can't load the config file !", ex);
 			System.exit(-1);
 		}
 		for (String idProp : prop.stringPropertyNames()) {

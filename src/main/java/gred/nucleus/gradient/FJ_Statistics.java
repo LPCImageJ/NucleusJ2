@@ -43,7 +43,7 @@ public class FJ_Statistics implements PlugIn, ItemListener, WindowListener {
 			" Kurtosis"
 	};
 	
-	private static final boolean[] values = {
+	private static final boolean[] values   = {
 			true,
 			true,
 			true,
@@ -59,16 +59,16 @@ public class FJ_Statistics implements PlugIn, ItemListener, WindowListener {
 			false,
 			false
 	};
-	private static final Point    pos      = new Point(-1, -1);
-	private static boolean clear   = false;
-	private static boolean name    = true;
-	private static boolean channel = false;
-	private static boolean time    = false;
-	private static boolean slice   = false;
-	private static       int      decimals = 3;
-	private              Checkbox channelBox;
-	private              Checkbox timeBox;
-	private              Checkbox sliceBox;
+	private static final Point     pos      = new Point(-1, -1);
+	private static       boolean   clear    = false;
+	private static       boolean   name     = true;
+	private static       boolean   channel  = false;
+	private static       boolean   time     = false;
+	private static       boolean   slice    = false;
+	private static       int       decimals = 3;
+	private              Checkbox  channelBox;
+	private              Checkbox  timeBox;
+	private              Checkbox  sliceBox;
 	
 	
 	@SuppressWarnings("rawtypes")

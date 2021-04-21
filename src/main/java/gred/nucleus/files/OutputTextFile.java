@@ -1,14 +1,19 @@
 package gred.nucleus.files;
 
-import ij.IJ;
 import org.apache.commons.io.FilenameUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 
 
 public class OutputTextFile extends FilesNames {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	
 	public OutputTextFile(String filePath) {
 		super(filePath);
@@ -40,10 +45,9 @@ public class OutputTextFile extends FilesNames {
                 writer.close();
             }*/
 		} catch (IOException e) {
-			IJ.log("\n" + this.fullPathFile + " creation failed\n");
-			e.printStackTrace();
+			LOGGER.error(this.fullPathFile + " creation failed", e);
 		}
-		IJ.log("\n" + this.fullPathFile + " created\n");
+		LOGGER.info("{} created",this.fullPathFile);
 	}
 	
 }

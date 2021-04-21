@@ -1,18 +1,23 @@
 package gred.nucleus.plugins;
 
 import gred.nucleus.files.Directory;
+import gred.nucleus.segmentation.SegmentationParameters;
 import ij.IJ;
 import ij.ImagePlus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.lang.invoke.MethodHandles;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Properties;
 
 
 public class PluginParameters {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	
 	/** Activation of manual calibration parameter */
 	public boolean manualParameter = false;
@@ -91,16 +96,15 @@ public class PluginParameters {
 	
 	
 	public void addGeneralProperties(String pathToConfigFile) {
-		Logger logger = LoggerFactory.getLogger(getClass().getName());
 		
 		Properties prop = new Properties();
 		try (InputStream is = new FileInputStream(pathToConfigFile)) {
 			prop.load(is);
 		} catch (FileNotFoundException ex) {
-			logger.error("{}: can't find the config file !", pathToConfigFile);
+			LOGGER.error("{}: can't find the config file !", pathToConfigFile);
 			System.exit(-1);
 		} catch (IOException ex) {
-			logger.error("{}: can't load the config file !", pathToConfigFile);
+			LOGGER.error("{}: can't load the config file !", pathToConfigFile);
 			System.exit(-1);
 		}
 		for (String idProp : prop.stringPropertyNames()) {
@@ -120,7 +124,6 @@ public class PluginParameters {
 	
 	
 	private void checkInputPaths(String inputFolder, String outputFolder) {
-		Logger logger = LoggerFactory.getLogger(getClass().getName());
 		
 		File input = new File(inputFolder);
 		if (input.isDirectory()) {
@@ -129,7 +132,7 @@ public class PluginParameters {
 			this.inputFolder = input.getParent();
 			
 		} else {
-			logger.error("{}: can't find the input folder/file !", inputFolder);
+			LOGGER.error("{}: can't find the input folder/file !", inputFolder);
 			IJ.error(inputFolder + " : can't find the input folder/file !");
 //            System.exit(-1);
 		}

@@ -36,9 +36,9 @@ public class NucleusChromocentersAnalysis {
 	 * @param imagePlusChromocenter
 	 */
 	public static void computeParameters(String rhfChoice,
-	                              ImagePlus imagePlusInput,
-	                              ImagePlus imagePlusSegmented,
-	                              ImagePlus imagePlusChromocenter) {
+	                                     ImagePlus imagePlusInput,
+	                                     ImagePlus imagePlusSegmented,
+	                                     ImagePlus imagePlusChromocenter) {
 		IJ.log("3D PARAMETERS ");
 		Histogram histogram = new Histogram();
 		histogram.run(imagePlusChromocenter);
@@ -68,7 +68,7 @@ public class NucleusChromocentersAnalysis {
 		}
 		
 		if (histogram.getNbLabels() > 0) {
-			double[]       tVolumesObjects = measure3D.computeVolumeOfAllObjects(imagePlusChromocenter);
+			double[] tVolumesObjects = measure3D.computeVolumeOfAllObjects(imagePlusChromocenter);
 			double[] tBorderToBorderDistance =
 					RadialDistance.computeBorderToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
 			double[] tBarycenterToBorderDistance =
@@ -99,10 +99,10 @@ public class NucleusChromocentersAnalysis {
 	 * @throws IOException
 	 */
 	public static void computeParameters(String pathResultsFile,
-	                              String rhfChoice,
-	                              ImagePlus imagePlusInput,
-	                              ImagePlus imagePlusSegmented,
-	                              ImagePlus imagePlusChromocenter) throws IOException {
+	                                     String rhfChoice,
+	                                     ImagePlus imagePlusInput,
+	                                     ImagePlus imagePlusSegmented,
+	                                     ImagePlus imagePlusChromocenter) throws IOException {
 		Histogram histogram = new Histogram();
 		histogram.run(imagePlusChromocenter);
 		Calibration calibration = imagePlusInput.getCalibration();
@@ -148,9 +148,9 @@ public class NucleusChromocentersAnalysis {
 				text += measure3D.computeVolumeRHF(imagePlusSegmented, imagePlusChromocenter) + "\t";
 			}
 			if (histogram.getNbLabels() > 0) {
-				double[]       tVolumesObjects = measure3D.computeVolumeOfAllObjects(imagePlusChromocenter);
-				double         volumeCcMean    = computeMeanOfTable(tVolumesObjects);
-				int            nbCc            = measure3D.getNumberOfObject(imagePlusChromocenter);
+				double[] tVolumesObjects = measure3D.computeVolumeOfAllObjects(imagePlusChromocenter);
+				double   volumeCcMean    = computeMeanOfTable(tVolumesObjects);
+				int      nbCc            = measure3D.getNumberOfObject(imagePlusChromocenter);
 				double[] tBorderToBorderDistance =
 						RadialDistance.computeBorderToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
 				double[] tBarycenterToBorderDistance =

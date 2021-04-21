@@ -36,6 +36,7 @@ import org.slf4j.LoggerFactory;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,6 +51,8 @@ import java.util.concurrent.ExecutionException;
  * @author Tristan Dubos and Axel Poulet
  */
 public class NucleusSegmentation {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	/** Segmentation parameters for the analyse */
 	private final SegmentationParameters segmentationParameters;
@@ -735,26 +738,24 @@ public class NucleusSegmentation {
 	 * @param inputPathDir folder of the input to create badcrop folder.
 	 */
 	public void checkBadCrop(String inputPathDir) {
-		Logger logger = LoggerFactory.getLogger(getClass());
 		
 		if ((this.badCrop) || (this.bestThreshold == -1)) {
 			File badCropFolder = new File(inputPathDir + File.separator + "BadCrop");
-			logger.debug("et du coup on est dedans ou quoi ...........\n{}..................", badCropFolder);
+			LOGGER.debug("et du coup on est dedans ou quoi ...........\n{}..................", badCropFolder);
 			
 			if (badCropFolder.exists() || badCropFolder.mkdir()) {
 				File    fileToMove = new File(inputPathDir + File.separator + this.imgRawTransformed.getTitle());
 				File    newFile    = new File(badCropFolder + File.separator + this.imgRawTransformed.getTitle());
 				boolean renamed    = fileToMove.renameTo(newFile);
-				if (!renamed) logger.info("File not renamed: {}", fileToMove.getAbsolutePath());
+				if (!renamed) LOGGER.info("File not renamed: {}", fileToMove.getAbsolutePath());
 			} else {
-				logger.error("Directory does not exist and could not be created: {}", badCropFolder);
+				LOGGER.error("Directory does not exist and could not be created: {}", badCropFolder);
 			}
 		}
 	}
 	
 	
 	public void checkBadCrop(ImageWrapper image, Client client) {
-		Logger logger = LoggerFactory.getLogger(getClass());
 		if ((this.badCrop) || (this.bestThreshold == -1)) {
 			List<TagAnnotationWrapper> tags;
 			TagAnnotationWrapper       tagBadCrop;
@@ -762,7 +763,7 @@ public class NucleusSegmentation {
 			try {
 				tags = client.getTags("BadCrop");
 			} catch (Exception e) {
-				logger.error("Could not get list of \"BadCrop\" tags", e);
+				LOGGER.error("Could not get list of \"BadCrop\" tags", e);
 				return;
 			}
 			
@@ -770,30 +771,29 @@ public class NucleusSegmentation {
 				try {
 					tagBadCrop = new TagAnnotationWrapper(client, "BadCrop", "");
 				} catch (Exception e) {
-					logger.error("Could not create new \"BadCrop\" tag", e);
+					LOGGER.error("Could not create new \"BadCrop\" tag", e);
 					return;
 				}
 			} else {
 				try {
 					tagBadCrop = tags.get(0);
 				} catch (Exception e) {
-					logger.error("Could not retrieve a \"BadCrop\" tag", e);
+					LOGGER.error("Could not retrieve a \"BadCrop\" tag", e);
 					return;
 				}
 			}
 			
-			logger.info("Adding Bad Crop tag");
+			LOGGER.info("Adding Bad Crop tag");
 			try {
 				image.addTag(client, tagBadCrop);
 			} catch (Exception e) {
-				logger.error("Tag already added", e);
+				LOGGER.error("Tag already added", e);
 			}
 		}
 	}
 	
 	
 	public void checkBadCrop(ROIWrapper roi, Client client) {
-		Logger logger = LoggerFactory.getLogger(getClass());
 		if ((this.badCrop) || (this.bestThreshold == -1)) {
 			for (GenericShapeWrapper<?> shape : roi.getShapes()) {
 				shape.setStroke(Color.RED);
@@ -802,7 +802,7 @@ public class NucleusSegmentation {
 		try {
 			roi.saveROI(client);
 		} catch (Exception e) {
-			logger.error("Could not save bad crop ROI id: {}", roi.getId());
+			LOGGER.error("Could not save bad crop ROI id: {}", roi.getId());
 		}
 	}
 	
@@ -829,7 +829,6 @@ public class NucleusSegmentation {
 	 */
 	public void saveOTSUSegmentedOMERO(Client client, Long id)
 	throws Exception {
-		Logger logger = LoggerFactory.getLogger(getClass());
 		if (!badCrop && bestThreshold != -1) {
 			String path = new java.io.File(".").getCanonicalPath() + File.separator + this.imageSeg[0].getTitle();
 			saveFile(this.imageSeg[0], path);
@@ -852,7 +851,7 @@ public class NucleusSegmentation {
 			try {
 				Files.deleteIfExists(file.toPath());
 			} catch (IOException e) {
-				logger.error("Could not delete file: {}", path);
+				LOGGER.error("Could not delete file: {}", path);
 			}
 		}
 	}
@@ -882,7 +881,6 @@ public class NucleusSegmentation {
 	 */
 	public void saveGiftWrappingSegOMERO(Client client, Long id)
 	throws Exception {
-		Logger logger = LoggerFactory.getLogger(getClass());
 		if (!badCrop && bestThreshold != -1
 		    && this.segmentationParameters.getGiftWrapping()) {
 			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
@@ -910,7 +908,7 @@ public class NucleusSegmentation {
 			try {
 				Files.deleteIfExists(file.toPath());
 			} catch (IOException e) {
-				logger.error("Could not delete file: {}", path);
+				LOGGER.error("Could not delete file: {}", path);
 			}
 		}
 	}

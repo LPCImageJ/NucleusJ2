@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 import java.io.Console;
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,6 +33,9 @@ import java.util.regex.Pattern;
 
 
 public class Main {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	
 	/**
 	 * Method to run autocrop with only input output folder and with default parameters which are:
@@ -168,19 +172,18 @@ public class Main {
 	 * @param outputDirectory path to output folder analysis
 	 */
 	public static void segmentationFolder(String inputDirectory, String outputDirectory) {
-		Logger logger = LoggerFactory.getLogger(Main.class);
-		logger.debug("test: {}", inputDirectory);
+		LOGGER.debug("test: {}", inputDirectory);
 		SegmentationParameters segmentationParameters = new SegmentationParameters(inputDirectory, outputDirectory);
 		SegmentationCalling    otsuModified           = new SegmentationCalling(segmentationParameters);
 		try {
 			String log = otsuModified.runSeveralImages2();
 			if (!(log.equals(""))) {
-				logger.error("Nuclei which didn't pass the segmentation:\n{}", log);
+				LOGGER.error("Nuclei which didn't pass the segmentation:\n{}", log);
 			}
 		} catch (IOException e) {
-			logger.error("I/O exception.", e);
+			LOGGER.error("I/O exception.", e);
 		} catch (FormatException e) {
-			logger.error("Format exception", e);
+			LOGGER.error("Format exception", e);
 		}
 	}
 	
@@ -193,7 +196,6 @@ public class Main {
 	 * @param config          path to config file
 	 */
 	public static void segmentationFolder(String inputDirectory, String outputDirectory, String config) {
-		Logger logger = LoggerFactory.getLogger(Main.class);
 		
 		SegmentationParameters segmentationParameters =
 				new SegmentationParameters(inputDirectory, outputDirectory, config);
@@ -201,12 +203,12 @@ public class Main {
 		try {
 			String log = otsuModified.runSeveralImages2();
 			if (!(log.equals(""))) {
-				logger.error("Nuclei which didn't pass the segmentation:\n{}", log);
+				LOGGER.error("Nuclei which didn't pass the segmentation:\n{}", log);
 			}
 		} catch (IOException e) {
-			logger.error("I/O exception.", e);
+			LOGGER.error("I/O exception.", e);
 		} catch (FormatException e) {
-			logger.error("Format exception", e);
+			LOGGER.error("Format exception", e);
 		}
 	}
 	
@@ -218,17 +220,16 @@ public class Main {
 	 * @param outputDirectory path to output folder analysis
 	 */
 	public static void segmentationOneImage(String inputDirectory, String outputDirectory) {
-		Logger logger = LoggerFactory.getLogger(Main.class);
 		
 		SegmentationParameters segmentationParameters = new SegmentationParameters(inputDirectory, outputDirectory);
 		SegmentationCalling    otsuModified           = new SegmentationCalling(segmentationParameters);
 		try {
 			String log = otsuModified.runOneImage(inputDirectory);
 			if (!(log.equals(""))) {
-				logger.error("Nuclei which didn't pass the segmentation:\n{}", log);
+				LOGGER.error("Nuclei which didn't pass the segmentation:\n{}", log);
 			}
 		} catch (Exception e) {
-			logger.error("An exception occurred", e);
+			LOGGER.error("An exception occurred", e);
 		}
 	}
 	
@@ -238,7 +239,6 @@ public class Main {
 	                                     Client client,
 	                                     SegmentationCalling otsuModified)
 	throws ServiceException, AccessException, OMEROServerError {
-		Logger logger = LoggerFactory.getLogger(Main.class);
 		
 		String[] param = inputDirectory.split(Pattern.quote(File.separator));
 		
@@ -255,10 +255,10 @@ public class Main {
 						log = otsuModified.runOneImageOMERO(image, Long.parseLong(outputDirectory), client);
 					}
 					if (!(log.equals(""))) {
-						logger.error("Nuclei which didn't pass the segmentation\n{}", log);
+						LOGGER.error("Nuclei which didn't pass the segmentation\n{}", log);
 					}
 				} catch (Exception e) {
-					logger.error("An exception occurred", e);
+					LOGGER.error("An exception occurred", e);
 				}
 			} else {
 				Long               id = Long.parseLong(param[1]);
@@ -298,10 +298,10 @@ public class Main {
 						log = otsuModified.runSeveralImageOMERO(images, Long.parseLong(outputDirectory), client);
 					}
 					if (!(log.equals(""))) {
-						logger.error("Nuclei which didn't pass the segmentation\n{}", log);
+						LOGGER.error("Nuclei which didn't pass the segmentation\n{}", log);
 					}
 				} catch (Exception e) {
-					logger.error("An exception occurred", e);
+					LOGGER.error("An exception occurred", e);
 				}
 			}
 		} else {
@@ -467,9 +467,10 @@ public class Main {
 	
 	
 	public static void main(String[] args) throws Exception {
-		DebugTools.enableLogging("OFF");
+		DebugTools.setRootLevel("OFF");
 		List<String> listArgs = Arrays.asList(args);
 		System.setProperty("java.awt.headless", "false");
+		System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tF %1$tT] [%4$s] [%2$s] %5$s%6$s%n");
 		
 		if (listArgs.contains("-h") || listArgs.contains("-help")) {
 			CLIHelper.run(args);
@@ -493,7 +494,6 @@ public class Main {
 	
 	
 	public static void main2(String[] args) throws Exception {
-		Logger logger = LoggerFactory.getLogger(Main.class);
 		
 		DebugTools.enableLogging("OFF");
 		Console con = System.console();
@@ -524,7 +524,7 @@ public class Main {
 		
 		switch (cmd.getOptionValue("action")) {
 			case "autocrop":
-				logger.info("Start autocrop");
+				LOGGER.info("Start autocrop");
 				
 				if (cmd.hasOption("omero")) {
 					Client client = new Client();
@@ -569,7 +569,7 @@ public class Main {
 				}
 				break;
 			case "segmentation":
-				logger.info("start segmentation");
+				LOGGER.info("start segmentation");
 				
 				if (cmd.hasOption("omero")) {
 					Client client = new Client();
@@ -655,7 +655,7 @@ public class Main {
             */
 				break;
 		}
-		logger.info("Fin du programme");
+		LOGGER.info("Fin du programme");
 	}
 	
 }
