@@ -442,7 +442,11 @@ public class SegmentationCalling {
 		enh.setNormalize(true);
 		enh.setUseStackHistogram(true);
 		enh.setProcessStack(true);
-		enh.stretchHistogram(img.getProcessor(), 0.05);
+		enh.stretchHistogram(img, 0.05);
+		double min = img.getStatistics().min;
+		double max = img.getStatistics().max;
+		img.setDisplayRange(min, max);
+		
 		GaussianBlur3D.blur(img, 0.5, 0.5, 1);
 		StackConverter stackConverter = new StackConverter(img);
 		stackConverter.convertToGray8();
