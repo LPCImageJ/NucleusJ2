@@ -2,6 +2,7 @@ package gred.nucleus.autocrop;
 
 import fr.igred.omero.Client;
 import fr.igred.omero.exception.AccessException;
+import fr.igred.omero.exception.ServiceException;
 import fr.igred.omero.repository.ImageWrapper;
 import fr.igred.omero.roi.ROIWrapper;
 import fr.igred.omero.roi.RectangleWrapper;
@@ -120,7 +121,7 @@ public class AutoCrop {
 	
 	
 	public AutoCrop(ImageWrapper image, AutocropParameters autocropParametersAnalyse, Client client)
-	throws AccessException, ExecutionException {
+	throws ServiceException, AccessException, ExecutionException {
 		this.currentFile = new File(image.getName());
 		this.autocropParameters = autocropParametersAnalyse;
 		this.outputDirPath = this.autocropParameters.getOutputFolder();
@@ -174,7 +175,7 @@ public class AutoCrop {
 	
 	
 	public ImagePlus getImageChannelOMERO(int channelNumber, ImageWrapper image, Client client)
-	throws AccessException, ExecutionException {
+	throws ServiceException, AccessException, ExecutionException {
 		int[] cBound = {channelNumber, channelNumber};
 		return image.toImagePlus(client, null, null, cBound, null, null);
 	}
@@ -198,7 +199,7 @@ public class AutoCrop {
 	
 	
 	public void setChannelNumbersOMERO(ImageWrapper image, Client client)
-	throws AccessException, ExecutionException {
+	throws ServiceException, AccessException, ExecutionException {
 		DebugTools.enableLogging("OFF");      /* DEBUG INFO BIO-FORMATS OFF*/
 		int[] cBound = {this.autocropParameters.getChannelToComputeThreshold(),
 		                this.autocropParameters.getChannelToComputeThreshold()};
@@ -503,7 +504,7 @@ public class AutoCrop {
 				fileOutput.saveImage(croppedImage);
 				this.outputFile.add(this.outputFilesPrefix + "_" + i + ".tif");
 				dataset.importImages(client, tiffPath);
-				File    file    = new File(tiffPath);
+				File file = new File(tiffPath);
 				try {
 					Files.deleteIfExists(file.toPath());
 				} catch (Exception e) {

@@ -1,6 +1,8 @@
 package gred.nucleus.core;
 
 import fr.igred.omero.Client;
+import fr.igred.omero.exception.AccessException;
+import fr.igred.omero.exception.ServiceException;
 import fr.igred.omero.repository.ImageWrapper;
 import fr.igred.omero.roi.GenericShapeWrapper;
 import fr.igred.omero.roi.ROIWrapper;
@@ -38,6 +40,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -105,7 +108,8 @@ public class NucleusSegmentation {
 	 * @param outputFilesPrefix      prefix for the output file
 	 * @param segmentationParameters list the parameters for the analyse
 	 *
-	 * @throws Exception
+	 * @throws IOException
+	 * @throws FormatException
 	 */
 	public NucleusSegmentation(File imageFile,
 	                           String outputFilesPrefix,
@@ -128,7 +132,7 @@ public class NucleusSegmentation {
 	
 	
 	public NucleusSegmentation(ImageWrapper image, SegmentationParameters segmentationParameters, Client client)
-	throws Exception {
+	throws ServiceException, AccessException, ExecutionException {
 		this.segmentationParameters = segmentationParameters;
 		
 		int[] cBound = {0, 0};
