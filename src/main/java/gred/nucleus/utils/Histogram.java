@@ -15,17 +15,17 @@ import java.util.Map;
  */
 public class Histogram {
 	/** HashMap which stock the different values of voxels and the number of voxels for each value present on the image */
-	private final HashMap<Double, Integer> hHistogram = new HashMap<>();
+	private final Map<Double, Integer> hHistogram = new HashMap<>();
 	/** All the value present on the image */
-	private       double[]                 label;
+	private       double[]             label;
 	/**
 	 *
 	 */
-	private       double                   labelMax   = -1;
+	private       double               labelMax   = -1;
 	/**
 	 *
 	 */
-	private       int                      nbLabel    = 0;
+	private       int                  nbLabel    = 0;
 	
 	
 	/**

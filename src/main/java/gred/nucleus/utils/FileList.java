@@ -1,10 +1,7 @@
 package gred.nucleus.utils;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.regex.Pattern;
 
 
@@ -196,10 +193,10 @@ public class FileList {
 	 * @return
 	 */
 	public String[] getDirectoryFiles(String directory, File[] tFile) {
-		String[]                 tRef         = directory.split(Pattern.quote(File.separator));
-		String[]                 tTemp        = new String[0];
-		ArrayList<String>        arrayList    = new ArrayList<>();
-		HashMap<String, Integer> directoryMap = new HashMap<>();
+		String[]             tRef         = directory.split(Pattern.quote(File.separator));
+		String[]             tTemp        = new String[0];
+		List<String>         arrayList    = new ArrayList<>();
+		Map<String, Integer> directoryMap = new HashMap<>();
 		for (File file : tFile) {
 			String[] temp = file.toString().split(Pattern.quote(File.separator));
 			if (temp.length > tRef.length + 1 && !directoryMap.containsKey(temp[tRef.length])) {
@@ -230,7 +227,7 @@ public class FileList {
 			String das = "\\\\";
 			s = s.replace(as, das);
 		}
-		ArrayList<String> arrayListFile = new ArrayList<>();
+		List<String> arrayListFile = new ArrayList<>();
 		for (File file : tFile) {
 			if (file.toString().matches(s)) {
 				arrayListFile.add(file.toString());

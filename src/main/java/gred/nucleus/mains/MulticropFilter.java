@@ -48,7 +48,7 @@ public class MulticropFilter {
 	
 	public static List<String> readCoordinatesTXT(File boxFile) {
 		
-		ArrayList<String> boxLists = new ArrayList<>();
+		List<String> boxLists = new ArrayList<>();
 		try (Scanner scanner = new Scanner(boxFile)) {
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();

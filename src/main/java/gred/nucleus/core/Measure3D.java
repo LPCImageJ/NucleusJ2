@@ -11,6 +11,7 @@ import ij.measure.Calibration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -35,8 +36,8 @@ public class Measure3D {
 	double yCal;
 	double zCal;
 	
-	HashMap<Double, Integer> segmentedNucleusHistogram = new HashMap<>();
-	HashMap<Double, Integer> backgroundHistogram       = new HashMap<>();
+	Map<Double, Integer> segmentedNucleusHistogram = new HashMap<>();
+	Map<Double, Integer> backgroundHistogram       = new HashMap<>();
 	
 	
 	public Measure3D() {
@@ -421,12 +422,12 @@ public class Measure3D {
 	 * @return
 	 */
 	public double computeComplexSurface() {
-		Gradient                gradient            = new Gradient(this.rawImage);
-		ArrayList<Double>[][][] tableUnitary        = gradient.getUnitNormals();
-		ImageStack              imageStackSegmented = this.imageSeg[0].getStack();
-		double                  surfaceArea         = 0, voxelValue, neighborVoxelValue;
-		VoxelRecord             voxelRecordIn       = new VoxelRecord();
-		VoxelRecord             voxelRecordOut      = new VoxelRecord();
+		Gradient           gradient            = new Gradient(this.rawImage);
+		List<Double>[][][] tableUnitary        = gradient.getUnitNormals();
+		ImageStack         imageStackSegmented = this.imageSeg[0].getStack();
+		double             surfaceArea         = 0, voxelValue, neighborVoxelValue;
+		VoxelRecord        voxelRecordIn       = new VoxelRecord();
+		VoxelRecord        voxelRecordOut      = new VoxelRecord();
 		
 		for (int k = 2; k < this.imageSeg[0].getNSlices() - 2; ++k) {
 			for (int i = 2; i < this.imageSeg[0].getWidth() - 2; ++i) {
@@ -509,15 +510,15 @@ public class Measure3D {
 	 * @return
 	 */
 	public double computeComplexSurface(ImagePlus imagePlusSegmented, Gradient gradient) {
-		ArrayList<Double>[][][] tableUnitary        = gradient.getUnitNormals();
-		ImageStack              imageStackSegmented = imagePlusSegmented.getStack();
-		double                  surfaceArea         = 0, voxelValue, neighborVoxelValue;
-		VoxelRecord             voxelRecordIn       = new VoxelRecord();
-		VoxelRecord             voxelRecordOut      = new VoxelRecord();
-		Calibration             calibration         = imagePlusSegmented.getCalibration();
-		double                  xCalibration        = calibration.pixelWidth;
-		double                  yCalibration        = calibration.pixelHeight;
-		double                  zCalibration        = calibration.pixelDepth;
+		List<Double>[][][] tableUnitary        = gradient.getUnitNormals();
+		ImageStack         imageStackSegmented = imagePlusSegmented.getStack();
+		double             surfaceArea         = 0, voxelValue, neighborVoxelValue;
+		VoxelRecord        voxelRecordIn       = new VoxelRecord();
+		VoxelRecord        voxelRecordOut      = new VoxelRecord();
+		Calibration        calibration         = imagePlusSegmented.getCalibration();
+		double             xCalibration        = calibration.pixelWidth;
+		double             yCalibration        = calibration.pixelHeight;
+		double             zCalibration        = calibration.pixelDepth;
 		for (int k = 2; k < imagePlusSegmented.getNSlices() - 2; ++k) {
 			for (int i = 2; i < imagePlusSegmented.getWidth() - 2; ++i) {
 				for (int j = 2; j < imagePlusSegmented.getHeight() - 2; ++j) {
@@ -578,8 +579,8 @@ public class Measure3D {
 	 *
 	 * @return
 	 */
-	private double computeSurfelContribution(ArrayList<Double> listUnitaryIn,
-	                                         ArrayList<Double> listUnitaryOut,
+	private double computeSurfelContribution(List<Double> listUnitaryIn,
+	                                         List<Double> listUnitaryOut,
 	                                         VoxelRecord voxelRecordIn,
 	                                         VoxelRecord voxelRecordOut,
 	                                         double as) {

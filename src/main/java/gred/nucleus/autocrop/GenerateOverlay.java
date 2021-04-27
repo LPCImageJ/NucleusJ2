@@ -18,7 +18,7 @@ public class GenerateOverlay {
 	/** Logger */
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
-	HashMap<String, String> linkOverlayProjection = new HashMap<>();
+	Map<String, String> linkOverlayProjection = new HashMap<>();
 	
 	
 	public GenerateOverlay(String linkOverlayProjection) throws Exception {

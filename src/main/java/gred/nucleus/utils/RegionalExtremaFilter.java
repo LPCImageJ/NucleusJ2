@@ -6,6 +6,7 @@ import ij.plugin.filter.PlugInFilter;
 import ij.process.ImageProcessor;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /** @author Philippe Andrey, Tristan Dubos and Axel Poulet */
@@ -51,17 +52,17 @@ public class RegionalExtremaFilter implements PlugInFilter {
 	 */
 	public ImagePlus applyWithMask(ImagePlus imagePlusInput) {
 		this.imagePlusInput = imagePlusInput;
-		double                 width          = this.imagePlusInput.getWidth();
-		double                 height         = this.imagePlusInput.getHeight();
-		double                 depth          = this.imagePlusInput.getStackSize();
-		int                    kCurrent;
-		int                    iCurrent;
-		int                    jCurrent;
-		int                    ii;
-		int                    jj;
-		int                    kk;
-		VoxelRecord            voxelRecord    = new VoxelRecord();
-		ArrayList<VoxelRecord> arrayListVoxel = new ArrayList<>();
+		double            width          = this.imagePlusInput.getWidth();
+		double            height         = this.imagePlusInput.getHeight();
+		double            depth          = this.imagePlusInput.getStackSize();
+		int               kCurrent;
+		int               iCurrent;
+		int               jCurrent;
+		int               ii;
+		int               jj;
+		int               kk;
+		VoxelRecord       voxelRecord    = new VoxelRecord();
+		List<VoxelRecord> arrayListVoxel = new ArrayList<>();
 		computeImageMoreOne();
 		ImagePlus  imageOutput      = this.imagePlusInput.duplicate();
 		ImageStack imageStackOutput = imageOutput.getStack();
@@ -75,7 +76,7 @@ public class RegionalExtremaFilter implements PlugInFilter {
 						imageStackOutput.setVoxel(i, j, k, 0);
 						voxelRecord.setLocation(i, j, k);
 						arrayListVoxel.add(voxelRecord);
-						while (arrayListVoxel.size() > 0) {
+						while (!arrayListVoxel.isEmpty()) {
 							voxelRecord = arrayListVoxel.remove(0);
 							iCurrent = (int) voxelRecord.getI();
 							jCurrent = (int) voxelRecord.getJ();

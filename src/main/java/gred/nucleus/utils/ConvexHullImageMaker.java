@@ -88,7 +88,7 @@ public class ConvexHullImageMaker {
 			ImagePlus  ip    = imagePlusBlack.duplicate();
 			double[][] image = giveTable(imagePlusBinary, width, height, k);
 			if (listLabel.size() == 1) {
-				ArrayList<VoxelRecord> lVoxelBoundary = detectVoxelBoundary(image, listLabel.get(0), k);
+				List<VoxelRecord> lVoxelBoundary = detectVoxelBoundary(image, listLabel.get(0), k);
 				if (lVoxelBoundary.size() > 5) {
 					ip = imageMaker(image, lVoxelBoundary, width, height, equivalentSphericalRadius);
 					
@@ -99,7 +99,7 @@ public class ConvexHullImageMaker {
 			} else if (listLabel.size() > 1) {
 				ImageStack imageStackIp = ip.getImageStack();
 				for (Double aDouble : listLabel) {
-					ArrayList<VoxelRecord> lVoxelBoundary = detectVoxelBoundary(image, aDouble, k);
+					List<VoxelRecord> lVoxelBoundary = detectVoxelBoundary(image, aDouble, k);
 					if (lVoxelBoundary.size() > 5) {
 						//TODO THINKING ON AN OTHER WAY TO DEFINE equivalentSphericalRadius PARAMETER
 						ImageStack imageTempStack =
@@ -132,8 +132,8 @@ public class ConvexHullImageMaker {
 	 *
 	 * @return
 	 */
-	ArrayList<VoxelRecord> detectVoxelBoundary(double[][] image, double label, int indice) {
-		ArrayList<VoxelRecord> lVoxelBoundary = new ArrayList<>();
+	List<VoxelRecord> detectVoxelBoundary(double[][] image, double label, int indice) {
+		List<VoxelRecord> lVoxelBoundary = new ArrayList<>();
 		p0.setLocation(0, 0, 0);
 		//parcours de l'ensemble des pixel de l'image 2D
 		for (int i = 1; i < image.length; ++i) {

@@ -258,7 +258,7 @@ public class NucleusSegmentation {
 		                     this.imgRaw.getHeight() * this.imgRaw.getStackSize();
 		Gradient gradient       = new Gradient(this.imgRaw);
 		double   bestSphericity = -1;
-		ArrayList<Integer> arrayListThreshold = computeMinMaxThreshold(
+		List<Integer> arrayListThreshold = computeMinMaxThreshold(
 				this.imgRawTransformed);  // methode OTSU
 		for (int t = arrayListThreshold.get(0); t <= arrayListThreshold.get(1); ++t) {
 			ImagePlus tempSeg;
@@ -366,7 +366,7 @@ public class NucleusSegmentation {
 		                           yCalibration * imagePlusInput.getHeight() *
 		                           zCalibration * imagePlusInput.getStackSize();
 		ImagePlus          imagePlusSegmented = new ImagePlus();
-		ArrayList<Integer> arrayListThreshold = computeMinMaxThreshold(imagePlusInput);
+		List<Integer> arrayListThreshold = computeMinMaxThreshold(imagePlusInput);
 		for (int t = arrayListThreshold.get(0); t <= arrayListThreshold.get(1); ++t) {
 			ImagePlus imagePlusSegmentedTemp = generateSegmentedImage(imagePlusInput, t);
 			imagePlusSegmentedTemp = BinaryImages.componentsLabeling(imagePlusSegmentedTemp, 26, 32);
@@ -490,8 +490,8 @@ public class NucleusSegmentation {
 	 *
 	 * @return array lis which contain at the index 0 the min valu and index 1 the max value
 	 */
-	private ArrayList<Integer> computeMinMaxThreshold(ImagePlus imagePlusInput) {
-		ArrayList<Integer> arrayListMinMaxThreshold = new ArrayList<>();
+	private List<Integer> computeMinMaxThreshold(ImagePlus imagePlusInput) {
+		List<Integer> arrayListMinMaxThreshold = new ArrayList<>();
 		
 		int             threshold       = Thresholding.computeOTSUThreshold(imagePlusInput);
 		StackStatistics stackStatistics = new StackStatistics(imagePlusInput);

@@ -47,7 +47,7 @@ public abstract class ConnectedComponent {
 	protected int foregroundColor;
 	
 	/** Components Information (cardinality, label, voxel representative, etc.) */
-	protected ArrayList<ComponentInfo> compInfo;
+	protected List<ComponentInfo> compInfo;
 	
 	/** Array containing the label of each voxel */
 	protected int[][][] labels;
@@ -253,7 +253,7 @@ public abstract class ConnectedComponent {
 	 * @return the array of voxel representatives of components
 	 */
 	public List<Voxel> getVoxelRepresentants() {
-		ArrayList<Voxel> tabVoxels = new ArrayList<>();
+		List<Voxel> tabVoxels = new ArrayList<>();
 		for (ComponentInfo ci : this.compInfo) {
 			if (ci.getNumberOfPoints() > 0) {
 				tabVoxels.add(ci.getRepresentant());
@@ -323,7 +323,7 @@ public abstract class ConnectedComponent {
 	                                boolean setRandomColors) {
 		LOGGER.debug("Là, on des compO : {}", this.voxelVolume);
 		
-		ArrayList<Boolean> existsVoxelSatisfyingPredicate = new ArrayList<>();
+		List<Boolean> existsVoxelSatisfyingPredicate = new ArrayList<>();
 		for (int i = 0; i < this.compInfo.size(); ++i) {
 			existsVoxelSatisfyingPredicate.add(Boolean.FALSE);
 		}
@@ -368,10 +368,10 @@ public abstract class ConnectedComponent {
 			}
 		}
 		
-		int                      thresholdNVoxel  = (int) (thresholdComponentVolume / this.voxelVolume);
-		ArrayList<Integer>       newLabels        = new ArrayList<>(this.compInfo.size());
-		ArrayList<ComponentInfo> newTabComponents = new ArrayList<>();
-		short                    componentsCount  = 0;
+		int                 thresholdNVoxel  = (int) (thresholdComponentVolume / this.voxelVolume);
+		List<Integer>       newLabels        = new ArrayList<>(this.compInfo.size());
+		List<ComponentInfo> newTabComponents = new ArrayList<>();
+		short               componentsCount  = 0;
 		// For each label
 		for (int label = 1; label <= this.compInfo.size(); label++) {
 			ComponentInfo ci = this.compInfo.get(label - 1);
@@ -390,7 +390,7 @@ public abstract class ConnectedComponent {
 				newLabels.add(0);
 			}
 		}
-		ArrayList<Double> componentsColors = new ArrayList<>(newTabComponents.size());
+		List<Double> componentsColors = new ArrayList<>(newTabComponents.size());
 		for (int i = 0; i < newTabComponents.size(); i++) {
 			componentsColors.add(100 + Math.random() * (255 - 100));
 		}

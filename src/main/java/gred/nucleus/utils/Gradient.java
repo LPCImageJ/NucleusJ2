@@ -5,6 +5,7 @@ import ij.ImageStack;
 import ij.measure.Calibration;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 /** @author Tristan Dubos and Axel Poulet */
@@ -12,11 +13,11 @@ public class Gradient {
 	/**
 	 *
 	 */
-	private final ArrayList<Double>[][][] tableGradient;
+	private final List<Double>[][][] tableGradient;
 	/**
 	 *
 	 */
-	private final ArrayList<Double>[][][] tableUnitNormals;
+	private final List<Double>[][][] tableUnitNormals;
 	
 	
 	@SuppressWarnings("unchecked")
@@ -44,10 +45,10 @@ public class Gradient {
 		for (int k = 1; k < imagePlusInput.getStackSize() - 1; ++k) {
 			for (int i = 1; i < imagePlusInput.getWidth() - 1; ++i) {
 				for (int j = 1; j < imagePlusInput.getHeight() - 1; ++j) {
-					ArrayList<Double> list = new ArrayList<>();
-					double            dx   = 0;
-					double            dy   = 0;
-					double            dz   = 0;
+					List<Double> list = new ArrayList<>();
+					double       dx   = 0;
+					double       dy   = 0;
+					double       dz   = 0;
 					if (k - 1 > 1 || j - 1 > 1 || i - 1 > 1 || k + 1 < imagePlusInput.getStackSize() - 1 ||
 					    j + 1 < imagePlusInput.getHeight() - 1 || i + 1 < imagePlusInput.getWidth() - 1) {
 						dx = (1 / xCalibration) *
@@ -71,7 +72,7 @@ public class Gradient {
 						ny = dy / norm;
 						nz = dz / norm;
 					}
-					ArrayList<Double> listN = new ArrayList<>();
+					List<Double> listN = new ArrayList<>();
 					listN.add(nx);
 					listN.add(ny);
 					listN.add(nz);
@@ -84,13 +85,13 @@ public class Gradient {
 	
 	
 	/** @return  */
-	public ArrayList<Double>[][][] getUnitNormals() {
+	public List<Double>[][][] getUnitNormals() {
 		return tableUnitNormals;
 	}
 	
 	
 	/** @return  */
-	public ArrayList<Double>[][][] getGradient() {
+	public List<Double>[][][] getGradient() {
 		return tableGradient;
 	}
 	

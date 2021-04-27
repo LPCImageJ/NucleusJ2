@@ -481,7 +481,7 @@ public class Main {
 	
 	
 	public static boolean OMEROAvailableAction(String action) {
-		ArrayList<String> actionAvailableInOMERO = new ArrayList<>();
+		List<String> actionAvailableInOMERO = new ArrayList<>();
 		actionAvailableInOMERO.add("autocrop");
 		actionAvailableInOMERO.add("segmentation");
 		

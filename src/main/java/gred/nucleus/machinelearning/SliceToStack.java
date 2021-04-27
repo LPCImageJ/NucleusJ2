@@ -52,7 +52,7 @@ public class SliceToStack {
 	 */
 	public void run() {
 		
-		HashMap<String, Integer> test            = new HashMap<>();
+		Map<String, Integer> test            = new HashMap<>();
 		Directory                directoryOutput = new Directory(this.pathToOutputDir);
 		Directory                directoryInput  = new Directory(this.pathToSliceDir);
 		directoryInput.listImageFiles(this.pathToSliceDir);

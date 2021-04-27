@@ -59,7 +59,7 @@ public class GenerateProjectionFromCoordinates {
 	 */
 	public static Map<String, String> readCoordinatesTXT(File boxFile) {
 		
-		HashMap<String, String> boxLists = new HashMap<>();
+		Map<String, String> boxLists = new HashMap<>();
 		try (Scanner scanner = new Scanner(boxFile)) {
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();
@@ -117,8 +117,8 @@ public class GenerateProjectionFromCoordinates {
 		for (short i = 0; i < coordinates.getNumberFiles(); ++i) {
 			File                coordinateFile        = coordinates.getFile(i);
 			Map<String, String> listOfBoxes           = readCoordinatesTXT(coordinateFile);
-			ArrayList<Integer>  boxNumber             = new ArrayList<>();
-			ArrayList<String>   boxListsNucleiNotPass = new ArrayList<>();
+			List<Integer>       boxNumber             = new ArrayList<>();
+			List<String>        boxListsNucleiNotPass = new ArrayList<>();
 			Map<String, String> sortedMap             = new TreeMap<>(listOfBoxes);
 			for (Map.Entry<String, String> entry : sortedMap.entrySet()) {
 				if (!(giftSegImages.checkIfFileExists(entry.getKey()))) {
@@ -163,7 +163,7 @@ public class GenerateProjectionFromCoordinates {
 		for (short i = 0; i < coordinates.getNumberFiles(); ++i) {
 			File                coordinateFile        = coordinates.getFile(i);
 			Map<String, String> listOfBoxes           = readCoordinatesTXT(coordinateFile);
-			ArrayList<String>   boxListsNucleiNotPass = new ArrayList<>();
+			List<String>        boxListsNucleiNotPass = new ArrayList<>();
 			for (Map.Entry<String, String> entry : listOfBoxes.entrySet()) {
 				boxListsNucleiNotPass.add(entry.getValue());
 			}

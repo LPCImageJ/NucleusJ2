@@ -2,6 +2,7 @@ package gred.nucleus.autocrop;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -23,19 +24,19 @@ import java.util.TreeMap;
 public class RectangleIntersection {
 	
 	/** List of boxes Rectangle : xMin , yMin , width , height */
-	ArrayList<Rectangle>      listRectangle      = new ArrayList<>();
+	List<Rectangle>       listRectangle      = new ArrayList<>();
 	/** Slice coordinate associated to the rectangles(boxes) */
-	ArrayList<String>         zSlices            = new ArrayList<>();
+	List<String>          zSlices            = new ArrayList<>();
 	/** List of rectangle intersected detected */
-	ArrayList<String>         rectangleIntersect = new ArrayList<>();
+	List<String>          rectangleIntersect = new ArrayList<>();
 	/** Number of intersections per rectangles */
-	HashMap<Integer, Integer> countIntersect     = new HashMap<>();
+	Map<Integer, Integer> countIntersect     = new HashMap<>();
 	/** Final list of rectangles after re rectangle computations */
-	ArrayList<String>         finalListRectangle = new ArrayList<>();
+	List<String>          finalListRectangle = new ArrayList<>();
 	/** Boolean to check if new rectangles are computed */
-	boolean                   newBoxesAdded      = false;
+	boolean               newBoxesAdded      = false;
 	/** Autocrop parameter */
-	AutocropParameters        autocropParameters;
+	AutocropParameters    autocropParameters;
 	
 	
 	/**
@@ -141,9 +142,9 @@ public class RectangleIntersection {
 					listRectangleConnected.append("-").append(splitList[splitList.length - 1]);
 					this.rectangleIntersect.remove(i);
 					this.rectangleIntersect.remove(splitList[splitList.length - 1] + "-" + entry.getKey());
-					ArrayList<String> listToIterateThrough = new ArrayList<>();
+					List<String> listToIterateThrough = new ArrayList<>();
 					listToIterateThrough.add(splitList[splitList.length - 1]);
-					while (listToIterateThrough.size() > 0) {
+					while (!listToIterateThrough.isEmpty()) {
 						for (int y = 0; y < this.rectangleIntersect.size(); y++) {
 							String[] splitIntersect2 = this.rectangleIntersect.get(y).split("-");
 							if (splitIntersect2[0].equals(listToIterateThrough.get(0))) {
@@ -178,9 +179,9 @@ public class RectangleIntersection {
 	/** Compile of new rectangle by getting extreme coordinate of a group of rectangles. */
 	public void recompileRectangle() {
 		this.newBoxesAdded = false;
-		ArrayList<Rectangle> listOfRectangleToAdd       = new ArrayList<>();
-		ArrayList<String>    listOfRectangleZSliceToAdd = new ArrayList<>();
-		ArrayList<Rectangle> listOfRectangleToRemove    = new ArrayList<>();
+		List<Rectangle> listOfRectangleToAdd       = new ArrayList<>();
+		List<String>    listOfRectangleZSliceToAdd = new ArrayList<>();
+		List<Rectangle> listOfRectangleToRemove    = new ArrayList<>();
 		for (String value : this.finalListRectangle) {
 			String[] splitList2       = value.split("-");
 			double   xMixNewRectangle = 0;
@@ -251,8 +252,8 @@ public class RectangleIntersection {
 	 *
 	 * @return list of new boxes
 	 */
-	public HashMap<Double, Box> getNewBoxes() {
-		HashMap<Double, Box> boxes = new HashMap<>();
+	public Map<Double, Box> getNewBoxes() {
+		Map<Double, Box> boxes = new HashMap<>();
 		
 		
 		for (int i = 0; i < listRectangle.size(); i++) {

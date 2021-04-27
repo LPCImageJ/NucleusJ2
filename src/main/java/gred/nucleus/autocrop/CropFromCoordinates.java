@@ -16,7 +16,7 @@ public class CropFromCoordinates {
 	/** Logger */
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
-	HashMap<String, String> coordinateToRawImage = new HashMap<>();
+	Map<String, String> coordinateToRawImage = new HashMap<>();
 	
 	
 	/**
@@ -59,7 +59,7 @@ public class CropFromCoordinates {
 	
 	public Map<Double, Box> readCoordinatesTXT(File boxesFile) {
 		
-		HashMap<Double, Box> boxLists = new HashMap<>();
+		Map<Double, Box> boxLists = new HashMap<>();
 		double               count    = 0;
 		try (Scanner scanner = new Scanner(boxesFile)) {
 			while (scanner.hasNextLine()) {

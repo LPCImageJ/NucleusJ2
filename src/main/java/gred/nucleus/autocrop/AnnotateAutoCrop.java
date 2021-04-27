@@ -127,7 +127,7 @@ public class AnnotateAutoCrop {
 			String[] fileName  = splitLine[0].split(Pattern.quote(File.separator));
 			String[] name      = fileName[fileName.length - 1].split("_");
 			LOGGER.info(boxCoordinate);
-			LOGGER.debug("Box number {} saved to file: {}",
+			LOGGER.trace("Box number {} saved to file: {}",
 			             Integer.parseInt(name[name.length - 2]),
 			             splitLine[0]);
 			addBoxCropToZProjection(boxCoordinate, Integer.parseInt(name[name.length - 2]));

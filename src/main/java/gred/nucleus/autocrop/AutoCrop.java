@@ -68,7 +68,7 @@ public class AutoCrop {
 	/** List of the path of the output files created by the cropKernels method */
 	private final List<String>       outputFile     = new ArrayList<>();
 	/** List of boxes coordinates */
-	private final ArrayList<String>  boxCoordinates = new ArrayList<>();
+	private final List<String>       boxCoordinates = new ArrayList<>();
 	/** Parameters crop analyse */
 	private final AutocropParameters autocropParameters;
 	/** File to process (Image input) */
@@ -280,7 +280,7 @@ public class AutoCrop {
 				this.boxes.put(key, initializedBox);
 			}
 		}
-		printNumberOfBox();
+		LOGGER.info("Number of boxes: {}", this.boxes.size());
 	}
 	
 	
@@ -773,11 +773,6 @@ public class AutoCrop {
 		       getNbOfNuc() + "\t" +
 		       this.otsuThreshold + "\t" +
 		       this.defaultThreshold + "\n";
-	}
-	
-	
-	public void printNumberOfBox() {
-		LOGGER.info("Number of box: {}", this.boxes.size());
 	}
 	
 	

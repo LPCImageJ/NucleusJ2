@@ -5,9 +5,9 @@ import java.util.List;
 
 
 public class ConnectedComponents {
-	private final ArrayList<Double> listLabel = new ArrayList<>();
-	private       double[][]        image;
-	private       String            axesName;
+	private final List<Double> listLabel = new ArrayList<>();
+	private       double[][]   image;
+	private       String       axesName;
 	
 	
 	/**
@@ -39,7 +39,7 @@ public class ConnectedComponents {
 	 * @param currentLabel
 	 */
 	private void breadthFirstSearch(double labelIni, VoxelRecord voxelRecord, int currentLabel) {
-		ArrayList<VoxelRecord> voxelBoundary = detectVoxelBoundary(labelIni);
+		List<VoxelRecord> voxelBoundary = detectVoxelBoundary(labelIni);
 		voxelBoundary.add(0, voxelRecord);
 		image[(int) voxelRecord.i][(int) voxelRecord.j] = currentLabel;
 		while (!voxelBoundary.isEmpty()) {
@@ -146,8 +146,8 @@ public class ConnectedComponents {
 	 *
 	 * @return
 	 */
-	private ArrayList<VoxelRecord> detectVoxelBoundary(double label) {
-		ArrayList<VoxelRecord> lVoxelBoundary = new ArrayList<>();
+	private List<VoxelRecord> detectVoxelBoundary(double label) {
+		List<VoxelRecord> lVoxelBoundary = new ArrayList<>();
 		for (int i = 0; i < image.length; ++i) {
 			for (int j = 0; j < image[i].length; ++j) {
 				if (image[i][j] == label) {

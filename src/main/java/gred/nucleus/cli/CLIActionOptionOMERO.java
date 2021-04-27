@@ -4,6 +4,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.ParseException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.apache.commons.lang.Validate.isTrue;
 
@@ -103,7 +104,7 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 	 * @return boolean existing action
 	 */
 	private static boolean availableActionOMERO(String action) {
-		ArrayList<String> actionAvailableInOMERO = new ArrayList<>();
+		List<String> actionAvailableInOMERO = new ArrayList<>();
 		actionAvailableInOMERO.add("autocrop");
 		actionAvailableInOMERO.add("segmentation");
 		return actionAvailableInOMERO.contains(action);
@@ -143,7 +144,7 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 
 //        if(cmd.getOptionValue("action").equals("autocrop")) {
 /*
-ArrayList<String> actionList = new ArrayList<>();
+List<String> actionList = new ArrayList<>();
         actionList.add("autocrop");
         actionList.add("segmentation");
         actionList.add("computeParameters");
