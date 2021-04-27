@@ -10,7 +10,6 @@ import ij.ImageStack;
 import ij.io.FileSaver;
 import inra.ijpb.binary.BinaryImages;
 import inra.ijpb.label.LabelImages;
-import loci.common.DebugTools;
 import loci.formats.FormatException;
 import loci.plugins.BF;
 import org.slf4j.Logger;
@@ -98,26 +97,19 @@ public class ComputeSegmentationParametersDL {
 		                                                         + directoryInput.getSeparator()
 		                                                         + "result_Segmentation_Analyse.csv");
 		resultFileOutputOTSU.saveTextFile(outputCropGeneralInfoOTSU.toString(), true);
-		
 	}
 	
 	
 	public static void main(String[] args) throws Exception {
-		DebugTools.enableLogging("OFF");
-		
 		computeNucleusParametersDL(
 				"/media/titus/DATA/ML_ANALYSE_DATA/ANALYSE_COMPARAISON_REANALYSE/129_ANNOTATION_FULL/RAW",
 				"/media/titus/DATA/ML_ANALYSE_DATA/ANALYSE_COMPARAISON_REANALYSE/129_ANNOTATION_FULL/129_TRIER");
-		
-		
 	}
 	
 	
 	public static ImagePlus imageSEGTransform(ImagePlus segmentedTMP) {
 		LabelImages.removeBorderLabels(segmentedTMP);
 		return segmentedTMP;
-		
-		
 	}
 	
 	

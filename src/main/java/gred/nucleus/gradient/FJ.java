@@ -8,18 +8,26 @@ import ij.process.LUT;
 import imagescience.image.Image;
 import imagescience.utility.I5DResource;
 import imagescience.utility.ImageScience;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.invoke.MethodHandles;
 
 
 public final class FJ {
-	static final         int    SINGLE_IMAGE    = 1;
-	static final         int    IMAGE_STACK     = 2;
-	static final         int    HYPERSTACK      = 3;
-	static final         int    COMPOSITE_IMAGE = 4;
-	static final         int    IMAGE5D         = 5;
-	private static final String NAME            = "FeatureJ";
-	private static final String VERSION         = "1.6.0";
-	private static final String MIN_IJ_VERSION  = "1.44a";
-	private static final String MIN_IS_VERSION  = "2.4.0";
+	static final int SINGLE_IMAGE    = 1;
+	static final int IMAGE_STACK     = 2;
+	static final int HYPERSTACK      = 3;
+	static final int COMPOSITE_IMAGE = 4;
+	static final int IMAGE5D         = 5;
+	
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
+	private static final String NAME           = "FeatureJ";
+	private static final String VERSION        = "1.6.0";
+	private static final String MIN_IJ_VERSION = "1.44a";
+	private static final String MIN_IS_VERSION = "2.4.0";
 	
 	
 	public static String name() {
@@ -131,7 +139,7 @@ public final class FJ {
 			Class.forName("i5d.Image5D");
 			i5dExist = true;
 		} catch (Throwable e) {
-			e.printStackTrace();
+			LOGGER.error("An error occurred.", e);
 		}
 		if (i5dExist && I5DResource.instance(imp)) {
 			type = IMAGE5D;
@@ -145,7 +153,6 @@ public final class FJ {
 	
 	
 	static void error(final String message) {
-		
 		IJ.showMessage(NAME + ": Error", message + ".");
 		IJ.showProgress(1);
 		IJ.showStatus("");
@@ -153,7 +160,6 @@ public final class FJ {
 	
 	
 	static void log(final String message) {
-		
 		if (FJ_Options.log) IJ.log(message);
 	}
 	

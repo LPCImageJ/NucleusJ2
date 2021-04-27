@@ -10,13 +10,11 @@ import fr.igred.omero.repository.ProjectWrapper;
 import gred.nucleus.autocrop.*;
 import gred.nucleus.cli.*;
 import gred.nucleus.core.ComputeNucleiParameters;
-import gred.nucleus.exceptions.FileInOut;
 import gred.nucleus.machinelearning.ComputeNucleiParametersML;
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
 import ij.ImagePlus;
 import ij.io.FileSaver;
-import loci.common.DebugTools;
 import loci.formats.FormatException;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
@@ -404,8 +402,8 @@ public class Main {
 	 * Method to draw missing boxes in initial projection after manual filtering.
 	 *
 	 * @param pathToGIFTSeg     Path to cropped images
-	 * @param pathToZprojection Path to projection images
-	 * @param pathToCoordinate  Path to coordinate
+	 * @param pathToZProjection Path to projection images
+	 * @param pathToCoordinates Path to coordinate
 	 *
 	 * @throws IOException
 	 * @throws FormatException
@@ -414,11 +412,11 @@ public class Main {
 	
 	
 	public static void generateProjectionFromCoordinates(String pathToGIFTSeg,
-	                                                     String pathToZprojection,
-	                                                     String pathToCoordinate)
+	                                                     String pathToZProjection,
+	                                                     String pathToCoordinates)
 	throws IOException, FormatException, Exception {
 		GenerateProjectionFromCoordinates projection =
-				new GenerateProjectionFromCoordinates(pathToGIFTSeg, pathToZprojection, pathToCoordinate);
+				new GenerateProjectionFromCoordinates(pathToGIFTSeg, pathToZProjection, pathToCoordinates);
 		projection.generateCoordinateFiltered();
 	}
 	
@@ -467,10 +465,8 @@ public class Main {
 	
 	
 	public static void main(String[] args) throws Exception {
-		DebugTools.setRootLevel("OFF");
 		List<String> listArgs = Arrays.asList(args);
 		System.setProperty("java.awt.headless", "false");
-		System.setProperty("java.util.logging.SimpleFormatter.format", "[%1$tF %1$tT] [%4$s] [%2$s] %5$s%6$s%n");
 		
 		if (listArgs.contains("-h") || listArgs.contains("-help")) {
 			CLIHelper.run(args);
@@ -494,8 +490,6 @@ public class Main {
 	
 	
 	public static void main2(String[] args) throws Exception {
-		
-		DebugTools.enableLogging("OFF");
 		Console con = System.console();
 		
 		System.setProperty("java.awt.headless", "false");

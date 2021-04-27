@@ -69,7 +69,7 @@ public class MulticropFilter {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			LOGGER.error("An error occurred.", e);
 		}
 		return boxLists;
 	}

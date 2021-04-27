@@ -1,14 +1,16 @@
 package gred.nucleus.core;
 
 import gred.nucleus.utils.Histogram;
-import ij.IJ;
 import ij.ImagePlus;
 import ij.measure.Calibration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 
 
 /**
@@ -18,6 +20,10 @@ import java.io.IOException;
  * @author Tristan Dubos and Axel Poulet
  */
 public class NucleusChromocentersAnalysis {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
+	
 	/**
 	 *
 	 */
@@ -39,7 +45,7 @@ public class NucleusChromocentersAnalysis {
 	                                     ImagePlus imagePlusInput,
 	                                     ImagePlus imagePlusSegmented,
 	                                     ImagePlus imagePlusChromocenter) {
-		IJ.log("3D PARAMETERS ");
+		LOGGER.info("3D PARAMETERS ");
 		Histogram histogram = new Histogram();
 		histogram.run(imagePlusChromocenter);
 		Calibration calibration = imagePlusInput.getCalibration();
@@ -54,14 +60,17 @@ public class NucleusChromocentersAnalysis {
 		              + measure3D.computeFlatnessAndElongation(255)[1] + " "
 		              + measure3D.computeSphericity(volume, surfaceArea);
 		if (rhfChoice.equals("Volume and intensity")) {
-			IJ.log("ImageTitle Volume ESR SurfaceArea Flatness Elongation Sphericity IntensityRHF VolumeRHF NbCc VCcMean VCcTotal DistanceBorderToBorderMean DistanceBarycenterToBorderMean VoxelVolume");
+			LOGGER.info(
+					"ImageTitle Volume ESR SurfaceArea Flatness Elongation Sphericity IntensityRHF VolumeRHF NbCc VCcMean VCcTotal DistanceBorderToBorderMean DistanceBarycenterToBorderMean VoxelVolume");
 			text += " " + measure3D.computeIntensityRHF(imagePlusInput, imagePlusSegmented, imagePlusChromocenter) + " "
 			        + measure3D.computeVolumeRHF(imagePlusSegmented, imagePlusChromocenter) + " ";
 		} else if (rhfChoice.equals("Volume")) {
-			IJ.log("ImageTitle Volume ESR SurfaceArea Flatness Elongation Sphericity VolumeRHF NbCc VCcMean VCcTotal DistanceBorderToBorderMean DistanceBarycenterToBorderMean VoxelVolume");
+			LOGGER.info(
+					"ImageTitle Volume ESR SurfaceArea Flatness Elongation Sphericity VolumeRHF NbCc VCcMean VCcTotal DistanceBorderToBorderMean DistanceBarycenterToBorderMean VoxelVolume");
 			text += " " + measure3D.computeVolumeRHF(imagePlusSegmented, imagePlusChromocenter) + " ";
 		} else {
-			IJ.log("ImageTitle Volume ESR SurfaceArea Flatness Elongation Sphericity IntensityRHF NbCc VCcMean VCcTotal DistanceBorderToBorderMean DistanceBarycenterToBorderMean VoxelVolume");
+			LOGGER.info(
+					"ImageTitle Volume ESR SurfaceArea Flatness Elongation Sphericity IntensityRHF NbCc VCcMean VCcTotal DistanceBorderToBorderMean DistanceBarycenterToBorderMean VoxelVolume");
 			text += " " +
 			        measure3D.computeIntensityRHF(imagePlusInput, imagePlusSegmented, imagePlusChromocenter) +
 			        " ";
@@ -83,7 +92,7 @@ public class NucleusChromocentersAnalysis {
 		} else {
 			text += "0 0 0 NaN NaN " + voxelVolume;
 		}
-		IJ.log(text);
+		LOGGER.info(text);
 	}
 	
 	

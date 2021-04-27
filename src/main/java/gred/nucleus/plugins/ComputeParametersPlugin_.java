@@ -49,7 +49,7 @@ public class ComputeParametersPlugin_ implements PlugIn {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("An error occurred.", e);
 		}
 	}
 	

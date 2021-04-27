@@ -93,12 +93,12 @@ public class AutoCropCalling {
 			autoCrop.boxIntersection();
 			autoCrop.cropKernels2();
 			autoCrop.writeAnalyseInfo();
-			AnnotateAutoCrop test = new AnnotateAutoCrop(autoCrop.getFileCoordinates(),
-			                                             currentFile,
-			                                             this.autocropParameters.getOutputFolder() + File.separator,
-			                                             this.prefix,
-			                                             this.autocropParameters);
-			test.run();
+			AnnotateAutoCrop annotate = new AnnotateAutoCrop(autoCrop.getFileCoordinates(),
+			                                                 currentFile,
+			                                                 this.autocropParameters.getOutputFolder() + File.separator,
+			                                                 this.prefix,
+			                                                 this.autocropParameters);
+			annotate.run();
 			this.outputCropGeneralInfo += autoCrop.getImageCropInfo();
 		} catch (Exception e) {
 			LOGGER.error("Cannot run autocrop on: " + currentFile.getName(), e);

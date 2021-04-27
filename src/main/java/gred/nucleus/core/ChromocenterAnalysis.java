@@ -1,13 +1,15 @@
 package gred.nucleus.core;
 
 import gred.nucleus.utils.Histogram;
-import ij.IJ;
 import ij.ImagePlus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 
 
 /**
@@ -16,6 +18,9 @@ import java.io.IOException;
  * @author Tristan Dubos and Axel Poulet
  */
 public final class ChromocenterAnalysis {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	
 	private ChromocenterAnalysis() {
 	}
@@ -33,8 +38,8 @@ public final class ChromocenterAnalysis {
 		histogram.run(imagePlusChromocenter);
 		Measure3D measure3D = new Measure3D();
 		double[]  tVolume   = measure3D.computeVolumeOfAllObjects(imagePlusChromocenter);
-		IJ.log("CHROMOCENTER PARAMETERS");
-		IJ.log("Titre Volume BorderToBorderDistance BarycenterToBorderDistance BarycenterToBorderDistanceNucleus ");
+		LOGGER.info("CHROMOCENTER PARAMETERS");
+		LOGGER.info("Titre Volume BorderToBorderDistance BarycenterToBorderDistance BarycenterToBorderDistanceNucleus ");
 		if (histogram.getNbLabels() > 0) {
 			double[] tBorderToBorderDistanceTable =
 					RadialDistance.computeBorderToBorderDistances(imagePlusSegmented, imagePlusChromocenter);
@@ -43,13 +48,13 @@ public final class ChromocenterAnalysis {
 			double[] tBarycenterToBorderDistanceTableNucleus =
 					RadialDistance.computeBarycenterToBorderDistances(imagePlusSegmented, imagePlusSegmented);
 			for (int i = 0; i < tBorderToBorderDistanceTable.length; ++i) {
-				IJ.log(
-						imagePlusChromocenter.getTitle() + "_" + i + " "
-						+ tVolume[i] + " "
-						+ tBorderToBorderDistanceTable[i] + " "
-						+ tBarycenterToBorderDistanceTable[i] + " "
-						+ tBarycenterToBorderDistanceTableNucleus[0]
-				      );
+				LOGGER.info("{}_{} {} {} {} {}",
+				            imagePlusChromocenter.getTitle(),
+				            i,
+				            tVolume[i],
+				            tBorderToBorderDistanceTable[i],
+				            tBarycenterToBorderDistanceTable[i],
+				            tBarycenterToBorderDistanceTableNucleus[0]);
 			}
 		}
 	}

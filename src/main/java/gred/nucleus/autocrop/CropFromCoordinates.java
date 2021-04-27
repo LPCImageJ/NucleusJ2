@@ -1,15 +1,20 @@
 package gred.nucleus.autocrop;
 
 import gred.nucleus.files.FilesNames;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
 
 public class CropFromCoordinates {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	HashMap<String, String> coordinateToRawImage = new HashMap<>();
 	
@@ -80,7 +85,7 @@ public class CropFromCoordinates {
 				count++;
 			}
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			LOGGER.error("An error occurred.", e);
 		}
 		return boxLists;
 	}

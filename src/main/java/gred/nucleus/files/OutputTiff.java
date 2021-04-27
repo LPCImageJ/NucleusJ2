@@ -1,13 +1,18 @@
 package gred.nucleus.files;
 
-import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 
 
 public class OutputTiff extends FilesNames {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	
 	/** Constructor to create file to output */
 	public OutputTiff(String filePath) {
@@ -32,7 +37,7 @@ public class OutputTiff extends FilesNames {
 			} else {
 				File old = new File(this.fullPathFile);
 				if (old.delete()) {
-					IJ.log("Deleted old " + this.fullPathFile);
+					LOGGER.debug("Deleted old {}", this.fullPathFile);
 				}
 				if (imageToSave.getNSlices() > 1) {
 					FileSaver fileSaver = new FileSaver(imageToSave);
@@ -43,7 +48,7 @@ public class OutputTiff extends FilesNames {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("An error occurred.", e);
 		}
 	}
 	

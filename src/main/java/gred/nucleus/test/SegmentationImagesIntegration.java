@@ -73,7 +73,7 @@ public class SegmentationImagesIntegration {
 	 *
 	 * @param args
 	 */
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) {
 		String pathToTest   = "/home/tridubos/Bureau/IMAGES_TEST/";
 		String pathToOutput = "/home/tridubos/Bureau/IMAGES_TEST/AUTOCROP";
 		
@@ -94,7 +94,7 @@ public class SegmentationImagesIntegration {
         fw.GetFilesResultingOfAnalysis(outputTristan);
         fw.CompareAnalysisResult();
         */
-		System.err.println("The program ended normally.");
+		LOGGER.info("The program ended normally.");
 	}
 	
 }

@@ -6,7 +6,6 @@ import gred.nucleus.files.OutputTextFile;
 import gred.nucleus.plugins.PluginParameters;
 import ij.ImagePlus;
 import ij.ImageStack;
-import loci.common.DebugTools;
 import loci.formats.FormatException;
 import loci.plugins.BF;
 import org.slf4j.Logger;
@@ -88,7 +87,6 @@ public class ComputeSegmentationParameters {
 	
 	
 	public static void main(String[] args) throws Exception {
-		DebugTools.enableLogging("OFF");
 		computeNucleusParameters(
 				"/media/titus/DATA/ML_ANALYSE_DATA/ANALYSE_COMPARAISON_REANALYSE/129_ANNOTATION_FULL/RAW",
 				"/media/titus/DATA/ML_ANALYSE_DATA/ANALYSE_COMPARAISON_REANALYSE/129_ANNOTATION_FULL/GIFT");

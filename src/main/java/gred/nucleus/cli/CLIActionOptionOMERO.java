@@ -18,7 +18,7 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 	                                          .desc("Hostname of the OMERO server")
 	                                          .numberOfArgs(1)
 	                                          .build();
-	/** Server port connexion */
+	/** Server port connection */
 	private final Option port         = Option.builder("pt")
 	                                          .longOpt("port")
 	                                          .required()
@@ -26,21 +26,21 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 	                                          .desc("Port used by OMERO")
 	                                          .numberOfArgs(1)
 	                                          .build();
-	/** username connexion */
+	/** username connection */
 	private final Option username     = Option.builder("u")
 	                                          .longOpt("username")
 	                                          .type(String.class)
 	                                          .desc("Username in OMERO")
 	                                          .numberOfArgs(1)
 	                                          .build();
-	/** OMERO password connexion */
+	/** OMERO password connection */
 	private final Option password     = Option.builder("p")
 	                                          .longOpt("password")
 	                                          .type(String.class)
 	                                          .desc("Password in OMERO")
 	                                          .numberOfArgs(1)
 	                                          .build();
-	/** Group user connexion */
+	/** Group user connection */
 	private final Option group        = Option.builder("g")
 	                                          .longOpt("group")
 	                                          .required()

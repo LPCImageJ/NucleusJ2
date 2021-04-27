@@ -7,6 +7,10 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.WindowManager;
 import ij.plugin.PlugIn;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.invoke.MethodHandles;
 
 
 /**
@@ -16,6 +20,8 @@ import ij.plugin.PlugIn;
  */
 @Deprecated
 public class NucleusSegmentationAndAnalysisPlugin_ implements PlugIn {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	
 	/**
@@ -41,24 +47,24 @@ public class NucleusSegmentationAndAnalysisPlugin_ implements PlugIn {
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				LOGGER.error("An error occurred.", e);
 			}
 		}
 		if (nucleusSegmentationAndAnalysisDialog.isStart()) {
 			short volumeMin = (short) nucleusSegmentationAndAnalysisDialog.getMinVolume();
 			short volumeMax = (short) nucleusSegmentationAndAnalysisDialog.getMaxVolume();
 			
-			IJ.log("Begin image processing " + img.getTitle());
+			LOGGER.info("Starting image processing on: {}", img.getTitle());
 			SegmentationCalling segMethod = new SegmentationCalling(img, volumeMin, volumeMax);
 			try {
 				int thresh = segMethod.runOneImage();
 				if (thresh != -1) {
 					NucleusAnalysis nucleusAnalysis = new NucleusAnalysis(img, segMethod.getImageSegmented());
-					//	IJ.log(nucleusAnalysis.nucleusParameter3D());
+					//LOGGER.info(nucleusAnalysis.nucleusParameter3D());
 					segMethod.getImageSegmented().show();
 				}
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error("An error occurred.", e);
 			}
 		}
 	}

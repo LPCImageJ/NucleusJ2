@@ -1,6 +1,5 @@
 package gred.nucleus.plugins;
 
-import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.core.ChromocentersEnhancement;
 import gred.nucleus.dialogs.ChromocenterSegmentationPipelineBatchDialog;
 import gred.nucleus.utils.FileList;
@@ -50,11 +49,11 @@ public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
 				String workDirectory =
 						chromocenterSegmentationPipelineBatchDialog.getWorkDirectory();
 				for (int i = 0; i < listImageSegmentedDataNucleus.size(); ++i) {
-					IJ.log("image" + (i + 1) + " / " + listImageSegmentedDataNucleus.size());
+					LOGGER.info("image {}/{}", (i + 1), listImageSegmentedDataNucleus.size());
 					String pathImageSegmentedNucleus = listImageSegmentedDataNucleus.get(i);
 					String pathNucleusRaw =
 							pathImageSegmentedNucleus.replace("SegmentedDataNucleus", "RawDataNucleus");
-					IJ.log(pathNucleusRaw);
+					LOGGER.info(pathNucleusRaw);
 					if (fileList.isDirectoryOrFileExist(pathNucleusRaw, tFileRawData)) {
 						ImagePlus imagePlusSegmented = IJ.openImage(pathImageSegmentedNucleus);
 						ImagePlus imagePlusInput     = IJ.openImage(pathNucleusRaw);
@@ -88,8 +87,8 @@ public class ChromocenterSegmentationBatchPlugin_ implements PlugIn {
 						saveFile(imagePlusContrast, workDirectory + File.separator + "ContrastDataNucleus");
 					}
 				}
-				IJ.log("End of the chromocenter segmentation , the results are in " +
-				       chromocenterSegmentationPipelineBatchDialog.getWorkDirectory());
+				LOGGER.info("End of the chromocenter segmentation , the results are in {}",
+				            chromocenterSegmentationPipelineBatchDialog.getWorkDirectory());
 			} else {
 				IJ.showMessage(
 						"There are no the two subdirectories (See the directory name) or subDirectories are empty");

@@ -11,7 +11,6 @@ package gred.nucleus.connectedcomponent;
 
 import gred.nucleus.componentremoval.ComponentRemovalNone;
 import gred.nucleus.componentremoval.ComponentRemovalPredicate;
-import gred.nucleus.plugins.ComputeParametersPlugin_;
 import gred.nucleus.utils.Voxel;
 import ij.ImagePlus;
 import ij.ImageStack;
@@ -68,7 +67,7 @@ public abstract class ConnectedComponent {
 		Calibration cal = this.inputImage.getCalibration();
 		this.voxelVolume = cal.pixelDepth * cal.pixelWidth * cal.pixelHeight;
 		
-		//System.out.println("vol vx" + voxelVolume);
+		//LOGGER.debug("vol vx{}", voxelVolume);
 		this.foregroundColor = foregroundColor;
 		this.labels =
 				new int[this.inputImage.getWidth()][this.inputImage.getHeight()][this.inputImage.getNSlices()];

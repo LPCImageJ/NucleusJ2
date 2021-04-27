@@ -11,14 +11,19 @@ import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
 import ij.IJ;
 import ij.plugin.PlugIn;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 
 public class Segmentation_ implements PlugIn, IDialogListener {
 	SegmentationDialog segmentationDialog;
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	
 	/**
@@ -45,11 +50,11 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 	}
 	
 	
-	public Client checkOMEROConnexion(String hostname,
-	                                  String port,
-	                                  String username,
-	                                  String password,
-	                                  String group) {
+	public Client checkOMEROConnection(String hostname,
+	                                   String port,
+	                                   String username,
+	                                   String password,
+	                                   String group) {
 		Client client = new Client();
 		try {
 			client.connect(hostname,
@@ -72,7 +77,7 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 		String username = segmentationDialog.getUsername();
 		String password = segmentationDialog.getPassword();
 		String group    = segmentationDialog.getGroup();
-		Client client   = checkOMEROConnexion(hostname, port, username, password, group);
+		Client client   = checkOMEROConnection(hostname, port, username, password, group);
 		
 		SegmentationParameters segmentationParameters = null;
 		// Check config
@@ -87,7 +92,7 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 			case INPUT:
 				SegmentationConfigDialog scd = segmentationDialog.getSegmentationConfigFileDialog();
 				if (scd.isCalibrationSelected()) {
-					IJ.log("w/ calibration");
+					LOGGER.info("w/ calibration");
 					segmentationParameters = new SegmentationParameters(".", ".",
 					                                                    Integer.parseInt(scd.getXCalibration()),
 					                                                    Integer.parseInt(scd.getYCalibration()),
@@ -97,7 +102,7 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 					                                                    scd.getGiftWrapping()
 					);
 				} else {
-					IJ.log("w/out calibration");
+					LOGGER.info("w/out calibration");
 					segmentationParameters = new SegmentationParameters(".", ".",
 					                                                    Integer.parseInt(scd.getMinVolume()),
 					                                                    Integer.parseInt(scd.getMaxVolume()),
@@ -122,7 +127,7 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 				segmentation.saveCropGeneralInfoOmero(client, outputID);
 				
 				if (!(log.equals(""))) {
-					IJ.log("Nuclei which didn't pass the segmentation\n" + log);
+					LOGGER.error("Nuclei which didn't pass the segmentation\n{}", log);
 				}
 			} else {
 				List<ImageWrapper> images = null;
@@ -143,7 +148,7 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 				String log;
 				log = segmentation.runSeveralImageOMERO(images, outputID, client);
 				if (!(log.equals(""))) {
-					IJ.log("Nuclei which didn't pass the segmentation\n" + log);
+					LOGGER.error("Nuclei which didn't pass the segmentation\n{}", log);
 				}
 			}
 		} catch (ServiceException se) {
@@ -151,7 +156,7 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 		} catch (AccessException ae) {
 			IJ.error("Cannot access " + dataType + "with ID = " + inputID + ".");
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("An error occurred.", e);
 		}
 	}
 	
@@ -166,7 +171,7 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 			IJ.error("Output directory is missing");
 		} else {
 			try {
-				IJ.log("Begin Segmentation process ");
+				LOGGER.info("Begin Segmentation process ");
 				SegmentationParameters segmentationParameters = null;
 				
 				switch (segmentationDialog.getConfigMode()) {
@@ -174,17 +179,17 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 						if (config == null || config.equals("")) {
 							IJ.error("Config file is missing");
 						} else {
-							IJ.log("Config file");
+							LOGGER.info("Config file");
 							segmentationParameters = new SegmentationParameters(input, output, config);
 						}
 						break;
 					case INPUT:
 						SegmentationConfigDialog scd = segmentationDialog.getSegmentationConfigFileDialog();
 						if (scd.isCalibrationSelected()) {
-							IJ.log("w/ calibration" +
-							       "\nx: " + scd.getXCalibration() +
-							       "\ny: " + scd.getYCalibration() +
-							       "\nz: " + scd.getZCalibration());
+							LOGGER.info("w/ calibration" +
+							            "\nx: " + scd.getXCalibration() +
+							            "\ny: " + scd.getYCalibration() +
+							            "\nz: " + scd.getZCalibration());
 							
 							segmentationParameters = new SegmentationParameters(input, output,
 							                                                    Integer.parseInt(scd.getXCalibration()),
@@ -195,7 +200,7 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 							                                                    scd.getGiftWrapping()
 							);
 						} else {
-							IJ.log("w/out calibration");
+							LOGGER.info("w/out calibration");
 							segmentationParameters = new SegmentationParameters(input, output,
 							                                                    Integer.parseInt(scd.getMinVolume()),
 							                                                    Integer.parseInt(scd.getMaxVolume()),
@@ -204,7 +209,7 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 						}
 						break;
 					case DEFAULT:
-						IJ.log("w/out config");
+						LOGGER.info("w/out config");
 						segmentationParameters = new SegmentationParameters(input, output);
 						break;
 				}
@@ -220,14 +225,14 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 					otsuModified.saveCropGeneralInfo();
 				}
 				if (!(log.equals(""))) {
-					System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+					LOGGER.error("Nuclei which didn't pass the segmentation\n{}", log);
 				}
 				
-				IJ.log("\nSegmentation process has ended successfully");
+				LOGGER.info("Segmentation process has ended successfully");
 			} catch (IOException ioe) {
 				IJ.error("File/Directory does not exist");
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error("An error occurred.", e);
 			}
 		}
 	}

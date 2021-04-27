@@ -2,8 +2,11 @@ package gred.nucleus.plugins;
 
 import gred.nucleus.dialogs.NucleusSegmentationAndAnalysisBatchDialog;
 import gred.nucleus.segmentation.SegmentationCalling;
-import ij.IJ;
 import ij.plugin.PlugIn;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.invoke.MethodHandles;
 
 
 /**
@@ -11,6 +14,9 @@ import ij.plugin.PlugIn;
  * @deprecated Method to segment and analyse the nucleus on batch
  */
 public class NucleusSegmentationAndAnalysisBatchPlugin_ implements PlugIn {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	NucleusSegmentationAndAnalysisBatchDialog nucleusPipelineBatchDialog =
 			new NucleusSegmentationAndAnalysisBatchDialog();
 	
@@ -21,12 +27,12 @@ public class NucleusSegmentationAndAnalysisBatchPlugin_ implements PlugIn {
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				LOGGER.error("An error occurred.", e);
 			}
 		}
 		if (nucleusPipelineBatchDialog.isStart()) {
-			IJ.log("Beginning of the segmentation of nuclei, the data are in " +
-			       nucleusPipelineBatchDialog.getRawDataDirectory());
+			LOGGER.info("Beginning of the segmentation of nuclei, the data are in " +
+			            nucleusPipelineBatchDialog.getRawDataDirectory());
 			SegmentationCalling otsuModified =
 					new SegmentationCalling(nucleusPipelineBatchDialog.getRawDataDirectory(),
 					                        nucleusPipelineBatchDialog.getWorkDirectory(),
@@ -35,11 +41,11 @@ public class NucleusSegmentationAndAnalysisBatchPlugin_ implements PlugIn {
 			try {
 				String log = otsuModified.runSeveralImages2();
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error("An error occurred.", e);
 			}
 			
-			IJ.log("End of the segmentation the nuclei, the results are in " +
-			       nucleusPipelineBatchDialog.getWorkDirectory());
+			LOGGER.info("End of the segmentation the nuclei, the results are in " +
+			            nucleusPipelineBatchDialog.getWorkDirectory());
 		}
 	}
 	

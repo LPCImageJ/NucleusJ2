@@ -13,7 +13,10 @@ package gred.nucleus.connectedcomponent;
 import gred.nucleus.utils.Voxel;
 import ij.ImagePlus;
 import ij.process.ImageProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.util.LinkedList;
 
 
@@ -24,6 +27,9 @@ import java.util.LinkedList;
  * <p> TODO : This class has not been tested and should probably be worked out before use.
  */
 public class ConnectedComponent2D extends ConnectedComponent {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	
 	/**
 	 * Constructor from an ImageWrapper representing a binary image and the foreground color in this image
@@ -127,7 +133,7 @@ public class ConnectedComponent2D extends ConnectedComponent {
 					try {
 						breadthFirstSearch(new Voxel(i, j, (short) 0), currentLabel, componentInfo);
 					} catch (Exception e) {
-						e.printStackTrace();
+						LOGGER.error("An error occurred.", e);
 						System.exit(0);
 					}
 					this.compInfo.add(componentInfo);

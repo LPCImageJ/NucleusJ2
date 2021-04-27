@@ -156,7 +156,7 @@ public class OutputFileVerification {
 		try {
 			checksumMD5 = DigestUtils.md5Hex(new FileInputStream(path));
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("An error occurred.", e);
 		}
 		return checksumMD5;
 	}

@@ -1,7 +1,6 @@
 package gred.nucleus.machinelearning;
 
 import gred.nucleus.files.Directory;
-import gred.nucleus.mains.TestAutoCrop;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;

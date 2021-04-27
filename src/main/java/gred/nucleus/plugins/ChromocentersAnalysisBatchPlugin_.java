@@ -8,11 +8,14 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.measure.Calibration;
 import ij.plugin.PlugIn;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 
@@ -20,6 +23,9 @@ import java.util.List;
  * @author Tristan Dubos and Axel Poulet
  */
 public class ChromocentersAnalysisBatchPlugin_ implements PlugIn {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	
 	/** Run the the analyse, call the graphical windows */
 	public void run(String arg) {
@@ -29,7 +35,7 @@ public class ChromocentersAnalysisBatchPlugin_ implements PlugIn {
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				LOGGER.error("An error occurred.", e);
 			}
 		}
 		if (chromocentersPipelineBatchDialog.isStart()) {
@@ -57,14 +63,14 @@ public class ChromocentersAnalysisBatchPlugin_ implements PlugIn {
 				String nameFileChromocenter           = workDirectory + File.separator + "CcParameters.tab";
 				
 				for (int i = 0; i < listImageChromocenter.size(); ++i) {
-					IJ.log("image" + (i + 1) + " / " + listImageChromocenter.size());
+					LOGGER.info("image {}/{}", (i + 1), listImageChromocenter.size());
 					String pathImageChromocenter = listImageChromocenter.get(i);
 					String pathNucleusRaw =
 							pathImageChromocenter.replace("SegmentedDataCc", "RawDataNucleus");
 					String pathNucleusSegmented =
 							pathImageChromocenter.replace("SegmentedDataCc", "SegmentedDataNucleus");
-					IJ.log(pathNucleusRaw);
-					IJ.log(pathNucleusSegmented);
+					LOGGER.info(pathNucleusRaw);
+					LOGGER.info(pathNucleusSegmented);
 					if (fileList.isDirectoryOrFileExist(pathNucleusRaw, tFileRawImage) &&
 					    fileList.isDirectoryOrFileExist(pathNucleusSegmented, tFileRawImage)) {
 						ImagePlus imagePlusInput = IJ.openImage(pathNucleusRaw);
@@ -91,8 +97,8 @@ public class ChromocentersAnalysisBatchPlugin_ implements PlugIn {
 								ChromocenterAnalysis.computeParametersChromocenter(nameFileChromocenter,
 								                                                   imagePlusSegmented,
 								                                                   imagePlusChromocenter);
-								IJ.log("chromocenterAnalysis is computing ...");
-								IJ.log("nucleusChromocenterAnalysis is computing...");
+								LOGGER.info("chromocenterAnalysis is computing...");
+								LOGGER.info("nucleusChromocenterAnalysis is computing...");
 								NucleusChromocentersAnalysis.computeParameters(nameFileChromocenterAndNucleus,
 								                                               rhfChoice,
 								                                               imagePlusInput,
@@ -110,15 +116,14 @@ public class ChromocentersAnalysisBatchPlugin_ implements PlugIn {
 								                                               imagePlusChromocenter);
 							}
 						} catch (IOException e) {
-							e.printStackTrace();
+							LOGGER.error("An error occurred.", e);
 						}
 					} else {
-						IJ.log("Image name problem :  the image " +
-						       pathImageChromocenter
-						       +
-						       " is not find in the directory SegmentedDataNucleus or RawDataNucleus, see nameProblem.txt in "
-						       +
-						       workDirectory);
+						LOGGER.info("Image name problem: the image {} is not found " +
+						            "in the directory SegmentedDataNucleus or RawDataNucleus, " +
+						            "see nameProblem.txt in {}",
+						            pathImageChromocenter,
+						            workDirectory);
 						try (BufferedWriter bufferedWriterLogFile = new BufferedWriter(new FileWriter(workDirectory +
 						                                                                              File.separator +
 						                                                                              "logNameProblem.log",
@@ -126,12 +131,12 @@ public class ChromocentersAnalysisBatchPlugin_ implements PlugIn {
 							bufferedWriterLogFile.write(pathImageChromocenter + "\n");
 							bufferedWriterLogFile.flush();
 						} catch (IOException e) {
-							e.printStackTrace();
+							LOGGER.error("An error occurred.", e);
 						}
 					}
 				}
-				IJ.log("End of the chromocenter analysis , the results are in " +
-				       chromocentersPipelineBatchDialog.getWorkDirectory());
+				LOGGER.info("End of the chromocenter analysis , the results are in {}",
+				            chromocentersPipelineBatchDialog.getWorkDirectory());
 			} else {
 				IJ.showMessage(
 						"There are no the three subdirectories  (See the directory name) or subDirectories are empty");

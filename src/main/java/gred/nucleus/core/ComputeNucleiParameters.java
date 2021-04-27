@@ -6,12 +6,17 @@ import gred.nucleus.plugins.PluginParameters;
 import ij.ImagePlus;
 import ij.measure.Calibration;
 import loci.plugins.BF;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 
 public class ComputeNucleiParameters {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	private final PluginParameters pluginParameters;
 	
@@ -88,7 +93,7 @@ public class ComputeNucleiParameters {
 				                                    this.pluginParameters.getZCalibration(raw));
 				outputCropGeneralInfoOTSU.append(measure3D.nucleusParameter3D()).append("\n");
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error("An error occurred.", e);
 			}
 		}
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(

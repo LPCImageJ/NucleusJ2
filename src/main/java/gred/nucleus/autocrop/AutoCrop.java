@@ -21,7 +21,6 @@ import ij.plugin.Duplicator;
 import ij.plugin.GaussianBlur3D;
 import inra.ijpb.binary.BinaryImages;
 import inra.ijpb.label.LabelImages;
-import loci.common.DebugTools;
 import loci.formats.FormatException;
 import loci.plugins.BF;
 import loci.plugins.in.ImporterOptions;
@@ -171,7 +170,6 @@ public class AutoCrop {
 	 * @throws FormatException
 	 */
 	public ImagePlus getImageChannel(int channelNumber) throws IOException, FormatException {
-		DebugTools.enableLogging("OFF");    /* DEBUG INFO BIO-FORMATS OFF*/
 		ImagePlus[] currentImage = BF.openImagePlus(this.imageFilePath);
 		currentImage = ChannelSplitter.split(currentImage[0]);
 		return currentImage[channelNumber];
@@ -192,7 +190,6 @@ public class AutoCrop {
 	 * @throws FormatException
 	 */
 	public void setChannelNumbers() throws IOException, FormatException {
-		DebugTools.enableLogging("OFF");      /* DEBUG INFO BIO-FORMATS OFF*/
 		ImagePlus[] currentImage = BF.openImagePlus(this.imageFilePath);
 		currentImage = ChannelSplitter.split(currentImage[0]);
 		this.rawImg = currentImage[0];
@@ -204,7 +201,6 @@ public class AutoCrop {
 	
 	public void setChannelNumbersOMERO(ImageWrapper image, Client client)
 	throws ServiceException, AccessException, ExecutionException {
-		DebugTools.enableLogging("OFF");      /* DEBUG INFO BIO-FORMATS OFF*/
 		int[] cBound = {this.autocropParameters.getChannelToComputeThreshold(),
 		                this.autocropParameters.getChannelToComputeThreshold()};
 		this.rawImg = image.toImagePlus(client, null, null, cBound, null, null);
@@ -333,7 +329,7 @@ public class AutoCrop {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("An error occurred.", e);
 		}
 	}
 	

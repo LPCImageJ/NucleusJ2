@@ -3,11 +3,16 @@ package gred.nucleus.test;
 import gred.nucleus.analysistest.OutputFileVerification;
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 
 
 public class SegmentationImageIntegrationCheck {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	
 	/*
@@ -36,10 +41,10 @@ public class SegmentationImageIntegrationCheck {
 		try {
 			String log = otsuModified.runSeveralImages2();
 			if (!(log.equals(""))) {
-				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+				LOGGER.error("Nuclei which didn't pass the segmentation\n{}", log);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Error.", e);
 		}
 	}
 	
@@ -50,10 +55,10 @@ public class SegmentationImageIntegrationCheck {
 		try {
 			String log = otsuModified.runSeveralImages2();
 			if (!(log.equals(""))) {
-				System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+				LOGGER.error("Nuclei which didn't pass the segmentation\n{}", log);
 			}
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.error("Error.", e);
 		}
 	}
 	
@@ -88,7 +93,7 @@ public class SegmentationImageIntegrationCheck {
         fw.GetFilesResultingOfAnalysis(outputTristan);
         fw.CompareAnalysisResult();
         */
-		System.err.println("The program ended normally.");
+		LOGGER.info("The program ended normally.");
 	}
 	
 }

@@ -1,7 +1,6 @@
 package gred.nucleus.plugins;
 
 import gred.nucleus.files.Directory;
-import gred.nucleus.segmentation.SegmentationParameters;
 import ij.IJ;
 import ij.ImagePlus;
 import org.slf4j.Logger;

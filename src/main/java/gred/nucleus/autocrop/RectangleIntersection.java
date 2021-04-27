@@ -49,11 +49,11 @@ public class RectangleIntersection {
 		this.autocropParameters = autocropParameters;
 		for (Map.Entry<Double, Box> entry : new TreeMap<>(boxes).entrySet()) {
 			Box box       = entry.getValue();
-			int boxWith   = box.getXMax() - box.getXMin();
+			int boxWidth  = box.getXMax() - box.getXMin();
 			int boxHeight = box.getYMax() - box.getYMin();
 			int boxSlice  = box.getZMax() - box.getZMin();
 			
-			this.listRectangle.add(new Rectangle(box.getXMin(), box.getYMin(), boxWith, boxHeight));
+			this.listRectangle.add(new Rectangle(box.getXMin(), box.getYMin(), boxWidth, boxHeight));
 			this.zSlices.add(box.getZMin() + "-" + boxSlice);
 		}
 	}

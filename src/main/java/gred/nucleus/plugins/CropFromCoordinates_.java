@@ -4,9 +4,16 @@ import gred.nucleus.autocrop.CropFromCoordinates;
 import gred.nucleus.dialogs.CropFromCoodinateDialog;
 import ij.IJ;
 import ij.plugin.PlugIn;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.invoke.MethodHandles;
 
 
 public class CropFromCoordinates_ implements PlugIn {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	
 	public static void cropFromCoordinates(String coordinateDir) throws Exception {
 		
@@ -26,7 +33,7 @@ public class CropFromCoordinates_ implements PlugIn {
 			try {
 				Thread.sleep(1);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				LOGGER.error("An error occurred.", e);
 			}
 		}
 		
@@ -36,14 +43,14 @@ public class CropFromCoordinates_ implements PlugIn {
 				IJ.error("Input file or directory is missing");
 			} else {
 				try {
-					IJ.log("Begin Autocrop from coordinate process ");
+					LOGGER.info("Begin Autocrop from coordinate process ");
 					
 					cropFromCoordinates(file);
 					
-					IJ.log("\nAutocrop from coordinate process has ended successfully");
+					LOGGER.info("Autocrop from coordinate process has ended successfully");
 				} catch (Exception e) {
-					IJ.log("\nAutocrop from coordinate process has failed");
-					e.printStackTrace();
+					LOGGER.info("Autocrop from coordinate process has failed");
+					LOGGER.error("An error occurred.", e);
 				}
 			}
 		}

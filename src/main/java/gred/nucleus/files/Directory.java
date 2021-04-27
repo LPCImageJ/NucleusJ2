@@ -73,9 +73,9 @@ public class Directory {
 		if (!directory.exists()) {
 			boolean isDirCreated = directory.mkdirs();
 			if (isDirCreated) {
-				IJ.log("New directory : " + this.dirPath);
+				LOGGER.info("New directory: {}", this.dirPath);
 			} else {
-				IJ.error(this.dirPath + " : directory cannot be created");
+				IJ.error("{}: directory cannot be created", this.dirPath);
 				System.exit(-1);
 			}
 		}

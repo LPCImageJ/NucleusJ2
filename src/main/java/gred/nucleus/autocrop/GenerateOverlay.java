@@ -4,14 +4,19 @@ import gred.nucleus.files.Directory;
 import ij.IJ;
 import ij.ImagePlus;
 import ij.io.FileSaver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
 
 public class GenerateOverlay {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	HashMap<String, String> linkOverlayProjection = new HashMap<>();
 	
@@ -51,18 +56,18 @@ public class GenerateOverlay {
 			                                 "Overlay_Projection_MERGED");
 			output.checkAndCreateDir();
 			ImagePlus overlay     = IJ.openImage(listOfFile.getKey());
-			ImagePlus Zprojection = IJ.openImage(listOfFile.getValue());
-			System.out.println("\n\n" + listOfFile.getKey() + "\n" + listOfFile.getValue() + "\n\n");
-			//IJ.run(Zprojection, "Fire", "");
-			//IJ.run(Zprojection, "Invert LUT", "");
+			ImagePlus zProjection = IJ.openImage(listOfFile.getValue());
+			LOGGER.debug("{}: {}", listOfFile.getKey(), listOfFile.getValue());
+			//IJ.run(zProjection, "Fire", "");
+			//IJ.run(zProjection, "Invert LUT", "");
 			overlay.show();
-			Zprojection.show();
+			zProjection.show();
 			IJ.run("Add Image...", overlay + " x=0 y=0 opacity=50");
-			saveFile(Zprojection, output.getDirPath() + File.separator +
+			saveFile(zProjection, output.getDirPath() + File.separator +
 			                      zprojectionFile.getName().substring(0, zprojectionFile.getName().lastIndexOf('.')) +
 			                      "_MERGED.tiff");
 			overlay.close();
-			Zprojection.close();
+			zProjection.close();
 		}
 	}
 	

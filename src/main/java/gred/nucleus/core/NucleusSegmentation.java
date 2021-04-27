@@ -27,7 +27,6 @@ import ij.plugin.GaussianBlur3D;
 import ij.process.StackConverter;
 import ij.process.StackStatistics;
 import inra.ijpb.binary.BinaryImages;
-import loci.common.DebugTools;
 import loci.formats.FormatException;
 import loci.plugins.BF;
 import org.slf4j.Logger;
@@ -193,7 +192,6 @@ public class NucleusSegmentation {
 	 * @throws FormatException
 	 */
 	public ImagePlus getImageChannel(int channelNumber) throws IOException, FormatException {
-		DebugTools.enableLogging("OFF");       // DEBUG INFO BIO-FORMATS OFF
 		ImagePlus[] currentImage = BF.openImagePlus(this.currentFile.getAbsolutePath());
 		currentImage = ChannelSplitter.split(currentImage[channelNumber]);
 		return currentImage[0];

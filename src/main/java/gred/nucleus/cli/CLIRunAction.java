@@ -6,12 +6,18 @@ import gred.nucleus.machinelearning.ComputeNucleiParametersML;
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
 import org.apache.commons.cli.CommandLine;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 
 
 public class CLIRunAction {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	/** Command line */
 	private final CommandLine cmd;
 	
@@ -73,9 +79,8 @@ public class CLIRunAction {
 	
 	
 	private void runAutocrop() {
-		AutocropParameters autocropParameters = new AutocropParameters(
-				this.cmd.getOptionValue("input")
-				, this.cmd.getOptionValue("output"));
+		AutocropParameters autocropParameters = new AutocropParameters(this.cmd.getOptionValue("input"),
+		                                                               this.cmd.getOptionValue("output"));
 		if (this.cmd.hasOption("config")) {
 			autocropParameters.addGeneralProperties(this.cmd.getOptionValue("config"));
 			autocropParameters.addProperties(this.cmd.getOptionValue("config"));
@@ -105,33 +110,37 @@ public class CLIRunAction {
 			try {
 				String log = otsuModified.runOneImage(this.cmd.getOptionValue("input"));
 				otsuModified.saveCropGeneralInfo();
-				if (!(log.equals(""))) System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+				if (!(log.equals(""))) {
+					LOGGER.error("Nuclei which didn't pass the segmentation\n{}", log);
+				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.error("An error occurred.", e);
 			}
 		} else {
 			SegmentationCalling otsuModified = new SegmentationCalling(segmentationParameters);
 			try {
 				String log = otsuModified.runSeveralImages2();
-				if (!(log.equals(""))) System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+				if (!(log.equals(""))) {
+					LOGGER.error("Nuclei which didn't pass the segmentation\n{}", log);
+				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				LOGGER.error("An error occurred.", e);
 			}
 		}
 	}
 	
 	
 	private void runComputeNucleiParameters() {
-		ComputeNucleiParameters generateParameters =
-				new ComputeNucleiParameters(this.cmd.getOptionValue("input"), this.cmd.getOptionValue("input2"));
+		ComputeNucleiParameters generateParameters = new ComputeNucleiParameters(this.cmd.getOptionValue("input"),
+		                                                                         this.cmd.getOptionValue("input2"));
 		if (this.cmd.hasOption("config")) generateParameters.addConfigParameters(this.cmd.getOptionValue("config"));
 		generateParameters.run();
 	}
 	
 	
 	private void runComputeNucleiParametersDL() throws Exception {
-		ComputeNucleiParametersML computeParameters =
-				new ComputeNucleiParametersML(this.cmd.getOptionValue("input"), this.cmd.getOptionValue("input2"));
+		ComputeNucleiParametersML computeParameters = new ComputeNucleiParametersML(this.cmd.getOptionValue("input"),
+		                                                                            this.cmd.getOptionValue("input2"));
 		computeParameters.run();
 	}
 	

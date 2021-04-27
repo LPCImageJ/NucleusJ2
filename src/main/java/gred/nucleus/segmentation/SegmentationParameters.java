@@ -1,7 +1,6 @@
 package gred.nucleus.segmentation;
 
 
-import gred.nucleus.machinelearning.SliceToStack;
 import gred.nucleus.plugins.PluginParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

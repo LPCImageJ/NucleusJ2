@@ -10,13 +10,19 @@ import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Console;
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 
 public class CLIRunActionOMERO {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	/** List of options */
 	Options     options = new Options();
 	/** Command line */
@@ -24,7 +30,7 @@ public class CLIRunActionOMERO {
 	/** OMERO client information see fr.igred.omero.Client */
 	Client      client  = new Client();
 	
-	/** OMERO password connexion */
+	/** OMERO password connection */
 	String mdp;
 	
 	/** OMERO type of data to analyse : image data dataset tag */
@@ -34,7 +40,7 @@ public class CLIRunActionOMERO {
 	public CLIRunActionOMERO(CommandLine cmd) throws Exception {
 		this.cmd = cmd;
 		getOMEROPassword();
-		checkOMEROConnexion();
+		checkOMEROConnection();
 		switch (this.cmd.getOptionValue("action")) {
 			case "autocrop":
 				runAutoCropOMERO();
@@ -123,7 +129,7 @@ public class CLIRunActionOMERO {
 	}
 	
 	
-	public void checkOMEROConnexion() {
+	public void checkOMEROConnection() {
 		try {
 			client.connect(this.cmd.getOptionValue("hostname"),
 			               Integer.parseInt(this.cmd.getOptionValue("port")),
@@ -131,8 +137,7 @@ public class CLIRunActionOMERO {
 			               this.mdp,
 			               Long.valueOf(this.cmd.getOptionValue("group")));
 		} catch (Exception exp) {
-			System.out.println("OMERO connexion error : \n");
-			System.out.println(exp.getMessage() + "\n");
+			LOGGER.error("OMERO connection error: " + exp.getMessage(), exp);
 			System.exit(1);
 		}
 	}
@@ -151,7 +156,7 @@ public class CLIRunActionOMERO {
 			              this.client,
 			              autoCrop);
 		} catch (IllegalArgumentException exp) {
-			System.out.println(exp.getMessage());
+			LOGGER.error(exp.getMessage(), exp);
 			System.exit(1);
 		}
 	}
@@ -191,10 +196,10 @@ public class CLIRunActionOMERO {
 					}
 					otsuModified.saveCropGeneralInfoOmero(client, Long.parseLong(outputDirectory));
 					if (!(log.equals(""))) {
-						System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+						LOGGER.error("Nuclei which didn't pass the segmentation\n{}", log);
 					}
 				} catch (IOException e) {
-					e.printStackTrace();
+					LOGGER.error("An error occurred.", e);
 				}
 			} else {
 				List<ImageWrapper> images;
@@ -233,10 +238,10 @@ public class CLIRunActionOMERO {
 						log = otsuModified.runSeveralImageOMERO(images, Long.parseLong(outputDirectory), client);
 					}
 					if (!(log.equals(""))) {
-						System.out.println("Nuclei which didn't pass the segmentation\n" + log);
+						LOGGER.error("Nuclei which didn't pass the segmentation\n{}", log);
 					}
 				} catch (IOException e) {
-					e.printStackTrace();
+					LOGGER.error("An error occurred.", e);
 				}
 			}
 		} else {

@@ -12,12 +12,18 @@ import gred.nucleus.dialogs.AutocropDialog;
 import gred.nucleus.dialogs.IDialogListener;
 import ij.IJ;
 import ij.plugin.PlugIn;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 
 public class Autocrop_ implements PlugIn, IDialogListener {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
+	
 	AutocropDialog autocropDialog;
 	
 	
@@ -45,11 +51,11 @@ public class Autocrop_ implements PlugIn, IDialogListener {
 	}
 	
 	
-	public Client checkOMEROConnexion(String hostname,
-	                                  String port,
-	                                  String username,
-	                                  String password,
-	                                  String group) {
+	public Client checkOMEROConnection(String hostname,
+	                                   String port,
+	                                   String username,
+	                                   String password,
+	                                   String group) {
 		Client client = new Client();
 		
 		try {
@@ -74,7 +80,7 @@ public class Autocrop_ implements PlugIn, IDialogListener {
 		String username = autocropDialog.getUsername();
 		String password = autocropDialog.getPassword();
 		String group    = autocropDialog.getGroup();
-		Client client   = checkOMEROConnexion(hostname, port, username, password, group);
+		Client client   = checkOMEROConnection(hostname, port, username, password, group);
 		
 		AutocropParameters autocropParameters = null;
 		// Check config
@@ -89,7 +95,7 @@ public class Autocrop_ implements PlugIn, IDialogListener {
 			case INPUT:
 				AutocropConfigDialog acd = autocropDialog.getAutocropConfigFileDialog();
 				if (acd.isCalibrationSelected()) {
-					IJ.log("w/ calibration");
+					LOGGER.info("w/ calibration");
 					autocropParameters = new AutocropParameters(".",
 					                                            ".",
 					                                            Integer.parseInt(acd.getXCalibration()),
@@ -107,7 +113,7 @@ public class Autocrop_ implements PlugIn, IDialogListener {
 					                                            acd.isRegroupBoxesSelected()
 					);
 				} else {
-					IJ.log("w/out calibration");
+					LOGGER.info("w/out calibration");
 					autocropParameters = new AutocropParameters(".",
 					                                            ".",
 					                                            Integer.parseInt(acd.getXCropBoxSize()),
@@ -174,7 +180,7 @@ public class Autocrop_ implements PlugIn, IDialogListener {
 		} catch (AccessException ae) {
 			IJ.error("Cannot access " + dataType + "with ID = " + inputID + ".");
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.error("An error occurred.", e);
 		}
 	}
 	
@@ -189,7 +195,7 @@ public class Autocrop_ implements PlugIn, IDialogListener {
 			IJ.error("Output directory is missing");
 		} else {
 			try {
-				IJ.log("Begin Autocrop process ");
+				LOGGER.info("Begin Autocrop process ");
 				
 				AutocropParameters autocropParameters = null;
 				
@@ -198,14 +204,14 @@ public class Autocrop_ implements PlugIn, IDialogListener {
 						if (config == null || config.equals("")) {
 							IJ.error("Config file is missing");
 						} else {
-							IJ.log("Config file");
+							LOGGER.info("Config file");
 							autocropParameters = new AutocropParameters(input, output, config);
 						}
 						break;
 					case INPUT:
 						AutocropConfigDialog acd = autocropDialog.getAutocropConfigFileDialog();
 						if (acd.isCalibrationSelected()) {
-							IJ.log("w/ calibration");
+							LOGGER.info("w/ calibration");
 							autocropParameters = new AutocropParameters(input,
 							                                            output,
 							                                            Integer.parseInt(acd.getXCalibration()),
@@ -222,7 +228,7 @@ public class Autocrop_ implements PlugIn, IDialogListener {
 							                                            Integer.parseInt(acd.getBoxesPercentSurfaceToFilter()),
 							                                            acd.isRegroupBoxesSelected());
 						} else {
-							IJ.log("w/out calibration");
+							LOGGER.info("w/out calibration");
 							autocropParameters = new AutocropParameters(input,
 							                                            output,
 							                                            Integer.parseInt(acd.getXCropBoxSize()),
@@ -238,7 +244,7 @@ public class Autocrop_ implements PlugIn, IDialogListener {
 						}
 						break;
 					case DEFAULT:
-						IJ.log("w/out config");
+						LOGGER.info("w/out config");
 						autocropParameters = new AutocropParameters(input, output);
 						break;
 				}
@@ -250,10 +256,9 @@ public class Autocrop_ implements PlugIn, IDialogListener {
 					autoCrop.runFile(input);
 					autoCrop.saveGeneralInfo();
 				}
-				
-				IJ.log("\nAutocrop process has ended successfully");
+				LOGGER.info("Autocrop process has ended successfully");
 			} catch (Exception e) {
-				e.printStackTrace();
+				LOGGER.error("An error occurred during autocrop.", e);
 			}
 		}
 	}
