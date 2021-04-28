@@ -1,15 +1,15 @@
 package gred.nucleus.core;
 
 import fr.igred.omero.Client;
+import fr.igred.omero.annotations.TagAnnotationWrapper;
 import fr.igred.omero.exception.AccessException;
 import fr.igred.omero.exception.ServiceException;
+import fr.igred.omero.repository.DatasetWrapper;
 import fr.igred.omero.repository.ImageWrapper;
+import fr.igred.omero.repository.ProjectWrapper;
 import fr.igred.omero.roi.GenericShapeWrapper;
 import fr.igred.omero.roi.ROIWrapper;
 import fr.igred.omero.roi.RectangleWrapper;
-import fr.igred.omero.annotations.TagAnnotationWrapper;
-import fr.igred.omero.repository.DatasetWrapper;
-import fr.igred.omero.repository.ProjectWrapper;
 import gred.nucleus.files.Directory;
 import gred.nucleus.imageprocessing.Thresholding;
 import gred.nucleus.segmentation.SegmentationParameters;
@@ -32,7 +32,7 @@ import loci.plugins.BF;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
+import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
@@ -365,7 +365,7 @@ public class NucleusSegmentation {
 		final double imageVolume = xCalibration * imagePlusInput.getWidth() *
 		                           yCalibration * imagePlusInput.getHeight() *
 		                           zCalibration * imagePlusInput.getStackSize();
-		ImagePlus          imagePlusSegmented = new ImagePlus();
+		ImagePlus     imagePlusSegmented = new ImagePlus();
 		List<Integer> arrayListThreshold = computeMinMaxThreshold(imagePlusInput);
 		for (int t = arrayListThreshold.get(0); t <= arrayListThreshold.get(1); ++t) {
 			ImagePlus imagePlusSegmentedTemp = generateSegmentedImage(imagePlusInput, t);

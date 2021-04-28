@@ -10,7 +10,10 @@ import imagescience.image.Image;
 import imagescience.segment.ZeroCrosser;
 import imagescience.utility.Progressor;
 
-import java.awt.*;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.awt.Point;
+import java.awt.Panel;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 

@@ -1,6 +1,10 @@
 package gred.nucleus.cli;
 
-import gred.nucleus.autocrop.*;
+import gred.nucleus.autocrop.AutoCropCalling;
+import gred.nucleus.autocrop.AutocropParameters;
+import gred.nucleus.autocrop.CropFromCoordinates;
+import gred.nucleus.autocrop.GenerateOverlay;
+import gred.nucleus.autocrop.GenerateProjectionFromCoordinates;
 import gred.nucleus.core.ComputeNucleiParameters;
 import gred.nucleus.machinelearning.ComputeNucleiParametersML;
 import gred.nucleus.segmentation.SegmentationCalling;

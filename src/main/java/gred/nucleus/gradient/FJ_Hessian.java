@@ -8,7 +8,10 @@ import imagescience.image.Aspects;
 import imagescience.image.FloatImage;
 import imagescience.image.Image;
 
-import java.awt.*;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.awt.Panel;
+import java.awt.Point;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.Vector;
@@ -16,16 +19,17 @@ import java.util.Vector;
 
 public class FJ_Hessian implements PlugIn, WindowListener {
 	
+	private static final Point pos = new Point(-1, -1);
+	
 	private static boolean largest  = true;
 	private static boolean middle   = false;
 	private static boolean smallest = true;
-	
 	private static boolean absolute = true;
 	
-	private static       String    scale = "1.0";
-	private static final Point     pos   = new Point(-1, -1);
+	private static String scale = "1.0";
+	
 	@SuppressWarnings("unused")
-	private final        ImagePlus imp   = null;
+	private final ImagePlus imp = null;
 	
 	
 	public void run(String arg) {

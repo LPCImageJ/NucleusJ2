@@ -8,20 +8,23 @@ import imagescience.image.Aspects;
 import imagescience.image.FloatImage;
 import imagescience.image.Image;
 
-import java.awt.*;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.awt.Panel;
+import java.awt.Point;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 
 
 public class FJ_Derivatives implements PlugIn, WindowListener {
 	
+	private static final Point pos = new Point(-1, -1);
+	
 	private static int xOrder = 0;
 	private static int yOrder = 0;
 	private static int zOrder = 0;
 	
 	private static String scale = "1.0";
-	
-	private static final Point pos = new Point(-1, -1);
 	
 	
 	public void run(String arg) {

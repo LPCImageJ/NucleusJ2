@@ -9,7 +9,6 @@ import ij.ImagePlus;
 import ij.ImageStack;
 import ij.measure.Calibration;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

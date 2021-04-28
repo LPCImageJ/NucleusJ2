@@ -16,6 +16,9 @@ public class Directory {
 	/** Logger */
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
+	/** List of nd files */
+	private final List<File> fileListND = new ArrayList<>();
+	
 	/** Directory path */
 	private File       dir;
 	/** Directory path */
@@ -24,8 +27,6 @@ public class Directory {
 	private List<File> fileList      = new ArrayList<>();
 	/** Check if directory contain nd files */
 	private boolean    containNdFile = false;
-	/** List of nd files */
-	private List<File> fileListND    = new ArrayList<>();
 	/** Path separator */
 	private String     separator;
 	

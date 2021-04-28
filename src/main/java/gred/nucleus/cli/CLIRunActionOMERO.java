@@ -1,8 +1,8 @@
 package gred.nucleus.cli;
 
 import fr.igred.omero.Client;
-import fr.igred.omero.repository.ImageWrapper;
 import fr.igred.omero.repository.DatasetWrapper;
+import fr.igred.omero.repository.ImageWrapper;
 import fr.igred.omero.repository.ProjectWrapper;
 import gred.nucleus.autocrop.AutoCropCalling;
 import gred.nucleus.autocrop.AutocropParameters;
