@@ -1,7 +1,11 @@
 package gred.nucleus.autocrop;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +26,8 @@ import java.util.TreeMap;
 
 
 public class RectangleIntersection {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	/** List of boxes Rectangle : xMin , yMin , width , height */
 	List<Rectangle>       listRectangle      = new ArrayList<>();
@@ -232,7 +238,9 @@ public class RectangleIntersection {
 				                                       (int) maxHeight));
 			}
 		}
-		
+		LOGGER.debug("{} boxes will be merged in {} new boxes",
+		             listOfRectangleToRemove.size(),
+		             listOfRectangleToAdd.size());
 		for (int i = 0; i < listOfRectangleToAdd.size(); i++) {
 			this.newBoxesAdded = true;
 			listRectangle.add(listOfRectangleToAdd.get(i));

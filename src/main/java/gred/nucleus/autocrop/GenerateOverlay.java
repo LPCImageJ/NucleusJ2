@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +22,7 @@ public class GenerateOverlay {
 	Map<String, String> linkOverlayProjection = new HashMap<>();
 	
 	
-	public GenerateOverlay(String linkOverlayProjection) throws Exception {
+	public GenerateOverlay(String linkOverlayProjection) throws FileNotFoundException {
 		File overlayProjection = new File(linkOverlayProjection);
 		try (Scanner scanner = new Scanner(overlayProjection)) {
 			while (scanner.hasNextLine()) {
@@ -30,7 +31,6 @@ public class GenerateOverlay {
 				if (!(line.matches("^#.*"))) {
 					String[] splitLine = line.split("\\t");
 					this.linkOverlayProjection.put(splitLine[0], splitLine[1]);
-					
 				}
 			}
 		}

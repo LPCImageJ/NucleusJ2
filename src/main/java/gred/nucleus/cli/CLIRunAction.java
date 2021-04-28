@@ -9,11 +9,13 @@ import gred.nucleus.core.ComputeNucleiParameters;
 import gred.nucleus.machinelearning.ComputeNucleiParametersML;
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
+import loci.formats.FormatException;
 import org.apache.commons.cli.CommandLine;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 
@@ -26,8 +28,12 @@ public class CLIRunAction {
 	private final CommandLine cmd;
 	
 	
-	public CLIRunAction(CommandLine cmd) throws Exception {
+	public CLIRunAction(CommandLine cmd) {
 		this.cmd = cmd;
+	}
+	
+	
+	public void run() throws Exception {
 		switch (this.cmd.getOptionValue("action")) {
 			case "autocrop":
 				runAutocrop();
@@ -50,17 +56,19 @@ public class CLIRunAction {
 			case "GenerateOverlay":
 				runGenerateOV();
 				break;
+			default:
+				throw new IllegalArgumentException("Invalid action.");
 		}
 	}
 	
 	
-	private void runGenerateOV() throws Exception {
+	private void runGenerateOV() throws FileNotFoundException {
 		GenerateOverlay ov = new GenerateOverlay(this.cmd.getOptionValue("input"));
 		ov.run();
 	}
 	
 	
-	private void runCropFromCoordinates() throws Exception {
+	private void runCropFromCoordinates() throws IOException, FormatException {
 		CropFromCoordinates test = new CropFromCoordinates(this.cmd.getOptionValue("input"));
 		test.runCropFromCoordinate();
 	}

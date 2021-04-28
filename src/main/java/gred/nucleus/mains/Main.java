@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.Console;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
@@ -429,10 +430,10 @@ public class Main {
 	 *
 	 * @param coordinatesDir
 	 *
-	 * @throws Exception
+	 * @throws IOException
+	 * @throws FormatException
 	 */
-	public static void cropFromCoordinates(String coordinatesDir) throws Exception {
-		
+	public static void cropFromCoordinates(String coordinatesDir) throws IOException, FormatException {
 		CropFromCoordinates test = new CropFromCoordinates(coordinatesDir);
 		test.runCropFromCoordinate();
 	}
@@ -446,15 +447,13 @@ public class Main {
 	 *
 	 * @param linkOverlayProjection
 	 *
-	 * @throws Exception
+	 * @throws FileNotFoundException
 	 */
 	
 	
-	public static void generateOV(String linkOverlayProjection) throws Exception {
-		
+	public static void generateOV(String linkOverlayProjection) throws FileNotFoundException {
 		GenerateOverlay ov = new GenerateOverlay(linkOverlayProjection);
 		ov.run();
-		
 	}
 	
 	
@@ -466,16 +465,17 @@ public class Main {
 	
 	public static void main(String[] args) throws Exception {
 		List<String> listArgs = Arrays.asList(args);
-		System.setProperty("java.awt.headless", "false");
 		
 		if (listArgs.contains("-h") || listArgs.contains("-help")) {
 			CLIHelper.run(args);
 		} else if ((listArgs.contains("-ome")) || (listArgs.contains("-omero"))) {
 			CLIActionOptionOMERO command = new CLIActionOptionOMERO(args);
-			new CLIRunActionOMERO(command.getCmd());
+			CLIRunActionOMERO cliOMERO = new CLIRunActionOMERO(command.getCmd());
+			cliOMERO.run();
 		} else {
 			CLIActionOptionCmdLine command = new CLIActionOptionCmdLine(args);
-			new CLIRunAction(command.getCmd());
+			CLIRunAction cli = new CLIRunAction(command.getCmd());
+			cli.run();
 		}
 	}
 	

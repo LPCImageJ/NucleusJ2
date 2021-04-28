@@ -4,9 +4,11 @@ import gred.nucleus.autocrop.CropFromCoordinates;
 import gred.nucleus.dialogs.CropFromCoodinateDialog;
 import ij.IJ;
 import ij.plugin.PlugIn;
+import loci.formats.FormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 
 
@@ -15,7 +17,7 @@ public class CropFromCoordinates_ implements PlugIn {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	
-	public static void cropFromCoordinates(String coordinateDir) throws Exception {
+	public static void cropFromCoordinates(String coordinateDir) throws IOException, FormatException {
 		
 		CropFromCoordinates test = new CropFromCoordinates(coordinateDir);
 		test.runCropFromCoordinate();

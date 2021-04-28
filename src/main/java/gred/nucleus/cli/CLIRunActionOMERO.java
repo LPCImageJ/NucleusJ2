@@ -37,9 +37,13 @@ public class CLIRunActionOMERO {
 	String dataType;
 	
 	
-	public CLIRunActionOMERO(CommandLine cmd) throws Exception {
+	public CLIRunActionOMERO(CommandLine cmd) {
 		this.cmd = cmd;
 		getOMEROPassword();
+	}
+	
+	
+	public void run() throws Exception {
 		checkOMEROConnection();
 		switch (this.cmd.getOptionValue("action")) {
 			case "autocrop":
@@ -48,6 +52,8 @@ public class CLIRunActionOMERO {
 			case "segmentation":
 				runSegmentationOMERO();
 				break;
+			default:
+				throw new IllegalArgumentException("Invalid action");
 		}
 		this.client.disconnect();
 	}

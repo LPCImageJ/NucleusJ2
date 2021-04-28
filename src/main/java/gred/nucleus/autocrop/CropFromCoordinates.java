@@ -1,11 +1,13 @@
 package gred.nucleus.autocrop;
 
 import gred.nucleus.files.FilesNames;
+import loci.formats.FormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +27,7 @@ public class CropFromCoordinates {
 	 * @param linkCoordinateToRawImage tabulate file
 	 */
 	public CropFromCoordinates(String linkCoordinateToRawImage)
-	throws Exception {
+	throws FileNotFoundException {
 		File coordinateFile = new File(linkCoordinateToRawImage);
 		try (Scanner scanner = new Scanner(coordinateFile)) {
 			while (scanner.hasNextLine()) {
@@ -41,7 +43,7 @@ public class CropFromCoordinates {
 	}
 	
 	
-	public void runCropFromCoordinate() throws Exception {
+	public void runCropFromCoordinate() throws IOException, FormatException {
 		
 		for (Map.Entry<String, String> listOfFile : coordinateToRawImage.entrySet()) {
 			File coordinateFile = new File(listOfFile.getKey());

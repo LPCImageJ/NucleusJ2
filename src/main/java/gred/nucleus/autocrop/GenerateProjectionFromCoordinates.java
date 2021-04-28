@@ -104,7 +104,6 @@ public class GenerateProjectionFromCoordinates {
 	 * @throws FormatException
 	 */
 	public void generateCoordinateFiltered() throws IOException, FormatException {
-		
 		Directory giftSegImages = new Directory(this.pathToGIFTSeg);
 		giftSegImages.listImageFiles(this.pathToGIFTSeg);
 		giftSegImages.checkIfEmpty();
@@ -117,7 +116,6 @@ public class GenerateProjectionFromCoordinates {
 		for (short i = 0; i < coordinates.getNumberFiles(); ++i) {
 			File                coordinateFile        = coordinates.getFile(i);
 			Map<String, String> listOfBoxes           = readCoordinatesTXT(coordinateFile);
-			List<Integer>       boxNumber             = new ArrayList<>();
 			List<String>        boxListsNucleiNotPass = new ArrayList<>();
 			Map<String, String> sortedMap             = new TreeMap<>(listOfBoxes);
 			for (Map.Entry<String, String> entry : sortedMap.entrySet()) {
@@ -146,13 +144,12 @@ public class GenerateProjectionFromCoordinates {
 			                                                                                                        .lastIndexOf(
 					                                                                                                        '.')),
 			                                                         autocropParameters);
-			annotateAutoCrop.runAddBadCrop(boxNumber);
+			annotateAutoCrop.runAddBadCrop();
 		}
 	}
 	
 	
 	public void generateCoordinate() throws IOException, FormatException {
-		
 		Directory rawImage = new Directory(this.pathToRaw);
 		rawImage.listImageFiles(this.pathToRaw);
 		rawImage.checkIfEmpty();

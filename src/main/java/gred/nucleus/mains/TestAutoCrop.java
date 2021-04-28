@@ -3,9 +3,11 @@ package gred.nucleus.mains;
 import gred.nucleus.autocrop.AutoCropCalling;
 import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.autocrop.CropFromCoordinates;
+import loci.formats.FormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 
@@ -56,8 +58,7 @@ public class TestAutoCrop {
 	}
 	
 	
-	public static void runCropFromCoordinates(String coordinateDir) throws Exception {
-		
+	public static void runCropFromCoordinates(String coordinateDir) throws IOException, FormatException {
 		CropFromCoordinates test = new CropFromCoordinates(coordinateDir);
 		test.runCropFromCoordinate();
 	}

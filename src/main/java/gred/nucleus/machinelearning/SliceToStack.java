@@ -18,7 +18,6 @@ public class SliceToStack {
 	/** Logger */
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
-	
 	String pathToSliceDir;
 	String pathToOutputDir;
 	
@@ -51,10 +50,10 @@ public class SliceToStack {
 	 * Merge slice to stack : - images shall have this file name format : CommonNameOfImageToMerge_NumberOfSlice
 	 */
 	public void run() {
+		Map<String, Integer> test = new HashMap<>();
 		
-		Map<String, Integer> test            = new HashMap<>();
-		Directory                directoryOutput = new Directory(this.pathToOutputDir);
-		Directory                directoryInput  = new Directory(this.pathToSliceDir);
+		Directory directoryOutput = new Directory(this.pathToOutputDir);
+		Directory directoryInput  = new Directory(this.pathToSliceDir);
 		directoryInput.listImageFiles(this.pathToSliceDir);
 		// Iterate over images from directory
 		for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {

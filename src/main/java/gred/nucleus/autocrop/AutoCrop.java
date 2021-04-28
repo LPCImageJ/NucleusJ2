@@ -216,6 +216,7 @@ public class AutoCrop {
 	 * still under 20 threshold default threshold value is 20.
 	 */
 	public void thresholdKernels() {
+		LOGGER.info("Thresholding kernels.");
 		if (this.imageSeg == null) {
 			return;
 		}
@@ -254,6 +255,7 @@ public class AutoCrop {
 	
 	/** MorpholibJ Method computing connected components using OTSU segmented image */
 	public void computeConnectedComponent() {
+		LOGGER.info("Computing connected components.");
 		this.imageSegLabelled = BinaryImages.componentsLabeling(this.imageSeg, 26, 32);
 	}
 	
@@ -263,6 +265,7 @@ public class AutoCrop {
 	 * Filter connected components based on minimum volume (default 1 ) and maximum volume (default 2147483647)
 	 */
 	public void componentSizeFilter() {
+		LOGGER.info("Filtering components by size.");
 		Histogram histogram = new Histogram();
 		histogram.run(this.imageSegLabelled);
 		Map<Double, Integer> histogramData = histogram.getHistogram();
@@ -286,6 +289,7 @@ public class AutoCrop {
 	
 	/** MorpholibJ Method filtering border connect component */
 	public void componentBorderFilter() {
+		LOGGER.info("Filtering components on border.");
 		LabelImages.removeBorderLabels(this.imageSegLabelled);
 	}
 	
@@ -300,6 +304,7 @@ public class AutoCrop {
 	 * binarization method.
 	 */
 	public void computeBoxes2() {
+		LOGGER.info("Computing boxes.");
 		try {
 			ImageStack imageStackInput = this.imageSegLabelled.getStack();
 			Box        box;
@@ -344,6 +349,7 @@ public class AutoCrop {
 	 * </ul>
 	 */
 	public void addCROPParameter() {
+		LOGGER.info("Adding CROP parameter.");
 		for (Map.Entry<Double, Box> entry : new TreeMap<>(this.boxes).entrySet()) {
 			Box box  = entry.getValue();
 			int xMin = (int) box.getXMin() - this.autocropParameters.getXCropBoxSize();
@@ -392,6 +398,7 @@ public class AutoCrop {
 	 * <p>Then the image results obtained was used to create a new ImageCoreIJ, and the image is saved.
 	 */
 	public void cropKernels2() throws IOException, FormatException {
+		LOGGER.info("Cropping kernels (2).");
 		StringBuilder info      = new StringBuilder();
 		Directory     dirOutput = new Directory(this.outputDirPath + "nuclei");
 		dirOutput.checkAndCreateDir();
@@ -415,7 +422,9 @@ public class AutoCrop {
 				Calibration cal = this.rawImg.getCalibration();
 				croppedImage.setCalibration(cal);
 				String tiffPath = dirOutput.getDirPath() + File.separator +
-				                  this.outputFilesPrefix + "_" + i + "_C" + c + ".tif";
+				                  this.outputFilesPrefix +
+				                  "_" + String.format("%02d", i) +
+				                  "_C" + c + ".tif";
 				OutputTiff fileOutput = new OutputTiff(tiffPath);
 				info.append(tiffPath).append("\t")
 				    .append(c).append("\t")
@@ -429,13 +438,15 @@ public class AutoCrop {
 				fileOutput.saveImage(croppedImage);
 				this.outputFile.add(this.outputDirPath + File.separator +
 				                    this.outputFilesPrefix + File.separator +
-				                    this.outputFilesPrefix + "_" + i + ".tif");
+				                    this.outputFilesPrefix + "_" +
+				                    String.format("%02d", i) + ".tif");
 				if (c == 0) {
 					int xMax = xMin + width;
 					int yMax = yMin + height;
 					int zMax = zMin + depth;
 					this.boxCoordinates.add(this.outputDirPath + File.separator +
-					                        this.outputFilesPrefix + "_" + i + "_C0" + "\t" +
+					                        this.outputFilesPrefix + "_" +
+					                        String.format("%02d", i) + "_C0" + "\t" +
 					                        xMin + "\t" +
 					                        xMax + "\t" +
 					                        yMin + "\t" +
@@ -451,7 +462,7 @@ public class AutoCrop {
 	
 	public void cropKernelsOMERO(ImageWrapper image, Long[] outputsDat, Client client)
 	throws Exception {
-		
+		LOGGER.info("Cropping kernels (OMERO).");
 		StringBuilder info = new StringBuilder();
 		info.append(getSpecificImageInfo()).append(HEADERS);
 		for (int c = 0; c < this.channelNumbers; c++) {
@@ -485,8 +496,10 @@ public class AutoCrop {
 				ImagePlus   croppedImage = image.toImagePlus(client, xBound, yBound, cBound, zBound, null);
 				Calibration cal          = this.rawImg.getCalibration();
 				croppedImage.setCalibration(cal);
-				String tiffPath = new java.io.File(".").getCanonicalPath() + File.separator +
-				                  this.outputFilesPrefix + "_" + i + ".tif";
+				String tiffPath = new File(".").getCanonicalPath() +
+				                  File.separator +
+				                  this.outputFilesPrefix + "_" +
+				                  String.format("%02d", i) + ".tif";
 				OutputTiff fileOutput = new OutputTiff(tiffPath);
 				info.append(outputDirPath).append(outputFilesPrefix)
 				    .append(File.separator).append(outputFilesPrefix)
@@ -501,7 +514,8 @@ public class AutoCrop {
 				    .append(height).append("\t")
 				    .append(depth).append("\n");
 				fileOutput.saveImage(croppedImage);
-				this.outputFile.add(this.outputFilesPrefix + "_" + i + ".tif");
+				this.outputFile.add(this.outputFilesPrefix + "_" +
+				                    String.format("%02d", i) + ".tif");
 				dataset.importImages(client, tiffPath);
 				File file = new File(tiffPath);
 				try {
@@ -531,6 +545,7 @@ public class AutoCrop {
 	
 	/** Method crops a box of interest, from coordinate files. */
 	public void cropKernels3() throws IOException, FormatException {
+		LOGGER.info("Cropping kernels (3).");
 		StringBuilder info      = new StringBuilder();
 		Directory     dirOutput = new Directory(this.outputDirPath + File.separator + "Nuclei");
 		dirOutput.checkAndCreateDir();
@@ -554,7 +569,9 @@ public class AutoCrop {
 				Calibration cal = this.rawImg.getCalibration();
 				croppedImage.setCalibration(cal);
 				String tiffPath = dirOutput.getDirPath() + File.separator +
-				                  this.outputFilesPrefix + "_" + i + "_C" + c + ".tif";
+				                  this.outputFilesPrefix +
+				                  "_" + String.format("%02d", i) +
+				                  "_C" + c + ".tif";
 				OutputTiff fileOutput = new OutputTiff(tiffPath);
 				info.append(tiffPath).append("\t")
 				    .append(c).append("\t")
@@ -568,7 +585,8 @@ public class AutoCrop {
 				fileOutput.saveImage(croppedImage);
 				this.outputFile.add(this.outputDirPath + File.separator +
 				                    this.outputFilesPrefix + File.separator +
-				                    this.outputFilesPrefix + "_" + i + ".tif");
+				                    this.outputFilesPrefix + "_" +
+				                    String.format("%02d", i) + ".tif");
 				if (c == 0) {
 					int xMax = xMin + width;
 					int yMax = yMin + height;
@@ -726,6 +744,7 @@ public class AutoCrop {
 	 * Write analysis info in output text file
 	 */
 	public void writeAnalyseInfo() {
+		LOGGER.info("Writing analysis to file.");
 		Directory dirOutput = new Directory(this.outputDirPath + "coordinates");
 		dirOutput.checkAndCreateDir();
 		OutputTextFile resultFileOutput = new OutputTextFile(this.outputDirPath +
@@ -761,6 +780,7 @@ public class AutoCrop {
 	 * @return number of object detected
 	 */
 	public String getImageCropInfo() {
+		LOGGER.info("Getting image crop info.");
 		return this.imageFilePath + "\t" +
 		       getNbOfNuc() + "\t" +
 		       this.otsuThreshold + "\t" +
@@ -796,6 +816,7 @@ public class AutoCrop {
 	/** Compute boxes merging if intersecting */
 	public void boxIntersection() {
 		if (this.autocropParameters.getBoxesRegrouping()) {
+			LOGGER.info("Computing boxes intersections.");
 			RectangleIntersection recompute = new RectangleIntersection(this.boxes, this.autocropParameters);
 			recompute.runRectangleRecompilation();
 			this.boxes = recompute.getNewBoxes();
