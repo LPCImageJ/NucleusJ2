@@ -39,6 +39,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 
 
 /**
@@ -221,6 +222,7 @@ public class AutoCrop {
 			return;
 		}
 		this.sliceUsedForOTSU = "default";
+		// NB: GaussianBlur3D is responsible for the program hanging when done in CLI
 		GaussianBlur3D.blur(this.imageSeg, 0.5, 0.5, 1);
 		int thresh = Thresholding.computeOTSUThreshold(this.imageSeg);
 		if (thresh < this.autocropParameters.getThresholdOTSUComputing()) {
@@ -283,7 +285,7 @@ public class AutoCrop {
 				this.boxes.put(key, initializedBox);
 			}
 		}
-		LOGGER.info("Number of boxes: {}", this.boxes.size());
+		LOGGER.debug("Number of objects found: {}", this.boxes.size());
 	}
 	
 	

@@ -2,7 +2,6 @@ package gred.nucleus.autocrop;
 
 import gred.nucleus.files.Directory;
 import ij.ImagePlus;
-import ij.gui.Overlay;
 import ij.gui.TextRoi;
 import ij.io.FileSaver;
 import ij.plugin.ContrastEnhancer;
@@ -132,6 +131,9 @@ public class AnnotateAutoCrop {
 		ZProjector zProjectionTmp = new ZProjector(this.zProjection);
 		this.zProjection = projectionMax(zProjectionTmp);
 		adjustContrast(0.3);
+		ImageConverter converter = new ImageConverter(this.zProjection);
+		converter.convertToRGB();
+		
 		for (String boxCoordinate : this.boxCoordinates) {
 			String[] splitLine = boxCoordinate.split("\\t");
 			String[] fileName  = splitLine[0].split(Pattern.quote(File.separator));
@@ -212,7 +214,8 @@ public class AnnotateAutoCrop {
 			xBorder = Integer.parseInt(currentBox[2]) + 60;
 		}
 		/* Draw the nucleus number aside the box */
-		ip.drawString(Integer.toString(boxNumber), xBorder, yBorder);
+		TextRoi text = new TextRoi(Integer.toString(boxNumber), xBorder, yBorder, font);
+		text.drawPixels(ip);
 	}
 	
 	
