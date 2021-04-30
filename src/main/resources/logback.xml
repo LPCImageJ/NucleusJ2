@@ -13,4 +13,7 @@
 	<logger name="loci.formats">
 		<level value="warn" />
 	</logger>
+	<logger name="ome.formats">
+		<level value="warn" />
+	</logger>
 </configuration>

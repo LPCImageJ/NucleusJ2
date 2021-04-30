@@ -19,6 +19,7 @@ import ij.measure.Calibration;
 import ij.plugin.ChannelSplitter;
 import ij.plugin.Duplicator;
 import ij.plugin.GaussianBlur3D;
+import ij.util.ThreadUtil;
 import inra.ijpb.binary.BinaryImages;
 import inra.ijpb.label.LabelImages;
 import loci.formats.FormatException;
@@ -39,7 +40,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
 
 
 /**
@@ -224,6 +224,8 @@ public class AutoCrop {
 		this.sliceUsedForOTSU = "default";
 		// NB: GaussianBlur3D is responsible for the program hanging when done in CLI
 		GaussianBlur3D.blur(this.imageSeg, 0.5, 0.5, 1);
+		/** Manually ask to threads to close because GaussianBlur3D are still active */
+		ThreadUtil.threadPoolExecutor.shutdownNow();
 		int thresh = Thresholding.computeOTSUThreshold(this.imageSeg);
 		if (thresh < this.autocropParameters.getThresholdOTSUComputing()) {
 			ImagePlus imp2;

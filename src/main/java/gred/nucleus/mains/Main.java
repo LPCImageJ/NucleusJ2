@@ -15,7 +15,6 @@ import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
 import ij.ImagePlus;
 import ij.io.FileSaver;
-import ij.util.ThreadUtil;
 import loci.formats.FormatException;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
@@ -29,7 +28,6 @@ import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 
@@ -479,9 +477,6 @@ public class Main {
 			CLIRunAction cli = new CLIRunAction(command.getCmd());
 			cli.run();
 		}
-		
-		/** Manually ask to threads to close because GaussianBlur3D are still active */
-		ThreadUtil.threadPoolExecutor.shutdownNow();
 	}
 	
 	
