@@ -16,14 +16,15 @@ import gred.nucleus.segmentation.SegmentationParameters;
 import gred.nucleus.utils.FillingHoles;
 import gred.nucleus.utils.Gradient;
 import gred.nucleus.utils.Histogram;
-import ij.IJ;
 import ij.ImagePlus;
 import ij.ImageStack;
+import ij.Macro;
 import ij.io.FileSaver;
 import ij.measure.Calibration;
 import ij.plugin.ChannelSplitter;
 import ij.plugin.Filters3D;
 import ij.plugin.GaussianBlur3D;
+import ij.plugin.filter.LutApplier;
 import ij.process.StackConverter;
 import ij.process.StackStatistics;
 import inra.ijpb.binary.BinaryImages;
@@ -253,7 +254,7 @@ public class NucleusSegmentation {
 	 * @return ImagePlus Segmented image
 	 */
 	public void findOTSUMaximisingSphericity() {
-		
+		LOGGER.info("Finding OTSU to maximize sphericity.");
 		double imageVolume = getVoxelVolume() * this.imgRaw.getWidth() *
 		                     this.imgRaw.getHeight() * this.imgRaw.getStackSize();
 		Gradient gradient       = new Gradient(this.imgRaw);
@@ -323,10 +324,11 @@ public class NucleusSegmentation {
 	 * <p> TODO object function image transformation
 	 */
 	public void preProcessImage() {
-		
+		LOGGER.info("Preprocessing image.");
 		GaussianBlur3D.blur(this.imgRawTransformed, 0.1, 0.1, 1);
 		ImageStack imageStack = this.imgRawTransformed.getStack();
-		int        max        = 0;
+		
+		int max = 0;
 		for (int k = 0; k < this.imgRawTransformed.getStackSize(); ++k) {
 			for (int b = 0; b < this.imgRawTransformed.getWidth(); ++b) {
 				for (int j = 0; j < this.imgRawTransformed.getHeight(); ++j) {
@@ -336,8 +338,18 @@ public class NucleusSegmentation {
 				}
 			}
 		}
-		IJ.setMinAndMax(this.imgRawTransformed, 0, max);
-		IJ.run(this.imgRawTransformed, "Apply LUT", "stack");
+		imgRawTransformed.setDisplayRange(0, max);
+		/* Prepare LutApplier */
+		LutApplier lutApplier = new LutApplier();
+		lutApplier.setup("", imgRawTransformed);
+		/* Set stack mode with Macro class, but thread has to be renamed */
+		String threadName = Thread.currentThread().getName();
+		Thread.currentThread().setName("Run$_" + threadName);
+		Macro.setOptions("stack");
+		/* Apply LUT */
+		lutApplier.run(imgRawTransformed.getProcessor());
+		/* Restore thread name */
+		Thread.currentThread().setName(threadName);
 		if (this.imgRaw.getType() == ImagePlus.GRAY16) {
 			StackConverter stackConverter = new StackConverter(this.imgRawTransformed);
 			stackConverter.convertToGray8();
@@ -736,10 +748,10 @@ public class NucleusSegmentation {
 	 * @param inputPathDir folder of the input to create badcrop folder.
 	 */
 	public void checkBadCrop(String inputPathDir) {
-		
+		LOGGER.info("Checking bad crop.");
 		if ((this.badCrop) || (this.bestThreshold == -1)) {
 			File badCropFolder = new File(inputPathDir + File.separator + "BadCrop");
-			LOGGER.debug("et du coup on est dedans ou quoi ...........\n{}..................", badCropFolder);
+			LOGGER.debug("Saving bad crops to: {}", badCropFolder);
 			
 			if (badCropFolder.exists() || badCropFolder.mkdir()) {
 				File    fileToMove = new File(inputPathDir + File.separator + this.imgRawTransformed.getTitle());
@@ -810,6 +822,7 @@ public class NucleusSegmentation {
 	 * <p> TODO verifier cette methode si elle est à ca place
 	 */
 	public void saveOTSUSegmented() {
+		LOGGER.info("Saving OTSU segmentation.");
 		if (!badCrop && bestThreshold != -1) {
 			String pathSegOTSU = this.segmentationParameters.getOutputFolder() +
 			                     "OTSU" +
@@ -827,6 +840,7 @@ public class NucleusSegmentation {
 	 */
 	public void saveOTSUSegmentedOMERO(Client client, Long id)
 	throws Exception {
+		LOGGER.info("Saving OTSU segmentation.");
 		if (!badCrop && bestThreshold != -1) {
 			String path = new java.io.File(".").getCanonicalPath() + File.separator + this.imageSeg[0].getTitle();
 			saveFile(this.imageSeg[0], path);
@@ -860,13 +874,12 @@ public class NucleusSegmentation {
 	 * <p> TODO verifier cette methode si elle est à sa place
 	 */
 	public void saveGiftWrappingSeg() {
-		
-		if (!badCrop && bestThreshold != -1
-		    && this.segmentationParameters.getGiftWrapping()) {
+		LOGGER.info("Saving Gift Wrapping segmentation.");
+		if (!badCrop && bestThreshold != -1 && this.segmentationParameters.getGiftWrapping()) {
 			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
 			this.imageSeg[0] = nuc.runGIFTWrapping(this.imageSeg[0], this.segmentationParameters);
-			String pathSegGIFT =
-					this.segmentationParameters.getOutputFolder() + "GIFT" + File.separator + this.imgRaw.getTitle();
+			String pathSegGIFT = this.segmentationParameters.getOutputFolder() +
+			                     "GIFT" + File.separator + this.imgRaw.getTitle();
 			this.imageSeg[0].setTitle(pathSegGIFT);
 			saveFile(this.imageSeg[0], pathSegGIFT);
 		}
@@ -879,8 +892,8 @@ public class NucleusSegmentation {
 	 */
 	public void saveGiftWrappingSegOMERO(Client client, Long id)
 	throws Exception {
-		if (!badCrop && bestThreshold != -1
-		    && this.segmentationParameters.getGiftWrapping()) {
+		LOGGER.info("Saving Gift Wrapping segmentation.");
+		if (!badCrop && bestThreshold != -1 && this.segmentationParameters.getGiftWrapping()) {
 			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
 			
 			this.imageSeg[0] = nuc.runGIFTWrapping(this.imageSeg[0], this.segmentationParameters);
@@ -892,7 +905,7 @@ public class NucleusSegmentation {
 			List<DatasetWrapper> datasets = project.getDatasets("GIFT");
 			
 			DatasetWrapper gift;
-			if (datasets.size() == 0) {
+			if (datasets.isEmpty()) {
 				gift = new DatasetWrapper("GIFT", "");
 				Long datasetId = project.addDataset(client, gift).getId();
 				gift = client.getDataset(datasetId);

@@ -8,7 +8,8 @@ import org.apache.commons.cli.*;
 public class CLIActionOptions {
 	
 	/** NucleusJ version */
-	private static final String NJ_version  = Version.get();
+	private static final String NJ_VERSION = Version.get();
+	
 	/** Path to input folder */
 	public               Option inputFolder = Option.builder("in")
 	                                                .longOpt("input")
@@ -23,7 +24,7 @@ public class CLIActionOptions {
 	                                                .desc("Path to config file\n" +
 	                                                      "To generate config file example in current folder:\n" +
 	                                                      "java -jar NucleusJ_2-" +
-	                                                      NJ_version +
+	                                                      NJ_VERSION +
 	                                                      ".jar -h configFileExample")
 	                                                .numberOfArgs(1)
 	                                                .build();
@@ -64,8 +65,8 @@ public class CLIActionOptions {
 		try {
 			this.cmd = this.parser.parse(this.options, argument, true);
 		} catch (ParseException exp) {
-			System.out.println(exp.getMessage() + "\n");
-			System.out.println(getHelperInfo());
+			System.console().writer().println(exp.getMessage() + "\n");
+			System.console().writer().println(getHelperInfo());
 			System.exit(1);
 		}
 	}
@@ -74,11 +75,11 @@ public class CLIActionOptions {
 	/** @return : helper info */
 	public String getHelperInfo() {
 		return "More details for available actions:\n" +
-		       "java -jar NucleusJ_2-" + NJ_version + ".jar -h \n" +
-		       "java -jar NucleusJ_2-" + NJ_version + ".jar -help \n\n" +
+		       "java -jar NucleusJ_2-" + NJ_VERSION + ".jar -h \n" +
+		       "java -jar NucleusJ_2-" + NJ_VERSION + ".jar -help \n\n" +
 		       "More details for a specific action:\n" +
-		       "java -jar NucleusJ_2-" + NJ_version + ".jar -h <action>\n" +
-		       "java -jar NucleusJ_2-" + NJ_version + ".jar -help <action>";
+		       "java -jar NucleusJ_2-" + NJ_VERSION + ".jar -h <action>\n" +
+		       "java -jar NucleusJ_2-" + NJ_VERSION + ".jar -help <action>";
 	}
 	
 	

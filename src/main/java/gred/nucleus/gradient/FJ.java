@@ -51,7 +51,7 @@ public final class FJ {
 			if (ImageScience.version().compareTo(MIN_IS_VERSION) < 0) {
 				throw new IllegalStateException();
 			}
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			error("This plugin requires ImageScience version " + MIN_IS_VERSION + " or higher");
 			return false;
 		}
@@ -138,7 +138,7 @@ public final class FJ {
 		try {
 			Class.forName("i5d.Image5D");
 			i5dExist = true;
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			LOGGER.error("An error occurred.", e);
 		}
 		if (i5dExist && I5DResource.instance(imp)) {

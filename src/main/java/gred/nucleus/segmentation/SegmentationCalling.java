@@ -281,6 +281,7 @@ public class SegmentationCalling {
 	
 	
 	public void saveCropGeneralInfo() {
+		LOGGER.info("Saving crop general info.");
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(this.segmentationParameters.getOutputFolder()
 		                                                         + "OTSU"
 		                                                         + File.separator

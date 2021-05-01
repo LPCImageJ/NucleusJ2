@@ -25,6 +25,7 @@ public class OutputTiff extends FilesNames {
 	 * <p> TODO ADD ERROR IN LOG FILE
 	 */
 	public void saveImage(ImagePlus imageToSave) {
+		LOGGER.debug("Saving image: {}", this.fullPathFile);
 		try {
 			if (!fileExists()) {
 				if (imageToSave.getNSlices() > 1) {

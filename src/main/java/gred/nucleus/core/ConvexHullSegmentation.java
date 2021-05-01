@@ -4,6 +4,10 @@ import gred.nucleus.segmentation.SegmentationParameters;
 import gred.nucleus.utils.ConvexHullImageMaker;
 import ij.ImagePlus;
 import ij.ImageStack;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.lang.invoke.MethodHandles;
 
 
 /**
@@ -13,6 +17,8 @@ import ij.ImageStack;
  * @author Tristan Dubos and Axel Poulet
  */
 public class ConvexHullSegmentation {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	
 	private SegmentationParameters segmentationParameters;
@@ -26,6 +32,7 @@ public class ConvexHullSegmentation {
 	 * @return segmented image
 	 */
 	public ImagePlus runGIFTWrapping(ImagePlus imagePlusInput, SegmentationParameters segmentationParameters) {
+		LOGGER.info("Running GIFT Wrapping.");
 		ConvexHullImageMaker nuc = new ConvexHullImageMaker();
 		nuc.setAxes("xy");
 		ImagePlus imagePlusXY = nuc.giftWrapping(imagePlusInput, segmentationParameters);

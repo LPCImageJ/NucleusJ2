@@ -152,7 +152,7 @@ class FJStructure {
 		} catch (IllegalArgumentException | IllegalStateException e) {
 			FJ.error(e.getMessage());
 			
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			FJ.error("An unidentified error occurred while running the plugin");
 			
 		}

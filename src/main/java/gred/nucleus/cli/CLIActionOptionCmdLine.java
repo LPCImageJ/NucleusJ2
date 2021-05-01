@@ -52,12 +52,14 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
 			this.cmd = this.parser.parse(this.options, args);
 			isTrue(availableActionCMD(this.cmd.getOptionValue("action")));
 		} catch (ParseException exp) {
-			System.out.println(exp.getMessage() + "\n");
-			System.out.println(getHelperInfo());
+			System.console().writer().println(exp.getMessage() + "\n");
+			System.console().writer().println(getHelperInfo());
 			System.exit(1);
 		} catch (Exception exp) {
-			System.out.println("Action option \"" + this.cmd.getOptionValue("action") + "\" not available" + "\n");
-			System.out.println(getHelperInfo());
+			System.console().writer().println("Action option \"" +
+			                                  this.cmd.getOptionValue("action") +
+			                                  "\" not available" + "\n");
+			System.console().writer().println(getHelperInfo());
 			System.exit(1);
 		}
 	}

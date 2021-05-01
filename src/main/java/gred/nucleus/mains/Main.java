@@ -15,6 +15,7 @@ import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
 import ij.ImagePlus;
 import ij.io.FileSaver;
+import ij.util.ThreadUtil;
 import loci.formats.FormatException;
 import org.apache.commons.cli.*;
 import org.slf4j.Logger;
@@ -408,14 +409,13 @@ public class Main {
 	 *
 	 * @throws IOException
 	 * @throws FormatException
-	 * @throws Exception
 	 */
 	
 	
 	public static void generateProjectionFromCoordinates(String pathToGIFTSeg,
 	                                                     String pathToZProjection,
 	                                                     String pathToCoordinates)
-	throws IOException, FormatException, Exception {
+	throws IOException, FormatException {
 		GenerateProjectionFromCoordinates projection =
 				new GenerateProjectionFromCoordinates(pathToGIFTSeg, pathToZProjection, pathToCoordinates);
 		projection.generateCoordinateFiltered();
@@ -466,6 +466,9 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		List<String> listArgs = Arrays.asList(args);
 		
+		/* Allow IJ threads from thread pool to timeout */
+		ThreadUtil.threadPoolExecutor.allowCoreThreadTimeOut(true);
+		
 		if (listArgs.contains("-h") || listArgs.contains("-help")) {
 			CLIHelper.run(args);
 		} else if ((listArgs.contains("-ome")) || (listArgs.contains("-omero"))) {
@@ -477,6 +480,7 @@ public class Main {
 			CLIRunAction cli = new CLIRunAction(command.getCmd());
 			cli.run();
 		}
+		ThreadUtil.threadPoolExecutor.shutdown();
 	}
 	
 	
@@ -527,7 +531,7 @@ public class Main {
 					if (cmd.hasOption("password")) {
 						mdp = cmd.getOptionValue("password");
 					} else {
-						System.out.println("Enter password: ");
+						System.console().writer().println("Enter password: ");
 						mdp = String.valueOf(con.readPassword());
 					}
 					
@@ -572,7 +576,7 @@ public class Main {
 					if (cmd.hasOption("password")) {
 						mdp = cmd.getOptionValue("password");
 					} else {
-						System.out.println("Enter password: ");
+						System.console().writer().println("Enter password: ");
 						mdp = String.valueOf(con.readPassword());
 					}
 					
@@ -641,11 +645,11 @@ public class Main {
 			default:
 				formatter.printHelp("NucleusJ2.0", options, true);
 /*
-            System.out.println("Argument le premier argument doit être   autocrop  ou   segmentation ou computeParameters");
-            System.out.println("\nExemples :");
-            System.out.println("\njava NucleusJ_giftwrapping.jar autocrop dossier/raw/ dossier/out/");
-            System.out.println("\njava NucleusJ_giftwrapping.jar segmentation dossier/raw/ dossier/out/");
-            System.out.println("\n\n");
+            System.console().writer().println("Argument le premier argument doit être   autocrop  ou   segmentation ou computeParameters");
+            System.console().writer().println("\nExemples :");
+            System.console().writer().println("\njava NucleusJ_giftwrapping.jar autocrop dossier/raw/ dossier/out/");
+            System.console().writer().println("\njava NucleusJ_giftwrapping.jar segmentation dossier/raw/ dossier/out/");
+            System.console().writer().println("\n\n");
             */
 				break;
 		}

@@ -16,11 +16,11 @@ import imagescience.utility.Progressor;
  */
 public class MyGradient {
 	
-	private static final boolean compute  = true;
-	private static final boolean suppress = false;
-	private static final String  scale    = "1.0";
-	private static final String  lower    = "";
-	private static final String  higher   = "";
+	private static final boolean COMPUTE  = true;
+	private static final boolean SUPPRESS = false;
+	private static final String  SCALE    = "1.0";
+	private static final String  LOWER    = "";
+	private static final String  HIGHER   = "";
 	private final        boolean mask;
 	ImagePlus imagePlus;
 	ImagePlus imagePlusBinary;
@@ -49,24 +49,24 @@ public class MyGradient {
 			boolean lowThreshold  = true;
 			boolean highThreshold = true;
 			try {
-				scaleVal = Double.parseDouble(scale);
+				scaleVal = Double.parseDouble(SCALE);
 			} catch (Exception e) {
 				throw new IllegalArgumentException("Invalid smoothing scale value");
 			}
 			try {
-				if (lower.equals("")) {
+				if (LOWER.equals("")) {
 					lowThreshold = false;
 				} else {
-					lowVal = Double.parseDouble(lower);
+					lowVal = Double.parseDouble(LOWER);
 				}
 			} catch (Exception e) {
 				throw new IllegalArgumentException("Invalid lower threshold value");
 			}
 			try {
-				if (higher.equals("")) {
+				if (HIGHER.equals("")) {
 					highThreshold = false;
 				} else {
-					highVal = Double.parseDouble(higher);
+					highVal = Double.parseDouble(HIGHER);
 				}
 			} catch (Exception e) {
 				throw new IllegalArgumentException("Invalid higher threshold value");
@@ -76,12 +76,12 @@ public class MyGradient {
 			Image       newImage   = new FloatImage(image);
 			double[]    pls        = {0, 1};
 			int         pl         = 0;
-			if ((compute || suppress) && threshMode > 0) {
+			if ((COMPUTE || SUPPRESS) && threshMode > 0) {
 				pls = new double[]{0, 0.9, 1};
 			}
 			final Progressor progressor = new Progressor();
 			progressor.display(FJ_Options.pgs);
-			if (compute || suppress) {
+			if (COMPUTE || SUPPRESS) {
 				final Aspects aspects = newImage.aspects();
 				if (!FJ_Options.isotropic) newImage.aspects(new Aspects());
 				final MyEdges myEdges = new MyEdges();
@@ -91,7 +91,7 @@ public class MyGradient {
 				myEdges.progressor.parent(progressor);
 				myEdges.messenger.log(FJ_Options.log);
 				myEdges.messenger.status(FJ_Options.pgs);
-				newImage = myEdges.run(newImage, scaleVal, suppress);
+				newImage = myEdges.run(newImage, scaleVal, SUPPRESS);
 				newImage.aspects(aspects);
 			}
 			newImagePlus = newImage.imageplus();
@@ -105,7 +105,7 @@ public class MyGradient {
 		} catch (IllegalArgumentException | IllegalStateException e) {
 			FJ.error(e.getMessage());
 		}
-		//catch (Throwable e) {	FJ.error("An unidentified error occurred while running the plugin");	}
+		//catch (Exception e) {	FJ.error("An unidentified error occurred while running the plugin");	}
 		return newImagePlus;
 	}
 	

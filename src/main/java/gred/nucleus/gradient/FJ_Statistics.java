@@ -373,25 +373,24 @@ class FJStatistics {
 	}
 	
 	
-	@SuppressWarnings("static-access")
 	private String results() {
 		
 		final StringBuilder res = new StringBuilder();
 		
-		if (values[4]) res.append("\t").append(fmt.d2s(stats.get(stats.ELEMENTS)));
-		if (values[0]) res.append("\t").append(fmt.d2s(stats.get(stats.MINIMUM)));
-		if (values[1]) res.append("\t").append(fmt.d2s(stats.get(stats.MAXIMUM)));
-		if (values[2]) res.append("\t").append(fmt.d2s(stats.get(stats.MEAN)));
-		if (values[6]) res.append("\t").append(fmt.d2s(stats.get(stats.VARIANCE)));
-		if (values[8]) res.append("\t").append(fmt.d2s(stats.get(stats.SDEVIATION)));
-		if (values[9]) res.append("\t").append(fmt.d2s(stats.get(stats.ADEVIATION)));
-		if (values[3]) res.append("\t").append(fmt.d2s(stats.get(stats.MEDIAN)));
-		if (values[7]) res.append("\t").append(fmt.d2s(stats.get(stats.MODE)));
-		if (values[5]) res.append("\t").append(fmt.d2s(stats.get(stats.MASS)));
-		if (values[10]) res.append("\t").append(fmt.d2s(stats.get(stats.L1NORM)));
-		if (values[11]) res.append("\t").append(fmt.d2s(stats.get(stats.L2NORM)));
-		if (values[12]) res.append("\t").append(fmt.d2s(stats.get(stats.SKEWNESS)));
-		if (values[13]) res.append("\t").append(fmt.d2s(stats.get(stats.KURTOSIS)));
+		if (values[4]) res.append("\t").append(fmt.d2s(stats.get(Statistics.ELEMENTS)));
+		if (values[0]) res.append("\t").append(fmt.d2s(stats.get(Statistics.MINIMUM)));
+		if (values[1]) res.append("\t").append(fmt.d2s(stats.get(Statistics.MAXIMUM)));
+		if (values[2]) res.append("\t").append(fmt.d2s(stats.get(Statistics.MEAN)));
+		if (values[6]) res.append("\t").append(fmt.d2s(stats.get(Statistics.VARIANCE)));
+		if (values[8]) res.append("\t").append(fmt.d2s(stats.get(Statistics.SDEVIATION)));
+		if (values[9]) res.append("\t").append(fmt.d2s(stats.get(Statistics.ADEVIATION)));
+		if (values[3]) res.append("\t").append(fmt.d2s(stats.get(Statistics.MEDIAN)));
+		if (values[7]) res.append("\t").append(fmt.d2s(stats.get(Statistics.MODE)));
+		if (values[5]) res.append("\t").append(fmt.d2s(stats.get(Statistics.MASS)));
+		if (values[10]) res.append("\t").append(fmt.d2s(stats.get(Statistics.L1NORM)));
+		if (values[11]) res.append("\t").append(fmt.d2s(stats.get(Statistics.L2NORM)));
+		if (values[12]) res.append("\t").append(fmt.d2s(stats.get(Statistics.SKEWNESS)));
+		if (values[13]) res.append("\t").append(fmt.d2s(stats.get(Statistics.KURTOSIS)));
 		
 		return res.toString();
 	}

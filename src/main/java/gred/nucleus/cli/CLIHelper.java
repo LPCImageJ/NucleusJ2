@@ -9,6 +9,10 @@ import org.apache.commons.cli.HelpFormatter;
 /** Class to generate helper */
 public class CLIHelper {
 	
+	private CLIHelper() {
+		// DO NOTHING
+	}
+	
 	/**
 	 * Main method
 	 *
@@ -35,8 +39,8 @@ public class CLIHelper {
 		CLIActionOptionCmdLine command    = new CLIActionOptionCmdLine(exampleCMD);
 		HelpFormatter          formatter  = new HelpFormatter();
 		formatter.printHelp("NucleusJ2.0 cli : ", command.getOptions());
-		System.out.println("\nCommand line example : \n" +
-		                   exampleCommand + " " + exampleArgument + "\n\n");
+		System.console().writer().println("\nCommand line example : \n" +
+		                                  exampleCommand + " " + exampleArgument + "\n\n");
 		
 		String exampleArgumentOMERO = "-omero " +
 		                              "-action segmentation " +
@@ -48,8 +52,8 @@ public class CLIHelper {
 		String[]             exampleOMEROCMD = exampleArgumentOMERO.split(" ");
 		CLIActionOptionOMERO commandOMERO    = new CLIActionOptionOMERO(exampleOMEROCMD);
 		formatter.printHelp("NucleusJ2.0 OMERO MODE: ", commandOMERO.getOptions());
-		System.out.println("\nCommand line example : \n\n" +
-		                   exampleCommand + " " + exampleArgumentOMERO);
+		System.console().writer().println("\nCommand line example : \n\n" +
+		                                  exampleCommand + " " + exampleArgumentOMERO);
 		
 		System.exit(1);
 	}
@@ -75,8 +79,8 @@ public class CLIHelper {
 				command = new CLIActionOptionCmdLine(exampleCMD);
 				formatter = new HelpFormatter();
 				formatter.printHelp("NucleusJ2.0 segmentation cli : ", command.getOptions());
-				System.out.println("\nCommand line example : \n" +
-				                   exampleCommand + exampleArgument + "\n\n");
+				System.console().writer().println("\nCommand line example : \n" +
+				                                  exampleCommand + exampleArgument + "\n\n");
 				
 				String exampleArgumentOMERO = "-omero " +
 				                              "-action segmentation " +
@@ -89,8 +93,8 @@ public class CLIHelper {
 				String[] exampleOMEROCMD = exampleArgumentOMERO.split(" ");
 				CLIActionOptionOMERO commandOMERO = new CLIActionOptionOMERO(exampleOMEROCMD);
 				formatter.printHelp("NucleusJ2.0 segmentation OMERO MODE: ", commandOMERO.getOptions());
-				System.out.println("\nCommand line example : \n\n" +
-				                   exampleCommand + " " + exampleArgumentOMERO);
+				System.console().writer().println("\nCommand line example : \n\n" +
+				                                  exampleCommand + " " + exampleArgumentOMERO);
 				break;
 			
 			case "autocrop":
@@ -101,8 +105,8 @@ public class CLIHelper {
 				command = new CLIActionOptionCmdLine(exampleCMD);
 				formatter = new HelpFormatter();
 				formatter.printHelp("NucleusJ2.0 autocrop cli : ", command.getOptions());
-				System.out.println("\nCommand line example : \n" +
-				                   exampleCommand + exampleArgument + "\n\n");
+				System.console().writer().println("\nCommand line example : \n" +
+				                                  exampleCommand + exampleArgument + "\n\n");
 				
 				
 				exampleArgumentOMERO = "-omero " +
@@ -115,8 +119,8 @@ public class CLIHelper {
 				exampleOMEROCMD = exampleArgumentOMERO.split(" ");
 				commandOMERO = new CLIActionOptionOMERO(exampleOMEROCMD);
 				formatter.printHelp("NucleusJ2.0 autocrop OMERO MODE: ", commandOMERO.getOptions());
-				System.out.println("\nCommand line example : \n\n" +
-				                   exampleCommand + exampleArgumentOMERO);
+				System.console().writer().println("\nCommand line example : \n\n" +
+				                                  exampleCommand + exampleArgumentOMERO);
 				break;
 			
 			case "computeParameters":
@@ -127,8 +131,8 @@ public class CLIHelper {
 				command = new CLIActionOptionCmdLine(exampleCMD);
 				formatter = new HelpFormatter();
 				formatter.printHelp("NucleusJ2.0 computeParameters cli : ", command.getOptions());
-				System.out.println("\nCommand line example : \n" +
-				                   exampleCommand + exampleArgument + "\n\n");
+				System.console().writer().println("\nCommand line example : \n" +
+				                                  exampleCommand + exampleArgument + "\n\n");
 				break;
 			
 			case "computeParametersDL":
@@ -139,8 +143,8 @@ public class CLIHelper {
 				command = new CLIActionOptionCmdLine(exampleCMD);
 				formatter = new HelpFormatter();
 				formatter.printHelp("NucleusJ2.0 computeParametersDL cli : ", command.getOptions());
-				System.out.println("\nCommand line example : \n" +
-				                   exampleCommand + exampleArgument + "\n\n");
+				System.console().writer().println("\nCommand line example : \n" +
+				                                  exampleCommand + exampleArgument + "\n\n");
 				break;
 			
 			case "generateProjection":
@@ -151,8 +155,8 @@ public class CLIHelper {
 				command = new CLIActionOptionCmdLine(exampleCMD);
 				formatter = new HelpFormatter();
 				formatter.printHelp("NucleusJ2.0 generateProjection cli : ", command.getOptions());
-				System.out.println("\nCommand line example : \n" +
-				                   exampleCommand + exampleArgument + "\n\n");
+				System.console().writer().println("\nCommand line example : \n" +
+				                                  exampleCommand + exampleArgument + "\n\n");
 				break;
 			
 			case "generateProjectionFiltered":
@@ -164,8 +168,8 @@ public class CLIHelper {
 				command = new CLIActionOptionCmdLine(exampleCMD);
 				formatter = new HelpFormatter();
 				formatter.printHelp("NucleusJ2.0 generateProjectionFiltered cli : ", command.getOptions());
-				System.out.println("\nCommand line example : \n" +
-				                   exampleCommand + exampleArgument + "\n\n");
+				System.console().writer().println("\nCommand line example : \n" +
+				                                  exampleCommand + exampleArgument + "\n\n");
 				break;
 			
 			case "CropFromCoordinate":
@@ -175,8 +179,8 @@ public class CLIHelper {
 				command = new CLIActionOptionCmdLine(exampleCMD);
 				formatter = new HelpFormatter();
 				formatter.printHelp("NucleusJ2.0 CropFromCoordinate cli : ", command.getOptions());
-				System.out.println("\nCommand line example : \n" +
-				                   exampleCommand + exampleArgument + "\n\n");
+				System.console().writer().println("\nCommand line example : \n" +
+				                                  exampleCommand + exampleArgument + "\n\n");
 				break;
 			
 			case "GenerateOverlay":
@@ -186,8 +190,8 @@ public class CLIHelper {
 				command = new CLIActionOptionCmdLine(exampleCMD);
 				formatter = new HelpFormatter();
 				formatter.printHelp("NucleusJ2.0 GenerateOverlay cli : ", command.getOptions());
-				System.out.println("\nCommand line example : \n" +
-				                   exampleCommand + exampleArgument + "\n\n");
+				System.console().writer().println("\nCommand line example : \n" +
+				                                  exampleCommand + exampleArgument + "\n\n");
 				break;
 			
 			case "configFileExample":
@@ -212,14 +216,14 @@ public class CLIHelper {
 						"xCal:1\n" +
 						"yCal:1\n" +
 						"zCal:1";
-				System.out.println("Two config file with default parameters generate: \n");
+				System.console().writer().println("Two config file with default parameters generate: \n");
 				
 				saveFile(autocropConfigOption, "autocropConfigListParameters");
 				saveFile(segConfigOption, "segmentationConfigListParameters");
-				System.out.println("autocrop parameters details: " +
-				                   "https://gitlab.com/DesTristus/NucleusJ2.0/-/wikis/Autocrop#list-of-available-parameters \n" +
-				                   "segmentation parameters details: " +
-				                   "https://gitlab.com/DesTristus/NucleusJ2.0/-/wikis/Nucleus-segmentation#list-of-available-parameters");
+				System.console().writer().println("autocrop parameters details: " +
+				                                  "https://gitlab.com/DesTristus/NucleusJ2.0/-/wikis/Autocrop#list-of-available-parameters \n" +
+				                                  "segmentation parameters details: " +
+				                                  "https://gitlab.com/DesTristus/NucleusJ2.0/-/wikis/Nucleus-segmentation#list-of-available-parameters");
 				break;
 			
 			default:
@@ -228,8 +232,8 @@ public class CLIHelper {
 				                  "-output path/to/output/folder/ ";
 				exampleCMD = exampleArgument.split(" ");
 				CLIActionOptions wrongAction = new CLIActionOptions(exampleCMD);
-				System.out.println("Invalid action \"" + action + "\" :\n");
-				System.out.println(wrongAction.getHelperInfo());
+				System.console().writer().println("Invalid action \"" + action + "\" :\n");
+				System.console().writer().println(wrongAction.getHelperInfo());
 				break;
 		}
 	}

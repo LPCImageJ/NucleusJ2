@@ -27,10 +27,6 @@ public class ChromocenterSegmentationPipelineBatchDialog extends JFrame implemen
 	private final        JTextPane           readZCalibration        = new JTextPane();
 	private final        JCheckBox           addCalibrationBox       = new JCheckBox();
 	private final        JPanel              calibration;
-	private final        JFormattedTextField jTextFieldXCalibration  = new JFormattedTextField(Number.class);
-	private final        JFormattedTextField jTextFieldYCalibration  = new JFormattedTextField(Number.class);
-	private final        JFormattedTextField jTextFieldZCalibration  = new JFormattedTextField(Number.class);
-	private final        JTextField          jTextFieldUnit          = new JTextField();
 	private              boolean             start                   = false;
 	
 	

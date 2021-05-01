@@ -3,11 +3,11 @@ package gred.nucleus.autocrop;
 import fr.igred.omero.Client;
 import fr.igred.omero.exception.AccessException;
 import fr.igred.omero.exception.ServiceException;
+import fr.igred.omero.repository.DatasetWrapper;
 import fr.igred.omero.repository.ImageWrapper;
 import fr.igred.omero.roi.ROIWrapper;
 import fr.igred.omero.roi.RectangleWrapper;
 import fr.igred.omero.roi.ShapeList;
-import fr.igred.omero.repository.DatasetWrapper;
 import gred.nucleus.files.Directory;
 import gred.nucleus.files.OutputTextFile;
 import gred.nucleus.files.OutputTiff;
@@ -19,7 +19,6 @@ import ij.measure.Calibration;
 import ij.plugin.ChannelSplitter;
 import ij.plugin.Duplicator;
 import ij.plugin.GaussianBlur3D;
-import ij.util.ThreadUtil;
 import inra.ijpb.binary.BinaryImages;
 import inra.ijpb.label.LabelImages;
 import loci.formats.FormatException;
@@ -34,9 +33,9 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutionException;
@@ -222,10 +221,7 @@ public class AutoCrop {
 			return;
 		}
 		this.sliceUsedForOTSU = "default";
-		// NB: GaussianBlur3D is responsible for the program hanging when done in CLI
 		GaussianBlur3D.blur(this.imageSeg, 0.5, 0.5, 1);
-		/** Manually ask to threads to close because GaussianBlur3D are still active */
-		ThreadUtil.threadPoolExecutor.shutdownNow();
 		int thresh = Thresholding.computeOTSUThreshold(this.imageSeg);
 		if (thresh < this.autocropParameters.getThresholdOTSUComputing()) {
 			ImagePlus imp2;
@@ -409,7 +405,8 @@ public class AutoCrop {
 		info.append(getSpecificImageInfo()).append(HEADERS);
 		for (int c = 0; c < this.channelNumbers; c++) {
 			for (Map.Entry<Double, Box> entry : new TreeMap<>(this.boxes).entrySet()) {
-				int       i      = entry.getKey().intValue();
+				int i = entry.getKey().intValue();
+				LOGGER.info("Processing box number: {}", i);
 				Box       box    = entry.getValue();
 				int       xMin   = box.getXMin();
 				int       yMin   = box.getYMin();
@@ -471,20 +468,22 @@ public class AutoCrop {
 		info.append(getSpecificImageInfo()).append(HEADERS);
 		for (int c = 0; c < this.channelNumbers; c++) {
 			for (Map.Entry<Double, Box> entry : new TreeMap<>(this.boxes).entrySet()) {
-				DatasetWrapper dataset     = client.getDataset(outputsDat[c]);
-				int            i           = entry.getKey().intValue();
-				Box            box         = entry.getValue();
-				int            xMin        = box.getXMin();
-				int            yMin        = box.getYMin();
-				int            zMin        = box.getZMin();
-				int            width       = box.getXMax() - box.getXMin();
-				int            height      = box.getYMax() - box.getYMin();
-				int            depth       = box.getZMax() - box.getZMin();
-				String         coordinates = box.getXMin() + "_" + box.getYMin() + "_" + box.getZMin();
-				int[]          xBound      = {box.getXMin(), box.getXMax() - 1};
-				int[]          yBound      = {box.getYMin(), box.getYMax() - 1};
-				int[]          zBound      = {box.getZMin(), box.getZMax() - 1};
-				int[]          cBound      = {c, c};
+				DatasetWrapper dataset = client.getDataset(outputsDat[c]);
+				
+				int i = entry.getKey().intValue();
+				LOGGER.info("Processing box number: {}", i);
+				Box    box         = entry.getValue();
+				int    xMin        = box.getXMin();
+				int    yMin        = box.getYMin();
+				int    zMin        = box.getZMin();
+				int    width       = box.getXMax() - box.getXMin();
+				int    height      = box.getYMax() - box.getYMin();
+				int    depth       = box.getZMax() - box.getZMin();
+				String coordinates = box.getXMin() + "_" + box.getYMin() + "_" + box.getZMin();
+				int[]  xBound      = {box.getXMin(), box.getXMax() - 1};
+				int[]  yBound      = {box.getYMin(), box.getYMax() - 1};
+				int[]  zBound      = {box.getZMin(), box.getZMax() - 1};
+				int[]  cBound      = {c, c};
 				
 				ShapeList shapes = new ShapeList();
 				for (int z = box.getZMin(); z < box.getZMax(); z++) {
@@ -556,7 +555,8 @@ public class AutoCrop {
 		info.append(getSpecificImageInfo()).append(HEADERS);
 		for (int c = 0; c < this.channelNumbers; c++) {
 			for (Map.Entry<Double, Box> entry : new TreeMap<>(this.boxes).entrySet()) {
-				int       i      = entry.getKey().intValue();
+				int i = entry.getKey().intValue();
+				LOGGER.info("Processing box number: {}", i);
 				Box       box    = entry.getValue();
 				int       xMin   = box.getXMin();
 				int       yMin   = box.getYMin();
