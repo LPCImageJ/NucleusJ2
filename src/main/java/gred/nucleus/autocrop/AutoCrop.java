@@ -314,21 +314,12 @@ public class AutoCrop {
 						if ((imageStackInput.getVoxel(i, j, k) > 0) &&
 						    (this.boxes.containsKey(imageStackInput.getVoxel(i, j, k)))) {
 							box = this.boxes.get(imageStackInput.getVoxel(i, j, k));
-							if (i < box.getXMin()) {
-								box.setXMin(i);
-							} else if (i > box.getXMax()) {
-								box.setXMax(i);
-							}
-							if (j < box.getYMin()) {
-								box.setYMin(j);
-							} else if (j > box.getYMax()) {
-								box.setYMax(j);
-							}
-							if (k < box.getZMin()) {
-								box.setZMin(k);
-							} else if (k > box.getZMax()) {
-								box.setZMax(k);
-							}
+							box.setXMin((short) Math.min(i, box.getXMin()));
+							box.setXMax((short) Math.max(i, box.getXMax()));
+							box.setYMin((short) Math.min(j, box.getYMin()));
+							box.setYMax((short) Math.max(j, box.getYMax()));
+							box.setZMin((short) Math.min(k, box.getZMin()));
+							box.setZMax((short) Math.max(k, box.getZMax()));
 						}
 					}
 				}
@@ -356,15 +347,10 @@ public class AutoCrop {
 			int yMin = (int) box.getYMin() - this.autocropParameters.getYCropBoxSize();
 			int zMin = (int) box.getZMin() - this.autocropParameters.getZCropBoxSize();
 			
-			if (xMin <= 0) {
-				xMin = 1;
-			}
-			if (yMin <= 0) {
-				yMin = 1;
-			}
-			if (zMin <= 0) {
-				zMin = 1;
-			}
+			xMin = Math.max(1, xMin);
+			yMin = Math.max(1, yMin);
+			zMin = Math.max(1, zMin);
+			
 			int width = box.getXMax() + (2 * this.autocropParameters.getXCropBoxSize()) - box.getXMin();
 			if (width > imageSeg.getWidth()) {
 				width = imageSeg.getWidth() - 1;
@@ -471,7 +457,7 @@ public class AutoCrop {
 				DatasetWrapper dataset = client.getDataset(outputsDat[c]);
 				
 				int i = entry.getKey().intValue();
-				LOGGER.info("Processing box number: {}", i);
+				LOGGER.info("Processing box number: {} (OMERO)", i);
 				Box    box         = entry.getValue();
 				int    xMin        = box.getXMin();
 				int    yMin        = box.getYMin();

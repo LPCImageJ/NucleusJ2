@@ -2,12 +2,17 @@ package gred.nucleus.utils;
 
 
 import ij.measure.Calibration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import java.lang.invoke.MethodHandles;
 import java.util.List;
 
 
 /** @author Tristan Dubos and Axel Poulet */
 public class ConvexHullDetection {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	private static final double PI = Math.PI;
 	
@@ -53,7 +58,7 @@ public class ConvexHullDetection {
 	
 	
 	/**
-	 * Method to detect the ensemble of convexe hull voxels with  Jarvis march approach see :
+	 * Method to detect the ensemble of convex hull voxels with  Jarvis march approach see :
 	 * <p>
 	 * https://fr.wikipedia.org/wiki/Marche_de_Jarvis https://en.wikipedia.org/wiki/Gift_wrapping_algorithm
 	 *
@@ -73,13 +78,14 @@ public class ConvexHullDetection {
 	                                        VoxelRecord vectorTest,
 	                                        Calibration calibration,
 	                                        double distanceThreshold) {
+		LOGGER.trace("Finding convex hull.");
 		double      anglesSum      = 0.0;
 		int         compteur       = 0;
 		VoxelRecord voxelTest      = p0;
 		VoxelRecord voxelPrecedent = new VoxelRecord();
-		double      xcal           = calibration.pixelWidth;
-		double      ycal           = calibration.pixelHeight;
-		double      zcal           = calibration.pixelDepth;
+		double      xCal           = calibration.pixelWidth;
+		double      yCal           = calibration.pixelHeight;
+		double      zCal           = calibration.pixelDepth;
 		while (anglesSum < 2 * PI + 1) {
 			double      angleMin          = 0;
 			double      maxLength         = 0;
@@ -94,8 +100,8 @@ public class ConvexHullDetection {
 			}
 			
 			for (int i = 0; i < lVoxelBoundary.size(); i++) {
-				// IJ.log("anglesSum " +lVoxelBoundary.get(i)._i + " "+lVoxelBoundary.get(i)._j + " "+lVoxelBoundary.get(i)._k + " ");
-				// IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" size "+lVoxelBoundary.size()+ " le i "+i);
+				//LOGGER.trace("Processing boundary voxel {}/{}", i, lVoxelBoundary.size());
+				//LOGGER.trace("    anglesSum: {}, {} {} {}", anglesSum, lVoxelBoundary.get(i).i, lVoxelBoundary.get(i).j, lVoxelBoundary.get(i).k);
 				if (voxelTest.compareCoordinatesTo(lVoxelBoundary.get(i)) == 1) {
 					VoxelRecord vectorCourant = new VoxelRecord();
 					vectorCourant.setLocation(lVoxelBoundary.get(i).i - voxelTest.i,
@@ -103,16 +109,16 @@ public class ConvexHullDetection {
 					                          lVoxelBoundary.get(i).k - voxelTest.k);
 					switch (axesName) {
 						case "xy":
-							distance = Math.sqrt(vectorCourant.i * xcal * vectorCourant.i * xcal +
-							                     vectorCourant.j * ycal * vectorCourant.j * ycal);
+							distance = Math.sqrt(vectorCourant.i * xCal * vectorCourant.i * xCal +
+							                     vectorCourant.j * yCal * vectorCourant.j * yCal);
 							break;
 						case "xz":
-							distance = Math.sqrt(vectorCourant.i * xcal * vectorCourant.i * xcal +
-							                     vectorCourant.k * zcal * vectorCourant.k * zcal);
+							distance = Math.sqrt(vectorCourant.i * xCal * vectorCourant.i * xCal +
+							                     vectorCourant.k * zCal * vectorCourant.k * zCal);
 							break;
 						case "yz":
-							distance = Math.sqrt(vectorCourant.k * zcal * vectorCourant.k * zcal +
-							                     vectorCourant.j * ycal * vectorCourant.j * ycal);
+							distance = Math.sqrt(vectorCourant.k * zCal * vectorCourant.k * zCal +
+							                     vectorCourant.j * yCal * vectorCourant.j * yCal);
 							break;
 					}
 					// IJ.log("distance " +distance+ " "+vectorCourant._i + " "+vectorCourant._k );

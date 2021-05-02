@@ -822,7 +822,7 @@ public class NucleusSegmentation {
 	 * <p> TODO verifier cette methode si elle est à ca place
 	 */
 	public void saveOTSUSegmented() {
-		LOGGER.info("Saving OTSU segmentation.");
+		LOGGER.info("Computing and saving OTSU segmentation.");
 		if (!badCrop && bestThreshold != -1) {
 			String pathSegOTSU = this.segmentationParameters.getOutputFolder() +
 			                     "OTSU" +
@@ -840,7 +840,7 @@ public class NucleusSegmentation {
 	 */
 	public void saveOTSUSegmentedOMERO(Client client, Long id)
 	throws Exception {
-		LOGGER.info("Saving OTSU segmentation.");
+		LOGGER.info("Computing and saving OTSU segmentation.");
 		if (!badCrop && bestThreshold != -1) {
 			String path = new java.io.File(".").getCanonicalPath() + File.separator + this.imageSeg[0].getTitle();
 			saveFile(this.imageSeg[0], path);
@@ -874,7 +874,7 @@ public class NucleusSegmentation {
 	 * <p> TODO verifier cette methode si elle est à sa place
 	 */
 	public void saveGiftWrappingSeg() {
-		LOGGER.info("Saving Gift Wrapping segmentation.");
+		LOGGER.info("Computing and saving Gift Wrapping segmentation.");
 		if (!badCrop && bestThreshold != -1 && this.segmentationParameters.getGiftWrapping()) {
 			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
 			this.imageSeg[0] = nuc.runGIFTWrapping(this.imageSeg[0], this.segmentationParameters);
@@ -892,7 +892,7 @@ public class NucleusSegmentation {
 	 */
 	public void saveGiftWrappingSegOMERO(Client client, Long id)
 	throws Exception {
-		LOGGER.info("Saving Gift Wrapping segmentation.");
+		LOGGER.info("Computing and saving Gift Wrapping segmentation.");
 		if (!badCrop && bestThreshold != -1 && this.segmentationParameters.getGiftWrapping()) {
 			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
 			

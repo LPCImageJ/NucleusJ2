@@ -7,8 +7,11 @@ import ij.ImageStack;
 import ij.gui.PolygonRoi;
 import ij.gui.Roi;
 import ij.measure.Calibration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.image.BufferedImage;
+import java.lang.invoke.MethodHandles;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,6 +22,8 @@ import java.util.List;
  * @author Tristan Dubos and Axel Poulet
  */
 public class ConvexHullImageMaker {
+	/** Logger */
+	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	/**
 	 *
@@ -53,6 +58,7 @@ public class ConvexHullImageMaker {
 	 * @see gred.nucleus.core.ConvexHullSegmentation
 	 */
 	public ImagePlus giftWrapping(ImagePlus imagePlusBinary, SegmentationParameters segmentationParameters) {
+		LOGGER.debug("Computing GIFT Wrapping for axes {}.", this.axesName);
 		this.segmentationParameters = segmentationParameters;
 		calibration = imagePlusBinary.getCalibration();
 		ImageStack imageStackInput = imagePlusBinary.getStack();
@@ -65,41 +71,41 @@ public class ConvexHullImageMaker {
 		VoxelRecord tVoxelRecord              = measure3d.computeBarycenter3D(false, imagePlusBinary, 255.0);
 		ImagePlus   imagePlusCorrected        = new ImagePlus();
 		ImagePlus   imagePlusBlack            = new ImagePlus();
-		int         indice;
+		int         depth;
 		int         width;
 		int         height;
 		if (axesName.equals("xy")) {
 			width = imagePlusBinary.getWidth();
 			height = imagePlusBinary.getHeight();
-			indice = imagePlusBinary.getNSlices();
+			depth = imagePlusBinary.getNSlices();
 		} else if (axesName.equals("xz")) {
 			width = imagePlusBinary.getWidth();
 			height = imagePlusBinary.getNSlices();
-			indice = imagePlusBinary.getHeight();
+			depth = imagePlusBinary.getHeight();
 		} else {
 			width = imagePlusBinary.getHeight();
 			height = imagePlusBinary.getNSlices();
-			indice = imagePlusBinary.getWidth();
+			depth = imagePlusBinary.getWidth();
 		}
 		BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
 		imagePlusBlack.setImage(bufferedImage);
 		ImageStack imageStackOutput = new ImageStack(width, height);
-		for (int k = 0; k < indice; ++k) {
+		for (int k = 0; k < depth; ++k) {
 			ImagePlus  ip    = imagePlusBlack.duplicate();
 			double[][] image = giveTable(imagePlusBinary, width, height, k);
 			if (listLabel.size() == 1) {
+				LOGGER.trace("Processing only label {} on slice {}/{}", listLabel.get(0), k, depth);
 				List<VoxelRecord> lVoxelBoundary = detectVoxelBoundary(image, listLabel.get(0), k);
 				if (lVoxelBoundary.size() > 5) {
 					ip = imageMaker(image, lVoxelBoundary, width, height, equivalentSphericalRadius);
-					
 				} else {
 					ip = imagePlusBlack.duplicate();
-					
 				}
 			} else if (listLabel.size() > 1) {
 				ImageStack imageStackIp = ip.getImageStack();
-				for (Double aDouble : listLabel) {
-					List<VoxelRecord> lVoxelBoundary = detectVoxelBoundary(image, aDouble, k);
+				for (Double label : listLabel) {
+					LOGGER.trace("Processing label {} on slice: {}/{}", label, k, depth);
+					List<VoxelRecord> lVoxelBoundary = detectVoxelBoundary(image, label, k);
 					if (lVoxelBoundary.size() > 5) {
 						//TODO THINKING ON AN OTHER WAY TO DEFINE equivalentSphericalRadius PARAMETER
 						ImageStack imageTempStack =
@@ -133,6 +139,7 @@ public class ConvexHullImageMaker {
 	 * @return
 	 */
 	List<VoxelRecord> detectVoxelBoundary(double[][] image, double label, int indice) {
+		LOGGER.trace("Detecting voxel boundary.");
 		List<VoxelRecord> lVoxelBoundary = new ArrayList<>();
 		p0.setLocation(0, 0, 0);
 		//parcours de l'ensemble des pixel de l'image 2D
@@ -195,6 +202,7 @@ public class ConvexHullImageMaker {
 	                            int width,
 	                            int height,
 	                            double equivalentSphericalRadius) {
+		LOGGER.trace("Making image.");
 		List<VoxelRecord> convexHull = new ArrayList<>();
 		convexHull.add(p0);
 		VoxelRecord vectorTest = new VoxelRecord();

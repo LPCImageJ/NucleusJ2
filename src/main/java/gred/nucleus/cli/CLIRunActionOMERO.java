@@ -128,7 +128,7 @@ public class CLIRunActionOMERO {
 		if (this.cmd.hasOption("password")) {
 			this.mdp = this.cmd.getOptionValue("password");
 		} else {
-			System.out.println("Enter password ");
+			System.console().writer().println("Enter password ");
 			Console con = System.console();
 			this.mdp = String.valueOf(con.readPassword());
 		}
