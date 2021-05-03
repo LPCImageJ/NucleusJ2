@@ -1,4 +1,4 @@
-package gred.nucleus.test.old.analysistest;
+package old.analysistest;
 
 import org.apache.commons.codec.digest.DigestUtils;
 

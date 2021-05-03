@@ -1,6 +1,6 @@
-package gred.nucleus.test.old;
+package old;
 
-import gred.nucleus.test.old.analysistest.OutputFileVerification;
+import old.analysistest.OutputFileVerification;
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
 

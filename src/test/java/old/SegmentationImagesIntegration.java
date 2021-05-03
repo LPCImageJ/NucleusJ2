@@ -1,4 +1,4 @@
-package gred.nucleus.test.old;
+package old;
 
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
