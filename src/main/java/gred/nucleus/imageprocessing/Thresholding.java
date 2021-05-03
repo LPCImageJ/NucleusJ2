@@ -1,5 +1,6 @@
 package gred.nucleus.imageprocessing;
 
+import gred.nucleus.files.OutputTiff;
 import ij.ImagePlus;
 import ij.plugin.ContrastEnhancer;
 import ij.process.*;
@@ -41,9 +42,12 @@ public class Thresholding {
 		enh.setUseStackHistogram(true);
 		enh.setProcessStack(true);
 		enh.stretchHistogram(imagePlusInput, 0.05);
-		double min = imagePlusInput.getStatistics().min;
-		double max = imagePlusInput.getStatistics().max;
+		
+		StackStatistics stackStats = new StackStatistics(imagePlusInput);
+		double min = stackStats.min;
+		double max = stackStats.max;
 		imagePlusInput.setDisplayRange(min, max);
+		
 		
 		if (imagePlusInput.getNSlices() > 1) { // 3D
 			StackConverter stackConverter = new StackConverter(imagePlusInput);
@@ -52,6 +56,11 @@ public class Thresholding {
 			ImageConverter imageConverter = new ImageConverter(imagePlusInput);
 			imageConverter.convertToGray8();
 		}
+		
+		// DEBUG : Save image to see conversion
+		//OutputTiff outputTiff = new OutputTiff("../conversion-result/"+imagePlusInput.getTitle());
+		//outputTiff.saveImage(imagePlusInput);
+		
 		return imagePlusInput;
 		
 	}

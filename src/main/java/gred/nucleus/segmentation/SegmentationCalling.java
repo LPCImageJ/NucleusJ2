@@ -16,6 +16,7 @@ import ij.measure.Calibration;
 import ij.plugin.ContrastEnhancer;
 import ij.plugin.GaussianBlur3D;
 import ij.process.StackConverter;
+import ij.process.StackStatistics;
 import loci.formats.FormatException;
 
 import java.io.File;
@@ -443,8 +444,10 @@ public class SegmentationCalling {
 		enh.setUseStackHistogram(true);
 		enh.setProcessStack(true);
 		enh.stretchHistogram(img, 0.05);
-		double min = img.getStatistics().min;
-		double max = img.getStatistics().max;
+		
+		StackStatistics stackStats = new StackStatistics(img);
+		double min = stackStats.min;
+		double max = stackStats.max;
 		img.setDisplayRange(min, max);
 		
 		GaussianBlur3D.blur(img, 0.5, 0.5, 1);
