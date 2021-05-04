@@ -1,0 +1,14 @@
+<configuration>
+	<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>[%d{yyyy-MM-dd} %d{HH:mm:ss.SSS}] [%-5p] [%-27.27logger{0}] %m%n</pattern>
+		</encoder>
+	</appender>
+	<root level="warn">
+		<appender-ref ref="STDOUT" />
+	</root>
+	<logger name="autocroptest.AutocropTestRunner" level="debug" />
+	<logger name="autocroptest.AutocropTestChecker" level="debug" />
+	<logger name="segmentationtest.SegmentationTestRunner" level="debug" />
+	<logger name="segmentationtest.SegmentationTestChecker" level="debug" />
+</configuration>
