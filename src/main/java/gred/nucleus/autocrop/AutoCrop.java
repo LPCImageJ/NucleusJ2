@@ -453,11 +453,11 @@ public class AutoCrop {
 		StringBuilder info = new StringBuilder();
 		info.append(getSpecificImageInfo()).append(HEADERS);
 		for (int c = 0; c < this.channelNumbers; c++) {
+			DatasetWrapper dataset = client.getDataset(outputsDat[c]);
 			for (Map.Entry<Double, Box> entry : new TreeMap<>(this.boxes).entrySet()) {
-				DatasetWrapper dataset = client.getDataset(outputsDat[c]);
-				
 				int i = entry.getKey().intValue();
 				LOGGER.info("Processing box number: {} (OMERO)", i);
+				
 				Box    box         = entry.getValue();
 				int    xMin        = box.getXMin();
 				int    yMin        = box.getYMin();

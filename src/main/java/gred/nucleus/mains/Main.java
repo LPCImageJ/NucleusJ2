@@ -293,9 +293,9 @@ public class Main {
 					String log;
 					if ((param.length == 3 && param[2].equals("ROI")) ||
 					    (param.length == 5 && param[4].equals("ROI"))) {
-						log = otsuModified.runSeveralImageOMERObyROIs(images, Long.parseLong(outputDirectory), client);
+						log = otsuModified.runSeveralImagesOMERObyROIs(images, Long.parseLong(outputDirectory), client);
 					} else {
-						log = otsuModified.runSeveralImageOMERO(images, Long.parseLong(outputDirectory), client);
+						log = otsuModified.runSeveralImagesOMERO(images, Long.parseLong(outputDirectory), client);
 					}
 					if (!(log.equals(""))) {
 						LOGGER.error("Nuclei which didn't pass the segmentation\n{}", log);

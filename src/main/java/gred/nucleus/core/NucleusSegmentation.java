@@ -59,7 +59,7 @@ public class NucleusSegmentation {
 	/** ImagePlus input to process */
 	private final ImagePlus              imgRawTransformed;
 	/** List of the 3D parameters computed associated to the segmented image */
-	public        Measure3D              measure3D;
+	private       Measure3D              measure3D;
 	/* String stocking the file name if any nucleus is detected*/
 	/** Threshold detected by the Otsu modified method */
 	private       int                    bestThreshold = -1;
@@ -152,7 +152,8 @@ public class NucleusSegmentation {
 	                           ROIWrapper roi,
 	                           int i,
 	                           SegmentationParameters segmentationParameters,
-	                           Client client) throws Exception {
+	                           Client client)
+	throws ServiceException, AccessException, ExecutionException {
 		this.segmentationParameters = segmentationParameters;
 		
 		List<RectangleWrapper> rectangles = roi.getShapes().getElementsOf(RectangleWrapper.class);
@@ -286,13 +287,13 @@ public class NucleusSegmentation {
 			tempSeg.setCalibration(cal);
 			ImagePlus[] tempSegPlus = new ImagePlus[1];
 			tempSegPlus[0] = tempSeg;
-			Measure3D measure3D = new Measure3D(tempSegPlus,
-			                                    this.imgRawTransformed,
-			                                    getXCalibration(),
-			                                    getYCalibration(),
-			                                    getZCalibration());
+			Measure3D measure = new Measure3D(tempSegPlus,
+			                                  this.imgRawTransformed,
+			                                  getXCalibration(),
+			                                  getYCalibration(),
+			                                  getZCalibration());
 			deleteArtefact(tempSeg);
-			double  volume     = measure3D.computeVolumeObject2(255);
+			double  volume     = measure.computeVolumeObject2(255);
 			boolean firstStack = isVoxelThresholded(tempSeg, 255, 0);
 			boolean lastStack  = isVoxelThresholded(tempSeg, 255, tempSeg.getStackSize() - 1);
 			if (testRelativeObjectVolume(volume, imageVolume) &&
@@ -301,11 +302,10 @@ public class NucleusSegmentation {
 			    !firstStack && !lastStack) {
 				
 				double sphericity =
-						measure3D.computeSphericity(volume, measure3D.computeComplexSurface(tempSeg, gradient));
+						measure.computeSphericity(volume, measure.computeComplexSurface(tempSeg, gradient));
 				if (sphericity > bestSphericity) {
 					this.bestThreshold = t;
 					bestSphericity = sphericity;
-					this.bestThreshold = t;
 					this.imageSeg = tempSegPlus;
 					this.imageSeg[0].setTitle(this.imgRawTransformed.getTitle());
 				}
@@ -364,19 +364,20 @@ public class NucleusSegmentation {
 	 *
 	 * @deprecated Method to apply the segmentation to find the maximum sphericity.
 	 */
+	@Deprecated
 	public ImagePlus applySegmentation(ImagePlus imagePlusInput) {
 		double       sphericityMax = -1.0;
 		double       sphericity;
 		double       volume;
-		Calibration  calibration   = imagePlusInput.getCalibration();
 		final double xCalibration  = getXCalibration();
 		final double yCalibration  = getYCalibration();
 		final double zCalibration  = getZCalibration();
-		Measure3D    measure3D     = new Measure3D();
-		Gradient     gradient      = new Gradient(imagePlusInput);
 		final double imageVolume = xCalibration * imagePlusInput.getWidth() *
 		                           yCalibration * imagePlusInput.getHeight() *
 		                           zCalibration * imagePlusInput.getStackSize();
+		Calibration   calibration        = imagePlusInput.getCalibration();
+		Measure3D     measure            = new Measure3D(xCalibration, yCalibration, zCalibration);
+		Gradient      gradient           = new Gradient(imagePlusInput);
 		ImagePlus     imagePlusSegmented = new ImagePlus();
 		List<Integer> arrayListThreshold = computeMinMaxThreshold(imagePlusInput);
 		for (int t = arrayListThreshold.get(0); t <= arrayListThreshold.get(1); ++t) {
@@ -384,18 +385,18 @@ public class NucleusSegmentation {
 			imagePlusSegmentedTemp = BinaryImages.componentsLabeling(imagePlusSegmentedTemp, 26, 32);
 			deleteArtefact(imagePlusSegmentedTemp);
 			imagePlusSegmentedTemp.setCalibration(calibration);
-			volume = measure3D.computeVolumeObject(imagePlusSegmentedTemp, 255);
+			volume = measure.computeVolumeObject(imagePlusSegmentedTemp, 255);
 			imagePlusSegmentedTemp.setCalibration(calibration);
 			boolean firstStack = isVoxelThresholded(imagePlusSegmentedTemp, 255, 0);
 			boolean lastStack  = isVoxelThresholded(imagePlusSegmentedTemp, 255, imagePlusInput.getStackSize() - 1);
-			//boolean xyBorder;
+			
 			if (testRelativeObjectVolume(volume, imageVolume) &&
 			    volume >= vMin &&
 			    volume <= vMax && !firstStack
 			    && !lastStack) {
-				sphericity = measure3D.computeSphericity(volume,
-				                                         measure3D.computeComplexSurface(imagePlusSegmentedTemp,
-				                                                                         gradient));
+				sphericity = measure.computeSphericity(volume,
+				                                       measure.computeComplexSurface(imagePlusSegmentedTemp,
+				                                                                     gradient));
 				if (sphericity > sphericityMax) {
 					bestThreshold = t;
 					sphericityMax = sphericity;
@@ -405,8 +406,6 @@ public class NucleusSegmentation {
 				}
 			}
 		}
-		
-		ImageStack imageStackInput = imagePlusSegmented.getImageStack();
 		
 		if (bestThreshold != -1) morphologicalCorrection(imagePlusSegmented);
 		
@@ -556,7 +555,6 @@ public class NucleusSegmentation {
 	 * @param imagePlusSegmented image to be correct
 	 */
 	private void morphologicalCorrection(ImagePlus imagePlusSegmented) {
-		int temps = imagePlusSegmented.getBitDepth();
 		computeOpening(imagePlusSegmented);
 		computeClosing(imagePlusSegmented);
 		// TODO FIX?
@@ -879,7 +877,7 @@ public class NucleusSegmentation {
 			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
 			this.imageSeg[0] = nuc.runGIFTWrapping(this.imageSeg[0], this.segmentationParameters);
 			String pathSegGIFT = this.segmentationParameters.getOutputFolder() +
-			                     "GIFT" + File.separator + this.imgRaw.getTitle();
+			                     "GIFT" + File.separator + this.imageSeg[0].getTitle();
 			this.imageSeg[0].setTitle(pathSegGIFT);
 			saveFile(this.imageSeg[0], pathSegGIFT);
 		}

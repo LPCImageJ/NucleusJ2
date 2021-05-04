@@ -18,6 +18,7 @@ import ij.measure.Calibration;
 import ij.plugin.ContrastEnhancer;
 import ij.plugin.GaussianBlur3D;
 import ij.process.StackConverter;
+import ij.process.StackStatistics;
 import loci.formats.FormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -323,7 +325,7 @@ public class SegmentationCalling {
 	}
 	
 	
-	public String runSeveralImageOMERO(List<ImageWrapper> images, Long output, Client client) throws Exception {
+	public String runSeveralImagesOMERO(List<ImageWrapper> images, Long output, Client client) throws Exception {
 		StringBuilder log = new StringBuilder();
 		
 		for (ImageWrapper image : images) {
@@ -337,29 +339,40 @@ public class SegmentationCalling {
 	
 	
 	public void saveCropGeneralInfoOmero(Client client, Long output)
-	throws IOException, ServiceException, AccessException, ExecutionException, InterruptedException {
-		
+	throws ServiceException, AccessException, ExecutionException, InterruptedException {
+		LOGGER.info("Saving OTSU results.");
 		DatasetWrapper dataset = client.getProject(output).getDatasets("OTSU").get(0);
 		
-		String path =
-				new File(".").getCanonicalPath() + File.separator + "result_Segmentation_Analyse.csv";
+		String path = "." + File.separator + "result_Segmentation_Analyse.csv";
+		try {
+			path = new File(path).getCanonicalPath();
+		} catch (IOException e) {
+			LOGGER.error("Could not get canonical path for:" + path, e);
+		}
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(path);
 		resultFileOutputOTSU.saveTextFile(this.outputCropGeneralInfoOTSU, false);
 		
 		File file = new File(path);
 		dataset.addFile(client, file);
-		boolean deleted = file.delete();
-		if (!deleted) LOGGER.error("File not deleted: {}", path);
+		try {
+			Files.deleteIfExists(file.toPath());
+		} catch (IOException e) {
+			LOGGER.error("File not deleted: " + path, e);
+		}
 		
 		if (this.segmentationParameters.getGiftWrapping()) {
+			LOGGER.info("Saving GIFT results.");
 			dataset = client.getProject(output).getDatasets("GIFT").get(0);
 			OutputTextFile resultFileOutputGIFT = new OutputTextFile(path);
 			resultFileOutputGIFT.saveTextFile(this.outputCropGeneralInfoGIFT, false);
 			
 			file = new File(path);
 			dataset.addFile(client, file);
-			deleted = file.delete();
-			if (!deleted) LOGGER.error("File not deleted: {}", path);
+			try {
+				Files.deleteIfExists(file.toPath());
+			} catch (IOException e) {
+				LOGGER.error("File not deleted: " + path, e);
+			}
 		}
 	}
 	
@@ -383,15 +396,18 @@ public class SegmentationCalling {
 		for (ROIWrapper roi : rois) {
 			LOGGER.info("Current ROI in process: {}", i);
 			
-			NucleusSegmentation nucleusSegmentation =
-					new NucleusSegmentation(image, roi, i, this.segmentationParameters, client);
+			NucleusSegmentation nucleusSegmentation = new NucleusSegmentation(image,
+			                                                                  roi,
+			                                                                  i,
+			                                                                  this.segmentationParameters,
+			                                                                  client);
 			nucleusSegmentation.preProcessImage();
 			nucleusSegmentation.findOTSUMaximisingSphericity();
 			nucleusSegmentation.checkBadCrop(roi, client);
 			
-			
 			nucleusSegmentation.saveOTSUSegmentedOMERO(client, output);
 			info.append(nucleusSegmentation.getImageCropInfoOTSU());
+			
 			nucleusSegmentation.saveGiftWrappingSegOMERO(client, output);
 			info.append(nucleusSegmentation.getImageCropInfoGIFT());
 			
@@ -403,15 +419,22 @@ public class SegmentationCalling {
 		LOGGER.info("End: {}", timeStampStart);
 		
 		DatasetWrapper dataset = client.getProject(output).getDatasets("OTSU").get(0);
-		String path =
-				new java.io.File(".").getCanonicalPath() + "result_Segmentation_Analyse.csv";
+		String path = "." + File.separator + "result_Segmentation_Analyse.csv";
+		try {
+			path = new File(path).getCanonicalPath();
+		} catch (IOException e) {
+			LOGGER.error("Could not get canonical path for:" + path, e);
+		}
 		OutputTextFile resultFileOutputOTSU = new OutputTextFile(path);
 		resultFileOutputOTSU.saveTextFile(this.outputCropGeneralInfoOTSU, false);
 		
 		File file = new File(path);
 		dataset.addFile(client, file);
-		boolean deleted = file.delete();
-		if (!deleted) LOGGER.error("File not deleted: {}", path);
+		try {
+			Files.deleteIfExists(file.toPath());
+		} catch (IOException e) {
+			LOGGER.error("File not deleted: " + path, e);
+		}
 		
 		if (this.segmentationParameters.getGiftWrapping()) {
 			dataset = client.getProject(output).getDatasets("GIFT").get(0);
@@ -420,15 +443,18 @@ public class SegmentationCalling {
 			
 			file = new File(path);
 			dataset.addFile(client, file);
-			deleted = file.delete();
-			if (!deleted) LOGGER.error("File not deleted: {}", path);
+			try {
+				Files.deleteIfExists(file.toPath());
+			} catch (IOException e) {
+				LOGGER.error("File not deleted: " + path, e);
+			}
 		}
 		
 		return log;
 	}
 	
 	
-	public String runSeveralImageOMERObyROIs(List<ImageWrapper> images, Long output, Client client) throws Exception {
+	public String runSeveralImagesOMERObyROIs(List<ImageWrapper> images, Long output, Client client) throws Exception {
 		StringBuilder log = new StringBuilder();
 		
 		for (ImageWrapper image : images) {
@@ -464,9 +490,8 @@ public class SegmentationCalling {
 		enh.setUseStackHistogram(true);
 		enh.setProcessStack(true);
 		enh.stretchHistogram(img, 0.05);
-		double min = img.getStatistics().min;
-		double max = img.getStatistics().max;
-		img.setDisplayRange(min, max);
+		StackStatistics statistics = new StackStatistics(img);
+		img.setDisplayRange(statistics.min, statistics.max);
 		
 		GaussianBlur3D.blur(img, 0.5, 0.5, 1);
 		StackConverter stackConverter = new StackConverter(img);

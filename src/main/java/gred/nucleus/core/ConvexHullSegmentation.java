@@ -60,6 +60,8 @@ public class ConvexHullSegmentation {
 	                                   ImagePlus imagePlusXZ,
 	                                   ImagePlus imagePlusYZ) {
 		ImagePlus  imagePlusOutput  = imagePlusInput.duplicate();
+		imagePlusOutput.setTitle(imagePlusInput.getTitle());
+		
 		ImageStack imageStackXY     = imagePlusXY.getStack();
 		ImageStack imageStackXZ     = imagePlusXZ.getStack();
 		ImageStack imageStackYZ     = imagePlusYZ.getStack();
