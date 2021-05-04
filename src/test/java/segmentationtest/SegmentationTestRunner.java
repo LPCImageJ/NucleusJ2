@@ -1,4 +1,4 @@
-package gred.nucleus.test;
+package segmentationtest;
 
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
@@ -8,11 +8,12 @@ import java.io.File;
 import java.util.Locale;
 
 
-public class SegmentationTest {
+public class SegmentationTestRunner {
 	public static final String PATH_TO_SEGMENTATION = "segmentation/";
-	public static final String PATH_TO_CONFIG = TestMain.PATH_TO_INPUT
+	public static final String PATH_TO_CONFIG = SegmentationTest.PATH_TO_INPUT
 	                                            + PATH_TO_SEGMENTATION
 	                                            + "config/seg.config";
+	
 	
 	public static void run(String dir) throws Exception {
 		File   file  = new File(dir + PATH_TO_SEGMENTATION);
@@ -34,8 +35,13 @@ public class SegmentationTest {
 					else {
 						System.out.println("Beginning process on : " + name);
 						runSegmentation(f.toString(),
-						                TestMain.PATH_TO_OUTPUT + PATH_TO_SEGMENTATION + name,
+						                SegmentationTest.PATH_TO_OUTPUT + PATH_TO_SEGMENTATION + name,
 						                PATH_TO_CONFIG);
+						System.out.println("Finished process on : "+ name);
+						
+						System.out.println("Checking results :");
+						SegmentationTestChecker checker = new SegmentationTestChecker(name);
+						checker.checkValues(f);
 					}
 				}
 			}
@@ -48,4 +54,7 @@ public class SegmentationTest {
 		segmentation.runOneImage(imageSourceFile);
 		segmentation.saveCropGeneralInfo();
 	}
+	
+	
+	
 }
