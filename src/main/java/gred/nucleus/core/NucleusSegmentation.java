@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
-
 /**
  * Object segmentation method for 3D images. This segmentation used as initial threshold the method of Otsu, and then
  * select the object maximizing the sphericity of the segmented object.
