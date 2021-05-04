@@ -1,7 +1,5 @@
-package segmentationtest;
+package gred.nucleus.segmentation;
 
-import gred.nucleus.segmentation.SegmentationCalling;
-import gred.nucleus.segmentation.SegmentationParameters;
 import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

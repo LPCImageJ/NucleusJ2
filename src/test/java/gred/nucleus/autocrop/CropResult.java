@@ -1,7 +1,4 @@
-package autocroptest;
-
-
-import gred.nucleus.autocrop.Box;
+package gred.nucleus.autocrop;
 
 
 public class CropResult {

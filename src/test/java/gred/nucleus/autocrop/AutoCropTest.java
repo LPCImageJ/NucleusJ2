@@ -1,4 +1,4 @@
-package autocroptest;
+package gred.nucleus.autocrop;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;

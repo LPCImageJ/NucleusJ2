@@ -1,4 +1,4 @@
-package segmentationtest;
+package gred.nucleus.segmentation;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;

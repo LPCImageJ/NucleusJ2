@@ -1,4 +1,4 @@
-package autocroptest;
+package gred.nucleus.autocrop;
 
 import java.util.Collections;
 import java.util.List;

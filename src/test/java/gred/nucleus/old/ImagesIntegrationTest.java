@@ -1,4 +1,4 @@
-package old;
+package gred.nucleus.old;
 
 public class ImagesIntegrationTest {
 	/*

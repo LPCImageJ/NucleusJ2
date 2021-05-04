@@ -1,4 +1,4 @@
-package old;
+package gred.nucleus.old;
 
 import gred.nucleus.autocrop.AutoCropCalling;
 import gred.nucleus.autocrop.AutocropParameters;

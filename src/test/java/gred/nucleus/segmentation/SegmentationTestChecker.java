@@ -1,4 +1,4 @@
-package segmentationtest;
+package gred.nucleus.segmentation;
 
 import ij.ImagePlus;
 import ij.plugin.ImageCalculator;

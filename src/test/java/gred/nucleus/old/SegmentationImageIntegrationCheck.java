@@ -1,6 +1,6 @@
-package old;
+package gred.nucleus.old;
 
-import old.analysistest.OutputFileVerification;
+import gred.nucleus.old.analysistest.OutputFileVerification;
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
 import org.slf4j.Logger;
