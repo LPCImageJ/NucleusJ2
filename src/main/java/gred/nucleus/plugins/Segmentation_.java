@@ -99,14 +99,14 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 					                                                    Integer.parseInt(scd.getZCalibration()),
 					                                                    Integer.parseInt(scd.getMinVolume()),
 					                                                    Integer.parseInt(scd.getMaxVolume()),
-					                                                    scd.getGiftWrapping()
+					                                                    scd.getConvexHullDetection()
 					);
 				} else {
 					LOGGER.info("w/out calibration");
 					segmentationParameters = new SegmentationParameters(".", ".",
 					                                                    Integer.parseInt(scd.getMinVolume()),
 					                                                    Integer.parseInt(scd.getMaxVolume()),
-					                                                    scd.getGiftWrapping()
+					                                                    scd.getConvexHullDetection()
 					);
 				}
 				break;
@@ -197,14 +197,14 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 							                                                    Integer.parseInt(scd.getZCalibration()),
 							                                                    Integer.parseInt(scd.getMinVolume()),
 							                                                    Integer.parseInt(scd.getMaxVolume()),
-							                                                    scd.getGiftWrapping()
+							                                                    scd.getConvexHullDetection()
 							);
 						} else {
 							LOGGER.info("w/out calibration");
 							segmentationParameters = new SegmentationParameters(input, output,
 							                                                    Integer.parseInt(scd.getMinVolume()),
 							                                                    Integer.parseInt(scd.getMaxVolume()),
-							                                                    scd.getGiftWrapping()
+							                                                    scd.getConvexHullDetection()
 							);
 						}
 						break;

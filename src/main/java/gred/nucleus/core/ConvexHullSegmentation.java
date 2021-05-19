@@ -11,8 +11,8 @@ import java.lang.invoke.MethodHandles;
 
 
 /**
- * Segmentation using Gift Wrapping analysis on 3D segmented image imputed for the different axis combined : - XY - XZ -
- * YZ
+ * Segmentation using a convex hull algorithm analysis on 3D segmented image imputed for the different axis combined : - XY - XZ -
+ *
  *
  * @author Tristan Dubos and Axel Poulet
  */
@@ -21,25 +21,26 @@ public class ConvexHullSegmentation {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	
-	private SegmentationParameters segmentationParameters;
-	
-	
 	/**
-	 * Run the gift wrapping analysis on 3D segmented image imputed for the different axis combined : XY XZ YZ
+	 * Run the convex hull detection analysis on 3D segmented image imputed for the different axis combined : XY XZ YZ
 	 *
 	 * @param imagePlusInput Current image segmented analysed
 	 *
 	 * @return segmented image
 	 */
-	public ImagePlus runGIFTWrapping(ImagePlus imagePlusInput, SegmentationParameters segmentationParameters) {
-		LOGGER.info("Running GIFT Wrapping.");
+	public ImagePlus convexHullDetection(ImagePlus imagePlusInput, SegmentationParameters segmentationParameters) {
+		LOGGER.info("Running Convex Hull Algorithm.");
 		ConvexHullImageMaker nuc = new ConvexHullImageMaker();
 		nuc.setAxes("xy");
-		ImagePlus imagePlusXY = nuc.giftWrapping(imagePlusInput, segmentationParameters);
+		ImagePlus imagePlusXY = nuc.runConvexHullDetection(imagePlusInput);
+		LOGGER.trace("XY done");
 		nuc.setAxes("xz");
-		ImagePlus imagePlusXZ = nuc.giftWrapping(imagePlusInput, segmentationParameters);
+		ImagePlus imagePlusXZ = nuc.runConvexHullDetection(imagePlusInput);
+		LOGGER.trace("XZ done");
 		nuc.setAxes("yz");
-		ImagePlus imagePlusYZ = nuc.giftWrapping(imagePlusInput, segmentationParameters);
+		ImagePlus imagePlusYZ = nuc.runConvexHullDetection(imagePlusInput);
+		LOGGER.trace("YZ done");
+		
 		return imageMakingUnion(imagePlusInput, imagePlusXY, imagePlusXZ, imagePlusYZ);
 	}
 	
@@ -51,9 +52,9 @@ public class ConvexHullSegmentation {
 	 * @param imagePlusXZ Segmented image in XZ dimension
 	 * @param imagePlusYZ Segmented image in YZ dimension
 	 *
-	 * @return ImagePlus image results of the gift wrapping
+	 * @return ImagePlus image results of the convex hull algorithm
 	 *
-	 * @see ConvexHullSegmentation#
+	 * @see ConvexHullSegmentation#convexHullDetection(ImagePlus, SegmentationParameters) 
 	 */
 	private ImagePlus imageMakingUnion(ImagePlus imagePlusInput,
 	                                   ImagePlus imagePlusXY,

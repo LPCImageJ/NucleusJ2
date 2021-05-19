@@ -1,6 +1,7 @@
 package gred.nucleus.segmentation;
 
 
+import gred.nucleus.core.NucleusSegmentation;
 import gred.nucleus.plugins.PluginParameters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,10 +18,10 @@ public class SegmentationParameters extends PluginParameters {
 	/** Logger */
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
-	/** GIFT wrapping option */
-	boolean giftWrapping     = true;
+	/** Convex Hull algorithm option */
+	boolean ConvexHullDetection = true;
 	/** Minimal object volume to segment */
-	int     minVolumeNucleus = 1;
+	int     minVolumeNucleus    = 1;
 	/** Maximal object volume to segment */
 	int     maxVolumeNucleus = 3000000;
 	
@@ -36,12 +37,11 @@ public class SegmentationParameters extends PluginParameters {
 	}
 	
 	
-	public SegmentationParameters(String inputFolder, String outputFolder, int minVolume, int maxVolume, boolean gift) {
+	public SegmentationParameters(String inputFolder, String outputFolder, int minVolume, int maxVolume, boolean convexHull) {
 		super(inputFolder, outputFolder);
 		this.minVolumeNucleus = minVolume;
 		this.maxVolumeNucleus = maxVolume;
-		this.giftWrapping = gift;
-		
+		this.ConvexHullDetection = convexHull;
 	}
 	
 	
@@ -52,12 +52,11 @@ public class SegmentationParameters extends PluginParameters {
 	                              int zCal,
 	                              int minVolume,
 	                              int maxVolume,
-	                              boolean gift) {
+	                              boolean convexHull) {
 		super(inputFolder, outputFolder, xCal, yCal, zCal);
 		this.minVolumeNucleus = minVolume;
 		this.maxVolumeNucleus = maxVolume;
-		this.giftWrapping = gift;
-		
+		this.ConvexHullDetection = convexHull;
 	}
 	
 	
@@ -80,8 +79,8 @@ public class SegmentationParameters extends PluginParameters {
 			System.exit(-1);
 		}
 		for (String idProp : prop.stringPropertyNames()) {
-			if (idProp.equals("GiftWrapping")) {
-				this.giftWrapping = Boolean.parseBoolean(prop.getProperty("GiftWrapping"));
+			if (idProp.equals("ConvexHullDetection")) {
+				this.ConvexHullDetection = Boolean.parseBoolean(prop.getProperty("ConvexHullDetection"));
 			}
 			if (idProp.equals("maxVolumeNucleus")) {
 				this.maxVolumeNucleus = Integer.parseInt(prop.getProperty("maxVolumeNucleus"));
@@ -98,7 +97,8 @@ public class SegmentationParameters extends PluginParameters {
 		super.getAnalysisParameters();
 		this.headerInfo += "#maxVolumeNucleus:" + maxVolumeNucleus + "\n"
 		                   + "#minVolumeNucleus: " + minVolumeNucleus + "\n"
-		                   + "#GiftWrapping: " + giftWrapping + "\n";
+		                   + "#ConvexHullDetection (" + NucleusSegmentation.CONVEX_HULL_ALGORITHM + "): "
+		                   + ConvexHullDetection + "\n";
 		return this.headerInfo;
 	}
 	
@@ -123,8 +123,8 @@ public class SegmentationParameters extends PluginParameters {
 	}
 	
 	
-	public boolean getGiftWrapping() {
-		return this.giftWrapping;
+	public boolean getConvexHullDetection() {
+		return this.ConvexHullDetection;
 	}
 	
 }

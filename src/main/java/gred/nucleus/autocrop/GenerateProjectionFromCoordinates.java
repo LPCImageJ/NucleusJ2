@@ -18,7 +18,7 @@ public class GenerateProjectionFromCoordinates {
 	/** Logger */
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
-	String pathToGIFTSeg;
+	String pathToConvexHullSeg;
 	String pathToZProjection;
 	String pathToCoordinates;
 	String pathToRaw;
@@ -27,12 +27,12 @@ public class GenerateProjectionFromCoordinates {
 	/**
 	 * Constructor
 	 *
-	 * @param pathToGIFTSeg     path to segmented image's folder
+	 * @param pathToConvexHullSeg     path to segmented image's folder
 	 * @param pathToZProjection path to Zprojection image's from autocrop
 	 * @param pathToCoordinates path to coordinates files from autocrop
 	 */
-	public GenerateProjectionFromCoordinates(String pathToCoordinates, String pathToGIFTSeg, String pathToZProjection) {
-		this.pathToGIFTSeg = pathToGIFTSeg;
+	public GenerateProjectionFromCoordinates(String pathToCoordinates, String pathToConvexHullSeg, String pathToZProjection) {
+		this.pathToConvexHullSeg = pathToConvexHullSeg;
 		this.pathToZProjection = pathToZProjection;
 		this.pathToCoordinates = pathToCoordinates;
 	}
@@ -97,16 +97,16 @@ public class GenerateProjectionFromCoordinates {
 	
 	
 	/**
-	 * Run new annotation of Zprojection, color in red nuclei which were filtered (in case of GIFT wrapping color in red
-	 * nuclei which not pass the segmentation most of case Z truncated )
+	 * Run new annotation of Zprojection, color in red nuclei which were filtered (in case of convex hull algorithm color in red
+	 * nuclei which doesn't pass the segmentation most of case Z truncated )
 	 *
 	 * @throws IOException
 	 * @throws FormatException
 	 */
 	public void generateCoordinateFiltered() throws IOException, FormatException {
-		Directory giftSegImages = new Directory(this.pathToGIFTSeg);
-		giftSegImages.listImageFiles(this.pathToGIFTSeg);
-		giftSegImages.checkIfEmpty();
+		Directory convexHullSegImages = new Directory(this.pathToConvexHullSeg);
+		convexHullSegImages.listImageFiles(this.pathToConvexHullSeg);
+		convexHullSegImages.checkIfEmpty();
 		Directory zProjection = new Directory(this.pathToZProjection);
 		zProjection.listImageFiles(this.pathToZProjection);
 		zProjection.checkIfEmpty();
@@ -119,7 +119,7 @@ public class GenerateProjectionFromCoordinates {
 			List<String>        boxListsNucleiNotPass = new ArrayList<>();
 			Map<String, String> sortedMap             = new TreeMap<>(listOfBoxes);
 			for (Map.Entry<String, String> entry : sortedMap.entrySet()) {
-				if (!(giftSegImages.checkIfFileExists(entry.getKey()))) {
+				if (!(convexHullSegImages.checkIfFileExists(entry.getKey()))) {
 					boxListsNucleiNotPass.add(entry.getValue());
 					LOGGER.info("add {}", entry.getValue());
 				}

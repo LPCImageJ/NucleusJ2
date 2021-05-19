@@ -1,5 +1,7 @@
 package gred.nucleus.dialogs;
 
+import gred.nucleus.core.NucleusSegmentation;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,18 +11,18 @@ import java.awt.event.ItemListener;
 
 
 public class SegmentationConfigDialog extends JFrame implements ItemListener {
-	private final JTextField         minVolume         = new JTextField();
-	private final JTextField         maxVolume         = new JTextField();
-	private final JCheckBox          giftWrapping      = new JCheckBox();
-	private final JTextField         xCalibration      = new JTextField();
-	private final JTextField         yCalibration      = new JTextField();
-	private final JTextField         zCalibration      = new JTextField();
-	private final JCheckBox          addCalibrationBox = new JCheckBox();
-	private final JButton            buttonOK          = new JButton("Done");
+	private final JTextField         minVolume           = new JTextField();
+	private final JTextField         maxVolume             = new JTextField();
+	private final JCheckBox          convexHullDetection   = new JCheckBox();
+	private final JTextField         xCalibration          = new JTextField();
+	private final JTextField         yCalibration          = new JTextField();
+	private final JTextField         zCalibration          = new JTextField();
+	private final JCheckBox          addCalibrationBox     = new JCheckBox();
+	private final JButton            buttonOK              = new JButton("Done");
 	private final JPanel             volumePane;
 	private final Container          container;
 	private final SegmentationDialog caller;
-	private       Boolean            isGiftWrapping    = true;
+	private       Boolean            isConvexHullDetection = true;
 	private       JPanel             xCalibrationPanel;
 	private       JPanel             yCalibrationPanel;
 	private       JPanel             zCalibrationPanel;
@@ -72,23 +74,23 @@ public class SegmentationConfigDialog extends JFrame implements ItemListener {
 		maxVolume.setMinimumSize(new Dimension(60, 10));
 		maxVolumePane.add(maxVolume);
 		
-		JPanel giftWrappingPane = new JPanel();
-		giftWrappingPane.setLayout(new BoxLayout(giftWrappingPane, BoxLayout.X_AXIS));
-		giftWrappingPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
-		JLabel zBox = new JLabel("Gift wrapping:");
-		giftWrappingPane.add(zBox);
-		giftWrappingPane.add(Box.createRigidArea(new Dimension(10, 0)));
-		giftWrapping.setSelected(true);
-		giftWrapping.setMinimumSize(new Dimension(100, 10));
-		giftWrapping.addItemListener(this);
-		giftWrappingPane.add(giftWrapping);
+		JPanel convexHullPane = new JPanel();
+		convexHullPane.setLayout(new BoxLayout(convexHullPane, BoxLayout.X_AXIS));
+		convexHullPane.setBorder(BorderFactory.createEmptyBorder(0, 10, 10, 10));
+		JLabel zBox = new JLabel("Convex Hull Detection (" + NucleusSegmentation.CONVEX_HULL_ALGORITHM +":");
+		convexHullPane.add(zBox);
+		convexHullPane.add(Box.createRigidArea(new Dimension(10, 0)));
+		convexHullDetection.setSelected(true);
+		convexHullDetection.setMinimumSize(new Dimension(100, 10));
+		convexHullDetection.addItemListener(this);
+		convexHullPane.add(convexHullDetection);
 		
 		JLabel volumeLabel = new JLabel("Volume:");
 		volumeLabel.setAlignmentX(0);
 		volumePane.add(volumeLabel);
 		volumePane.add(minVolumePane);
 		volumePane.add(maxVolumePane);
-		volumePane.add(giftWrappingPane);
+		volumePane.add(convexHullPane);
 		volumePane.add(Box.createRigidArea(new Dimension(0, 20)));
 
 
@@ -146,8 +148,8 @@ public class SegmentationConfigDialog extends JFrame implements ItemListener {
 	}
 	
 	
-	public boolean getGiftWrapping() {
-		return giftWrapping.isSelected();
+	public boolean getConvexHullDetection() {
+		return convexHullDetection.isSelected();
 	}
 	
 	
@@ -173,8 +175,8 @@ public class SegmentationConfigDialog extends JFrame implements ItemListener {
 	
 	@Override
 	public void itemStateChanged(ItemEvent e) {
-		if (e.getSource() == giftWrapping) {
-			isGiftWrapping = giftWrapping.isSelected();
+		if (e.getSource() == convexHullDetection) {
+			isConvexHullDetection = convexHullDetection.isSelected();
 		} else if (e.getSource() == addCalibrationBox) {
 			if (addCalibrationBox.isSelected()) {
 				

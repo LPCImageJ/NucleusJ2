@@ -212,7 +212,7 @@ public class CLIHelper {
 				
 				String segConfigOption =
 						"thresholdOTSUComputing:20\n" +
-						"GiftWrapping:true\n" +
+						"ConvexHullDetection:true\n" +
 						"xCal:1\n" +
 						"yCal:1\n" +
 						"zCal:1";

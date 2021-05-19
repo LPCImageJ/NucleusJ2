@@ -16,7 +16,7 @@ import java.lang.invoke.MethodHandles;
 /**
  * @author Tristan Dubos and Axel Poulet
  * @deprecated Method to segment and analyse the nucleus on one image //TODO add a parameter in GUI to chose true or
- * false for the giftWrapping 3D
+ * false for the 3D convex hull algorithm
  */
 @Deprecated
 public class NucleusSegmentationAndAnalysisPlugin_ implements PlugIn {
