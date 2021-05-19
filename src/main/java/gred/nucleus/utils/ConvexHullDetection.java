@@ -1,413 +1,340 @@
 package gred.nucleus.utils;
 
-
-import ij.measure.Calibration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import java.awt.*;
 import java.lang.invoke.MethodHandles;
+import java.util.*;
 import java.util.List;
 
+/*
+ * Copyright (c) 2010, Bart Kiers
+ *
+ * Permission is hereby granted, free of charge, to any person
+ * obtaining a copy of this software and associated documentation
+ * files (the "Software"), to deal in the Software without
+ * restriction, including without limitation the rights to use,
+ * copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following
+ * conditions:
+ *
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+ * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+ * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+ * OTHER DEALINGS IN THE SOFTWARE.
+ */
 
-/** @author Tristan Dubos and Axel Poulet */
+
+/**
+ * Class which run a 2D convex hull algorithm to a set of voxels
+ *
+ * Currently uses an implementation of the Graham Scan
+ */
 public class ConvexHullDetection {
 	/** Logger */
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
-	private static final double PI = Math.PI;
-	
-	private VoxelRecord p0       = new VoxelRecord();
-	private String      axesName = "";
-	/*
-	 * 1) On calcule l'angle alpha comme précédemment :
-	 * double acos = Math.acos(cosAlpha)
-	 * 	double alpha;
-	 * 	if (sinAlpha < 0)
-	 * 		alpha = -acos;
-	 * 	else
-	 * 		alpha = acos;
-	 * 2) L'angle alpha est l'angle entre la "tangente"  (vecteur entre v_{n-1} et v_n) à la frontière, calculée précédemment, et le vecteur vers les autres voxels.
-	 * L'algo précédent doit marche pour une vrai enveloppe convexe (à mettre au point avant de coder la version avec seuillage sur la distance !).
-	 * Pour une vrai enveloppe convexe, normalement, l'angle alpha doit toujours, pour tous les voxels, être entre 0 et pi (à vérifier !).
-	 * Dans notre algo avec seuillage sur la distance, justement, on peut autoriser des angles alphas négatifs, car le polygone de sortie n'est pas forcément convexe.
-	 * On doit alors ruser en considérant non pas l'angle entre la "tangente" à la frontière, calculée précédemment, et le vecteur vers les autres voxels, mais l'angle
-	 * (ou plutôt son représentant pris entre -pi et pi) entre la "normale entrante", qui est la "tangente" (vecteur entre v_{n-1} et v_n) plus pi/2.
-	 * Ça donne quelque chose comme :
-	 *
-	 * double angle = computeAngle(vectorTest,vectorCourant);
-	 * double anglePlusPiSurDeux = angle - pi/2;
-	 * if (anglePlusPiSurDeux < -pi)
-	 *         anglePlusPiSurDeux += 2*pi;
-	 *  if(anglePlusPiSurDeux <= angleMin )
-	 *  angleMin = anglePlusPiSurDeux;
-	 *
-	 *    etc.
-	 *   Par contre, pour voir si on a "fait le tour" (somme des angles dépasse 2*pi), on peut garder l'ancien angle...
-	 * Pour calculer l'angle alpha, on utilise :
-	 *  produit vectoriel (U^V)z = Ux*Vy-Uy*Vx
-	 *  produit scalaire V.U= Vx*Ux+Vy*Uy
-	 *  produit des normes = racineCarre(Vx*Vx+Vy*Vy)*racineCarre(Ux*Ux+Uy*Uy)
-	 *  sin alpha = produit vectoriel / produit des normes
-	 *  cos alpha = produit scalaire / produit des normes
-	 *  Pour calculer l'angle alpha, on utilise
-	 *  sin alpha = produit vectoriel / produit des normes
-	 *  cos alpha = produit scalaire / produit des normes
-	 *  On inverse avec arccos en tenant compte du signe du sinus
-	 *  et on cherche la détermination + ou - 2*k*pi qui se trouve dans [0, 2*pi[
-	 */
-	
 	
 	/**
-	 * Method to detect the ensemble of convex hull voxels with  Jarvis march approach see :
-	 * <p>
-	 * https://fr.wikipedia.org/wiki/Marche_de_Jarvis https://en.wikipedia.org/wiki/Gift_wrapping_algorithm
-	 *
-	 * @param distanceThreshold
-	 * @param convexHull        List of voxels composing the convexe Hull   The input contain only the starting pixel
-	 *                          (the most down rigth of the boundary voxels)
-	 * @param image             Image contenant les voxel de la composante connexe
-	 * @param lVoxelBoundary    Liste des voxels frontiere
-	 * @param vectorTest        Voxel ??? test avec
-	 * @param calibration       Calibration de l'image
-	 *
-	 * @return List of voxels composing the convexe Hull
+	 * Run graham scan given a list of voxel after converting voxels to points
+	 * @param axesName current combined axe used
+	 * @param lVoxelBoundary voxels of the boundaries
+	 * @return voxels of the convex hull
 	 */
-	public List<VoxelRecord> findConvexHull(double[][] image,
-	                                        List<VoxelRecord> convexHull,
-	                                        List<VoxelRecord> lVoxelBoundary,
-	                                        VoxelRecord vectorTest,
-	                                        Calibration calibration,
-	                                        double distanceThreshold) {
-		LOGGER.trace("Finding convex hull.");
-		double      anglesSum      = 0.0;
-		int         compteur       = 0;
-		VoxelRecord voxelTest      = p0;
-		VoxelRecord voxelPrecedent = new VoxelRecord();
-		double      xCal           = calibration.pixelWidth;
-		double      yCal           = calibration.pixelHeight;
-		double      zCal           = calibration.pixelDepth;
-		while (anglesSum < 2 * PI + 1) {
-			double      angleMin          = 0;
-			double      maxLength         = 0;
-			double      distance          = 0;
-			double      angleMinPiSurDeux = 2 * PI;
-			VoxelRecord voxelMin          = new VoxelRecord();
-			int         iMin              = 0;
-			if (compteur != 0) {
-				vectorTest.setLocation(voxelTest.i - voxelPrecedent.i,
-				                       voxelTest.j - voxelPrecedent.j,
-				                       voxelTest.k - voxelPrecedent.k);
-			}
-			
-			for (int i = 0; i < lVoxelBoundary.size(); i++) {
-				//LOGGER.trace("Processing boundary voxel {}/{}", i, lVoxelBoundary.size());
-				//LOGGER.trace("    anglesSum: {}, {} {} {}", anglesSum, lVoxelBoundary.get(i).i, lVoxelBoundary.get(i).j, lVoxelBoundary.get(i).k);
-				if (voxelTest.compareCoordinatesTo(lVoxelBoundary.get(i)) == 1) {
-					VoxelRecord vectorCourant = new VoxelRecord();
-					vectorCourant.setLocation(lVoxelBoundary.get(i).i - voxelTest.i,
-					                          lVoxelBoundary.get(i).j - voxelTest.j,
-					                          lVoxelBoundary.get(i).k - voxelTest.k);
-					switch (axesName) {
-						case "xy":
-							distance = Math.sqrt(vectorCourant.i * xCal * vectorCourant.i * xCal +
-							                     vectorCourant.j * yCal * vectorCourant.j * yCal);
-							break;
-						case "xz":
-							distance = Math.sqrt(vectorCourant.i * xCal * vectorCourant.i * xCal +
-							                     vectorCourant.k * zCal * vectorCourant.k * zCal);
-							break;
-						case "yz":
-							distance = Math.sqrt(vectorCourant.k * zCal * vectorCourant.k * zCal +
-							                     vectorCourant.j * yCal * vectorCourant.j * yCal);
-							break;
-					}
-					// IJ.log("distance " +distance+ " "+vectorCourant._i + " "+vectorCourant._k );
-					// IJ.log("distance " + distance +"<="+ distanceThreshold);
-					if (distance <= distanceThreshold) {
-						double angle              = computeAngle(vectorTest, vectorCourant, calibration);
-						double anglePlusPiSurDeux = angle - PI / 2;
-						if (anglePlusPiSurDeux <= -PI) {
-							anglePlusPiSurDeux += 2 * PI;
-						}
-						double threshold = angleThreshold(image, voxelTest, vectorTest, calibration, distanceThreshold);
-						if (anglePlusPiSurDeux <= angleMinPiSurDeux) {
-							if (anglePlusPiSurDeux < angleMinPiSurDeux) {
-								maxLength = distance;
-								angleMinPiSurDeux = anglePlusPiSurDeux;
-								angleMin = angle;
-								voxelMin = lVoxelBoundary.get(i);
-								iMin = i;
-							} else if (anglePlusPiSurDeux == angleMinPiSurDeux && distance > maxLength) {
-								maxLength = distance;
-								angleMinPiSurDeux = anglePlusPiSurDeux;
-								angleMin = angle;
-								voxelMin = lVoxelBoundary.get(i);
-								iMin = i;
-							}
-						}
-					}
-				}
-			}
-			++compteur;
-			voxelPrecedent = voxelTest;
-			voxelTest = voxelMin;
-			
-			//System.out.println("le voxel min "+voxelMin._i+" "+voxelMin._k+" "+voxelMin._j+" ");
-			//if(voxelMin._i > 0 &&voxelMin._k> 0 &&voxelMin._j> 0 ){
-			lVoxelBoundary.remove(iMin);
-			
-			anglesSum += angleMin;
-			if (voxelMin.compareCoordinatesTo(p0) == 0) {
-				break;
-			}
-			
-			if (anglesSum <= 2 * PI) {
-				convexHull.add(voxelMin);
-				//IJ.log("point num: "+compteur+" "+_p0._i+" "+_p0._j+" "+_p0._k+" angle: "+angleMinPiSurDeux+" distance: "+maxLength+" angle sum"+anglesSum);
-			}
-/*
- }
- ICI ISSUE 13 a regarder !!!!! l'image qui pose probleme se trouve ici :
- /media/tridubos/DATA1/DATA_ANALYSE/MANIP_MANU_KAKU/ANALYSE_OCTOBRE_2019/images_PROBLEMS
- else{
- return null;
- }
- 
- */
-		
-		}
-		return convexHull;
-	}
-	
-	
-	/**
-	 * sweetsweet sun
-	 *
-	 * @param calibration
-	 * @param vector1
-	 * @param vector2
-	 *
-	 * @return
-	 */
-	double computeAngle(VoxelRecord vector1, VoxelRecord vector2, Calibration calibration) {
-		double xcal = calibration.pixelWidth;
-		double ycal = calibration.pixelHeight;
-		double zcal = calibration.pixelDepth;
-		double normeVector1 = Math.sqrt(vector1.i * xcal * vector1.i * xcal +
-		                                vector1.j * ycal * vector1.j * ycal +
-		                                vector1.k * zcal * vector1.k * zcal);
-		double normeVector2 = Math.sqrt(vector2.i * xcal * vector2.i * xcal +
-		                                vector2.j * ycal * vector2.j * ycal +
-		                                vector2.k * zcal * vector2.k * zcal);
-		double normesProduct = normeVector1 * normeVector2;
-		double sinAlpha      = 0, cosAlpha = 0;
+	public static List<VoxelRecord> runGrahamScan(String axesName, List<VoxelRecord> lVoxelBoundary){
+		List<Point> points      = new ArrayList<>();
+		double      constantAxe = 0;
 		
 		switch (axesName) {
 			case "xy":
-				sinAlpha = ((vector1.i * xcal) * (vector2.j * ycal) - (vector1.j * ycal) * (vector2.i * xcal)) /
-				           normesProduct;
-				cosAlpha = ((vector1.i * xcal) * (vector2.i * xcal) + (vector1.j * ycal) * (vector2.j * ycal)) /
-				           normesProduct;
+				constantAxe = lVoxelBoundary.get(0).k;
+				for (VoxelRecord v: lVoxelBoundary) {
+					points.add(new Point((int)v.i, (int)v.j));
+				}
 				break;
 			case "xz":
-				sinAlpha = ((vector1.i * xcal) * (vector2.k * zcal) - (vector1.k * zcal) * (vector2.i * xcal)) /
-				           normesProduct;
-				cosAlpha = ((vector1.i * xcal) * (vector2.i * xcal) + (vector1.k * zcal) * (vector2.k * zcal)) /
-				           normesProduct;
+				constantAxe = lVoxelBoundary.get(0).j;
+				for (VoxelRecord v: lVoxelBoundary) {
+					points.add(new Point((int)v.i, (int)v.k));
+				}
 				break;
 			case "yz":
-				sinAlpha = ((vector1.j * ycal) * (vector2.k * zcal) - (vector1.k * zcal) * (vector2.j * ycal)) /
-				           normesProduct;
-				cosAlpha = ((vector1.j * ycal) * (vector2.j * ycal) + (vector1.k * zcal) * (vector2.k * zcal)) /
-				           normesProduct;
+				constantAxe = lVoxelBoundary.get(0).i;
+				for (VoxelRecord v: lVoxelBoundary) {
+					points.add(new Point((int)v.j, (int)v.k));
+				}
 				break;
 		}
-		if (cosAlpha > 1) {
-			cosAlpha = 1;
-		} else if (cosAlpha < -1) {
-			cosAlpha = -1;
+		
+		List<Point> pointsConvexHull = getConvexHull(points);
+		List<VoxelRecord> convexHull = new ArrayList<>();
+		switch (axesName) {
+			case "xy":
+				for (Point p: pointsConvexHull) {
+					VoxelRecord voxel = new VoxelRecord();
+					voxel.setLocation(p.x, p.y, constantAxe);
+					convexHull.add(voxel);
+				}
+				break;
+			case "xz":
+				for (Point p: pointsConvexHull) {
+					VoxelRecord voxel = new VoxelRecord();
+					voxel.setLocation(p.x, constantAxe, p.y);
+					convexHull.add(voxel);
+				}
+				break;
+			case "yz":
+				for (Point p: pointsConvexHull) {
+					VoxelRecord voxel = new VoxelRecord();
+					voxel.setLocation(constantAxe, p.x, p.y);
+					convexHull.add(voxel);
+				}
+				break;
 		}
-		double acos = Math.acos(cosAlpha);
-		double alpha;
-		if (sinAlpha < 0) {
-			alpha = -acos;
-		} else {
-			alpha = acos;
-		}
-		return alpha;
+		convexHull.remove(0); // Remove the duplicate voxel (begin/end)
+		return convexHull;
 	}
-	
 	
 	/**
-	 * @param p
-	 * @param q
-	 * @param r
-	 *
-	 * @return
+	 * An enum denoting a directional-turn between 3 points (vectors).
 	 */
-	int orientation(VoxelRecord p, VoxelRecord q, VoxelRecord r) {
-		int turn = (int) ((q.i - p.i) * (r.j - p.j) - (r.i - p.i) * (q.j - p.j));
-		return Integer.signum(turn);
-	}
-	
-	
-	/** @return  */
-	public String getAxes() {
-		return axesName;
-	}
-	
-	
-	/** @param axes  */
-	public void setAxes(String axes) {
-		axesName = axes;
-	}
-	
-	
-	/** @param voxelRecord  */
-	public void setInitialVoxel(VoxelRecord voxelRecord) {
-		p0 = voxelRecord;
-	}
-
-	/*Soit d notre seuil de distance et C(v, D) le carré de centre v et de rayon d (dans le plan considéré).
-	Copier l'image dans le carré C(v, D) dans une petite image I_c
-	inverser les zéros et les uns dans I_c
-	Mettre v (où plutôt le voxel qui lui correspond qui doit être le centre de I_c) à 1.
-	Etiqueter à 2 la composante connexe des 1 qui contient v dans I_c (faire un parcours breadthFirstSerach comme l'autre jour)
-	Pour chaque voxel  w du bord de I_c qui est à 2, calculer 
-	double angleEntreZeroEt2pi = computeAngle(vectorTest,w-v,calibration) + pi
-	Calculer angleEntreZeroEt2piMax le maximum des angles obtenus.
-	thresholdAngle = (angleEntreZeroEt2piMax).
-	si (thresholdAngle >= pi)
-	thresholdAngle -= 2pi */
-	
+	protected enum Turn { CLOCKWISE, COUNTER_CLOCKWISE, COLLINEAR }
 	
 	/**
-	 * @param image
-	 * @param voxelRecord
-	 * @param vectorTest
-	 * @param calibration
-	 * @param distance
+	 * Returns true iff all points in <code>points</code> are collinear.
 	 *
-	 * @return
+	 * @param points the list of points.
+	 * @return       true iff all points in <code>points</code> are collinear.
 	 */
-	private double angleThreshold(double[][] image,
-	                              VoxelRecord voxelRecord,
-	                              VoxelRecord vectorTest,
-	                              Calibration calibration,
-	                              double distance) {
-		int nbPixelWidth  = (int) (distance / calibration.pixelWidth);
-		int nbPixelHeight = (int) (distance / calibration.pixelHeight);
-		int x             = (int) voxelRecord.i;
-		int y             = (int) voxelRecord.j;
-		if (axesName.equals("xz")) {
-			y = (int) voxelRecord.k;
-			nbPixelHeight = (int) (distance / calibration.pixelDepth);
-		} else if (axesName.equals("yz")) {
-			x = (int) voxelRecord.j;
-			y = (int) voxelRecord.k;
-			nbPixelWidth = (int) (distance / calibration.pixelHeight);
-			nbPixelHeight = (int) (distance / calibration.pixelDepth);
-		}
-		if (nbPixelWidth == 0) {
-			nbPixelWidth = 1;
+	protected static boolean areAllCollinear(List<Point> points) {
+		
+		if(points.size() < 2) {
+			return true;
 		}
 		
-		if (nbPixelHeight == 0) {
-			nbPixelHeight = 1;
-		}
-		//IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" largeur la distance  " +distance+ "\n  nbPixelWidth "+nbPixelWidth+ "\n nbPixelHeight "+nbPixelHeight+ "\n x "+x+ " y "+y+ " " + calibration.pixelDepth+ " "+calibration.pixelHeight);
-		//double angleMax = 0;
-		//if(nbPixelWidth>0 && nbPixelHeight>0 ) {
-		//  IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" "+nbPixelWidth + " "+nbPixelHeight+" " +x + " " + y);
-		List<VoxelRecord> listBoundaryVoxel = getListOfInterestVoxel(image, nbPixelWidth, nbPixelHeight, x, y);
-		double            angleMax          = 0;
-		for (VoxelRecord record : listBoundaryVoxel) {
-			VoxelRecord vectorCourant = new VoxelRecord();
-			vectorCourant.setLocation(record.i - nbPixelWidth,
-			                          record.j - nbPixelHeight,
-			                          0);
-			if (axesName.equals("xz")) {
-				vectorCourant.setLocation(record.i - nbPixelWidth,
-				                          0,
-				                          record.k - nbPixelHeight);
-			} else if (axesName.equals("yz")) {
-				vectorCourant.setLocation(0,
-				                          record.j - nbPixelWidth,
-				                          record.k - nbPixelHeight);
-			}
-			double angleEntreZeroEt2pi = computeAngle(vectorTest, vectorCourant, calibration) + PI;
-			//IJ.log("AngleTest "+ angleEntreZeroEt2pi );
-			if (angleEntreZeroEt2pi > angleMax) {
-				angleMax = angleEntreZeroEt2pi;
+		final Point a = points.get(0);
+		final Point b = points.get(1);
+		
+		for(int i = 2; i < points.size(); i++) {
+			
+			Point c = points.get(i);
+			
+			if(getTurn(a, b, c) != Turn.COLLINEAR) {
+				return false;
 			}
 		}
-		if (angleMax > PI) {
-			angleMax -= 2 * PI;
-		}
-		return angleMax;
+		
+		return true;
 	}
-	
 	
 	/**
-	 * @param image
-	 * @param nbPixelWidth
-	 * @param nbPixelHeight
-	 * @param iInterestVoxel
-	 * @param jInterestVoxel
+	 * Returns the convex hull of the points created from <code>xs</code>
+	 * and <code>ys</code>. Note that the first and last point in the returned
+	 * <code>List&lt;java.awt.Point&gt;</code> are the same point.
 	 *
-	 * @return
+	 * @param xs the x coordinates.
+	 * @param ys the y coordinates.
+	 * @return   the convex hull of the points created from <code>xs</code>
+	 *           and <code>ys</code>.
+	 * @throws IllegalArgumentException if <code>xs</code> and <code>ys</code>
+	 *                                  don't have the same size, if all points
+	 *                                  are collinear or if there are less than
+	 *                                  3 unique points present.
 	 */
-	private List<VoxelRecord> getListOfInterestVoxel(double[][] image,
-	                                                 int nbPixelWidth,
-	                                                 int nbPixelHeight,
-	                                                 int iInterestVoxel,
-	                                                 int jInterestVoxel) {
-		double value     = image[iInterestVoxel][jInterestVoxel];
-		int    minWidth  = iInterestVoxel - nbPixelWidth;
-		int    maxWidth  = iInterestVoxel + nbPixelWidth;
-		int    minHeight = jInterestVoxel - nbPixelHeight;
-		int    maxHeight = jInterestVoxel + nbPixelHeight;
-		if (minWidth < 0) {
-			minWidth = 0;
+	public static List<Point> getConvexHull(int[] xs, int[] ys) throws IllegalArgumentException {
+		
+		if(xs.length != ys.length) {
+			throw new IllegalArgumentException("xs and ys don't have the same size");
 		}
-		if (maxWidth >= image.length) {
-			maxWidth = image.length - 1;
+		
+		List<Point> points = new ArrayList<>();
+		
+		for(int i = 0; i < xs.length; i++) {
+			points.add(new Point(xs[i], ys[i]));
 		}
-		if (minHeight < 0) {
-			minHeight = 0;
-		}
-		if (maxHeight >= image[0].length) {
-			maxHeight = image[0].length - 1;
-		}
-		double[][] iC = new double[nbPixelWidth * 2][nbPixelHeight * 2];
-		/*
-        IJ.log(" i "+ iInterestVoxel + " j "+jInterestVoxel+"\n");
-		IJ.log("Image 1 "+image.length + " x "+image[0].length+"\n");
-        IJ.log("minWidth "+minWidth + " maxWidth "+maxWidth+"\n");
-        IJ.log("minHeight "+minHeight + " maxHeight "+maxHeight+"\n");
-        */
-		//IJ.log("HA "   +minWidth+" max "+maxWidth+" iInterestVoxel "+iInterestVoxel+" "+maxHeight+" ers "+iC.length + " nbPixelWidth "+nbPixelWidth +" nbPixelHeight " +nbPixelHeight);
-		int k = 0;
-		for (iInterestVoxel = minWidth; iInterestVoxel < maxWidth; ++iInterestVoxel) {
-			int l = 0;
-			for (jInterestVoxel = minHeight; jInterestVoxel < maxHeight; ++jInterestVoxel) {
-				//IJ.log("HB "+ iInterestVoxel +"  "+ jInterestVoxel+ " "+image[iInterestVoxel][jInterestVoxel]+  " "+iC[k][l]);
-				if (image[iInterestVoxel][jInterestVoxel] == value) {
-					iC[k][l] = 0;
-				} else {
-					iC[k][l] = 1;
-				}
-				++l;
-			}
-			++k;
-		}
-		VoxelRecord voxelRecord = new VoxelRecord();
-		voxelRecord.setLocation(nbPixelWidth, nbPixelHeight, 0);
-		ConnectedComponents connectedComponents = new ConnectedComponents();
-		connectedComponents.setImageTable(iC);
-		//IJ.log(""+ getClass().getName()+" L-"+ new Exception().getStackTrace()[0].getLineNumber()+" image  "+iC.length+ " "+voxelRecord._i+ " "+voxelRecord._j + " " +image.length+ " "+image[0].length);
-		connectedComponents.computeLabelOfOneObject(1, voxelRecord);
-		return connectedComponents.getBoundaryVoxel(2);
+		
+		return getConvexHull(points);
 	}
 	
+	/**
+	 * Returns the convex hull of the points created from the list
+	 * <code>points</code>. Note that the first and last point in the
+	 * returned <code>List&lt;java.awt.Point&gt;</code> are the same
+	 * point.
+	 *
+	 * @param points the list of points.
+	 * @return       the convex hull of the points created from the list
+	 *               <code>points</code>.
+	 * @throws IllegalArgumentException if all points are collinear or if there
+	 *                                  are less than 3 unique points present.
+	 */
+	public static List<Point> getConvexHull(List<Point> points) throws IllegalArgumentException {
+		
+		List<Point> sorted = new ArrayList<>(getSortedPointSet(points));
+		
+		if(sorted.size() < 3) {
+			throw new IllegalArgumentException("can only create a convex hull of 3 or more unique points");
+		}
+		
+		//	if(areAllCollinear(sorted)) {
+		//		throw new IllegalArgumentException("cannot create a convex hull from collinear points");
+		//	}
+		
+		Stack<Point> stack = new Stack<>();
+		stack.push(sorted.get(0));
+		stack.push(sorted.get(1));
+		
+		for (int i = 2; i < sorted.size(); i++) {
+			
+			Point head = sorted.get(i);
+			Point middle = stack.pop();
+			Point tail = stack.peek();
+			
+			Turn turn = getTurn(tail, middle, head);
+			
+			switch(turn) {
+				case COUNTER_CLOCKWISE:
+					stack.push(middle);
+					stack.push(head);
+					break;
+				case CLOCKWISE:
+					i--;
+					break;
+				case COLLINEAR:
+					stack.push(head);
+					break;
+			}
+		}
+		
+		// close the hull
+		stack.push(sorted.get(0));
+		
+		return new ArrayList<>(stack);
+	}
+	
+	/**
+	 * Returns the points with the lowest y coordinate. In case more than 1 such
+	 * point exists, the one with the lowest x coordinate is returned.
+	 *
+	 * @param points the list of points to return the lowest point from.
+	 * @return       the points with the lowest y coordinate. In case more than
+	 *               1 such point exists, the one with the lowest x coordinate
+	 *               is returned.
+	 */
+	protected static Point getLowestPoint(List<Point> points) {
+		
+		Point lowest = points.get(0);
+		
+		for(int i = 1; i < points.size(); i++) {
+			
+			Point temp = points.get(i);
+			
+			if(temp.y < lowest.y || (temp.y == lowest.y && temp.x < lowest.x)) {
+				lowest = temp;
+			}
+		}
+		
+		return lowest;
+	}
+	
+	/**
+	 * Returns a sorted set of points from the list <code>points</code>. The
+	 * set of points are sorted in increasing order of the angle they and the
+	 * lowest point <tt>P</tt> make with the x-axis. If tow (or more) points
+	 * form the same angle towards <tt>P</tt>, the one closest to <tt>P</tt>
+	 * comes first.
+	 *
+	 * @param points the list of points to sort.
+	 * @return       a sorted set of points from the list <code>points</code>.
+	 * @see ConvexHullDetection#getLowestPoint(java.util.List)
+	 */
+	protected static Set<Point> getSortedPointSet(List<Point> points) {
+		
+		final Point lowest = getLowestPoint(points);
+		
+		TreeSet<Point> set = new TreeSet<>(new Comparator<Point>() {
+			@Override
+			public int compare(Point a, Point b) {
+				
+				if(a == b || a.equals(b)) {
+					return 0;
+				}
+				
+				// use longs to guard against int-underflow
+				double thetaA = Math.atan2((long)a.y - lowest.y, (long)a.x - lowest.x);
+				double thetaB = Math.atan2((long)b.y - lowest.y, (long)b.x - lowest.x);
+				
+				if(thetaA < thetaB) {
+					return -1;
+				}
+				else if(thetaA > thetaB) {
+					return 1;
+				}
+				else {
+					// collinear with the 'lowest' point, let the point closest to it come first
+					
+					// use longs to guard against int-over/underflow
+					double distanceA = Math.sqrt((((long)lowest.x - a.x) * ((long)lowest.x - a.x)) +
+					                             (((long)lowest.y - a.y) * ((long)lowest.y - a.y)));
+					double distanceB = Math.sqrt((((long)lowest.x - b.x) * ((long)lowest.x - b.x)) +
+					                             (((long)lowest.y - b.y) * ((long)lowest.y - b.y)));
+					
+					if(distanceA < distanceB) {
+						return -1;
+					}
+					else {
+						return 1;
+					}
+				}
+			}
+		});
+		
+		set.addAll(points);
+		
+		return set;
+	}
+	
+	/**
+	 * Returns the GrahamScan#Turn formed by traversing through the
+	 * ordered points <code>a</code>, <code>b</code> and <code>c</code>.
+	 * More specifically, the cross product <tt>C</tt> between the
+	 * 3 points (vectors) is calculated:
+	 *
+	 * <tt>(b.x-a.x * c.y-a.y) - (b.y-a.y * c.x-a.x)</tt>
+	 *
+	 * and if <tt>C</tt> is less than 0, the turn is CLOCKWISE, if
+	 * <tt>C</tt> is more than 0, the turn is COUNTER_CLOCKWISE, else
+	 * the three points are COLLINEAR.
+	 *
+	 * @param a the starting point.
+	 * @param b the second point.
+	 * @param c the end point.
+	 * @return the GrahamScan#Turn formed by traversing through the
+	 *         ordered points <code>a</code>, <code>b</code> and
+	 *         <code>c</code>.
+	 */
+	protected static Turn getTurn(Point a, Point b, Point c) {
+		
+		// use longs to guard against int-over/underflow
+		long crossProduct = (((long)b.x - a.x) * ((long)c.y - a.y)) -
+		                    (((long)b.y - a.y) * ((long)c.x - a.x));
+		
+		if(crossProduct > 0) {
+			return Turn.COUNTER_CLOCKWISE;
+		}
+		else if(crossProduct < 0) {
+			return Turn.CLOCKWISE;
+		}
+		else {
+			return Turn.COLLINEAR;
+		}
+	}
 }

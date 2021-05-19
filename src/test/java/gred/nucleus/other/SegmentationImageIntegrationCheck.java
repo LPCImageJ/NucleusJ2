@@ -1,8 +1,8 @@
-package gred.nucleus.old;
+package gred.nucleus.other;
 
+import gred.nucleus.other.analysistest.OutputFileVerification;
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
-import loci.formats.FormatException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -10,12 +10,13 @@ import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 
 
-public class SegmentationImagesIntegration {
+public class SegmentationImageIntegrationCheck {
 	/** Logger */
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
 	
 	/*
+	 
 	 * @param img
 	 * @param vMin
 	 * @param vMax
@@ -34,8 +35,7 @@ public class SegmentationImagesIntegration {
 	 * @param input
 	 * @param output
 	 */
-	public static void testStupidSeveralImages(String input, String output) {
-		
+	public static void testStupidSeveralImages(String input, String output) throws Exception {
 		SegmentationParameters segmentationParameters = new SegmentationParameters(input, output);
 		SegmentationCalling    otsuModified           = new SegmentationCalling(segmentationParameters);
 		try {
@@ -44,15 +44,12 @@ public class SegmentationImagesIntegration {
 				LOGGER.error("Nuclei which didn't pass the segmentation\n{}", log);
 			}
 		} catch (IOException e) {
-			LOGGER.error("I/O exception.", e);
-		} catch (FormatException e) {
-			LOGGER.error("Format exception", e);
+			LOGGER.error("Error.", e);
 		}
 	}
 	
 	
-	public static void testStupidSeveralImages(String input, String output, String config) {
-		
+	public static void testStupidSeveralImages(String input, String output, String config) throws Exception {
 		SegmentationParameters segmentationParameters = new SegmentationParameters(input, output, config);
 		SegmentationCalling    otsuModified           = new SegmentationCalling(segmentationParameters);
 		try {
@@ -61,9 +58,7 @@ public class SegmentationImagesIntegration {
 				LOGGER.error("Nuclei which didn't pass the segmentation\n{}", log);
 			}
 		} catch (IOException e) {
-			LOGGER.error("I/O exception.", e);
-		} catch (FormatException e) {
-			LOGGER.error("Format exception", e);
+			LOGGER.error("Error.", e);
 		}
 	}
 	
@@ -74,20 +69,24 @@ public class SegmentationImagesIntegration {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		String pathToTest   = "/home/tridubos/Bureau/IMAGES_TEST/";
-		String pathToOutput = "/home/tridubos/Bureau/IMAGES_TEST/AUTOCROP";
+		String pathToTest     = "/home/tridubos/Bureau/IMAGES_TEST/SEGMENTATION_IMAGES/SEGMENTATION_VERIF";
+		String pathToExpected = "/home/tridubos/Bureau/IMAGES_TEST/SEGMENTATION_IMAGES/SEGMENTATION";
 		
-		testStupidSeveralImages(pathToTest + "/SEGMENTATION/Gros_Nucleols",
-		                        pathToTest + "/SEGMENTATION/SEGMENTATION_RESULTS/Gros_Nucleols");
-		testStupidSeveralImages(pathToTest + "/SEGMENTATION/Noyaux_Calib_1_1_1",
-		                        pathToTest + "/SEGMENTATION/SEGMENTATION_RESULTS/Noyaux_Calib_1_1_1",
-		                        pathToTest + "/SEGMENTATION/Noyaux_Calib_1_1_1/config_calibration.txt");
-		testStupidSeveralImages(pathToTest + "/SEGMENTATION/PB_RADIUS_CONVEXHULL",
-		                        pathToTest + "/SEGMENTATION/SEGMENTATION_RESULTS/PB_RADIUS_CONVEXHULL");
-		
-		// testStupidSeveralImages(ExpectedResult, ExpectedResult, (short)6.0, 300000000,true);
-        /*fw.GetFilesResultingOfAnalysis(inputTristan);
-        fw.CompareAnalysisResult();
+		/*
+		testStupidSeveralImages(pathToTest+"/Gros_Nucleols",
+		pathToTest+"/SEGMENTATION_RESULTS/Gros_Nucleols");
+		testStupidSeveralImages(pathToTest+"/Noyaux_Calib_1_1_1",
+		pathToTest+"/SEGMENTATION_RESULTS/Noyaux_Calib_1_1_1",
+		pathToTest+"/Noyaux_Calib_1_1_1/config_calibration.txt");
+		testStupidSeveralImages(pathToTest+"/PB_RADIUS_CONVEXHULL",
+		pathToTest+"/SEGMENTATION_RESULTS/PB_RADIUS_CONVEXHULL");
+		*/
+		OutputFileVerification fw = new OutputFileVerification(pathToExpected, pathToTest);
+		fw.getFileResultExpected(pathToExpected);
+		//fw.GetFilesOutputFolder(pathToTest);
+		fw.getFilesResultingOfAnalysis(pathToTest);
+		fw.compareAnalysisResult();
+        /*
         OutputFileVerification fw = new OutputFileVerification();
         fw.GetFileResultExpected(ExpectedResult);
         fw.GetFilesOutputFolder(outputTristan);

@@ -1,12 +1,9 @@
 package gred.nucleus.utils;
 
-import gred.nucleus.core.Measure3D;
-import gred.nucleus.segmentation.SegmentationParameters;
 import ij.ImagePlus;
 import ij.ImageStack;
 import ij.gui.PolygonRoi;
 import ij.gui.Roi;
-import ij.measure.Calibration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,7 +14,7 @@ import java.util.List;
 
 
 /**
- * Running gift wrapping for each axis combined
+ * Running a convex hull algorithm for each axis combined
  *
  * @author Tristan Dubos and Axel Poulet
  */
@@ -25,55 +22,24 @@ public class ConvexHullImageMaker {
 	/** Logger */
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
-	/**
-	 *
-	 */
-	private final VoxelRecord p0 = new VoxelRecord();
-	/**
-	 *
-	 */
 	List<Double> listLabel;
-	/**
-	 *
-	 */
-	private String                 axesName = "";
-	/**
-	 *
-	 */
-	private Calibration            calibration;
-	private SegmentationParameters segmentationParameters;
-	
-	/* Constructor
-	 * @see VoxelRecord
-	 * @see ConvexHullImageMaker#setAxes(String) calibration Calibration of the current image analysed
-	 * @param listLabel list of voxels of the connected component of the current stack analysed (initialised by giveTable method)
-	 */
-	
+	private String axesName = "";
 	
 	/**
-	 * running gift wrapping on the image input
+	 * Run the convex hull algorithm on the image input for a given axe
 	 *
-	 * @return segmented image in axes concerned corrected by gift wrapping
-	 *
+	 * @param imagePlusBinary input imagePlus
+	 * @return segmented image in axes concerned corrected by a convex hull algorithm
 	 * @see gred.nucleus.core.ConvexHullSegmentation
 	 */
-	public ImagePlus giftWrapping(ImagePlus imagePlusBinary, SegmentationParameters segmentationParameters) {
-		LOGGER.debug("Computing GIFT Wrapping for axes {}.", this.axesName);
-		this.segmentationParameters = segmentationParameters;
-		calibration = imagePlusBinary.getCalibration();
-		ImageStack imageStackInput = imagePlusBinary.getStack();
-		Measure3D measure3d = new Measure3D(this.segmentationParameters.getXCal(),
-		                                    this.segmentationParameters.getYCal(),
-		                                    this.segmentationParameters.getZCal());
-		
-		// Calcul du rayon : PQ 1/2 du rayon
-		double      equivalentSphericalRadius = (measure3d.equivalentSphericalRadius(imagePlusBinary) / 2);
-		VoxelRecord tVoxelRecord              = measure3d.computeBarycenter3D(false, imagePlusBinary, 255.0);
+	public ImagePlus runConvexHullDetection(ImagePlus imagePlusBinary) {
+		LOGGER.debug("Computing convex hull algorithm for axes {}.", this.axesName);
 		ImagePlus   imagePlusCorrected        = new ImagePlus();
 		ImagePlus   imagePlusBlack            = new ImagePlus();
 		int         depth;
 		int         width;
 		int         height;
+		// Defining plan
 		if (axesName.equals("xy")) {
 			width = imagePlusBinary.getWidth();
 			height = imagePlusBinary.getHeight();
@@ -87,30 +53,36 @@ public class ConvexHullImageMaker {
 			height = imagePlusBinary.getNSlices();
 			depth = imagePlusBinary.getWidth();
 		}
+		// Create 2D image used to create each slice (depth) of a plan
 		BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_BYTE_GRAY);
 		imagePlusBlack.setImage(bufferedImage);
 		ImageStack imageStackOutput = new ImageStack(width, height);
 		for (int k = 0; k < depth; ++k) {
 			ImagePlus  ip    = imagePlusBlack.duplicate();
-			double[][] image = giveTable(imagePlusBinary, width, height, k);
-			if (listLabel.size() == 1) {
-				LOGGER.trace("Processing only label {} on slice {}/{}", listLabel.get(0), k, depth);
-				List<VoxelRecord> lVoxelBoundary = detectVoxelBoundary(image, listLabel.get(0), k);
-				if (lVoxelBoundary.size() > 5) {
-					ip = imageMaker(image, lVoxelBoundary, width, height, equivalentSphericalRadius);
+			double[][] image = giveTable(imagePlusBinary, width, height, k); // Return image with labelled components (& initialize listLabel)
+			LOGGER.trace("Processing slice {}/{} of plan \"{}\"", k, depth, axesName);
+			
+			// Calculate boundaries
+			if (listLabel.size() == 1) {  // If 1 single connected component
+				//LOGGER.trace("Processing the only label {} on slice {}/{}", listLabel.get(0), k, depth);
+				List<VoxelRecord> lVoxelBoundary = detectVoxelBoundary(image, listLabel.get(0), k); // List the voxels of boundary of the component
+				if (lVoxelBoundary.size() > 5) { // When component is big enough
+					// Create temporary image of the component using the convex hull detection algorithm
+					ip = imageMaker(lVoxelBoundary, width, height);
 				} else {
 					ip = imagePlusBlack.duplicate();
 				}
-			} else if (listLabel.size() > 1) {
+			}
+			else if (listLabel.size() > 1) { // If several connected components
 				ImageStack imageStackIp = ip.getImageStack();
 				for (Double label : listLabel) {
-					LOGGER.trace("Processing label {} on slice: {}/{}", label, k, depth);
-					List<VoxelRecord> lVoxelBoundary = detectVoxelBoundary(image, label, k);
-					if (lVoxelBoundary.size() > 5) {
-						//TODO THINKING ON AN OTHER WAY TO DEFINE equivalentSphericalRadius PARAMETER
-						ImageStack imageTempStack =
-								imageMaker(image, lVoxelBoundary, width, height, equivalentSphericalRadius).getStack();
-						for (int l = 0; l < width; ++l) {
+					//LOGGER.trace("Processing label {} ({}/{}) on slice: {}/{}", label, listLabel.indexOf(label)+1, listLabel.size() , k, depth);
+					List<VoxelRecord> lVoxelBoundary = detectVoxelBoundary(image, label, k); // List the voxels of boundary of the component
+					if (lVoxelBoundary.size() > 5) { // When the component is big enough make image
+						// Create temporary image of the component using the convex hull detection algorithm
+						ImageStack imageTempStack = imageMaker(lVoxelBoundary, width, height).getStack();
+						
+						for (int l = 0; l < width; ++l) { // For each labelled voxels of the component put a corresponding white voxel on the result
 							for (int m = 0; m < height; ++m) {
 								if (imageTempStack.getVoxel(l, m, 0) > 0) {
 									imageStackIp.setVoxel(l, m, 0, 255);
@@ -119,30 +91,29 @@ public class ConvexHullImageMaker {
 						}
 					}
 				}
-			} else {
+			}
+			else { // In case nothing is found return black image
 				ip = imagePlusBlack.duplicate();
 			}
-			imageStackOutput.addSlice(ip.getProcessor());
+			imageStackOutput.addSlice(ip.getProcessor()); // Add the image to the result
 		}
 		imagePlusCorrected.setStack(imageStackOutput);
 		return imagePlusCorrected;
 	}
-	
-	
+		
 	/**
-	 * Determine l'ensemble des pixels "frontieres" et le plus extreme
+	 * Find all the voxels of the boundaries (near black pixels)
 	 *
-	 * @param image
-	 * @param label
-	 * @param indice
+	 * @param image image used
+	 * @param label current label
+	 * @param indice slice indice
 	 *
-	 * @return
+	 * @return list of the voxels of the boundaries
 	 */
 	List<VoxelRecord> detectVoxelBoundary(double[][] image, double label, int indice) {
 		LOGGER.trace("Detecting voxel boundary.");
 		List<VoxelRecord> lVoxelBoundary = new ArrayList<>();
-		p0.setLocation(0, 0, 0);
-		//parcours de l'ensemble des pixel de l'image 2D
+		// Browse through the pixels of the 2D image
 		for (int i = 1; i < image.length; ++i) {
 			for (int j = 1; j < image[i].length; ++j) {
 				if (image[i][j] == label) {
@@ -156,81 +127,41 @@ public class ConvexHullImageMaker {
 							voxelTest.setLocation(indice, i, j);
 						}
 						lVoxelBoundary.add(voxelTest);
-						if (axesName.equals("xy")) {
-							if (j > p0.j) {
-								p0.setLocation(i, j, indice);
-							} else if (j == p0.j) {
-								if (i > p0.i) {
-									p0.setLocation(i, j, indice);
-								}
-							}
-						} else if (axesName.equals("xz")) {
-							if (j > p0.k) {
-								p0.setLocation(i, indice, j);
-							} else if (j == p0.k) {
-								if (i > p0.i) {
-									p0.setLocation(i, indice, j);
-								}
-							}
-						} else {
-							if (j > p0.k) {
-								p0.setLocation(indice, i, j);
-							} else if (j == p0.k) {
-								if (i > p0.j) {
-									p0.setLocation(indice, i, j);
-								}
-							}
 						}
 					}
 				}
 			}
-		}
 		return lVoxelBoundary;
 	}
 	
 	
 	/**
-	 * @param lVoxelBoundary
-	 * @param width
-	 * @param height
-	 * @param equivalentSphericalRadius
+	 * Make image plus of the convex hull detection result
 	 *
-	 * @return
+	 * @param lVoxelBoundary voxels of the boundaries
+	 * @param width slice width
+	 * @param height slice height
+	 *
+	 * @return ImagePlus result
 	 */
-	public ImagePlus imageMaker(double[][] image,
-	                            List<VoxelRecord> lVoxelBoundary,
+	public ImagePlus imageMaker(List<VoxelRecord> lVoxelBoundary,
 	                            int width,
-	                            int height,
-	                            double equivalentSphericalRadius) {
+	                            int height) {
 		LOGGER.trace("Making image.");
-		List<VoxelRecord> convexHull = new ArrayList<>();
-		convexHull.add(p0);
-		VoxelRecord vectorTest = new VoxelRecord();
-		if (axesName.equals("xy") || axesName.equals("xz")) {
-			vectorTest.setLocation(-10, 0, 0);
-		} else if (axesName.equals("yz")) {
-			vectorTest.setLocation(0, -10, 0);
-		}
 		
-		ConvexHullDetection convexHullDetection = new ConvexHullDetection();
-		convexHullDetection.setInitialVoxel(p0);
-		convexHullDetection.setAxes(axesName);
-		convexHull = convexHullDetection.findConvexHull(image,
-		                                                convexHull,
-		                                                lVoxelBoundary,
-		                                                vectorTest,
-		                                                calibration,
-		                                                equivalentSphericalRadius);
+		List<VoxelRecord> convexHull = ConvexHullDetection.runGrahamScan(axesName, lVoxelBoundary); // For testing
 		return makePolygon(convexHull, width, height);
 	}
 	
 	
 	/**
-	 * @param convexHull
-	 * @param width
-	 * @param height
+	 * Connect all result voxels of the convex hull and create an image plus
 	 *
-	 * @return
+	 * @param convexHull voxel of the convex hull
+	 * @param width slice width
+	 * @param height slice height
+	 *
+	 * @return ImagePlus result
 	 */
 	public ImagePlus makePolygon(List<VoxelRecord> convexHull, int width, int height) {
 		ImagePlus     ip            = new ImagePlus();
@@ -268,14 +199,6 @@ public class ConvexHullImageMaker {
 				tableHeight[convexHull.size()] = (int) convexHull.get(0).k;
 				break;
 		}
-		/*
-		Polygon p = new Polygon(tableWidth, tableHeight,tableWidth.length );
-		Graphics2D g2d = bufferedImage.createGraphics();
-		g2d.drawPolygon(p);
-		g2d.fillPolygon(p);
-		g2d.setColor(Color.WHITE);
-		g2d.dispose();
-		*/
 		
 		ip.setImage(bufferedImage);
 		ip.getProcessor().setValue(255);
@@ -285,37 +208,39 @@ public class ConvexHullImageMaker {
 	
 	
 	/**
-	 * @param imagePlusInput stack
-	 * @param width
-	 * @param height
-	 * @param indice         Number of the stack
+	 * Label all the connected components (set of voxels) found on the slice
 	 *
-	 * @return
+	 * @param imagePlusInput stack
+	 * @param width width of the slice
+	 * @param height height of the slice
+	 * @param index index of the slice
+	 *
+	 * @return list of label
 	 */
-	double[][] giveTable(ImagePlus imagePlusInput, int width, int height, int indice) {
+	double[][] giveTable(ImagePlus imagePlusInput, int width, int height, int index) {
 		ImageStack imageStackInput = imagePlusInput.getStack();
 		double[][] image           = new double[width][height];
 		for (int i = 0; i < width; ++i) {
 			for (int j = 0; j < height; ++j) {
 				if (axesName.equals("xy")) {
-					image[i][j] = imageStackInput.getVoxel(i, j, indice);
+					image[i][j] = imageStackInput.getVoxel(i, j, index);
 				} else if (axesName.equals("xz")) {
-					image[i][j] = imageStackInput.getVoxel(i, indice, j);
+					image[i][j] = imageStackInput.getVoxel(i, index, j);
 				} else {
-					image[i][j] = imageStackInput.getVoxel(indice, i, j);
+					image[i][j] = imageStackInput.getVoxel(index, i, j);
 				}
 			}
 		}
 		ConnectedComponents connectedComponents = new ConnectedComponents();
 		connectedComponents.setImageTable(image);
-		listLabel = connectedComponents.getListLabel(255);
-		image = connectedComponents.getImageTable();
+		listLabel = connectedComponents.getListLabel(255); // One label per connected components
+		image = connectedComponents.getImageTable(); // Return the image where all connected components have a different label (value)
 		return image;
 	}
 	
 	
 	/**
-	 * Return current combined axis  analysing
+	 * Return current combined axis analysing
 	 *
 	 * @return current combined axis  analysing
 	 */
@@ -325,7 +250,7 @@ public class ConvexHullImageMaker {
 	
 	
 	/**
-	 * Set the current combined axis  analysing
+	 * Set the current combined axis analysing
 	 *
 	 * @param axes Current combined axis analysing
 	 */

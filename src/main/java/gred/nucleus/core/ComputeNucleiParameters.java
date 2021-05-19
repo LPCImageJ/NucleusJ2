@@ -66,8 +66,8 @@ public class ComputeNucleiParameters {
 	
 	
 	/**
-	 * Compute nuclei parameters generate from segmentation ( OTSU / GIFT) Useful if parallel segmentation was use to
-	 * get results parameter in the same folder.
+	 * Compute nuclei parameters generate from segmentation ( OTSU / Convex Hull)
+	 * Useful if parallel segmentation was used to get results parameter in the same folder.
 	 */
 	public void run() {
 		Directory directoryRawInput = new Directory(this.pluginParameters.getInputFolder());

@@ -8,6 +8,9 @@ To increase the number of nuclei considered in a single analysis, a method was i
 
 [Article direct link](https://www.tandfonline.com/doi/full/10.1080/19491034.2020.1845012)
 
+# What's new
+
+The gift wrapping algorithm has been replaced by a graham scan algorithm which is more efficient. Thus, the speed of the segmentation is enhanced.
 
 # Downloading and manual user links
 

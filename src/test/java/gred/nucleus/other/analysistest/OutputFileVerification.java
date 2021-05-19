@@ -1,4 +1,4 @@
-package gred.nucleus.old.analysistest;
+package gred.nucleus.other.analysistest;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;

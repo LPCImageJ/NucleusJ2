@@ -54,6 +54,9 @@ public class NucleusSegmentation {
 	/** Logger */
 	private static final Logger LOGGER = LoggerFactory.getLogger(MethodHandles.lookup().lookupClass());
 	
+	/** Currently used algorithm to calculate nuclei convex hull*/
+	public static final String CONVEX_HULL_ALGORITHM = "GRAHAM";
+	
 	/** Segmentation parameters for the analyse */
 	private final SegmentationParameters segmentationParameters;
 	/** ImagePlus input to process */
@@ -127,9 +130,9 @@ public class NucleusSegmentation {
 		this.imgRawTransformed.setTitle(imageFile.getName());
 		Directory dirOutputOTSU = new Directory(this.segmentationParameters.getOutputFolder() + "OTSU");
 		dirOutputOTSU.checkAndCreateDir();
-		if (this.segmentationParameters.getGiftWrapping()) {
-			Directory dirOutputGIFT = new Directory(this.segmentationParameters.getOutputFolder() + "GIFT");
-			dirOutputGIFT.checkAndCreateDir();
+		if (this.segmentationParameters.getConvexHullDetection()) {
+			Directory dirOutputConvexHull = new Directory(this.segmentationParameters.getOutputFolder() + NucleusSegmentation.CONVEX_HULL_ALGORITHM);
+			dirOutputConvexHull.checkAndCreateDir();
 		}
 	}
 	
@@ -871,15 +874,15 @@ public class NucleusSegmentation {
 	 * Method to save the OTSU segmented image.
 	 * <p> TODO verifier cette methode si elle est à sa place
 	 */
-	public void saveGiftWrappingSeg() {
-		LOGGER.info("Computing and saving Gift Wrapping segmentation.");
-		if (!badCrop && bestThreshold != -1 && this.segmentationParameters.getGiftWrapping()) {
+	public void saveConvexHullSeg() {
+		LOGGER.info("Computing and saving Convex Hull segmentation.");
+		if (!badCrop && bestThreshold != -1 && this.segmentationParameters.getConvexHullDetection()) {
 			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
-			this.imageSeg[0] = nuc.runGIFTWrapping(this.imageSeg[0], this.segmentationParameters);
-			String pathSegGIFT = this.segmentationParameters.getOutputFolder() +
-			                     "GIFT" + File.separator + this.imageSeg[0].getTitle();
-			this.imageSeg[0].setTitle(pathSegGIFT);
-			saveFile(this.imageSeg[0], pathSegGIFT);
+			this.imageSeg[0] = nuc.convexHullDetection(this.imageSeg[0], this.segmentationParameters);
+			String pathConvexHullSeg = this.segmentationParameters.getOutputFolder() +
+			                     CONVEX_HULL_ALGORITHM + File.separator + this.imageSeg[0].getTitle();
+			this.imageSeg[0].setTitle(pathConvexHullSeg);
+			saveFile(this.imageSeg[0], pathConvexHullSeg);
 		}
 	}
 	
@@ -888,30 +891,30 @@ public class NucleusSegmentation {
 	 * Method to save the OTSU segmented image.
 	 * <p> TODO verifier cette methode si elle est à sa place
 	 */
-	public void saveGiftWrappingSegOMERO(Client client, Long id)
+	public void saveConvexHullSegOMERO(Client client, Long id)
 	throws Exception {
-		LOGGER.info("Computing and saving Gift Wrapping segmentation.");
-		if (!badCrop && bestThreshold != -1 && this.segmentationParameters.getGiftWrapping()) {
+		LOGGER.info("Computing and saving Convex Hull segmentation.");
+		if (!badCrop && bestThreshold != -1 && this.segmentationParameters.getConvexHullDetection()) {
 			ConvexHullSegmentation nuc = new ConvexHullSegmentation();
 			
-			this.imageSeg[0] = nuc.runGIFTWrapping(this.imageSeg[0], this.segmentationParameters);
+			this.imageSeg[0] = nuc.convexHullDetection(this.imageSeg[0], this.segmentationParameters);
 			
 			String path = new java.io.File(".").getCanonicalPath() + File.separator + this.imageSeg[0].getTitle();
 			saveFile(this.imageSeg[0], path);
 			
 			ProjectWrapper       project  = client.getProject(id);
-			List<DatasetWrapper> datasets = project.getDatasets("GIFT");
+			List<DatasetWrapper> datasets = project.getDatasets(CONVEX_HULL_ALGORITHM);
 			
-			DatasetWrapper gift;
+			DatasetWrapper convexHullDataset;
 			if (datasets.isEmpty()) {
-				gift = new DatasetWrapper("GIFT", "");
-				Long datasetId = project.addDataset(client, gift).getId();
-				gift = client.getDataset(datasetId);
+				convexHullDataset = new DatasetWrapper(CONVEX_HULL_ALGORITHM, "");
+				Long datasetId = project.addDataset(client, convexHullDataset).getId();
+				convexHullDataset = client.getDataset(datasetId);
 			} else {
-				gift = datasets.get(0);
+				convexHullDataset = datasets.get(0);
 			}
 			
-			gift.importImages(client, path);
+			convexHullDataset.importImages(client, path);
 			
 			File file = new File(path);
 			try {
@@ -940,13 +943,13 @@ public class NucleusSegmentation {
 	
 	
 	/**
-	 * Method to get the parameter of the 3D parameters for Gift wrapping segmented image if the object can't be
+	 * Method to get the parameter of the 3D parameters image segmented using convex hull algorithm if the object can't be
 	 * segmented return -1 for parameters.
 	 * <p> TODO verifier DUPLICATION DE getImageCropInfoOTSU à sa place ?
 	 *
 	 * @return
 	 */
-	public String getImageCropInfoGIFT() {
+	public String getImageCropInfoConvexHull() {
 		if (!badCrop && bestThreshold != -1) {
 			return saveImageResult(this.imageSeg) + "\t" + this.bestThreshold + "\n";
 		} else {
