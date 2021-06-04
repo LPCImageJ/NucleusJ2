@@ -113,7 +113,8 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 		}
 		
 		SegmentationCalling segmentation = new SegmentationCalling(segmentationParameters);
-		
+		segmentation.setExecutorThreads(segmentationDialog.getThreads());
+
 		// Handle the source according to the type given
 		String dataType = segmentationDialog.getDataType();
 		Long   inputID  = Long.valueOf(segmentationDialog.getSourceID());
@@ -215,7 +216,8 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 				}
 				
 				SegmentationCalling otsuModified = new SegmentationCalling(segmentationParameters);
-				
+				otsuModified.setExecutorThreads(segmentationDialog.getThreads());
+
 				File   file = new File(input);
 				String log  = "";
 				if (file.isDirectory()) {
