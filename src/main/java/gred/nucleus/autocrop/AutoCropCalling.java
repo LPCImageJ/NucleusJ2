@@ -15,8 +15,9 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
+import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.*;
 
 
 /**
@@ -39,8 +40,13 @@ public class AutoCropCalling {
 	private String             outputCropGeneralInfo = "#HEADER\n";
 	/** Parameters crop analyse */
 	private AutocropParameters autocropParameters;
-	
-	
+
+	/** Number of threads to used process images */
+	private int executorThreads = 4;
+	/** Number of threads used to download images */
+	private int downloaderThreads = 1;
+
+
 	/** Constructor Create the output directory if it doesn't exist. */
 	public AutoCropCalling() {
 	}
@@ -50,25 +56,89 @@ public class AutoCropCalling {
 		this.autocropParameters = autocropParameters;
 		this.outputCropGeneralInfo = autocropParameters.getAnalysisParameters() + HEADERS;
 	}
-	
-	
+
+	/**
+	 * Setter for the number of threads used to process images
+	 * @param threadNumber number of executors threads
+	 */
+	public void setExecutorThreads(int threadNumber) { this.executorThreads = threadNumber; }
+
+
 	/**
 	 * Run auto crop on image's folder: -If input is a file: open the image with bio-formats plugin to obtain the
 	 * metadata then run the auto crop. -If input is directory, listed the file, foreach tif file loaded file with
 	 * bio-formats, run the auto crop.
 	 */
 	public void runFolder() {
+		ExecutorService processExecutor = Executors.newFixedThreadPool(executorThreads);
+		final ConcurrentHashMap<String, String> outputCropGeneralLines = new ConcurrentHashMap<>();
+
 		Directory directoryInput = new Directory(this.autocropParameters.getInputFolder());
 		directoryInput.listImageFiles(this.autocropParameters.getInputFolder());
 		directoryInput.checkIfEmpty();
 		directoryInput.checkAndActualiseNDFiles();
-		for (short i = 0; i < directoryInput.getNumberFiles(); ++i) {
-			runFile(directoryInput.getFile(i).getAbsolutePath());
+
+		List<File> files = directoryInput.listFiles();
+		final CountDownLatch latch = new CountDownLatch(files.size());
+
+		class ImageProcessor implements Runnable {
+
+			private final File file;
+
+			public ImageProcessor(File file){
+				this.file = file;
+			}
+
+			@Override
+			public void run() {
+				LOGGER.info("Current file: {}", file.getAbsolutePath());
+				String     fileImg          = file.toString();
+				FilesNames outPutFilesNames = new FilesNames(fileImg);
+				String prefix = outPutFilesNames.prefixNameFile();
+				try {
+					AutoCrop autoCrop = new AutoCrop(file, prefix, autocropParameters);
+					autoCrop.thresholdKernels();
+					autoCrop.computeConnectedComponent();
+					autoCrop.componentBorderFilter();
+					autoCrop.componentSizeFilter();
+					autoCrop.computeBoxes2();
+					autoCrop.addCROPParameter();
+					autoCrop.boxIntersection();
+					autoCrop.cropKernels2();
+					autoCrop.writeAnalyseInfo();
+					AnnotateAutoCrop annotate = new AnnotateAutoCrop(autoCrop.getFileCoordinates(),
+							file,
+							autocropParameters.getOutputFolder() + File.separator,
+							prefix,
+							autocropParameters);
+					annotate.run();
+
+					outputCropGeneralLines.put(file.getName(), autoCrop.getImageCropInfo());
+
+					latch.countDown();
+				} catch (Exception e) {
+					LOGGER.error("Cannot run autocrop on: " + file.getName(), e);
+					IJ.error("Cannot run autocrop on " + file.getName());			}
+			}
 		}
+
+		for (File currentFile : files) {
+			processExecutor.submit(new ImageProcessor(currentFile));
+		}
+		try { latch.await(); }
+		catch (InterruptedException e) { e.printStackTrace(); }
+		processExecutor.shutdownNow();
+
+		StringBuilder generalInfoBuilder = new StringBuilder();
+		for (File file: files) {
+			generalInfoBuilder.append(outputCropGeneralLines.get(file.getName()));
+		}
+		outputCropGeneralInfo += generalInfoBuilder.toString();
+
 		saveGeneralInfo();
 	}
-	
-	
+
+
 	/**
 	 * Run auto crop on one image : -If input is a file: open the image with bio-formats plugin to obtain the metadata
 	 * then run the auto crop. -If input is directory, listed the file, foreach tif file loaded file with bio-formats,
@@ -92,6 +162,7 @@ public class AutoCropCalling {
 			autoCrop.addCROPParameter();
 			autoCrop.boxIntersection();
 			autoCrop.cropKernels2();
+			LOGGER.info("ENDED CROPPING");
 			autoCrop.writeAnalyseInfo();
 			AnnotateAutoCrop annotate = new AnnotateAutoCrop(autoCrop.getFileCoordinates(),
 			                                                 currentFile,
@@ -105,8 +176,8 @@ public class AutoCropCalling {
 			IJ.error("Cannot run autocrop on " + currentFile.getName());
 		}
 	}
-	
-	
+
+
 	public void saveGeneralInfo() {
 		LOGGER.info("{}result_Autocrop_Analyse", this.autocropParameters.getInputFolder());
 		OutputTextFile resultFileOutput =
@@ -134,9 +205,71 @@ public class AutoCropCalling {
 	}
 	
 	
-	public void runSeveralImageOMERO(List<ImageWrapper> images, Long[] outputsDatImages, Client client)
+	public void runSeveralImageOMERO(List<ImageWrapper> images, final Long[] outputsDatImages, final Client client)
 	throws Exception {
-		for (ImageWrapper image : images) runImageOMERO(image, outputsDatImages, client);
+		ExecutorService downloadExecutor = Executors.newFixedThreadPool(downloaderThreads);
+		final ExecutorService processExecutor = Executors.newFixedThreadPool(executorThreads);
+		final ConcurrentHashMap<String, String> outputCropGeneralLines = new ConcurrentHashMap<>();
+
+		final CountDownLatch latch = new CountDownLatch(images.size());
+
+		class ImageProcessor implements Runnable{
+			private final AutoCrop autoCrop;
+			private ImageWrapper image;
+
+			ImageProcessor(AutoCrop autoCrop, ImageWrapper image) {
+				this.autoCrop = autoCrop;
+			}
+
+			@Override
+			public void run() {
+				autoCrop.thresholdKernels();
+				autoCrop.computeConnectedComponent();
+				autoCrop.componentBorderFilter();
+				autoCrop.componentSizeFilter();
+				autoCrop.computeBoxes2();
+				autoCrop.addCROPParameter();
+				autoCrop.boxIntersection();
+				try { autoCrop.cropKernelsOMERO(image, outputsDatImages, client);
+				} catch (Exception exception) { exception.printStackTrace(); }
+				autoCrop.writeAnalyseInfoOMERO(outputsDatImages[autocropParameters.getChannelToComputeThreshold()], client);
+
+				outputCropGeneralLines.put(image.getName(), autoCrop.getImageCropInfo());
+
+				latch.countDown();
+			}
+		}
+		class ImageDownloader implements Runnable {
+
+			private final ImageWrapper image;
+
+			public ImageDownloader(ImageWrapper image){
+				this.image = image;
+			}
+
+			@Override
+			public void run() {
+				String fileImg = image.getName();
+				LOGGER.info("Current file: {}", fileImg);
+				AutoCrop autoCrop = null;
+				try { autoCrop = new AutoCrop(image, autocropParameters, client); }
+				catch (ServiceException | AccessException | ExecutionException e) { e.printStackTrace(); }
+				processExecutor.submit(new ImageProcessor(autoCrop, image));
+			}
+		}
+
+		for (ImageWrapper image : images) {
+			downloadExecutor.submit(new ImageDownloader(image));
+		}
+		latch.await();
+		downloadExecutor.shutdownNow();
+		processExecutor.shutdownNow();
+
+		StringBuilder generalInfoBuilder = new StringBuilder();
+		for (ImageWrapper image : images) {
+			generalInfoBuilder.append(outputCropGeneralLines.get(image.getName()));
+		}
+		outputCropGeneralInfo += generalInfoBuilder.toString();
 		
 		saveGeneralInfoOmero(client, outputsDatImages);
 	}
@@ -165,8 +298,8 @@ public class AutoCropCalling {
 			LOGGER.error("Problem while deleting file: " + resultPath, io);
 		}
 	}
-	
-	
+
+
 	/**
 	 * List of columns names in csv coordinates output file.
 	 *

@@ -132,7 +132,8 @@ public class Autocrop_ implements PlugIn, IDialogListener {
 		}
 		
 		AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
-		
+		autoCrop.setExecutorThreads(autocropDialog.getThreads());
+
 		// Handle the source according to the type given
 		
 		String dataType = autocropDialog.getDataType();
@@ -249,6 +250,7 @@ public class Autocrop_ implements PlugIn, IDialogListener {
 						break;
 				}
 				AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
+				autoCrop.setExecutorThreads(autocropDialog.getThreads());
 				File            file     = new File(input);
 				if (file.isDirectory()) {
 					autoCrop.runFolder();

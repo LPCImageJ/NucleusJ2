@@ -15,6 +15,7 @@ import gred.nucleus.imageprocessing.Thresholding;
 import gred.nucleus.utils.Histogram;
 import ij.ImagePlus;
 import ij.ImageStack;
+import ij.gui.Roi;
 import ij.measure.Calibration;
 import ij.plugin.ChannelSplitter;
 import ij.plugin.Duplicator;
@@ -383,12 +384,13 @@ public class AutoCrop {
 	 * the ImageCore put in input in this method (crop method available in the imagej wrapper).
 	 * <p>Then the image results obtained was used to create a new ImageCoreIJ, and the image is saved.
 	 */
-	public void cropKernels2() throws IOException, FormatException {
+	public void cropKernels2() {
 		LOGGER.info("Cropping kernels (2).");
 		StringBuilder info      = new StringBuilder();
 		Directory     dirOutput = new Directory(this.outputDirPath + "nuclei");
 		dirOutput.checkAndCreateDir();
 		info.append(getSpecificImageInfo()).append(HEADERS);
+		long durationCrop = 0, durationSave = 0;
 		for (int c = 0; c < this.channelNumbers; c++) {
 			for (Map.Entry<Double, Box> entry : new TreeMap<>(this.boxes).entrySet()) {
 				int i = entry.getKey().intValue();
@@ -397,10 +399,11 @@ public class AutoCrop {
 				int       xMin   = box.getXMin();
 				int       yMin   = box.getYMin();
 				int       zMin   = box.getZMin();
-				int       width  = box.getXMax() - box.getXMin();
-				int       height = box.getYMax() - box.getYMin();
-				int       depth  = box.getZMax() - box.getZMin();
+				int       width  = box.getXMax() - box.getXMin() + 1;
+				int       height = box.getYMax() - box.getYMin() + 1;
+				int       depth  = box.getZMax() - box.getZMin() + 1;
 				ImagePlus croppedImage;
+				long start = System.nanoTime(); //
 				if (this.rawImg.getNSlices() > 1) {
 					croppedImage = cropImage(xMin, yMin, zMin, width, height, depth, c);
 				} else {
@@ -466,9 +469,9 @@ public class AutoCrop {
 				int    height      = box.getYMax() - box.getYMin();
 				int    depth       = box.getZMax() - box.getZMin();
 				String coordinates = box.getXMin() + "_" + box.getYMin() + "_" + box.getZMin();
-				int[]  xBound      = {box.getXMin(), box.getXMax() - 1};
-				int[]  yBound      = {box.getYMin(), box.getYMax() - 1};
-				int[]  zBound      = {box.getZMin(), box.getZMax() - 1};
+				int[]  xBound      = {box.getXMin(), box.getXMax()};
+				int[]  yBound      = {box.getYMin(), box.getYMax()};
+				int[]  zBound      = {box.getZMin(), box.getZMax()};
 				int[]  cBound      = {c, c};
 				
 				ShapeList shapes = new ShapeList();
@@ -482,7 +485,7 @@ public class AutoCrop {
 				}
 				ROIWrapper roi = new ROIWrapper(shapes);
 				image.saveROI(client, roi);
-				ImagePlus   croppedImage = image.toImagePlus(client, xBound, yBound, cBound, zBound, null);
+				ImagePlus   croppedImage =  cropImage(xMin, yMin, zMin, width, height, depth, c);
 				Calibration cal          = this.rawImg.getCalibration();
 				croppedImage.setCalibration(cal);
 				String tiffPath = new File(".").getCanonicalPath() +
@@ -533,7 +536,7 @@ public class AutoCrop {
 	
 	
 	/** Method crops a box of interest, from coordinate files. */
-	public void cropKernels3() throws IOException, FormatException {
+	public void cropKernels3() {
 		LOGGER.info("Cropping kernels (3).");
 		StringBuilder info      = new StringBuilder();
 		Directory     dirOutput = new Directory(this.outputDirPath + File.separator + "Nuclei");
@@ -547,9 +550,9 @@ public class AutoCrop {
 				int       xMin   = box.getXMin();
 				int       yMin   = box.getYMin();
 				int       zMin   = box.getZMin();
-				int       width  = box.getXMax() - box.getXMin();
-				int       height = box.getYMax() - box.getYMin();
-				int       depth  = box.getZMax() - box.getZMin();
+				int       width  = box.getXMax() - box.getXMin() + 1;
+				int       height = box.getYMax() - box.getYMin() + 1;
+				int       depth  = box.getZMax() - box.getZMin() + 1;
 				ImagePlus croppedImage;
 				if (this.rawImg.getNSlices() > 1) {
 					croppedImage = cropImage(xMin, yMin, zMin, width, height, depth, c);
@@ -659,17 +662,13 @@ public class AutoCrop {
 	 *
 	 * @return : ImageCoreIJ of the cropped image.
 	 */
-	public ImagePlus cropImage(int xMin, int yMin, int zMin, int width, int height, int depth, int channelNumber)
-	throws IOException, FormatException {
-		ImporterOptions options = new ImporterOptions();
-		options.setId(this.imageFilePath);
-		options.setAutoscale(true);
-		options.setCrop(true);
-		ImagePlus[] imps = BF.openImagePlus(options);
-		ImagePlus   sort = new ImagePlus();
-		imps = ChannelSplitter.split(imps[0]);
-		sort.setStack(imps[channelNumber].getStack().crop(xMin, yMin, zMin, width, height, depth));
-		return sort;
+	public ImagePlus cropImage(int xMin, int yMin, int zMin, int width, int height, int depth, int channelNumber) {
+		Duplicator duplicator = new Duplicator();
+		ImagePlus cropped = duplicator.run(rawImg, channelNumber, channelNumber, zMin, zMin+depth-1, 0, 0);
+		cropped.setRoi(new Roi(xMin, yMin, width, height));
+		cropped.crop();
+		cropped.deleteRoi();
+		return cropped;
 	}
 	
 	
@@ -684,17 +683,14 @@ public class AutoCrop {
 	 *
 	 * @return : ImageCoreIJ of the cropped image.
 	 */
-	public ImagePlus cropImage2D(int xMin, int yMin, int width, int height, int channelNumber)
-	throws IOException, FormatException {
-		ImporterOptions options = new ImporterOptions();
-		options.setId(this.imageFilePath);
-		options.setAutoscale(true);
-		options.setCrop(true);
-		ImagePlus[] imps = BF.openImagePlus(options);
-		ImagePlus   sort = imps[channelNumber];
-		sort.setRoi(xMin, yMin, width, height);
-		sort.crop();
-		return sort;
+	public ImagePlus cropImage2D(int xMin, int yMin, int width, int height, int channelNumber) {
+		Duplicator duplicator = new Duplicator();
+		ImagePlus cropped = duplicator.run(rawImg, channelNumber, channelNumber, 0, 1, 0, 0);
+		Roi roi = new Roi(xMin, yMin, width, height);
+		cropped.setRoi(roi);
+		cropped.crop();
+		cropped.deleteRoi();
+		return cropped;
 	}
 	
 	
