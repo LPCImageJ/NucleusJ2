@@ -106,13 +106,13 @@ public class CLIRunActionOMERO {
 				int sizeC = images.get(0).getPixels().getSizeC();
 				
 				Long[] outputsDat = new Long[sizeC];
-				
+
 				for (int i = 0; i < sizeC; i++) {
 					DatasetWrapper dataset = new DatasetWrapper("raw_C" + i + "_" + name, "");
 					outputsDat[i] =
 							client.getProject(Long.parseLong(outputDirectory)).addDataset(client, dataset).getId();
 				}
-				
+
 				autoCrop.runSeveralImageOMERO(images, outputsDat, client);
 			}
 		} else {
@@ -156,6 +156,9 @@ public class CLIRunActionOMERO {
 			autocropParameters.addProperties(this.cmd.getOptionValue("config"));
 		}
 		AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
+		if(this.cmd.hasOption("threads")) {
+			autoCrop.setExecutorThreads(Integer.parseInt(this.cmd.getOptionValue("threads")));
+		}
 		try {
 			autoCropOMERO(this.cmd.getOptionValue("input"),
 			              this.cmd.getOptionValue("output"),
@@ -175,6 +178,9 @@ public class CLIRunActionOMERO {
 			segmentationParameters.addProperties(this.cmd.getOptionValue("config"));
 		}
 		SegmentationCalling otsuModified = new SegmentationCalling(segmentationParameters);
+		if(this.cmd.hasOption("threads")) {
+			otsuModified.setExecutorThreads(Integer.parseInt(this.cmd.getOptionValue("threads")));
+		}
 		segmentationOMERO(this.cmd.getOptionValue("input"),
 		                  this.cmd.getOptionValue("output"),
 		                  this.client,

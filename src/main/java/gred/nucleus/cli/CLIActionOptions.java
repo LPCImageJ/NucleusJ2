@@ -38,6 +38,18 @@ public class CLIActionOptions {
 	                                                      "segmentation : nucleus segmentation\n")
 	                                                .numberOfArgs(1)
 	                                                .build();
+
+	/** Number of threads */
+	public               Option threads      = Option.builder("th")
+													.longOpt("threads")
+													.type(String.class)
+													.desc("Number of threads used to split image processing (do not exceed the number of available CPUs  (="  +
+															Runtime.getRuntime().availableProcessors()+ " CPUs))\n" +
+															"Default : 4 threads for several images (otherwise 1 thread for single image processing)")
+													.numberOfArgs(1)
+													.build();
+
+
 	/** OMERO activate */
 	public               Option omero       = Option.builder("ome")
 	                                                .longOpt("omero")
@@ -61,6 +73,7 @@ public class CLIActionOptions {
 		this.options.addOption(this.inputFolder);
 		this.options.addOption(this.configFile);
 		this.options.addOption(this.action);
+		this.options.addOption(this.threads);
 		this.options.addOption(this.omero);
 		try {
 			this.cmd = this.parser.parse(this.options, argument, true);

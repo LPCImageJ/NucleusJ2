@@ -104,6 +104,9 @@ public class CLIRunAction {
 			autoCrop.saveGeneralInfo();
 		} else {
 			AutoCropCalling autoCrop = new AutoCropCalling(autocropParameters);
+			if(this.cmd.hasOption("threads")) {
+				autoCrop.setExecutorThreads(Integer.parseInt(this.cmd.getOptionValue("threads")));
+			}
 			autoCrop.runFolder();
 		}
 	}
@@ -131,6 +134,9 @@ public class CLIRunAction {
 		} else {
 			SegmentationCalling otsuModified = new SegmentationCalling(segmentationParameters);
 			try {
+				if(this.cmd.hasOption("threads")) {
+					otsuModified.setExecutorThreads(Integer.parseInt(this.cmd.getOptionValue("threads")));
+				}
 				String log = otsuModified.runSeveralImages2();
 				if (!(log.equals(""))) {
 					LOGGER.error("Nuclei which didn't pass the segmentation\n{}", log);
