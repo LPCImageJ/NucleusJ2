@@ -152,6 +152,8 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 					LOGGER.error("Nuclei which didn't pass the segmentation\n{}", log);
 				}
 			}
+			LOGGER.info("Segmentation process has ended successfully");
+			IJ.showMessage("Segmentation process ended successfully on "+ segmentationDialog.getDataType()+"\\"+inputID);
 		} catch (ServiceException se) {
 			IJ.error("Unable to access to OMERO service");
 		} catch (AccessException ae) {
@@ -231,12 +233,14 @@ public class Segmentation_ implements PlugIn, IDialogListener {
 				}
 				
 				LOGGER.info("Segmentation process has ended successfully");
+				IJ.showMessage("Segmentation process ended successfully on "+ file.getName());
 			} catch (IOException ioe) {
 				IJ.error("File/Directory does not exist");
 			} catch (Exception e) {
 				LOGGER.error("An error occurred.", e);
 			}
 		}
+
 	}
 	
 }

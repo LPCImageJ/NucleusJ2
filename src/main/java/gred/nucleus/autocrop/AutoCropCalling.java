@@ -44,7 +44,7 @@ public class AutoCropCalling {
 	/** Number of threads to used process images */
 	private int executorThreads = 4;
 	/** Number of threads used to download images */
-	private int downloaderThreads = 1;
+	private final int DOWNLOADER_THREADS = 1;
 
 
 	/** Constructor Create the output directory if it doesn't exist. */
@@ -207,7 +207,7 @@ public class AutoCropCalling {
 	
 	public void runSeveralImageOMERO(List<ImageWrapper> images, final Long[] outputsDatImages, final Client client)
 	throws Exception {
-		ExecutorService downloadExecutor = Executors.newFixedThreadPool(downloaderThreads);
+		ExecutorService downloadExecutor = Executors.newFixedThreadPool(DOWNLOADER_THREADS);
 		final ExecutorService processExecutor = Executors.newFixedThreadPool(executorThreads);
 		final ConcurrentHashMap<String, String> outputCropGeneralLines = new ConcurrentHashMap<>();
 
