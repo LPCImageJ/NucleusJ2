@@ -177,7 +177,7 @@ public class Autocrop_ implements PlugIn, IDialogListener {
 				
 			}
 			LOGGER.info("Autocrop process has ended successfully");
-			IJ.showMessage("Autocrop process ended successfully on "+ autocropDialog.getDataType()+"\\"+inputID);
+			IJ.showMessage("AutoCrop process ended successfully on "+ autocropDialog.getDataType()+"\\"+inputID);
 		} catch (ServiceException se) {
 			IJ.error("Unable to access to OMERO service");
 		} catch (AccessException ae) {
@@ -261,7 +261,7 @@ public class Autocrop_ implements PlugIn, IDialogListener {
 					autoCrop.saveGeneralInfo();
 				}
 				LOGGER.info("Autocrop process has ended successfully");
-				IJ.showMessage("Segmentation process ended successfully on "+ file.getName());
+				IJ.showMessage("AutoCrop process ended successfully on "+ file.getName());
 			} catch (Exception e) {
 				LOGGER.error("An error occurred during autocrop.", e);
 			}
