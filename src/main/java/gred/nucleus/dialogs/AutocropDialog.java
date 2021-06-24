@@ -325,8 +325,8 @@ public class AutocropDialog extends JFrame implements ActionListener, ItemListen
 	}
 	
 	
-	public String getPassword() {
-		return String.valueOf(jPasswordField.getPassword());
+	public char[] getPassword() {
+		return jPasswordField.getPassword();
 	}
 	
 	

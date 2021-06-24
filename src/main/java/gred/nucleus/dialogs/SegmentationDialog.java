@@ -322,8 +322,8 @@ public class SegmentationDialog extends JFrame implements ActionListener, ItemLi
 	}
 	
 	
-	public String getPassword() {
-		return String.valueOf(jPasswordField.getPassword());
+	public char[] getPassword() {
+		return jPasswordField.getPassword();
 	}
 	
 	

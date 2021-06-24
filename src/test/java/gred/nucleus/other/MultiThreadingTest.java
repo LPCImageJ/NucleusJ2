@@ -93,7 +93,7 @@ public class MultiThreadingTest {
 		Scanner scanner = new Scanner(System.in);
 		System.out.println("Password for \"demo\" :");
 		String password = scanner.nextLine();
-		checkOMEROConnection(password);
+		checkOMEROConnection(password.toCharArray());
 
 		SegmentationParameters parameters   = new SegmentationParameters(".", ".");
 		SegmentationCalling    segmentation = new SegmentationCalling(parameters);
@@ -106,7 +106,7 @@ public class MultiThreadingTest {
 		
 		segmentation.runSeveralImagesOMERO(images, OUTPUT_PROJECT_ID, client);
 	}
-	static void checkOMEROConnection(String password) {
+	static void checkOMEROConnection(char[] password) {
 		try {
 			client.connect("omero.igred.fr",
 			               4064,

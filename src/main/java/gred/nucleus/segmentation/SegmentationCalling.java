@@ -33,6 +33,7 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.*;
 
 
@@ -391,8 +392,8 @@ public class SegmentationCalling {
 	public String runSeveralImagesOMERO(List<ImageWrapper> images, Long output, final Client client) throws Exception {
 		ExecutorService downloadExecutor = Executors.newFixedThreadPool(downloaderThreads);
 		final ExecutorService processExecutor = Executors.newFixedThreadPool(executorThreads);
-		final ConcurrentHashMap<String, String> otsuResultLines = new ConcurrentHashMap<>();
-		final ConcurrentHashMap<String, String> convexHullResultLines = new ConcurrentHashMap<>();
+		final Map<Long, String> otsuResultLines = new ConcurrentHashMap<>();
+		final Map<Long, String> convexHullResultLines = new ConcurrentHashMap<>();
 
 
 		ProjectWrapper project = client.getProject(output);
@@ -431,9 +432,9 @@ public class SegmentationCalling {
 					nucleusSegmentation.checkBadCrop(img, client);
 
 					nucleusSegmentation.saveOTSUSegmentedOMERO(client, otsuDataset); // Upload
-					otsuResultLines.put(img.getId().toString(), nucleusSegmentation.getImageCropInfoOTSU()); // Put in thread safe collection
+					otsuResultLines.put(img.getId(), nucleusSegmentation.getImageCropInfoOTSU()); // Put in thread safe collection
 					nucleusSegmentation.saveConvexHullSegOMERO(client, convexHullDataset); // Upload
-					convexHullResultLines.put(img.getId().toString(), nucleusSegmentation.getImageCropInfoConvexHull()); // Put in thread safe collection
+					convexHullResultLines.put(img.getId(), nucleusSegmentation.getImageCropInfoConvexHull()); // Put in thread safe collection
 
 					timeStampStart = new SimpleDateFormat("yyyy-MM-dd:HH-mm-ss").format(Calendar.getInstance().getTime());
 					LOGGER.info("End: {} at {}", fileImg, timeStampStart);
@@ -478,8 +479,8 @@ public class SegmentationCalling {
 		StringBuilder otsuInfoBuilder = new StringBuilder();
 		StringBuilder convexHullInfoBuilder = new StringBuilder();
 		for (ImageWrapper img: images) {
-			otsuInfoBuilder.append(otsuResultLines.get(img.getId().toString()));
-			convexHullInfoBuilder.append(convexHullResultLines.get(img.getId().toString()));
+			otsuInfoBuilder.append(otsuResultLines.get(img.getId()));
+			convexHullInfoBuilder.append(convexHullResultLines.get(img.getId()));
 		}
 		outputCropGeneralInfoOTSU += otsuInfoBuilder.toString();
 		outputCropGeneralInfoConvexHull += convexHullInfoBuilder.toString();
