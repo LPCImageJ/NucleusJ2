@@ -3,7 +3,9 @@ package gred.nucleus.autocrop;
 import fr.igred.omero.Client;
 import fr.igred.omero.exception.AccessException;
 import fr.igred.omero.exception.ServiceException;
+import fr.igred.omero.repository.DatasetWrapper;
 import fr.igred.omero.repository.ImageWrapper;
+import fr.igred.omero.repository.ProjectWrapper;
 import gred.nucleus.files.Directory;
 import gred.nucleus.files.FilesNames;
 import gred.nucleus.files.OutputTextFile;
@@ -201,6 +203,26 @@ public class AutoCropCalling {
 		autoCrop.boxIntersection();
 		autoCrop.cropKernelsOMERO(image, outputsDatImages, client);
 		autoCrop.writeAnalyseInfoOMERO(outputsDatImages[autocropParameters.getChannelToComputeThreshold()], client);
+
+		AnnotateAutoCrop annotate = new AnnotateAutoCrop(autoCrop.getFileCoordinates(),
+				autoCrop.getRawImage(),
+				this.autocropParameters.getOutputFolder() + File.separator,
+				this.prefix,
+				this.autocropParameters);
+		annotate.run();
+
+		long outputProject = -1;
+		// TODO Find a better way to get output project (maybe just pass it as a parameter)
+		for (ProjectWrapper p: client.getProjects()) {
+			for (DatasetWrapper d : p.getDatasets()) {
+				if(d.getId()==outputsDatImages[0]){
+					outputProject = p.getId();
+					break;
+				}
+			}
+		}
+		annotate.saveProjectionOMERO(client, outputProject);
+		//
 		this.outputCropGeneralInfo += autoCrop.getImageCropInfoOmero(image.getName());
 	}
 	
