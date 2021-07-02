@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Pattern;
@@ -47,8 +48,6 @@ public class AnnotateAutoCrop {
 	private final String             outputDirPath;
 	/** Parameters crop analyse */
 	private final AutocropParameters autocropParameters;
-	/** File to process (Image input) */
-	File currentFile;
 	/** ImagePlus of the Z projection */
 	private ImagePlus zProjection;
 	/** The prefix of the names of the output cropped images, which are automatically numbered */
@@ -97,7 +96,6 @@ public class AnnotateAutoCrop {
 	                        AutocropParameters autocropParameters)
 	throws IOException, FormatException {
 		this.autocropParameters = autocropParameters;
-		this.currentFile = imageFile;
 		this.zProjection =
 				BF.openImagePlus(imageFile.getAbsolutePath())[this.autocropParameters.getSlicesOTSUComputing()];
 		this.boxCoordinates = boxesCoordinates;
@@ -111,10 +109,10 @@ public class AnnotateAutoCrop {
 							String prefix,
 							AutocropParameters autocropParameters) {
 		this.autocropParameters = autocropParameters;
-		this.zProjection = imp;   //[this.autocropParameters.getSlicesOTSUComputing()];
+		this.zProjection = imp;
 		this.boxCoordinates = boxesCoordinates;
 		this.outputDirPath = outputDirPath;
-		this.outputFilesPrefix = prefix;
+		this.outputFilesPrefix = prefix ;
 		Directory dirOutput = new Directory(this.outputDirPath + "zprojection");
 		dirOutput.checkAndCreateDir();
 	}

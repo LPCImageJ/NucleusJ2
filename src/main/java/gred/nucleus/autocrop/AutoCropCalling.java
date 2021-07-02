@@ -203,14 +203,12 @@ public class AutoCropCalling {
 		autoCrop.boxIntersection();
 		autoCrop.cropKernelsOMERO(image, outputsDatImages, client);
 		autoCrop.writeAnalyseInfoOMERO(outputsDatImages[autocropParameters.getChannelToComputeThreshold()], client);
-
 		AnnotateAutoCrop annotate = new AnnotateAutoCrop(autoCrop.getFileCoordinates(),
 				autoCrop.getRawImage(),
 				this.autocropParameters.getOutputFolder() + File.separator,
 				this.prefix,
 				this.autocropParameters);
 		annotate.run();
-
 		long outputProject = -1;
 		// TODO Find a better way to get output project (maybe just pass it as a parameter)
 		for (ProjectWrapper p: client.getProjects()) {
@@ -222,25 +220,36 @@ public class AutoCropCalling {
 			}
 		}
 		annotate.saveProjectionOMERO(client, outputProject);
-		//
 		this.outputCropGeneralInfo += autoCrop.getImageCropInfoOmero(image.getName());
 	}
 	
 	
-	public void runSeveralImageOMERO(List<ImageWrapper> images, final Long[] outputsDatImages, final Client client)
+	public void runSeveralImageOMERO(final List<ImageWrapper> images, final Long[] outputsDatImages, final Client client)
 	throws Exception {
 		ExecutorService downloadExecutor = Executors.newFixedThreadPool(DOWNLOADER_THREADS);
 		final ExecutorService processExecutor = Executors.newFixedThreadPool(executorThreads);
 		final ConcurrentHashMap<String, String> outputCropGeneralLines = new ConcurrentHashMap<>();
-
 		final CountDownLatch latch = new CountDownLatch(images.size());
+
+		long outputFound = -1;
+		// TODO Find a better way to get output project (maybe just pass it as a parameter)
+		for (ProjectWrapper p: client.getProjects()) {
+			for (DatasetWrapper d : p.getDatasets()) {
+				if(d.getId()==outputsDatImages[0]){
+					outputFound = p.getId();
+					break;
+				}
+			}
+		}
+		final long outputProject = outputFound;
 
 		class ImageProcessor implements Runnable{
 			private final AutoCrop autoCrop;
-			private ImageWrapper image;
+			private final ImageWrapper image;
 
 			ImageProcessor(AutoCrop autoCrop, ImageWrapper image) {
 				this.autoCrop = autoCrop;
+				this.image = image;
 			}
 
 			@Override
@@ -252,9 +261,21 @@ public class AutoCropCalling {
 				autoCrop.computeBoxes2();
 				autoCrop.addCROPParameter();
 				autoCrop.boxIntersection();
-				try { autoCrop.cropKernelsOMERO(image, outputsDatImages, client);
-				} catch (Exception exception) { exception.printStackTrace(); }
-				autoCrop.writeAnalyseInfoOMERO(outputsDatImages[autocropParameters.getChannelToComputeThreshold()], client);
+				try
+				{
+					autoCrop.cropKernelsOMERO(image, outputsDatImages, client);
+					autoCrop.writeAnalyseInfoOMERO(outputsDatImages[autocropParameters.getChannelToComputeThreshold()], client);
+
+					AnnotateAutoCrop annotate = new AnnotateAutoCrop(autoCrop.getFileCoordinates(),
+						autoCrop.getRawImage(),
+						autocropParameters.getOutputFolder() + File.separator,
+						image.getName()+"_"+image.getId(),
+						autocropParameters);
+					annotate.run();
+					annotate.saveProjectionOMERO(client, outputProject);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 
 				outputCropGeneralLines.put(image.getName(), autoCrop.getImageCropInfo());
 

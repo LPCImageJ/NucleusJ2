@@ -141,10 +141,11 @@ public class AutoCrop {
 		}
 		this.imageFilePath = image.getName();
 		this.infoImageAnalysis = autocropParametersAnalyse.getAnalysisParameters();
+		this.rawImg.setTitle(image.getName()+"-"+image.getId());
 	}
 
 	public ImagePlus getRawImage(){
-		return imageSeg;
+		return rawImg;
 	}
 	
 	public AutoCrop(File imageFile,
@@ -516,14 +517,14 @@ public class AutoCrop {
 					int yMax = yMin + height;
 					int zMax = zMin + depth;
 					this.boxCoordinates.add(this.outputDirPath + File.separator +
-					                        this.outputFilesPrefix + "_" + coordinates +
-					                        i + "\t" +
-					                        xMin + "\t" +
-					                        xMax + "\t" +
-					                        yMin + "\t" +
-					                        yMax + "\t" +
-					                        zMin + "\t" +
-					                        zMax);
+							this.outputFilesPrefix + "_" +
+							String.format("%02d", i) + "_C0" + "\t" +
+							xMin + "\t" +
+							xMax + "\t" +
+							yMin + "\t" +
+							yMax + "\t" +
+							zMin + "\t" +
+							zMax);
 				}
 			}
 		}
