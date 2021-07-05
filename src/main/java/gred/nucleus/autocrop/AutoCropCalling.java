@@ -17,7 +17,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
 import java.nio.file.Files;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.*;
 
@@ -35,7 +34,6 @@ public class AutoCropCalling {
 	
 	/** Column names */
 	private static final String HEADERS = "FileName\tNumberOfCrop\tOTSUThreshold\tDefaultOTSUThreshold\n";
-	
 	/** image prefix name */
 	private String             prefix                = "";
 	/** Get general information of cropping analyse */
@@ -342,14 +340,4 @@ public class AutoCropCalling {
 		}
 	}
 
-
-	/**
-	 * List of columns names in csv coordinates output file.
-	 *
-	 * @return columns name
-	 */
-	public String getResultsColumnNames() {
-		return HEADERS;
-	}
-	
 }

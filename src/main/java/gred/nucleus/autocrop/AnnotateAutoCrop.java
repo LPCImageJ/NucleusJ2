@@ -234,7 +234,7 @@ public class AnnotateAutoCrop {
 		ip.setLineWidth(4);
 		ip.setAntialiasedText(false);
 		/* Font */
-		Font font = new Font("Arial", Font.PLAIN, 30);
+		Font font = new Font("Arial", Font.PLAIN, autocropParameters.getNumberFontSize());
 		ip.setFont(font);
 		/* Draw current box*/
 		ip.drawRect(Integer.parseInt(currentBox[1]),
@@ -242,14 +242,8 @@ public class AnnotateAutoCrop {
 		            widthBox, heightBox);
 		
 		/* Calculation of the coordinate to add nuclei Number */
-		int xBorder = Integer.parseInt(currentBox[1]) - 100;
-		int yBorder = Integer.parseInt(currentBox[3]) +
-		              ((Integer.parseInt(currentBox[4]) - Integer.parseInt(currentBox[3])) / 2) - 20;
-		// When the box is in left border the number need
-		if (xBorder <= 40) {
-			// to be write on the right of the box
-			xBorder = Integer.parseInt(currentBox[2]) + 60;
-		}
+		int xBorder = Integer.parseInt(currentBox[1]) + font.getSize()/3;
+		int yBorder = Integer.parseInt(currentBox[3]) + font.getSize();
 		/* Draw the nucleus number aside the box */
 		TextRoi text = new TextRoi(Integer.toString(boxNumber), xBorder, yBorder, font);
 		text.drawPixels(ip);

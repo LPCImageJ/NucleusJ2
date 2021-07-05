@@ -80,12 +80,12 @@ public class CLIRunAction {
 					new GenerateProjectionFromCoordinates(this.cmd.getOptionValue("input"),
 					                                      this.cmd.getOptionValue("input2"),
 					                                      this.cmd.getOptionValue("input3"));
-			projection.generateCoordinateFiltered();
+			projection.generateProjectionFiltered();
 		} else {
 			GenerateProjectionFromCoordinates projection =
 					new GenerateProjectionFromCoordinates(this.cmd.getOptionValue("input"),
 					                                      this.cmd.getOptionValue("input2"));
-			projection.generateCoordinate();
+			projection.generateProjection();
 		}
 	}
 	
