@@ -6,6 +6,7 @@ import fr.igred.omero.repository.ImageWrapper;
 import fr.igred.omero.repository.ProjectWrapper;
 import gred.nucleus.autocrop.AutoCropCalling;
 import gred.nucleus.autocrop.AutocropParameters;
+import gred.nucleus.autocrop.GenerateOverlay;
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
 import org.apache.commons.cli.CommandLine;
@@ -51,6 +52,9 @@ public class CLIRunActionOMERO {
 				break;
 			case "segmentation":
 				runSegmentationOMERO();
+				break;
+			case "GenerateOverlay":
+				runGenerateOV();
 				break;
 			default:
 				throw new IllegalArgumentException("Invalid action");
@@ -260,5 +264,12 @@ public class CLIRunActionOMERO {
 			throw new IllegalArgumentException();
 		}
 	}
-	
+
+	private void runGenerateOV() throws Exception {
+		GenerateOverlay ov = new GenerateOverlay();
+		ov.runFromOMERO(this.cmd.getOptionValue("input"),
+						this.cmd.getOptionValue("input2"),
+						this.cmd.getOptionValue("out"),
+						this.client);
+	}
 }

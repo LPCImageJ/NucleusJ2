@@ -17,6 +17,15 @@ public class CLIActionOptions {
 	                                                .type(String.class)
 	                                                .numberOfArgs(1)
 	                                                .build();
+
+	/** Path to second input folder Need in specific action */
+	public 				 Option inputFolder2 = Option.builder("in2")
+													.longOpt("input2")
+													.required()
+													.type(String.class)
+													.numberOfArgs(1)
+													.build();
+
 	/** Path to config file */
 	public               Option configFile  = Option.builder("c")
 	                                                .longOpt("config")
@@ -71,6 +80,7 @@ public class CLIActionOptions {
 	 */
 	public CLIActionOptions(String[] argument) {
 		this.options.addOption(this.inputFolder);
+		this.options.addOption(this.inputFolder2);
 		this.options.addOption(this.configFile);
 		this.options.addOption(this.action);
 		this.options.addOption(this.threads);

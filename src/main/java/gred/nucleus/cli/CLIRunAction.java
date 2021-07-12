@@ -62,8 +62,9 @@ public class CLIRunAction {
 	}
 	
 	
-	private void runGenerateOV() throws FileNotFoundException {
-		GenerateOverlay ov = new GenerateOverlay(this.cmd.getOptionValue("input"));
+	private void runGenerateOV() throws Exception {
+		GenerateOverlay ov = new GenerateOverlay(this.cmd.getOptionValue("input"),
+												 this.cmd.getOptionValue("input2"));
 		ov.run();
 	}
 	

@@ -78,6 +78,7 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 				"Input id number" + "\n" +
 				"Example : " + "\n" +
 				"          dataset/1622");
+		this.options.addOption(this.inputFolder2);
 		try {
 			this.cmd = this.parser.parse(this.options, argument);
 			isTrue(availableActionOMERO(this.cmd.getOptionValue("action")));
@@ -107,6 +108,7 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 		List<String> actionAvailableInOMERO = new ArrayList<>();
 		actionAvailableInOMERO.add("autocrop");
 		actionAvailableInOMERO.add("segmentation");
+		actionAvailableInOMERO.add("GenerateOverlay");
 		return actionAvailableInOMERO.contains(action);
 	}
 	

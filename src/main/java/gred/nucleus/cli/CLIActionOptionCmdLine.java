@@ -19,13 +19,7 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
 	                                          .desc("Path to output results\n")
 	                                          .numberOfArgs(1)
 	                                          .build();
-	/** Path to second input folder Need in specific action */
-	private final Option inputFolder2 = Option.builder("in2")
-	                                          .longOpt("input2")
-	                                          .required()
-	                                          .type(String.class)
-	                                          .numberOfArgs(1)
-	                                          .build();
+
 	/** Path to second input folder Need in specific action */
 	private final Option inputFolder3 = Option.builder("in3")
 	                                          .longOpt("input3")
@@ -133,8 +127,9 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
 				break;
 			
 			case "GenerateOverlay":
-				this.inputFolder.setDescription("Path to tabulated file containing 2 columns :\n" +
-				                                "pathToOverlayFile pathToRawImageAssociate\n");
+				this.inputFolder.setDescription("Path to input folder containing Z-Projections\n");
+				this.inputFolder2.setDescription("Path to input folder containing DIC images\n");
+				this.options.addOption(this.inputFolder2);
 				this.omero.setDescription("NOT AVAILABLE");
 				break;
 		}
