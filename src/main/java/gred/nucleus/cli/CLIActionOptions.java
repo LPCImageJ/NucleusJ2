@@ -18,10 +18,9 @@ public class CLIActionOptions {
 	                                                .numberOfArgs(1)
 	                                                .build();
 
-	/** Path to second input folder Need in specific action */
+	/** Path to second input folder needed in specific action */
 	public 				 Option inputFolder2 = Option.builder("in2")
 													.longOpt("input2")
-													.required()
 													.type(String.class)
 													.numberOfArgs(1)
 													.build();
