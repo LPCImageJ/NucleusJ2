@@ -44,7 +44,7 @@ public class ZProjectionTest implements PlugIn {
     static Client client = new Client();
 
     public static void main(String[] args) throws Exception {
-        checkOMEROConnection("erdn155AXrong$".toCharArray());
+        checkOMEROConnection("".toCharArray());
 
         GenerateOverlay generateOverlay = new GenerateOverlay();
         generateOverlay.runFromOMERO(
@@ -52,11 +52,10 @@ public class ZProjectionTest implements PlugIn {
                "1380",
                 "657",
                 client);
-
     }
 
     public void checkIfFileResultAreMissingOrDifferent() throws AccessException, ServiceException {
-        checkOMEROConnection("12mmaf*".toCharArray());
+        checkOMEROConnection("".toCharArray());
 
         DatasetWrapper datSource = client.getDataset(20736L);
         DatasetWrapper dat1 = client.getDataset(20923L);
@@ -101,12 +100,11 @@ public class ZProjectionTest implements PlugIn {
         AutoCropCalling autoCrop = new AutoCropCalling(parameters);
         autoCrop.setExecutorThreads(1); // Set thread number
 
-        /*
+
         Scanner scanner = new Scanner(System.in);
         System.out.println("Password for \"demo\" :");
         String password = scanner.nextLine();
-        */
-        checkOMEROConnection("Isim@42".toCharArray());
+
 
         long source = 20647;
         long output = 11201;
