@@ -10,6 +10,7 @@ import gred.nucleus.files.Directory;
 import gred.nucleus.files.FilesNames;
 import gred.nucleus.files.OutputTextFile;
 import ij.IJ;
+import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -190,7 +191,7 @@ public class AutoCropCalling {
 		String fileImg = image.getName();
 		LOGGER.info("Current file: {}", fileImg);
 		FilesNames outPutFilesNames = new FilesNames(fileImg);
-		this.prefix = outPutFilesNames.prefixNameFile();
+		String prefix = outPutFilesNames.prefixNameFile();
 		AutoCrop autoCrop = new AutoCrop(image, autocropParameters, client);
 		autoCrop.thresholdKernels();
 		autoCrop.computeConnectedComponent();
@@ -204,7 +205,7 @@ public class AutoCropCalling {
 		AnnotateAutoCrop annotate = new AnnotateAutoCrop(autoCrop.getFileCoordinates(),
 				autoCrop.getRawImage(),
 				this.autocropParameters.getOutputFolder() + File.separator,
-				this.prefix,
+				prefix,
 				this.autocropParameters);
 		annotate.run();
 		long outputProject = -1;
@@ -267,7 +268,7 @@ public class AutoCropCalling {
 					AnnotateAutoCrop annotate = new AnnotateAutoCrop(autoCrop.getFileCoordinates(),
 						autoCrop.getRawImage(),
 						autocropParameters.getOutputFolder() + File.separator,
-						image.getName()+"_"+image.getId(),
+						FilenameUtils.removeExtension(image.getName()),
 						autocropParameters);
 					annotate.run();
 					annotate.saveProjectionOMERO(client, outputProject);

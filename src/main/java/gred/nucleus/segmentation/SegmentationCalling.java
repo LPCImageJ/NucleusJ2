@@ -358,14 +358,16 @@ public class SegmentationCalling {
 		ProjectWrapper project = client.getProject(output);
 		// Get OTSU dataset ID
 		List<DatasetWrapper> datasets = project.getDatasets("OTSU");
-		Long otsuDataset, convexHullDataset;
+		long otsuDataset, convexHullDataset = -1;
 		if (datasets.isEmpty()) otsuDataset = project.addDataset(client, "OTSU", "").getId();
 		else otsuDataset = datasets.get(0).getId();
 		project = client.getProject(output);
 		// Get Convex Hull dataset ID
-		datasets = project.getDatasets(NucleusSegmentation.CONVEX_HULL_ALGORITHM);
-		if (datasets.isEmpty()) convexHullDataset = project.addDataset(client, NucleusSegmentation.CONVEX_HULL_ALGORITHM, "").getId();
-		else convexHullDataset = datasets.get(0).getId();
+		if(segmentationParameters.getConvexHullDetection()){
+			datasets = project.getDatasets(NucleusSegmentation.CONVEX_HULL_ALGORITHM);
+			if (datasets.isEmpty()) convexHullDataset = project.addDataset(client, NucleusSegmentation.CONVEX_HULL_ALGORITHM, "").getId();
+			else convexHullDataset = datasets.get(0).getId();
+		}
 
 		String fileImg = image.getName();
 		LOGGER.info("Current image in process: {}", fileImg);
@@ -399,14 +401,17 @@ public class SegmentationCalling {
 		ProjectWrapper project = client.getProject(output);
 		// Get OTSU dataset ID
 		List<DatasetWrapper> datasets = project.getDatasets("OTSU");
-		final Long otsuDataset, convexHullDataset;
+		final long otsuDataset, convexHullDataset;
 		if (datasets.isEmpty()) otsuDataset = project.addDataset(client, "OTSU", "").getId();
 		else otsuDataset = datasets.get(0).getId();
 		project = client.getProject(output);
 		// Get Convex Hull dataset ID
-		datasets = project.getDatasets(NucleusSegmentation.CONVEX_HULL_ALGORITHM);
-		if (datasets.isEmpty()) convexHullDataset = project.addDataset(client, NucleusSegmentation.CONVEX_HULL_ALGORITHM, "").getId();
-		else convexHullDataset = datasets.get(0).getId();
+		if(segmentationParameters.getConvexHullDetection()){
+			datasets = project.getDatasets(NucleusSegmentation.CONVEX_HULL_ALGORITHM);
+			if (datasets.isEmpty()) convexHullDataset = project.addDataset(client, NucleusSegmentation.CONVEX_HULL_ALGORITHM, "").getId();
+			else convexHullDataset = datasets.get(0).getId();
+		}
+		else convexHullDataset = -1;
 
 		final CountDownLatch latch = new CountDownLatch(images.size());
 

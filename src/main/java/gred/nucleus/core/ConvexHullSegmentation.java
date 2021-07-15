@@ -83,5 +83,45 @@ public class ConvexHullSegmentation {
 		}
 		return imagePlusOutput;
 	}
-	
+
+
+	private ImagePlus imageMakingUnion2(ImagePlus imagePlusInput,
+									   ImagePlus imagePlusXY,
+									   ImagePlus imagePlusXZ,
+									   ImagePlus imagePlusYZ) {
+
+		ImagePlus  imagePlusOutput  = imagePlusInput.duplicate();
+		imagePlusOutput.setTitle(imagePlusInput.getTitle());
+
+		ImageStack imageStackXY     = imagePlusXY.getStack();
+		ImageStack imageStackXZ     = imagePlusXZ.getStack();
+		ImageStack imageStackYZ     = imagePlusYZ.getStack();
+		ImageStack imageStackOutput = imagePlusOutput.getStack();
+
+		for (int d = 1; d < imagePlusXY.getNSlices()-1; ++d) {
+			for (int w = 1; w < imagePlusXY.getWidth()-1; ++w) {
+				for (int h = 1; h < imagePlusXY.getHeight()-1; ++h) {
+
+					if ( (imageStackXY.getVoxel(w, h, d) != 0|| imageStackXZ.getVoxel(w, d, h) != 0 || imageStackYZ.getVoxel(h, d, w) != 0)
+						|| (((imageStackXY.getVoxel(w-1, h, d) != 0 || imageStackXY.getVoxel(w+1, h, d) != 0)
+							|| (imageStackXZ.getVoxel(w-1, d, h) != 0 || imageStackXZ.getVoxel(w+1, d, h) != 0)
+							|| (imageStackYZ.getVoxel(h, d, w-1) != 0 || imageStackYZ.getVoxel(h, d, w+1) != 0))
+							||
+							((imageStackXY.getVoxel(w, h-1, d) != 0 || imageStackXY.getVoxel(w, h+1, d) != 0)
+							|| (imageStackXZ.getVoxel(w, d, h-1) != 0 || imageStackXZ.getVoxel(w, d, h+1) != 0)
+							|| (imageStackYZ.getVoxel(h-1, d, w) != 0 || imageStackYZ.getVoxel(h+1, d, w) != 0)))
+							&&
+							((imageStackXY.getVoxel(w, h, d-1) != 0 || imageStackXY.getVoxel(w, h, d+1) != 0)
+							|| (imageStackXZ.getVoxel(w, d-1, h) != 0 || imageStackXZ.getVoxel(w, d+1, h) != 0)
+							|| (imageStackYZ.getVoxel(h, d-1, w) != 0 || imageStackYZ.getVoxel(h, d+1, w) != 0)) ) {
+
+							imageStackOutput.setVoxel(w, h, d, 255);
+					}
+
+				}
+			}
+		}
+
+		return imagePlusOutput;
+	}
 }
