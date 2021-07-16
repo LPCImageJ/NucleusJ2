@@ -51,7 +51,7 @@ public class CLIActionOptions {
 	public               Option threads      = Option.builder("th")
 													.longOpt("threads")
 													.type(String.class)
-													.desc("Number of threads used to split image processing (do not exceed the number of available CPUs  (="  +
+													.desc("Number of threads used to split image processing during autocrop or nucleus segmentation (do not exceed the number of available CPUs  (="  +
 															Runtime.getRuntime().availableProcessors()+ " CPUs))\n" +
 															"Default : 4 threads for several images (otherwise 1 thread for single image processing)")
 													.numberOfArgs(1)

@@ -107,7 +107,6 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
 				this.inputFolder.setDescription("Path to input folder containing coordinates files\n");
 				this.inputFolder2.setDescription("Path to input folder containing raw data\n");
 				this.options.addOption(this.inputFolder2);
-				this.omero.setDescription("NOT AVAILABLE");
 				break;
 			
 			case "generateProjectionFiltered":
@@ -130,7 +129,6 @@ public class CLIActionOptionCmdLine extends CLIActionOptions {
 				this.inputFolder.setDescription("Path to input folder containing Z-Projections\n");
 				this.inputFolder2.setDescription("Path to input folder containing DIC images\n");
 				this.options.addOption(this.inputFolder2);
-				this.omero.setDescription("NOT AVAILABLE");
 				break;
 		}
 	}

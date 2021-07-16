@@ -185,7 +185,7 @@ public class CLIHelper {
 			
 			case "GenerateOverlay":
 				exampleArgument = "-action GenerateOverlay " +
-						"-input path/to/input/zprojection/" +
+						"-input path/to/input/zprojection/ " +
 						"-input2 path/to/input/dic_images/";
 				exampleCMD = exampleArgument.split(" ");
 				command = new CLIActionOptionCmdLine(exampleCMD);

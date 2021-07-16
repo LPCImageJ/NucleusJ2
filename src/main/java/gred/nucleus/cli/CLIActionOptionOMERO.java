@@ -4,6 +4,7 @@ import org.apache.commons.cli.Option;
 import org.apache.commons.cli.ParseException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.apache.commons.lang.Validate.isTrue;
@@ -14,7 +15,6 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 	/** Host name server */
 	private final Option hostname     = Option.builder("ho")
 	                                          .longOpt("hostname")
-	                                          .required()
 	                                          .type(String.class)
 	                                          .desc("Hostname of the OMERO server")
 	                                          .numberOfArgs(1)
@@ -22,7 +22,6 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 	/** Server port connection */
 	private final Option port         = Option.builder("pt")
 	                                          .longOpt("port")
-	                                          .required()
 	                                          .type(Integer.class)
 	                                          .desc("Port used by OMERO")
 	                                          .numberOfArgs(1)
@@ -44,7 +43,6 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 	/** Group user connection */
 	private final Option group        = Option.builder("g")
 	                                          .longOpt("group")
-	                                          .required()
 	                                          .type(String.class)
 	                                          .desc("Group in OMERO")
 	                                          .numberOfArgs(1)
@@ -56,8 +54,16 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 	                                          .desc("Path to output folder containing images to analyse\n")
 	                                          .numberOfArgs(1)
 	                                          .build();
-	
-	
+
+	/** Path to OMERO config file */
+	private final Option omeroConfigFile = Option.builder("oc")
+												.longOpt("omeroConfig")
+												.type(String.class)
+												.desc("Path to OMERO config file")
+												.numberOfArgs(1)
+												.build();
+
+
 	/**
 	 * Constructor with argument
 	 *
@@ -65,6 +71,13 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 	 */
 	public CLIActionOptionOMERO(String[] argument) {
 		super(argument);
+		List<String> listArgs = Arrays.asList(argument);
+		if( !(listArgs.contains("-oc") || listArgs.contains("-omeroConfig")) ) {
+			hostname.setRequired(true);
+			port.setRequired(true);
+			username.setRequired(true);
+			group.setRequired(true);
+		}
 		this.options.addOption(this.action);
 		this.options.addOption(this.outputFolder);
 		this.options.addOption(this.port);
@@ -72,13 +85,17 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 		this.options.addOption(this.username);
 		this.options.addOption(this.password);
 		this.options.addOption(this.group);
-		this.inputFolder.setDescription(
-				"OMERO  inputs 2 information separated with slash separator :  " +
+		String inputDescription = "OMERO  inputs 2 information separated with slash separator :  " +
 				"Type input: dataset, project, image, tag " +
 				"Input id number" + "\n" +
 				"Example : " + "\n" +
-				"          dataset/1622");
+				"          dataset/1622";
+		this.options.addOption(this.inputFolder);
+		this.inputFolder.setDescription(inputDescription);
 		this.options.addOption(this.inputFolder2);
+		inputFolder2.setDescription(inputDescription);
+
+		this.options.addOption(this.omeroConfigFile);
 		try {
 			this.cmd = this.parser.parse(this.options, argument);
 			isTrue(availableActionOMERO(this.cmd.getOptionValue("action")));
@@ -138,20 +155,6 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 	}
 	
 	
-	private Option getOutputFolder() {
-		return this.outputFolder;
-	}
-	
-}
+	private Option getOutputFolder() { return this.outputFolder; }
 
-//        if(cmd.getOptionValue("action").equals("autocrop")) {
-/*
-List<String> actionList = new ArrayList<>();
-        actionList.add("autocrop");
-        actionList.add("segmentation");
-        actionList.add("computeParameters");
-        actionList.add("computeParametersDL");
-        actionList.add("generateProjection");
-        actionList.add("CropFromCoordinate");
-        actionList.add("GenerateOverlay");
- */
+}

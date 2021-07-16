@@ -14,6 +14,8 @@ import gred.nucleus.files.Directory;
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
 import ij.IJ;
+import ij.ImagePlus;
+import ij.io.FileSaver;
 import loci.formats.FormatException;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
@@ -37,9 +39,22 @@ public class MultiThreadingTest {
 
 	public static void main(String[] args) throws Exception {
 		long start = System.nanoTime();
-		localSegmentation(4);
+		localSegmentation(8);
 		long duration = System.nanoTime() - start;
 		LOGGER.info("Duration = {}", TimeUnit.NANOSECONDS.toSeconds(duration));
+	}
+
+	static void downloadAllFromOtherDataset() throws AccessException, ServiceException, ExecutionException {
+		checkOMEROConnection("".toCharArray());
+		DatasetWrapper pbGrahamDat = client.getDataset(20965L);
+		DatasetWrapper rawDat = client.getDataset(20934L);
+
+		for (ImageWrapper img : pbGrahamDat.getImages(client)) {
+			ImageWrapper rawImg = rawDat.getImages(client, img.getName()).get(0);
+			ImagePlus imp = rawImg.toImagePlus(client);
+			saveFile(imp, "E:\\alexw\\Desktop\\testinput\\"+imp.getTitle());
+		}
+
 	}
 
 	static void threadsStatistics(int threads) throws Exception {
@@ -78,8 +93,8 @@ public class MultiThreadingTest {
  		SegmentationParameters parameters = new SegmentationParameters(
 				//"E:\\alexw\\Desktop\\GReD\\testinput",
 				//"E:\\alexw\\Desktop\\GReD\\testouput"
-				"/data/home/rongiera/input",
-				"/data/home/rongiera/output"
+				"E:\\alexw\\Desktop\\testinput",
+				"E:\\alexw\\Desktop\\out2"
 		);
 		SegmentationCalling segmentation = new SegmentationCalling(parameters);
 		segmentation.setExecutorThreads(executorThreads); // Set thread number
@@ -106,17 +121,23 @@ public class MultiThreadingTest {
 		
 		segmentation.runSeveralImagesOMERO(images, OUTPUT_PROJECT_ID, client);
 	}
+
 	static void checkOMEROConnection(char[] password) {
 		try {
 			client.connect("omero.igred.fr",
 			               4064,
-			               "demo",
+			               "",
 			               password,
-			               553L);
+			               203L);
 		} catch (Exception exp) {
 			LOGGER.error("OMERO connection error: " + exp.getMessage(), exp);
 			System.exit(1);
 		}
+	}
+
+	public static void saveFile(ImagePlus imagePlusInput, String pathFile) {
+		FileSaver fileSaver = new FileSaver(imagePlusInput);
+		fileSaver.saveAsTiff(pathFile);
 	}
 
 
