@@ -5,37 +5,17 @@ import fr.igred.omero.exception.AccessException;
 import fr.igred.omero.exception.ServiceException;
 import fr.igred.omero.repository.DatasetWrapper;
 import fr.igred.omero.repository.ImageWrapper;
-import fr.igred.omero.roi.ROIWrapper;
-import fr.igred.omero.roi.RectangleWrapper;
-import fr.igred.omero.roi.ShapeList;
 import gred.nucleus.autocrop.*;
-import gred.nucleus.files.FilesNames;
 import ij.IJ;
-import ij.ImagePlus;
-import ij.gui.ImageRoi;
-import ij.gui.Overlay;
-import ij.plugin.Duplicator;
-import ij.plugin.LutLoader;
-import ij.plugin.OverlayCommands;
 import ij.plugin.PlugIn;
-import ij.process.ImageConverter;
-import ij.process.LUT;
 import loci.formats.FormatException;
-import org.apache.commons.io.FilenameUtils;
-import org.checkerframework.checker.units.qual.C;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
-import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.concurrent.ExecutionException;
-import java.util.regex.Pattern;
 
 public class ZProjectionTest implements PlugIn {
     /** Logger */
@@ -44,14 +24,41 @@ public class ZProjectionTest implements PlugIn {
     static Client client = new Client();
 
     public static void main(String[] args) throws Exception {
-        checkOMEROConnection("".toCharArray());
+        //checkOMEROConnection("".toCharArray());
 
-        GenerateOverlay generateOverlay = new GenerateOverlay();
+
+        // ComputeParameters test
+        /*
+        ComputeNucleiParameters computeNucleiParameters = new ComputeNucleiParameters(
+                "E:\\alexw\\Desktop\\computeParameters\\raw",
+                "E:\\alexw\\Desktop\\computeParameters\\segmented\\GRAHAM"
+        );
+        computeNucleiParameters.run();
+         */
+
+        // CropFromCoordinates test
+
+        CropFromCoordinates cropFromCoordinates = new CropFromCoordinates(
+                "E:\\alexw\\Desktop\\cropFromCoor\\result\\coordinates",
+                "E:\\alexw\\Desktop\\cropFromCoor\\raw\\2",
+                "E:\\alexw\\Desktop\\cropFromCoor\\output");
+        cropFromCoordinates.run();
+
+
+         // GenerateOverlay test
+        /*
+        GenerateOverlay generateOverlay = new GenerateOverlay(
+                "E:\\alexw\\Desktop\\zprojection",
+                "E:\\alexw\\Desktop\\dic"
+        );
+        generateOverlay.run();
+
         generateOverlay.runFromOMERO(
                 "1381",
                "1380",
                 "657",
                 client);
+         */
     }
 
     public void checkIfFileResultAreMissingOrDifferent() throws AccessException, ServiceException {

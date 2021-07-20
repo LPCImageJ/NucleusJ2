@@ -1,6 +1,8 @@
 package gred.nucleus.cli;
 
 import fr.igred.omero.Client;
+import fr.igred.omero.exception.AccessException;
+import fr.igred.omero.exception.ServiceException;
 import fr.igred.omero.repository.DatasetWrapper;
 import fr.igred.omero.repository.ImageWrapper;
 import fr.igred.omero.repository.ProjectWrapper;
@@ -8,6 +10,7 @@ import gred.nucleus.autocrop.AutoCropCalling;
 import gred.nucleus.autocrop.AutocropParameters;
 import gred.nucleus.autocrop.CropFromCoordinates;
 import gred.nucleus.autocrop.GenerateOverlay;
+import gred.nucleus.core.ComputeNucleiParameters;
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
 import omero.gateway.LoginCredentials;
@@ -20,6 +23,7 @@ import java.lang.invoke.MethodHandles;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 
 import static java.lang.System.exit;
 
@@ -142,6 +146,9 @@ public class CLIRunActionOMERO {
 				break;
 			case "cropFromCoordinate":
 				runCropFromCoordinate();
+				break;
+			case "computeParameters":
+				runComputeNucleiParameters();
 				break;
 			default:
 				throw new IllegalArgumentException("Invalid action");
@@ -345,6 +352,16 @@ public class CLIRunActionOMERO {
 				this.cmd.getOptionValue("input2"),
 				this.cmd.getOptionValue("out"),
 				this.client
+		);
+	}
+
+	private void runComputeNucleiParameters() throws AccessException, ServiceException, IOException, ExecutionException, InterruptedException {
+		ComputeNucleiParameters generateParameters = new ComputeNucleiParameters();
+		if (this.cmd.hasOption("config")) generateParameters.addConfigParameters(this.cmd.getOptionValue("config"));
+		generateParameters.runFromOMERO(
+				this.cmd.getOptionValue("input"),
+				this.cmd.getOptionValue("input2"),
+				client
 		);
 	}
 }

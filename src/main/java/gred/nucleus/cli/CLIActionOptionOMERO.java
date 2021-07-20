@@ -120,6 +120,7 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 		actionAvailableInOMERO.add("segmentation");
 		actionAvailableInOMERO.add("generateOverlay");
 		actionAvailableInOMERO.add("cropFromCoordinate");
+		actionAvailableInOMERO.add("computeParameters");
 		return actionAvailableInOMERO.contains(action);
 	}
 	
