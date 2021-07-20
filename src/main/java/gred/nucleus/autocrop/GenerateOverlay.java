@@ -56,11 +56,9 @@ public class GenerateOverlay {
 		this.pathToOutput = pathToProjection + File.separator + "overlay";
 	}
 
-	public void run() throws IOException {
+	private Map<File, File> gatherFilePairs(){
 		File projectionDir = new File(pathToProjection);
 		File dicDir = new File(pathToDic);
-		Directory output = new Directory(pathToOutput);
-		output.checkAndCreateDir();
 
 		Map<File, File> allDicToProj = new HashMap<>();
 		// Gather all pair of files
@@ -73,17 +71,13 @@ public class GenerateOverlay {
 				String dicName = FilenameUtils.removeExtension(fd.getName());
 				String[] dNameTab = dicName.split("_");
 				dicName = dicName.replace(dNameTab[dNameTab.length-1],"");
-				if(dicName.equals(projName)) {
-					allDicToProj.put(fd, fp);
-				}
+				if(dicName.equals(projName)) allDicToProj.put(fd, fp);
 			}
 		}
+		return allDicToProj;
+	}
 
-		// Process all pair and put them in overlay folder
-		Directory overlayDir = new Directory(pathToProjection + File.separator + "overlay");
-		overlayDir.checkAndCreateDir();
-
-		// Open LUT to apply to projection
+	private LUT getNucleiLUT() throws IOException {
 		InputStream in = getClass().getResourceAsStream("/overlay/LUT.txt");
 		BufferedReader br = new BufferedReader(new InputStreamReader(in));
 		BufferedWriter bw = new BufferedWriter(new FileWriter("./tmp-LUT.txt"));
@@ -92,7 +86,18 @@ public class GenerateOverlay {
 		bw.close();
 		LUT fire = LutLoader.openLut("./tmp-LUT.txt");
 		Files.delete(Paths.get("./tmp-LUT.txt"));
+		return fire;
+	}
 
+	public void run() throws IOException {
+		Directory output = new Directory(pathToOutput);
+		output.checkAndCreateDir();
+
+		Map<File, File> allDicToProj = this.gatherFilePairs();
+
+		LUT fire = this.getNucleiLUT();
+
+		// Process all pairs
 		for (Map.Entry<File, File> e : allDicToProj.entrySet()) {
 			String name = FilenameUtils.removeExtension(e.getKey().getName());
 			String[] nameTab = name.split("_");
