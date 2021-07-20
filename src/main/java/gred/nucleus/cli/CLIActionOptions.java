@@ -6,7 +6,7 @@ import org.apache.commons.cli.*;
 
 /** Generic class to handle command line option */
 public class CLIActionOptions {
-	
+	// TODO Store action and option String in constant
 	/** NucleusJ version */
 	private static final String NJ_VERSION = Version.get();
 	
@@ -22,6 +22,21 @@ public class CLIActionOptions {
 	public 				 Option inputFolder2 = Option.builder("in2")
 													.longOpt("input2")
 													.type(String.class)
+													.numberOfArgs(1)
+													.build();
+
+	/** Path to second input folder Need in specific action */
+	public 				Option inputFolder3 = Option.builder("in3")
+													.longOpt("input3")
+													.type(String.class)
+													.numberOfArgs(1)
+													.build();
+
+	/** Path to output folder */
+	protected 			Option outputFolder = Option.builder("out")
+													.longOpt("output")
+													.type(String.class)
+													.desc("Path to output results\n")
 													.numberOfArgs(1)
 													.build();
 

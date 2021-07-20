@@ -53,7 +53,7 @@ public class CLIRunAction {
 			case "cropFromCoordinate":
 				runCropFromCoordinates();
 				break;
-			case "GenerateOverlay":
+			case "generateOverlay":
 				runGenerateOV();
 				break;
 			default:
@@ -70,9 +70,14 @@ public class CLIRunAction {
 	
 	
 	private void runCropFromCoordinates() throws IOException, FormatException {
-		CropFromCoordinates test = new CropFromCoordinates(this.cmd.getOptionValue("input"));
-		test.runCropFromCoordinate();
+		CropFromCoordinates cropFromCoordinates = new CropFromCoordinates(
+				this.cmd.getOptionValue("input"),
+				this.cmd.getOptionValue("input2"),
+				this.cmd.getOptionValue("output")
+				);
+		cropFromCoordinates.run();
 	}
+
 	
 	
 	private void runProjectionFromCoordinates() throws Exception {

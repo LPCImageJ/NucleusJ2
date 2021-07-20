@@ -47,13 +47,7 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 	                                          .desc("Group in OMERO")
 	                                          .numberOfArgs(1)
 	                                          .build();
-	/** Path to output folder */
-	private final Option outputFolder = Option.builder("out")
-	                                          .longOpt("output")
-	                                          .type(String.class)
-	                                          .desc("Path to output folder containing images to analyse\n")
-	                                          .numberOfArgs(1)
-	                                          .build();
+
 
 	/** Path to OMERO config file */
 	private final Option omeroConfigFile = Option.builder("oc")
@@ -79,7 +73,7 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 			group.setRequired(true);
 		}
 		this.options.addOption(this.action);
-		this.options.addOption(this.outputFolder);
+		this.options.addOption(outputFolder);
 		this.options.addOption(this.port);
 		this.options.addOption(this.hostname);
 		this.options.addOption(this.username);
@@ -93,7 +87,6 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 		this.options.addOption(this.inputFolder);
 		this.inputFolder.setDescription(inputDescription);
 		this.options.addOption(this.inputFolder2);
-		inputFolder2.setDescription(inputDescription);
 
 		this.options.addOption(this.omeroConfigFile);
 		try {
@@ -125,7 +118,8 @@ public class CLIActionOptionOMERO extends CLIActionOptions {
 		List<String> actionAvailableInOMERO = new ArrayList<>();
 		actionAvailableInOMERO.add("autocrop");
 		actionAvailableInOMERO.add("segmentation");
-		actionAvailableInOMERO.add("GenerateOverlay");
+		actionAvailableInOMERO.add("generateOverlay");
+		actionAvailableInOMERO.add("cropFromCoordinate");
 		return actionAvailableInOMERO.contains(action);
 	}
 	

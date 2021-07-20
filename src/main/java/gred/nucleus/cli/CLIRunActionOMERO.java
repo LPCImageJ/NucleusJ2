@@ -6,6 +6,7 @@ import fr.igred.omero.repository.ImageWrapper;
 import fr.igred.omero.repository.ProjectWrapper;
 import gred.nucleus.autocrop.AutoCropCalling;
 import gred.nucleus.autocrop.AutocropParameters;
+import gred.nucleus.autocrop.CropFromCoordinates;
 import gred.nucleus.autocrop.GenerateOverlay;
 import gred.nucleus.segmentation.SegmentationCalling;
 import gred.nucleus.segmentation.SegmentationParameters;
@@ -136,8 +137,11 @@ public class CLIRunActionOMERO {
 			case "segmentation":
 				runSegmentationOMERO();
 				break;
-			case "GenerateOverlay":
+			case "generateOverlay":
 				runGenerateOV();
+				break;
+			case "cropFromCoordinate":
+				runCropFromCoordinate();
 				break;
 			default:
 				throw new IllegalArgumentException("Invalid action");
@@ -211,7 +215,7 @@ public class CLIRunActionOMERO {
 	}
 
 
-	public void runAutoCropOMERO() throws Exception {
+	private void runAutoCropOMERO() throws Exception {
 		AutocropParameters autocropParameters = new AutocropParameters(".", ".");
 		if (this.cmd.hasOption("config")) {
 			autocropParameters.addGeneralProperties(this.cmd.getOptionValue("config"));
@@ -231,9 +235,9 @@ public class CLIRunActionOMERO {
 			exit(1);
 		}
 	}
-	
-	
-	public void runSegmentationOMERO() throws Exception {
+
+
+	private void runSegmentationOMERO() throws Exception {
 		SegmentationParameters segmentationParameters = new SegmentationParameters(".", ".");
 		if (this.cmd.hasOption("config")) {
 			segmentationParameters.addGeneralProperties(this.cmd.getOptionValue("config"));
@@ -248,9 +252,9 @@ public class CLIRunActionOMERO {
 		                  this.client,
 		                  otsuModified);
 	}
-	
-	
-	public void segmentationOMERO(String inputDirectory,
+
+
+	private void segmentationOMERO(String inputDirectory,
 	                              String outputDirectory,
 	                              Client client,
 	                              SegmentationCalling otsuModified) throws Exception {
@@ -329,6 +333,18 @@ public class CLIRunActionOMERO {
 		ov.runFromOMERO(this.cmd.getOptionValue("input"),
 						this.cmd.getOptionValue("input2"),
 						this.cmd.getOptionValue("out"),
-						this.client);
+						this.client
+		);
+	}
+
+	private void runCropFromCoordinate() throws Exception {
+		CropFromCoordinates cropFromCoordinates = new CropFromCoordinates(
+				this.cmd.getOptionValue("input")
+		);
+		cropFromCoordinates.runFromOMERO(
+				this.cmd.getOptionValue("input2"),
+				this.cmd.getOptionValue("out"),
+				this.client
+		);
 	}
 }

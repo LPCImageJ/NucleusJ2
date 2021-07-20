@@ -471,7 +471,6 @@ public class AutoCrop {
 				int       width  = box.getXMax() - box.getXMin() + 1;
 				int       height = box.getYMax() - box.getYMin() + 1;
 				int       depth  = box.getZMax() - box.getZMin() + 1;
-				String coordinates = box.getXMin() + "_" + box.getYMin() + "_" + box.getZMin();
 
 				ShapeList shapes = new ShapeList();
 				for (int z = box.getZMin(); z < box.getZMax(); z++) {
@@ -533,66 +532,49 @@ public class AutoCrop {
 
 
 	/** Method crops a box of interest, from coordinate files. */
-	public void cropKernels3() {
+	public void cropKernels3(int channelToCrop) {
 		LOGGER.info("Cropping kernels (3).");
 		StringBuilder info      = new StringBuilder();
-		Directory     dirOutput = new Directory(this.outputDirPath + File.separator + "Nuclei");
+		Directory     dirOutput = new Directory(this.outputDirPath);
 		dirOutput.checkAndCreateDir();
 		info.append(getSpecificImageInfo()).append(HEADERS);
-		for (int c = 0; c < this.channelNumbers; c++) {
-			for (Map.Entry<Double, Box> entry : new TreeMap<>(this.boxes).entrySet()) {
-				int i = entry.getKey().intValue();
-				LOGGER.info("Processing box number: {}", i);
-				Box       box    = entry.getValue();
-				int       xMin   = box.getXMin();
-				int       yMin   = box.getYMin();
-				int       zMin   = box.getZMin();
-				int       width  = box.getXMax() - box.getXMin() + 1;
-				int       height = box.getYMax() - box.getYMin() + 1;
-				int       depth  = box.getZMax() - box.getZMin() + 1;
-				ImagePlus croppedImage;
-				if (this.rawImg.getNSlices() > 1) {
-					croppedImage = cropImage(xMin, yMin, zMin, width, height, depth, c);
-				} else {
-					croppedImage = cropImage2D(xMin, yMin, width, height, c);
-				}
-				Calibration cal = this.rawImg.getCalibration();
-				croppedImage.setCalibration(cal);
-				String tiffPath = dirOutput.getDirPath() + File.separator +
-				                  this.outputFilesPrefix +
-				                  "_" + String.format("%02d", i) +
-				                  "_C" + c + ".tif";
-				OutputTiff fileOutput = new OutputTiff(tiffPath);
-				info.append(tiffPath).append("\t")
-				    .append(c).append("\t")
-				    .append(i).append("\t")
-				    .append(xMin).append("\t")
-				    .append(yMin).append("\t")
-				    .append(zMin).append("\t")
-				    .append(width).append("\t")
-				    .append(height).append("\t")
-				    .append(depth).append("\n");
-				fileOutput.saveImage(croppedImage);
-				this.outputFile.add(this.outputDirPath + File.separator +
-				                    this.outputFilesPrefix + File.separator +
-				                    this.outputFilesPrefix + "_" +
-				                    String.format("%02d", i) + ".tif");
-				if (c == 0) {
-					int xMax = xMin + width;
-					int yMax = yMin + height;
-					int zMax = zMin + depth;
-					this.boxCoordinates.add(this.outputDirPath + File.separator +
-					                        this.outputFilesPrefix +
-					                        "_" +
-					                        i + "\t" +
-					                        xMin + "\t" +
-					                        xMax + "\t" +
-					                        yMin + "\t" +
-					                        yMax + "\t" +
-					                        zMin + "\t" +
-					                        zMax);
-				}
+		for (Map.Entry<Double, Box> entry : new TreeMap<>(this.boxes).entrySet()) {
+			int i = entry.getKey().intValue();
+			LOGGER.info("Processing box number: {}", i);
+			Box       box    = entry.getValue();
+			int       xMin   = box.getXMin();
+			int       yMin   = box.getYMin();
+			int       zMin   = box.getZMin();
+			int       width  = box.getXMax() - box.getXMin() + 1;
+			int       height = box.getYMax() - box.getYMin() + 1;
+			int       depth  = box.getZMax() - box.getZMin() + 1;
+			ImagePlus croppedImage;
+			if (this.rawImg.getNSlices() > 1) {
+				croppedImage = cropImage(xMin, yMin, zMin, width, height, depth, channelToCrop);
+			} else {
+				croppedImage = cropImage2D(xMin, yMin, width, height, channelToCrop);
 			}
+			Calibration cal = this.rawImg.getCalibration();
+			croppedImage.setCalibration(cal);
+			String tiffPath = dirOutput.getDirPath() + File.separator +
+							  this.outputFilesPrefix +
+							  "_" + String.format("%02d", i) +
+							  "_C" + channelToCrop + ".tif";
+			OutputTiff fileOutput = new OutputTiff(tiffPath);
+			info.append(tiffPath).append("\t")
+				.append(channelToCrop).append("\t")
+				.append(i).append("\t")
+				.append(xMin).append("\t")
+				.append(yMin).append("\t")
+				.append(zMin).append("\t")
+				.append(width).append("\t")
+				.append(height).append("\t")
+				.append(depth).append("\n");
+			fileOutput.saveImage(croppedImage);
+			this.outputFile.add(this.outputDirPath + File.separator +
+								this.outputFilesPrefix + File.separator +
+								this.outputFilesPrefix + "_" +
+								String.format("%02d", i) + ".tif");
 		}
 		this.infoImageAnalysis += info.toString();
 	}
@@ -664,7 +646,6 @@ public class AutoCrop {
 		ImagePlus cropped = duplicator.run(rawImg, channelNumber, channelNumber, zMin, zMin+depth-1, 0, 0);
 		cropped.setRoi(new Roi(xMin, yMin, width, height));
 		ImagePlus result = cropped.crop("stack");
-				//.resize(width, height, "bilinear"); // to see
 		result.deleteRoi();
 		return result;
 	}
