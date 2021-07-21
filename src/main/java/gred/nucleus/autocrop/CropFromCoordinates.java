@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 
 public class CropFromCoordinates {
@@ -39,7 +40,7 @@ public class CropFromCoordinates {
 	 * @param pathToOutput path where cropped nuclei will be saved
 	 */
 	public CropFromCoordinates(String pathToCoordinates, String pathToRawAndChannel, String pathToOutput) {
-		String[] splitRawInfo = pathToRawAndChannel.split(File.separator);
+		String[] splitRawInfo = pathToRawAndChannel.split(Pattern.quote(File.separator));
 		String channelNumber = splitRawInfo[splitRawInfo.length-1];
 		this.channelToCrop = Integer.parseInt(channelNumber);
 		this.pathToRaw = pathToRawAndChannel.replace(File.separator + channelNumber, "");
@@ -49,8 +50,8 @@ public class CropFromCoordinates {
 
 	public CropFromCoordinates(String pathToCoordinates){
 		this.pathToCoordinates = pathToCoordinates;
-		this.pathToRaw = "." + File.separator + "raw" + File.separator;
-		this.pathToOutput = "." + File.separator + "cropped_nuclei" + File.separator;
+		this.pathToRaw = "." + File.separator + "tmp-raw_cropFromCoordinate" + File.separator;
+		this.pathToOutput = "." + File.separator + "tmp-cropped_nuclei_cropFromCoordinate" + File.separator;
 	}
 
 	private Map<File, File> gatherFilePairs() {
