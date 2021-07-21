@@ -11,6 +11,7 @@ import ij.IJ;
 import ij.ImagePlus;
 import ij.gui.ImageRoi;
 import ij.io.FileSaver;
+import ij.plugin.ContrastEnhancer;
 import ij.plugin.Duplicator;
 import ij.plugin.LutLoader;
 import ij.plugin.filter.LutApplier;
@@ -44,8 +45,8 @@ public class GenerateOverlay {
 
 	public GenerateOverlay() {
 		isOMEROEnable = true;
-		pathToProjection = "." + File.separator +"zprojection";
-		pathToDic = "." + File.separator + "dic";
+		pathToProjection = "." + File.separator +"tmp-zprojection-GenerateOverlay";
+		pathToDic = "." + File.separator + "tmp-dic-GenerateOverlay";
 		pathToOutput = pathToProjection + File.separator + "overlay";
 	}
 
