@@ -53,8 +53,10 @@ public class AutoCropCalling {
 	
 	
 	/**
-	 * Run auto crop on image's folder: -If input is a file: open the image with bio-formats plugin to obtain the
-	 * metadata then run the auto crop. -If input is directory, listed the file, foreach tif file loaded file with
+	 * Run auto crop on image's folder: 
+	 * <p> If input is a file: open the image with bio-formats plugin to obtain the
+	 * metadata then run the auto crop. 
+	 * <p> If input is directory, listed the file, foreach tif file loaded file with
 	 * bio-formats, run the auto crop.
 	 */
 	public void runFolder() {
@@ -70,9 +72,13 @@ public class AutoCropCalling {
 	
 	
 	/**
-	 * Run auto crop on one image : -If input is a file: open the image with bio-formats plugin to obtain the metadata
-	 * then run the auto crop. -If input is directory, listed the file, foreach tif file loaded file with bio-formats,
-	 * run the auto crop.
+	 * Run auto crop on one image : 
+	 * 
+	 * 	<p> If input is a file: open the image with bio-formats plugin to obtain the metadata
+	 * 	then run the auto crop. 
+	 * 
+	 * 	<p> If input is directory, listed the file, foreach tif file loaded file with bio-formats,
+	 * 	run the auto crop.
 	 *
 	 * @param file
 	 */
