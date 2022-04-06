@@ -226,11 +226,17 @@ public class AutoCrop {
 		if (thresh < this.autocropParameters.getThresholdOTSUComputing()) {
 			ImagePlus imp2;
 			if (autocropParameters.getSlicesOTSUComputing() == 0) {
-				this.sliceUsedForOTSU =
-						"Start:" + this.imageSeg.getStackSize() / 2 + "-" + this.imageSeg.getStackSize();
-				imp2 = new Duplicator().run(this.imageSeg,
-				                            this.imageSeg.getStackSize() / 2,
-				                            this.imageSeg.getStackSize());
+				if(imageSeg.getStackSize()>1) {
+					this.sliceUsedForOTSU =
+							"Start:" + this.imageSeg.getStackSize() / 2 + "-" + this.imageSeg.getStackSize();
+					imp2 = new Duplicator().run(this.imageSeg,
+							this.imageSeg.getStackSize() / 2,
+							this.imageSeg.getStackSize());
+				}
+				// Case of 2D images
+				else {
+					imp2=new Duplicator().run(this.imageSeg);
+				}
 			} else {
 				this.sliceUsedForOTSU = "Start:" +
 				                        this.autocropParameters.getSlicesOTSUComputing() +
