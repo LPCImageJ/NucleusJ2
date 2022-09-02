@@ -50,4 +50,6 @@ release_branch:
   only:
     - master
   script:
-    - release-cli create --name "v$VERSION" --description "new release" --tag-name "v$VERSION" --ref $CI_COMMIT_SHA --assets-links-name ".jar" --assets-links-url "https://gitlab.com/api/v4/projects/19044962/packages/maven/burp/NucleusJ_2/$VERSION/NucleusJ_2-$VERSION.jar"
+    - release-cli create --name "v$VERSION" --description "new release" --tag-name "v$VERSION" --ref $CI_COMMIT_SHA --assets-links={"name": "NucleusJ.jar", "url":"https://gitlab.com/api/v4/projects/19044962/packages/maven/burp/NucleusJ_2/$VERSION/NucleusJ_2-$VERSION.jar"}
+    #- release-cli create --name "v$VERSION" --description "new release" --tag-name "v$VERSION" --ref $CI_COMMIT_SHA --assets-links-name ".jar" --assets-links-url "https://gitlab.com/api/v4/projects/19044962/packages/maven/burp/NucleusJ_2/$VERSION/NucleusJ_2-$VERSION.jar"
+#e.g. --assets-link='{"name": "Asset1", "url":"https://<domain>/some/location/1", "type": "other", "filepath": "xzy" }' or --assets-link='[{"name": "Asset1", "url":"https://example.com/some/location/1"}, {"name": "Asset2", "url":"https://example.com/some/location/2"}]'
