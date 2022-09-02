@@ -15,6 +15,7 @@ import gred.nucleus.imageprocessing.Thresholding;
 import gred.nucleus.utils.Histogram;
 import ij.ImagePlus;
 import ij.ImageStack;
+import ij.gui.Roi;
 import ij.measure.Calibration;
 import ij.plugin.ChannelSplitter;
 import ij.plugin.Duplicator;
@@ -28,7 +29,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.awt.Color;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.lang.invoke.MethodHandles;
@@ -138,9 +139,14 @@ public class AutoCrop {
 		} else {
 			this.imageSeg = this.rawImg;
 		}
+		this.imageFilePath = image.getName();
 		this.infoImageAnalysis = autocropParametersAnalyse.getAnalysisParameters();
+		this.rawImg.setTitle(image.getName()+"-"+image.getId());
 	}
-	
+
+	public ImagePlus getRawImage(){
+		return rawImg;
+	}
 	
 	public AutoCrop(File imageFile,
 	                String outputFilesPrefix,
@@ -389,7 +395,7 @@ public class AutoCrop {
 	 * the ImageCore put in input in this method (crop method available in the imagej wrapper).
 	 * <p>Then the image results obtained was used to create a new ImageCoreIJ, and the image is saved.
 	 */
-	public void cropKernels2() throws IOException, FormatException {
+	public void cropKernels2() {
 		LOGGER.info("Cropping kernels (2).");
 		StringBuilder info      = new StringBuilder();
 		Directory     dirOutput = new Directory(this.outputDirPath + "nuclei");
@@ -403,9 +409,9 @@ public class AutoCrop {
 				int       xMin   = box.getXMin();
 				int       yMin   = box.getYMin();
 				int       zMin   = box.getZMin();
-				int       width  = box.getXMax() - box.getXMin();
-				int       height = box.getYMax() - box.getYMin();
-				int       depth  = box.getZMax() - box.getZMin();
+				int       width  = box.getXMax() - box.getXMin() + 1;
+				int       height = box.getYMax() - box.getYMin() + 1;
+				int       depth  = box.getZMax() - box.getZMin() + 1;
 				ImagePlus croppedImage;
 				if (this.rawImg.getNSlices() > 1) {
 					croppedImage = cropImage(xMin, yMin, zMin, width, height, depth, c);
@@ -468,15 +474,10 @@ public class AutoCrop {
 				int    xMin        = box.getXMin();
 				int    yMin        = box.getYMin();
 				int    zMin        = box.getZMin();
-				int    width       = box.getXMax() - box.getXMin();
-				int    height      = box.getYMax() - box.getYMin();
-				int    depth       = box.getZMax() - box.getZMin();
-				String coordinates = box.getXMin() + "_" + box.getYMin() + "_" + box.getZMin();
-				int[]  xBound      = {box.getXMin(), box.getXMax() - 1};
-				int[]  yBound      = {box.getYMin(), box.getYMax() - 1};
-				int[]  zBound      = {box.getZMin(), box.getZMax() - 1};
-				int[]  cBound      = {c, c};
-				
+				int       width  = box.getXMax() - box.getXMin() + 1;
+				int       height = box.getYMax() - box.getYMin() + 1;
+				int       depth  = box.getZMax() - box.getZMin() + 1;
+
 				ShapeList shapes = new ShapeList();
 				for (int z = box.getZMin(); z < box.getZMax(); z++) {
 					RectangleWrapper rectangle = new RectangleWrapper(xMin, yMin, width, height);
@@ -488,26 +489,24 @@ public class AutoCrop {
 				}
 				ROIWrapper roi = new ROIWrapper(shapes);
 				image.saveROI(client, roi);
-				ImagePlus   croppedImage = image.toImagePlus(client, xBound, yBound, cBound, zBound, null);
+				ImagePlus   croppedImage =  cropImage(xMin, yMin, zMin, width, height, depth, c);
 				Calibration cal          = this.rawImg.getCalibration();
 				croppedImage.setCalibration(cal);
 				String tiffPath = new File(".").getCanonicalPath() +
 				                  File.separator +
 				                  this.outputFilesPrefix + "_" +
-				                  String.format("%02d", i) + ".tif";
+				                  String.format("%02d", i) +
+						          "_C" + c +".tif";
 				OutputTiff fileOutput = new OutputTiff(tiffPath);
-				info.append(outputDirPath).append(outputFilesPrefix)
-				    .append(File.separator).append(outputFilesPrefix)
-				    .append("_").append(i).append(".tif").append("\t")
-				    .append(tiffPath).append("\t")
-				    .append(c).append("\t")
-				    .append(i).append("\t")
-				    .append(xMin).append("\t")
-				    .append(yMin).append("\t")
-				    .append(zMin).append("\t")
-				    .append(width).append("\t")
-				    .append(height).append("\t")
-				    .append(depth).append("\n");
+				info.append(tiffPath).append("\t")
+						.append(c).append("\t")
+						.append(i).append("\t")
+						.append(xMin).append("\t")
+						.append(yMin).append("\t")
+						.append(zMin).append("\t")
+						.append(width).append("\t")
+						.append(height).append("\t")
+						.append(depth).append("\n");
 				fileOutput.saveImage(croppedImage);
 				this.outputFile.add(this.outputFilesPrefix + "_" +
 				                    String.format("%02d", i) + ".tif");
@@ -523,82 +522,65 @@ public class AutoCrop {
 					int yMax = yMin + height;
 					int zMax = zMin + depth;
 					this.boxCoordinates.add(this.outputDirPath + File.separator +
-					                        this.outputFilesPrefix + "_" + coordinates +
-					                        i + "\t" +
-					                        xMin + "\t" +
-					                        xMax + "\t" +
-					                        yMin + "\t" +
-					                        yMax + "\t" +
-					                        zMin + "\t" +
-					                        zMax);
+							this.outputFilesPrefix + "_" +
+							String.format("%02d", i) + "_C0" + "\t" +
+							xMin + "\t" +
+							xMax + "\t" +
+							yMin + "\t" +
+							yMax + "\t" +
+							zMin + "\t" +
+							zMax);
 				}
 			}
 		}
 		this.infoImageAnalysis += info.toString();
 	}
-	
-	
+
+
 	/** Method crops a box of interest, from coordinate files. */
-	public void cropKernels3() throws IOException, FormatException {
+	public void cropKernels3(int channelToCrop) {
 		LOGGER.info("Cropping kernels (3).");
 		StringBuilder info      = new StringBuilder();
-		Directory     dirOutput = new Directory(this.outputDirPath + File.separator + "Nuclei");
+		Directory     dirOutput = new Directory(this.outputDirPath);
 		dirOutput.checkAndCreateDir();
 		info.append(getSpecificImageInfo()).append(HEADERS);
-		for (int c = 0; c < this.channelNumbers; c++) {
-			for (Map.Entry<Double, Box> entry : new TreeMap<>(this.boxes).entrySet()) {
-				int i = entry.getKey().intValue();
-				LOGGER.info("Processing box number: {}", i);
-				Box       box    = entry.getValue();
-				int       xMin   = box.getXMin();
-				int       yMin   = box.getYMin();
-				int       zMin   = box.getZMin();
-				int       width  = box.getXMax() - box.getXMin();
-				int       height = box.getYMax() - box.getYMin();
-				int       depth  = box.getZMax() - box.getZMin();
-				ImagePlus croppedImage;
-				if (this.rawImg.getNSlices() > 1) {
-					croppedImage = cropImage(xMin, yMin, zMin, width, height, depth, c);
-				} else {
-					croppedImage = cropImage2D(xMin, yMin, width, height, c);
-				}
-				Calibration cal = this.rawImg.getCalibration();
-				croppedImage.setCalibration(cal);
-				String tiffPath = dirOutput.getDirPath() + File.separator +
-				                  this.outputFilesPrefix +
-				                  "_" + String.format("%02d", i) +
-				                  "_C" + c + ".tif";
-				OutputTiff fileOutput = new OutputTiff(tiffPath);
-				info.append(tiffPath).append("\t")
-				    .append(c).append("\t")
-				    .append(i).append("\t")
-				    .append(xMin).append("\t")
-				    .append(yMin).append("\t")
-				    .append(zMin).append("\t")
-				    .append(width).append("\t")
-				    .append(height).append("\t")
-				    .append(depth).append("\n");
-				fileOutput.saveImage(croppedImage);
-				this.outputFile.add(this.outputDirPath + File.separator +
-				                    this.outputFilesPrefix + File.separator +
-				                    this.outputFilesPrefix + "_" +
-				                    String.format("%02d", i) + ".tif");
-				if (c == 0) {
-					int xMax = xMin + width;
-					int yMax = yMin + height;
-					int zMax = zMin + depth;
-					this.boxCoordinates.add(this.outputDirPath + File.separator +
-					                        this.outputFilesPrefix +
-					                        "_" +
-					                        i + "\t" +
-					                        xMin + "\t" +
-					                        xMax + "\t" +
-					                        yMin + "\t" +
-					                        yMax + "\t" +
-					                        zMin + "\t" +
-					                        zMax);
-				}
+		for (Map.Entry<Double, Box> entry : new TreeMap<>(this.boxes).entrySet()) {
+			int i = entry.getKey().intValue();
+			LOGGER.info("Processing box number: {}", i);
+			Box       box    = entry.getValue();
+			int       xMin   = box.getXMin();
+			int       yMin   = box.getYMin();
+			int       zMin   = box.getZMin();
+			int       width  = box.getXMax() - box.getXMin() + 1;
+			int       height = box.getYMax() - box.getYMin() + 1;
+			int       depth  = box.getZMax() - box.getZMin() + 1;
+			ImagePlus croppedImage;
+			if (this.rawImg.getNSlices() > 1) {
+				croppedImage = cropImage(xMin, yMin, zMin, width, height, depth, channelToCrop);
+			} else {
+				croppedImage = cropImage2D(xMin, yMin, width, height, channelToCrop);
 			}
+			Calibration cal = this.rawImg.getCalibration();
+			croppedImage.setCalibration(cal);
+			String tiffPath = dirOutput.getDirPath() + File.separator +
+							  this.outputFilesPrefix +
+							  "_" + String.format("%02d", i) +
+							  "_C" + channelToCrop + ".tif";
+			OutputTiff fileOutput = new OutputTiff(tiffPath);
+			info.append(tiffPath).append("\t")
+				.append(channelToCrop).append("\t")
+				.append(i).append("\t")
+				.append(xMin).append("\t")
+				.append(yMin).append("\t")
+				.append(zMin).append("\t")
+				.append(width).append("\t")
+				.append(height).append("\t")
+				.append(depth).append("\n");
+			fileOutput.saveImage(croppedImage);
+			this.outputFile.add(this.outputDirPath + File.separator +
+								this.outputFilesPrefix + File.separator +
+								this.outputFilesPrefix + "_" +
+								String.format("%02d", i) + ".tif");
 		}
 		this.infoImageAnalysis += info.toString();
 	}
@@ -665,17 +647,13 @@ public class AutoCrop {
 	 *
 	 * @return : ImageCoreIJ of the cropped image.
 	 */
-	public ImagePlus cropImage(int xMin, int yMin, int zMin, int width, int height, int depth, int channelNumber)
-	throws IOException, FormatException {
-		ImporterOptions options = new ImporterOptions();
-		options.setId(this.imageFilePath);
-		options.setAutoscale(true);
-		options.setCrop(true);
-		ImagePlus[] imps = BF.openImagePlus(options);
-		ImagePlus   sort = new ImagePlus();
-		imps = ChannelSplitter.split(imps[0]);
-		sort.setStack(imps[channelNumber].getStack().crop(xMin, yMin, zMin, width, height, depth));
-		return sort;
+	public ImagePlus cropImage(int xMin, int yMin, int zMin, int width, int height, int depth, int channelNumber) {
+		Duplicator duplicator = new Duplicator();
+		ImagePlus cropped = duplicator.run(rawImg, channelNumber, channelNumber, zMin, zMin+depth-1, 0, 0);
+		cropped.setRoi(new Roi(xMin, yMin, width, height));
+		ImagePlus result = cropped.crop("stack");
+		result.deleteRoi();
+		return result;
 	}
 	
 	
@@ -690,17 +668,14 @@ public class AutoCrop {
 	 *
 	 * @return : ImageCoreIJ of the cropped image.
 	 */
-	public ImagePlus cropImage2D(int xMin, int yMin, int width, int height, int channelNumber)
-	throws IOException, FormatException {
-		ImporterOptions options = new ImporterOptions();
-		options.setId(this.imageFilePath);
-		options.setAutoscale(true);
-		options.setCrop(true);
-		ImagePlus[] imps = BF.openImagePlus(options);
-		ImagePlus   sort = imps[channelNumber];
-		sort.setRoi(xMin, yMin, width, height);
-		sort.crop();
-		return sort;
+	public ImagePlus cropImage2D(int xMin, int yMin, int width, int height, int channelNumber) {
+		Duplicator duplicator = new Duplicator();
+		ImagePlus cropped = duplicator.run(rawImg, channelNumber, channelNumber, 0, 1, 0, 0);
+		Roi roi = new Roi(xMin, yMin, width, height);
+		cropped.setRoi(roi);
+		cropped = cropped.crop();
+		cropped.deleteRoi();
+		return cropped;
 	}
 	
 	
@@ -769,7 +744,7 @@ public class AutoCrop {
 		}
 	}
 	
-	
+
 	/**
 	 * Getter number of crop
 	 *
